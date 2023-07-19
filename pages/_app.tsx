@@ -3,9 +3,10 @@ import { Provider as ReduxProvide } from 'react-redux';
 
 import type { AppProps as NextAppProps } from 'next/app';
 
-import { ColorScheme } from '@mantine/core';
+import { ColorScheme, Image } from '@mantine/core';
 import {
   ChainSelectConfig,
+  Head,
   LanguageInit,
   Layout,
   MantineProviders,
@@ -24,6 +25,7 @@ import {
 
 import { Provider as JotaiProvider } from 'jotai';
 
+import { Logo } from 'src/assets';
 import 'src/i18next';
 import { resources } from 'src/i18next';
 import InitStoreProvider from 'src/providers/InitStoreProvider';
@@ -32,7 +34,7 @@ import store from 'src/store/store';
 import { modals } from '../src/components';
 import { HeaderNav } from '../src/components/HeaderNav';
 import { CHAINS, ChainsID, Chain as CustomChain } from '../src/constants';
-import { modalStyles } from '../src/theme';
+import { modalStyles, theme } from '../src/theme';
 
 export const i18n = initLanguage(resources);
 
@@ -73,12 +75,30 @@ const App = ({ Component, pageProps }: AppProps) => {
           <ReduxProvide store={store}>
             <Web3Providers libraryConnectors={libraryConnectors}>
               <InitStoreProvider>
-                <MantineProviders modals={modals} modalStyles={modalStyles}>
+                <MantineProviders
+                  modals={modals}
+                  modalStyles={modalStyles}
+                  theme={theme}
+                >
                   <LanguageInit i={i18n} />
                   <Layout
-                    currentWebsite={Websites.EXAMPLE}
                     chains={customChains}
                     headerNav={<HeaderNav />}
+                    head={
+                      <Head
+                        title={'CleanSatMining YAM'}
+                        description={'CleanSatMining YAM'}
+                      />
+                    }
+                    newWebsite={{
+                      name: 'CleanSatMining',
+                      url: '/',
+                      logo: () => (
+                        <Image src={Logo.src} alt={'CSM Logo'} width={36} />
+                      ),
+                      comingSoon: false,
+                    }}
+                    disableHeaderMultisite={true}
                   >
                     <Component {...pageProps} />
                   </Layout>
