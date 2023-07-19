@@ -1,0 +1,14 @@
+{
+  "card": {
+    "inactive": "inactive",
+    "active": "active",
+    "stoped": "stoped",
+    "apy": "APY",
+    "site-income": "Site income",
+    "site-net-income": "Site net income",
+    "token-percent": " of total supply owned",
+    "my-tokens": "My tokens",
+    "my-income": "My income",
+    "bitcoin-mined": "Mined bitcoin"
+  }
+}

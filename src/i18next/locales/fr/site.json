@@ -1,0 +1,14 @@
+{
+  "card": {
+    "inactive": "inactive",
+    "active": "active",
+    "stoped": "stopé",
+    "apy": "Rendement annuel",
+    "site-income": "Revenu du site brut",
+    "site-net-income": "Revenu du site net",
+    "token-percent": " des tokens possédés",
+    "my-tokens": "Mes tokens",
+    "my-income": "Mes revenus",
+    "bitcoin-mined": "Bitcoins minés"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "table": {
+    "noData": "Aucune donnée"
+  },
+  "caption": {
+    "lineNumber": "Nombre de lignes",
+    "goTo": "Aller vers",
+    "noOption": "Aucune option",
+    "autoRefresh": "Rafraîchissement automatique"
+  },
+  "filters": {
+    "title": "Filtres",
+    "nameFilterPlaceholder": "Recherche"
+  }
+}

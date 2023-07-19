@@ -1,0 +1,15 @@
+{
+  "table": {
+    "noData": "No data"
+  },
+  "caption": {
+    "lineNumber": "Number of lines",
+    "goTo": "Go to page",
+    "noOption": "No options",
+    "autoRefresh": "Enable automatic refresh"
+  },
+  "filters": {
+    "title": "Filters",
+    "nameFilterPlaceholder": "Search"
+  }
+}

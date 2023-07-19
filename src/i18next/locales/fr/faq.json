@@ -1,0 +1,10 @@
+{
+    "title": "AIDE",
+    "createOffer": {
+        "title": "Comment utiliser YAM ?",
+        "answer": "Un tutoriel à été rédigé par la communauté. Vous pouvez le retrouver",
+        "here": "ici",
+        "link": "/tutos/Tuto_Yam_v5_FR.pdf",
+        "thanks": "Merci à @Phil0_0 pour le tuto."
+    }
+}
