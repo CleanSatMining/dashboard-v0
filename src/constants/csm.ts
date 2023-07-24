@@ -1,5 +1,10 @@
 import { MiningState, Site } from '../types/Site';
 
+export const FEE_RATE_CSM = 0.1;
+export const FEE_RATE_BBGS = 0.05;
+export const PROVISION_RATE = 0.2;
+export const SWISS_TAXE = 0.1357;
+
 export enum SiteID {
   alpha = '1',
   beta = '2',
@@ -23,29 +28,18 @@ export const SITES: Record<SiteID, Site> = {
     api: {
       username: undefined,
       url: undefined,
-      filters: [
-        {
-          label: '1 day',
-          duration: {
-            days: 1,
-          },
-        },
-        {
-          label: '6 hours',
-          duration: {
-            hours: 6,
-          },
-        },
-        {
-          label: '1 hour',
-          duration: {
-            hours: 1,
-          },
-        },
-      ],
     },
     apy: 0.17,
     fee: 0.5,
+    mining: {
+      asics: {
+        powerW: 0,
+        units: 0,
+      },
+      electricity: {
+        usdPricePerKWH: 0,
+      },
+    },
   },
   [SiteID.beta]: {
     name: 'CMS beta',
@@ -63,29 +57,18 @@ export const SITES: Record<SiteID, Site> = {
     api: {
       username: undefined,
       url: undefined,
-      filters: [
-        {
-          label: '1 day',
-          duration: {
-            days: 1,
-          },
-        },
-        {
-          label: '6 hours',
-          duration: {
-            hours: 6,
-          },
-        },
-        {
-          label: '1 hour',
-          duration: {
-            hours: 1,
-          },
-        },
-      ],
     },
     apy: 0.17,
     fee: 0.5,
+    mining: {
+      asics: {
+        powerW: 0,
+        units: 0,
+      },
+      electricity: {
+        usdPricePerKWH: 0,
+      },
+    },
   },
 
   [SiteID.gamma]: {
@@ -104,29 +87,18 @@ export const SITES: Record<SiteID, Site> = {
     api: {
       username: 'cleansatmininggamma',
       url: 'https://api.beta.luxor.tech/graphql',
-      filters: [
-        {
-          label: '1 day',
-          duration: {
-            days: 1,
-          },
-        },
-        {
-          label: '6 hours',
-          duration: {
-            hours: 6,
-          },
-        },
-        {
-          label: '1 hour',
-          duration: {
-            hours: 1,
-          },
-        },
-      ],
     },
     apy: 0.17,
     fee: 0.5,
+    mining: {
+      asics: {
+        powerW: 3000,
+        units: 189,
+      },
+      electricity: {
+        usdPricePerKWH: 0.078,
+      },
+    },
   },
   [SiteID.omega]: {
     name: 'CMS omega',
@@ -144,30 +116,21 @@ export const SITES: Record<SiteID, Site> = {
     api: {
       username: undefined,
       url: undefined,
-      filters: [
-        {
-          label: '1 day',
-          duration: {
-            days: 1,
-          },
-        },
-        {
-          label: '6 hours',
-          duration: {
-            hours: 6,
-          },
-        },
-        {
-          label: '1 hour',
-          duration: {
-            hours: 1,
-          },
-        },
-      ],
     },
     apy: 0.17,
     fee: 0.5,
+    mining: {
+      asics: {
+        powerW: 0,
+        units: 0,
+      },
+      electricity: {
+        usdPricePerKWH: 0,
+      },
+    },
   },
 };
 
 export const ALLOWED_SITES = Array.from(Object.keys(SITES));
+
+export const DAYS_PERIODS: number[] = [1, 7, 30, 60];

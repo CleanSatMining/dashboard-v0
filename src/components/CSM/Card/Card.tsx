@@ -34,6 +34,7 @@ const useStyle = createStyles((theme: MantineTheme) => ({
     marginLeft: '5px',
     fontWeight: 700,
     fontSize: '18px',
+    textDecoration: 'none',
   },
 }));
 
@@ -59,7 +60,7 @@ type TableProps = {
   csmSupply: number;
   miningState: MiningState;
   tokenUrl: string;
-  siteData: SiteData[];
+  data: SiteData;
 };
 
 export const UserSiteCard: FC<TableProps> = ({
@@ -71,7 +72,7 @@ export const UserSiteCard: FC<TableProps> = ({
   csmPercent = 0,
   csmSymbol = '',
   csmSupply = 0,
-  siteData,
+  data,
   tokenUrl,
   miningState,
 }) => {
@@ -80,27 +81,21 @@ export const UserSiteCard: FC<TableProps> = ({
 
   const { badgeColor, badgeState } = calculateSiteState(t, miningState);
 
-  const segmentedControlData: { label: string; value: string }[] = siteData.map(
-    function (data: SiteData) {
-      return { label: data.label, value: data.id };
-    }
-  );
-  const display: boolean = segmentedControlData.length > 0 ? true : false;
-  const siteDataDefault: SiteData = defaultSiteData(apr);
+  // const siteDataDefault: SiteData = defaultSiteData(apr);
 
-  const id = siteData.length > 0 ? siteData[0].id : 'default';
-  const [dataId, setDataId] = useState(id);
-  const [data, setData] = useState<SiteData>(siteDataDefault);
+  // const id = siteData.length > 0 ? siteData[0].id : 'default';
+  // const [dataId, setDataId] = useState(id);
+  // const [data, setData] = useState<SiteData>(siteDataDefault);
 
-  useEffect(() => {
-    const siteDataDefault: SiteData = defaultSiteData(apr);
-    const selectedData: SiteData | undefined = siteData.find(
-      (v) => v.id === dataId
-    );
-    setData(selectedData === undefined ? siteDataDefault : selectedData);
-    if (dataId === 'default' && siteData !== undefined && siteData.length > 0)
-      setDataId(siteData[0].id);
-  }, [dataId, siteData, apr]);
+  // useEffect(() => {
+  //   const siteDataDefault: SiteData = defaultSiteData(apr);
+  //   const selectedData: SiteData | undefined = siteData.find(
+  //     (v) => v.id === dataId
+  //   );
+  //   setData(selectedData === undefined ? siteDataDefault : selectedData);
+  //   if (dataId === 'default' && siteData !== undefined && siteData.length > 0)
+  //     setDataId(siteData[0].id);
+  // }, [dataId, siteData, apr]);
 
   return (
     <Card shadow={'sm'} padding={'lg'} radius={'md'} withBorder={true}>
@@ -114,17 +109,6 @@ export const UserSiteCard: FC<TableProps> = ({
         <Badge color={badgeColor} variant={'light'}>
           <Text fz={'md'}>{badgeState}</Text>
         </Badge>
-      </Group>
-
-      <Group position={'center'}>
-        {display && (
-          <SegmentedControl
-            value={dataId}
-            onChange={setDataId}
-            data={segmentedControlData}
-            defaultValue={'three'}
-          />
-        )}
       </Group>
 
       <Flex
@@ -150,9 +134,23 @@ export const UserSiteCard: FC<TableProps> = ({
         sx={{ marginBottom: '20px' }}
       >
         <div>
-          <Text weight={500} fz={'lg'} align={'center'}>
-            {t('my-tokens')}
-          </Text>
+          <Flex
+            gap={'0'}
+            justify={'center'}
+            align={'center'}
+            direction={'row'}
+            wrap={'wrap'}
+          >
+            <Text weight={500} fz={'lg'} align={'center'}>
+              {t('my-tokens')}
+            </Text>
+            <Avatar
+              src={'https://cleansatmining.com/data/files/logo_csm.png'}
+              size={'sm'}
+              sx={{ margin: '10px' }}
+            ></Avatar>
+          </Flex>
+
           <Flex
             mih={50}
             gap={'0'}
@@ -161,15 +159,9 @@ export const UserSiteCard: FC<TableProps> = ({
             direction={'row'}
             wrap={'wrap'}
           >
-            <Avatar
-              src={'https://cleansatmining.com/data/files/logo_csm.png'}
-              size={'sm'}
-              sx={{ margin: '10px' }}
-            ></Avatar>
-
             <Flex
               gap={'0'}
-              justify={'flex-start'}
+              justify={'flex-end'}
               align={'flex-end'}
               direction={'column'}
               wrap={'wrap'}
@@ -181,6 +173,7 @@ export const UserSiteCard: FC<TableProps> = ({
                   marginTop: '0px',
                   marginLeft: '0px',
                   marginRight: '0px',
+                  marginBottom: '5px',
                   lineHeight: 'normal',
                 }}
               >
@@ -202,9 +195,22 @@ export const UserSiteCard: FC<TableProps> = ({
           </Flex>
         </div>
         <div>
-          <Text weight={500} fz={'lg'} align={'center'}>
-            {t('my-income')}
-          </Text>
+          <Flex
+            gap={'0'}
+            justify={'center'}
+            align={'center'}
+            direction={'row'}
+            wrap={'wrap'}
+          >
+            <Text weight={500} fz={'lg'} align={'center'}>
+              {t('my-income')}
+            </Text>
+            <Avatar
+              src={'https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=025'}
+              size={'sm'}
+              sx={{ margin: '10px' }}
+            ></Avatar>
+          </Flex>
           <Flex
             mih={50}
             gap={'0'}
@@ -213,15 +219,9 @@ export const UserSiteCard: FC<TableProps> = ({
             direction={'row'}
             wrap={'wrap'}
           >
-            <Avatar
-              src={'https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=025'}
-              size={'sm'}
-              sx={{ margin: '10px' }}
-            ></Avatar>
-
             <Flex
               gap={'0'}
-              justify={'flex-start'}
+              justify={'flex-end'}
               align={'flex-end'}
               direction={'column'}
               wrap={'wrap'}
@@ -282,27 +282,6 @@ export const UserSiteCard: FC<TableProps> = ({
     </Card>
   );
 };
-function defaultSiteData(apr: number): SiteData {
-  return {
-    apr: apr,
-    id: 'default',
-    income: {
-      site: {
-        btc: 0,
-        usd: 0,
-      },
-      user: {
-        btc: 0,
-        usd: 0,
-      },
-    },
-    label: 'default',
-    mined: {
-      btc: 0,
-      usd: 0,
-    },
-  };
-}
 
 function calculateSiteState(
   t: TFunction<'site', 'card'>,

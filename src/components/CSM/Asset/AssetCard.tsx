@@ -1,6 +1,14 @@
 import { FC, memo, useEffect, useState } from 'react';
 
-import { ActionIcon, Card, Center, Group, Text, Title } from '@mantine/core';
+import {
+  Accordion,
+  ActionIcon,
+  Card,
+  Flex,
+  Group,
+  Text,
+  Title,
+} from '@mantine/core';
 import { TablerIcon } from '@tabler/icons';
 
 export type Data = {
@@ -12,10 +20,11 @@ type SiteProps = {
   title?: string;
   Icon?: TablerIcon;
   value?: string;
-  data?: Data[];
+  data: Data[];
+  subValue?: string;
 };
 
-const _AssetCard: FC<SiteProps> = ({ title, Icon, value, data }) => {
+const _AssetCard: FC<SiteProps> = ({ title, Icon, value, data, subValue }) => {
   return (
     <>
       <Card shadow={'sm'} padding={'lg'} radius={'md'} withBorder={true}>
@@ -23,35 +32,61 @@ const _AssetCard: FC<SiteProps> = ({ title, Icon, value, data }) => {
           <Title order={2}>{title}</Title>
           {Icon && (
             <ActionIcon variant={'transparent'}>
-              <Icon></Icon>
+              <Icon color={'green'}></Icon>
             </ActionIcon>
           )}
         </Group>
-        <Center>
-          <Title order={3} color={'dimmed'}>
+
+        <Flex
+          mih={50}
+          //gap={'md'}
+          justify={'flex-start'}
+          align={'flex-start'}
+          direction={'column'}
+          wrap={'wrap'}
+        >
+          <Title order={3} color={'green'}>
             {value}
           </Title>
-        </Center>
+          {subValue !== undefined && <Text color={'dimmed'}>{subValue}</Text>}
+        </Flex>
 
-        {data?.map((i) => (
-          <Group position={'apart'} mt={'xs'} mb={'xs'} key={`group-${i}`}>
-            <Text fz={'sm'}>{'CSM-xxx'}</Text>
-            <Text fz={'sm'}>{'1000'}</Text>
-          </Group>
-        ))}
+        {data.length > 0 && (
+          <Accordion
+            radius={'xl'}
+            variant={'separated'}
+            defaultValue={''}
+            styles={{
+              item: {
+                // styles added to all items
+                backgroundColor: 'transparent',
+                border: '0',
 
-        <Group position={'apart'} mt={'xs'} mb={'xs'}>
-          <Text fz={'sm'}>{'CSM-alpha'}</Text>
-          <Text fz={'sm'}>{'1000'}</Text>
-        </Group>
-        <Group position={'apart'} mt={'xs'} mb={'xs'}>
-          <Text fz={'sm'}>{'CSM-beta'}</Text>
-          <Text fz={'sm'}>{'1000'}</Text>
-        </Group>
-        <Group position={'apart'} mt={'xs'} mb={'xs'}>
-          <Text fz={'sm'}>{'CSM-gamma'}</Text>
-          <Text fz={'sm'}>{'1000'}</Text>
-        </Group>
+                // styles added to expanded item
+                '&[data-active]': {
+                  backgroundColor: 'transparent',
+                },
+              },
+            }}
+          >
+            <Accordion.Item value={'detail'}>
+              <Accordion.Control>{'Detail'}</Accordion.Control>
+              <Accordion.Panel>
+                {data?.map((setting, i) => (
+                  <Group
+                    position={'apart'}
+                    mt={'xs'}
+                    mb={'xs'}
+                    key={`group-${i}`}
+                  >
+                    <Text fz={'sm'}>{setting.label}</Text>
+                    <Text fz={'sm'}>{setting.value}</Text>
+                  </Group>
+                ))}
+              </Accordion.Panel>
+            </Accordion.Item>
+          </Accordion>
+        )}
       </Card>
     </>
   );

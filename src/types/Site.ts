@@ -1,5 +1,3 @@
-import {Duration} from './Mining'
-
 export type Site = {
     name: string;
     image: string;
@@ -8,6 +6,7 @@ export type Site = {
     api: Api;
     apy: number;
     fee: number;
+    mining: Mining;
   };
 
   export type Token = {
@@ -18,19 +17,17 @@ export type Site = {
     gnosisscanUrl : string;
   }
 
+  export type TokenBalance = {
+    address: string;
+    balance: number;
+    symbol: string;
+    usd : number;
+  }
+
   export type Api = {
     username: string | undefined;
     url: string | undefined;
-    filters: TimeFilter[];
   }
-
-
-  export type TimeFilter = {
-    label: string,
-    duration: Duration,
-  }
-
-
 
 
   export enum MiningState {
@@ -42,4 +39,21 @@ export type Site = {
   export type Income = {
     usd: number;
     btc: number;
+  }
+
+  export type Mining = {
+    electricity:{
+      usdPricePerKWH: number;
+    }
+    asics:{
+      powerW: number;
+      units: number;
+    }
+
+  }
+
+  export type Yield ={
+    usd: number;
+    btc: number;
+    apr: number;
   }

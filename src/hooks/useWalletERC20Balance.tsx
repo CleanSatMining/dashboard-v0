@@ -14,6 +14,7 @@ interface TokenInfos {
   balance: BigNumber;
   symbol: string;
   decimals: string;
+  address?: string;
 }
 
 interface UseWalletERC20Balance {
@@ -96,5 +97,103 @@ export const useWalletERC20Balance = (
     WalletERC20Balance: Component,
     bigNumberbalance: bigNumberbalance,
     balance: balance,
+  };
+};
+
+interface Balance {
+  bigBalance: BigNumber;
+  balance: number;
+  symbol: string;
+}
+
+interface UseWalletERC20Balances {
+  balances: { [tokenAddress: string]: Balance };
+}
+
+export const useWalletERC20Balances = (
+  tokenAddress: string[],
+  accountAddress: string | undefined = undefined
+): UseWalletERC20Balances => {
+  const [balances, setBalances] = useState<{ [tokenAddress: string]: Balance }>(
+    {}
+  );
+  const { account, provider } = useWeb3React();
+
+  if (accountAddress == undefined) {
+    accountAddress = account;
+  }
+
+  const contracts: Erc20[] = [];
+
+  for (const token of tokenAddress) {
+    const abi = getContract<Erc20>(
+      token,
+      Erc20ABI,
+      provider as Web3Provider,
+      accountAddress
+    );
+    if (abi !== undefined) {
+      contracts.push(abi);
+    }
+  }
+
+  const getTokenInfos = async (): Promise<TokenInfos[]> => {
+    return new Promise<TokenInfos[]>(async (resolve, reject) => {
+      const tokenInfos: TokenInfos[] = [];
+      for (const contract of contracts) {
+        try {
+          if (!contract || !accountAddress) return;
+
+          const balance = new BigNumber(
+            (await contract.balanceOf(accountAddress)).toString()
+          );
+          const decimals = new BigNumber(
+            (await contract.decimals()).toString()
+          );
+          const tokenSymbol = await contract?.symbol();
+          const address = contract.address;
+          tokenInfos.push({
+            balance: balance,
+            symbol: tokenSymbol ?? '',
+            decimals: decimals.toString() ?? '',
+            address: address,
+          });
+        } catch (err) {
+          console.log('Failed to get wallet balance: ', err);
+          reject(err);
+        }
+      }
+      resolve(tokenInfos);
+    });
+  };
+
+  const { data, refetch } = useQuery([tokenAddress], getTokenInfos, {
+    enabled: !!provider && !!tokenAddress && !!account,
+  });
+
+  // useEffect(() => {
+  //   if (tokenAddress) {
+  //     refetch();
+  //   }
+  // }, [tokenAddress, accountAddress, refetch]);
+
+  useEffect(() => {
+    if (data) {
+      const tempBalances: { [tokenAddress: string]: Balance } = {};
+      for (const tokenInfo of data) {
+        tempBalances[tokenInfo.address ?? ''] = {
+          balance: Number(
+            tokenInfo.balance.shiftedBy(-tokenInfo.decimals).toFixed(10)
+          ),
+          bigBalance: tokenInfo.balance,
+          symbol: tokenInfo.symbol,
+        };
+      }
+      setBalances(tempBalances);
+    }
+  }, [data]);
+
+  return {
+    balances,
   };
 };
