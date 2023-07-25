@@ -47,12 +47,15 @@ export type SiteData = {
     user: Income;
     site: Income;
   };
+  uptime: {
+    days: string;
+    machine: string;
+  };
 };
 
 type TableProps = {
   title: string;
   image: string;
-  apr: number;
   csm: number;
   csmUsd: number;
   csmPercent: number;
@@ -61,12 +64,12 @@ type TableProps = {
   miningState: MiningState;
   tokenUrl: string;
   data: SiteData;
+  startingDate: string;
 };
 
 export const UserSiteCard: FC<TableProps> = ({
   title = 'NA',
   image = 'https://cleansatmining.com/data/files/capturedecran2023-04-19.png',
-  apr = 0,
   csm = 0,
   csmUsd = 0,
   csmPercent = 0,
@@ -75,6 +78,7 @@ export const UserSiteCard: FC<TableProps> = ({
   data,
   tokenUrl,
   miningState,
+  startingDate,
 }) => {
   const { t } = useTranslation('site', { keyPrefix: 'card' });
   const { classes } = useStyle();
@@ -237,19 +241,11 @@ export const UserSiteCard: FC<TableProps> = ({
         </div>
       </SimpleGrid>
 
-      <Progress
-        color={'green'}
-        value={csmPercent * 100}
-        size={'xl'}
-        radius={'xl'}
-        sx={{ marginTop: '10px' }}
-      />
-      <Group position={'apart'} sx={{ margin: '0px' }}>
+      <Group position={'apart'} mt={'md'} mb={'xs'}>
         <Text weight={500} fz={'md'}>
           {'Tokens'}
         </Text>
-
-        <Text weight={500} fz={'md'} align={'center'}>
+        <Text fz={'md'}>
           {formatBigNumber(csm) +
             '/' +
             formatBigNumber(csmSupply) +
@@ -257,6 +253,27 @@ export const UserSiteCard: FC<TableProps> = ({
             formatSmallPercent(csmPercent) +
             ')'}
         </Text>
+      </Group>
+
+      <Group position={'apart'} mt={'md'} mb={'xs'}>
+        <Text weight={500} fz={'md'}>
+          {t('start-date')}
+        </Text>
+        <Text fz={'md'}>{startingDate}</Text>
+      </Group>
+
+      <Group position={'apart'} mt={'md'} mb={'xs'}>
+        <Text weight={500} fz={'md'}>
+          {t('active-days')}
+        </Text>
+        <Text fz={'md'}>{data.uptime.days}</Text>
+      </Group>
+
+      <Group position={'apart'} mt={'md'} mb={'xs'}>
+        <Text weight={500} fz={'md'}>
+          {t('active-machines')}
+        </Text>
+        <Text fz={'md'}>{data.uptime.machine}</Text>
       </Group>
 
       <Group position={'apart'} mt={'md'} mb={'xs'}>

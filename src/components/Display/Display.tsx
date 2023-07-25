@@ -1,4 +1,5 @@
 import React, { FC, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Flex, SegmentedControl } from '@mantine/core';
 
@@ -19,6 +20,7 @@ interface Display {
   component: React.ReactElement;
 }
 const Display: FC = () => {
+  const { t } = useTranslation('site', { keyPrefix: 'card' });
   const [account, setAccount] = useState(
     '0xC78f0e746A2e6248eE6D57828985D7fD8d6B33B0'
   );
@@ -88,7 +90,10 @@ const Display: FC = () => {
 
   const dataSegmentedControl: { label: string; value: string }[] =
     DAYS_PERIODS.map((d) => {
-      return { label: d + ' days', value: d.toString() };
+      return {
+        label: d > 1 ? d + t('days') : d + t('day'),
+        value: d.toString(),
+      };
     });
 
   return (

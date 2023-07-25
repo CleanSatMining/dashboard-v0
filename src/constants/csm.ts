@@ -29,9 +29,8 @@ export const SITES: Record<SiteID, Site> = {
       username: undefined,
       url: undefined,
     },
-    apy: 0.17,
-    fee: 0.5,
     mining: {
+      startingDate: '-',
       asics: {
         powerW: 0,
         units: 0,
@@ -58,9 +57,8 @@ export const SITES: Record<SiteID, Site> = {
       username: undefined,
       url: undefined,
     },
-    apy: 0.17,
-    fee: 0.5,
     mining: {
+      startingDate: '-',
       asics: {
         powerW: 0,
         units: 0,
@@ -88,9 +86,8 @@ export const SITES: Record<SiteID, Site> = {
       username: 'cleansatmininggamma',
       url: 'https://api.beta.luxor.tech/graphql',
     },
-    apy: 0.17,
-    fee: 0.5,
     mining: {
+      startingDate: '20/06/2023',
       asics: {
         powerW: 3000,
         units: 189,
@@ -117,9 +114,8 @@ export const SITES: Record<SiteID, Site> = {
       username: undefined,
       url: undefined,
     },
-    apy: 0.17,
-    fee: 0.5,
     mining: {
+      startingDate: '-',
       asics: {
         powerW: 0,
         units: 0,

@@ -1,7 +1,7 @@
 {
   "card": {
-    "inactive": "inactive",
-    "active": "active",
+    "inactive": "inactif",
+    "active": "actif",
     "stoped": "stopé",
     "apy": "Rendement annuel",
     "site-income": "Revenu du site brut",
@@ -9,6 +9,15 @@
     "token-percent": " des tokens possédés",
     "my-tokens": "Mes tokens",
     "my-income": "Mes revenus",
-    "bitcoin-mined": "Bitcoins minés"
+    "bitcoin-mined": "Bitcoins minés",
+    "my-sites": "Mes sites",
+    "my-apy": "APY",
+    "day": " jour",
+    "days": " jours",
+    "my-yield": "Mes revenus",
+    "start-date": "Date de démarrage",
+    "active-days": "Jours actifs",
+    "active-machines": "Machines actives (moyenne)"
   }
+
 }

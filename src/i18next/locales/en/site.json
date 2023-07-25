@@ -9,6 +9,14 @@
     "token-percent": " of total supply owned",
     "my-tokens": "My tokens",
     "my-income": "My income",
-    "bitcoin-mined": "Mined bitcoin"
+    "bitcoin-mined": "Mined bitcoin",
+    "my-sites": "My sites",
+    "my-apy": "APY",
+    "day": " day",
+    "days": " days",
+    "my-yield": "Yield",
+    "start-date": "Starting date",
+    "active-days": "Uptime days",
+    "active-machines": "Uptime machines"
   }
 }

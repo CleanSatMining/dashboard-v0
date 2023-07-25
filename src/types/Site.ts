@@ -4,8 +4,6 @@ export type Site = {
     token: Token;
     miningState: MiningState;
     api: Api;
-    apy: number;
-    fee: number;
     mining: Mining;
   };
 
@@ -42,6 +40,7 @@ export type Site = {
   }
 
   export type Mining = {
+    startingDate: string;
     electricity:{
       usdPricePerKWH: number;
     }

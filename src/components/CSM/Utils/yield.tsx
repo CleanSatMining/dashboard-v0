@@ -10,6 +10,17 @@ import {
 import { CSMPeriodState, CSMSsite, CSMStates } from '../../../types/CSMState';
 import { Site, TokenBalance, Yield } from '../../../types/Site';
 
+export const getUptimeBySite = (
+  siteState: CSMSsite,
+  period: number
+): { machines: number; days: number } => {
+  const income: CSMPeriodState = siteState.state.incomes.byPeriod[period];
+  return {
+    days: income.activeDays,
+    machines: income.uptimeTotalMachines,
+  };
+};
+
 export const getYieldBySite = (
   siteState: CSMSsite,
   period: number,

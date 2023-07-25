@@ -1,4 +1,5 @@
 import { FC, memo, useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { SimpleGrid } from '@mantine/core';
 import {
@@ -31,6 +32,7 @@ type AssetProps = {
 
 const _AssetGrid: FC<AssetProps> = ({ account, btcPrice, states, period }) => {
   const [address, setAddress] = useState(account);
+  const { t } = useTranslation('site', { keyPrefix: 'card' });
 
   useEffect(() => {
     setAddress(account);
@@ -54,28 +56,37 @@ const _AssetGrid: FC<AssetProps> = ({ account, btcPrice, states, period }) => {
   const numberOfSite = getUserSiteIds(states).length;
 
   return (
-    <SimpleGrid cols={4} sx={{ marginBottom: '50px' }}>
+    <SimpleGrid
+      cols={4}
+      breakpoints={[
+        { minWidth: 'xs', cols: 1 },
+        { minWidth: 'sm', cols: 2 },
+        { minWidth: 'md', cols: 3 },
+        { minWidth: 1200, cols: 4 },
+      ]}
+      sx={{ marginBottom: '50px' }}
+    >
       <AssetCard
-        title={'Tokens'}
+        title={t('my-tokens')}
         value={formatUsd(assetValue.usd)}
         data={dataTokens}
         Icon={IconCoins}
       ></AssetCard>
       <AssetCard
-        title={'Sites'}
+        title={t('my-sites')}
         value={numberOfSite.toString()}
         data={dataSites}
         Icon={IconBuildingFactory}
       ></AssetCard>
       <AssetCard
-        title={'Revenus'}
+        title={t('my-yield')}
         value={formatBTC(yieldBtc)}
         subValue={formatUsd(yieldUsd)}
         data={dataBTC}
         Icon={IconCoinBitcoin}
       ></AssetCard>
       <AssetCard
-        title={'APR'}
+        title={t('my-apy')}
         value={formatPercent(yieldApr)}
         Icon={IconMoneybag}
         data={dataAPR}
