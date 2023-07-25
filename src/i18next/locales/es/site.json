@@ -17,6 +17,7 @@
     "my-yield": "Yield",
     "start-date": "Starting date",
     "active-days": "Uptime days",
-    "active-machines": "Uptime machines"
+    "active-machines": "Uptime machines",
+    "fee-explained": "Bitcoins mined less the price of electricity, the CSM admin fee (5%), the taxes on Swiss profit (13.57%), the provision for the renewal of asics (20%)"
   }
 }

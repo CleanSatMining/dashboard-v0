@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { FC } from 'react';
 import { TFunction, useTranslation } from 'react-i18next';
 
 import {
@@ -7,15 +7,14 @@ import {
   Card,
   Flex,
   Group,
+  HoverCard,
   Image,
   MantineTheme,
-  SegmentedControl,
   SimpleGrid,
   Text,
   Title,
   createStyles,
 } from '@mantine/core';
-import { Progress } from '@mantine/core';
 
 import { Income } from '../../../types/Site';
 import { MiningState } from '../../../types/Site';
@@ -84,22 +83,6 @@ export const UserSiteCard: FC<TableProps> = ({
   const { classes } = useStyle();
 
   const { badgeColor, badgeState } = calculateSiteState(t, miningState);
-
-  // const siteDataDefault: SiteData = defaultSiteData(apr);
-
-  // const id = siteData.length > 0 ? siteData[0].id : 'default';
-  // const [dataId, setDataId] = useState(id);
-  // const [data, setData] = useState<SiteData>(siteDataDefault);
-
-  // useEffect(() => {
-  //   const siteDataDefault: SiteData = defaultSiteData(apr);
-  //   const selectedData: SiteData | undefined = siteData.find(
-  //     (v) => v.id === dataId
-  //   );
-  //   setData(selectedData === undefined ? siteDataDefault : selectedData);
-  //   if (dataId === 'default' && siteData !== undefined && siteData.length > 0)
-  //     setDataId(siteData[0].id);
-  // }, [dataId, siteData, apr]);
 
   return (
     <Card shadow={'sm'} padding={'lg'} radius={'md'} withBorder={true}>
@@ -230,9 +213,17 @@ export const UserSiteCard: FC<TableProps> = ({
               direction={'column'}
               wrap={'wrap'}
             >
-              <Text fz={'lg'} fw={700}>
-                {formatBTC(data.income.user.btc)}
-              </Text>
+              <HoverCard width={280} shadow={'md'}>
+                <HoverCard.Target>
+                  <Text fz={'lg'} fw={700}>
+                    {formatBTC(data.income.user.btc)}
+                  </Text>
+                </HoverCard.Target>
+                <HoverCard.Dropdown>
+                  <Text size={'sm'}>{t('fee-explained')}</Text>
+                </HoverCard.Dropdown>
+              </HoverCard>
+
               <Text fz={'xs'} color={'dimmed'}>
                 {formatUsd(data.income.user.usd)}
               </Text>

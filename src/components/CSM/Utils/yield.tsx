@@ -14,10 +14,19 @@ export const getUptimeBySite = (
   siteState: CSMSsite,
   period: number
 ): { machines: number; days: number } => {
-  const income: CSMPeriodState = siteState.state.incomes.byPeriod[period];
+  if (
+    siteState !== undefined &&
+    siteState.state.incomes.byPeriod[period] !== undefined
+  ) {
+    const income: CSMPeriodState = siteState.state.incomes.byPeriod[period];
+    return {
+      days: income.activeDays,
+      machines: income.uptimeTotalMachines,
+    };
+  }
   return {
-    days: income.activeDays,
-    machines: income.uptimeTotalMachines,
+    days: 0,
+    machines: 0,
   };
 };
 
