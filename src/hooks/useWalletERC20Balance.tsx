@@ -100,7 +100,7 @@ export const useWalletERC20Balance = (
   };
 };
 
-interface Balance {
+export interface Balance {
   bigBalance: BigNumber;
   balance: number;
   symbol: string;
@@ -123,77 +123,72 @@ export const useWalletERC20Balances = (
     accountAddress = account;
   }
 
-  const contracts: Erc20[] = [];
-
-  for (const token of tokenAddress) {
-    const abi = getContract<Erc20>(
-      token,
-      Erc20ABI,
-      provider as Web3Provider,
-      accountAddress
-    );
-    if (abi !== undefined) {
-      contracts.push(abi);
-    }
-  }
-
-  const getTokenInfos = async (): Promise<TokenInfos[]> => {
-    return new Promise<TokenInfos[]>(async (resolve, reject) => {
-      const tokenInfos: TokenInfos[] = [];
-      for (const contract of contracts) {
-        try {
-          if (!contract || !accountAddress) return;
-
-          const balance = new BigNumber(
-            (await contract.balanceOf(accountAddress)).toString()
-          );
-          const decimals = new BigNumber(
-            (await contract.decimals()).toString()
-          );
-          const tokenSymbol = await contract?.symbol();
-          const address = contract.address;
-          tokenInfos.push({
-            balance: balance,
-            symbol: tokenSymbol ?? '',
-            decimals: decimals.toString() ?? '',
-            address: address,
-          });
-        } catch (err) {
-          console.log('Failed to get wallet balance: ', err);
-          reject(err);
-        }
-      }
-      resolve(tokenInfos);
-    });
-  };
-
-  const { data, refetch } = useQuery([tokenAddress], getTokenInfos, {
-    enabled: !!provider && !!tokenAddress && !!account,
-  });
-
-  // useEffect(() => {
-  //   if (tokenAddress) {
-  //     refetch();
-  //   }
-  // }, [tokenAddress, accountAddress, refetch]);
-
   useEffect(() => {
-    if (data) {
-      const tempBalances: { [tokenAddress: string]: Balance } = {};
-      for (const tokenInfo of data) {
-        tempBalances[tokenInfo.address ?? ''] = {
-          balance: Number(
-            tokenInfo.balance.shiftedBy(-tokenInfo.decimals).toFixed(10)
-          ),
-          bigBalance: tokenInfo.balance,
-          symbol: tokenInfo.symbol,
-        };
+    const contracts: Erc20[] = [];
+
+    for (const token of tokenAddress) {
+      const abi = getContract<Erc20>(
+        token,
+        Erc20ABI,
+        provider as Web3Provider,
+        accountAddress
+      );
+      if (abi !== undefined) {
+        contracts.push(abi);
       }
-      setBalances(tempBalances);
     }
-  }, [data]);
+    const getTokensInfos = async (): Promise<TokenInfos[]> => {
+      return new Promise<TokenInfos[]>(async (resolve, reject) => {
+        const tokenInfos: TokenInfos[] = [];
+        for (const contract of contracts) {
+          try {
+            if (!contract || !accountAddress) return;
+
+            const balance = new BigNumber(
+              (await contract.balanceOf(accountAddress)).toString()
+            );
+            const decimals = new BigNumber(
+              (await contract.decimals()).toString()
+            );
+            const tokenSymbol = await contract?.symbol();
+            const address = contract.address;
+            tokenInfos.push({
+              balance: balance,
+              symbol: tokenSymbol ?? '',
+              decimals: decimals.toString() ?? '',
+              address: address,
+            });
+          } catch (err) {
+            console.log('Failed to get wallet balance: ', err);
+            reject(err);
+          }
+        }
+        console.log(
+          'useEffect BALANCE',
+          accountAddress,
+          JSON.stringify(tokenInfos, null, 4)
+        );
+        setBalances(extractBalances(tokenInfos));
+        resolve(tokenInfos);
+      });
+    };
+    getTokensInfos();
+  }, [accountAddress]);
 
   return {
     balances,
   };
 };
+function extractBalances(data: TokenInfos[]) {
+  const tempBalances: { [tokenAddress: string]: Balance } = {};
+  for (const tokenInfo of data) {
+    tempBalances[tokenInfo.address ?? ''] = {
+      balance: Number(
+        tokenInfo.balance.shiftedBy(-tokenInfo.decimals).toFixed(10)
+      ),
+      bigBalance: tokenInfo.balance,
+      symbol: tokenInfo.symbol,
+    };
+  }
+  return tempBalances;
+}
