@@ -56,8 +56,8 @@ export const getYieldBySite = (
     const netIncomePerPeriod = EBITDA - provision - taxe;
     const netIncomBtcPerPeriod = netIncomePerPeriod / btcPrice;
     const apr =
-      income.activeDays > 0
-        ? (netIncomePerPeriod * (365 / income.activeDays)) /
+      period > 0
+        ? (netIncomePerPeriod * (365 / period)) /
           (site.token.supply * site.token.price)
         : 0;
 
