@@ -9,7 +9,11 @@ import { Displays } from 'src/types/Displays';
 
 import { ALLOWED_SITES, DAYS_PERIODS, SITES, SiteID } from '../../constants';
 import { useBitcoinOracle } from '../../hooks/useBitcoinOracle';
-import { SiteUser, useMiningStates } from '../../hooks/useMiningStates';
+import {
+  SiteMiningState,
+  SiteUser,
+  useMiningStates,
+} from '../../hooks/useMiningStates';
 import {
   Balance,
   useWalletERC20Balances,
@@ -128,9 +132,7 @@ function getCsmState(
     [siteId: string]: {
       siteId: string;
       states: {
-        [
-          byPeriod: number
-        ]: import('c:/Users/cdurb/Documents/Workspaces/CSM/dashboard-v0/src/hooks/useMiningStates').SiteMiningState;
+        [byPeriod: number]: SiteMiningState;
       };
     };
   }
