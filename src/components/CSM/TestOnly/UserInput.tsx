@@ -1,8 +1,10 @@
 import { FC, useRef, useState } from 'react';
 
 import {
+  Card,
   Container,
   Flex,
+  Group,
   Text,
   TextInput,
   Title,
@@ -11,13 +13,12 @@ import {
 
 const useStyles = createStyles((theme) => ({
   container: {
-    borderColor: theme.colors.brand,
-    backgroundColor: theme.colors.brand,
-    borderWidth: '2px',
-    borderRadius: theme.spacing.sm,
     fontSize: '1.1rem',
     lineHeight: 1.4,
     padding: '10px',
+    marginBottom: '10px',
+  },
+  input: {
     marginBottom: '10px',
   },
 }));
@@ -37,33 +38,37 @@ export const AddressInput: FC<AddressProps> = ({
   const [account, setDisplayedAccount] = useState(address);
   return (
     <Container className={classes.container}>
-      <Title order={1}>{'This is only for test'}</Title>
-      <Flex
-        gap={'md'}
-        justify={'flex-start'}
-        align={'flex-start'}
-        direction={'row'}
-        wrap={'wrap'}
-      >
+      <Card shadow={'sm'} padding={'lg'} radius={'md'} withBorder={true}>
+        <Title order={1}>{'Wallet view'}</Title>
+
         <TextInput
+          className={classes.input}
           label={'Enter user account'}
           value={value}
           onChange={setAccountValue(setValue, setDisplayedAccount, setAccount)}
         />
+        <Text ref={ref} fz={'md'} fw={700}>
+          {'Selected account'}
+        </Text>
+        <Text ref={ref} fz={'xd'} fw={700}>
+          {account}
+        </Text>
+      </Card>
+
+      <Flex
+        gap={'md'}
+        justify={'flex-start'}
+        align={'flex-start'}
+        direction={'column'}
+        wrap={'wrap'}
+      >
         <Flex
           gap={'0'}
           justify={'flex-start'}
           align={'flex-start'}
           direction={'column'}
           wrap={'wrap'}
-        >
-          <Text ref={ref} fz={'md'} fw={700}>
-            {'Account'}
-          </Text>
-          <Text ref={ref} fz={'xd'} fw={700}>
-            {account}
-          </Text>
-        </Flex>
+        ></Flex>
       </Flex>
     </Container>
   );
