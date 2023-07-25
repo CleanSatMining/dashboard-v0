@@ -18,6 +18,6 @@
     "start-date": "Starting date",
     "active-days": "Uptime days",
     "active-machines": "Uptime machines",
-    "fee-explained": "Bitcoins mined less the price of electricity, the CSM admin fee (5%), the taxes on Swiss profit (13.57%), the provision for the renewal of asics (20%)"
+    "fee-explained": "Bitcoins mined are subtracted from the cost of electricity, CSM administrative fees (5%), taxes on Swiss profits (13.57%), and the provision for ASIC renewal (20%)."
   }
 }

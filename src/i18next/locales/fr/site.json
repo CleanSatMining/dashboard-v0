@@ -18,7 +18,7 @@
     "start-date": "Date de démarrage",
     "active-days": "Jours actifs",
     "active-machines": "Machines actives (moyenne)",
-    "fee-explained": "Bitcoins minés moins le prix de l'électicité, les frais admin CSM (5%), les taxes sur les profit suisse (13,57%), la provision pour le renouvellement des asics (20%)"
+    "fee-explained": "Les Bitcoins minés sont soustraits du prix de l'électricité, des frais administratifs CSM (5%), des taxes sur les profits suisses (13,57%) et de la provision pour le renouvellement des ASICs (20%)."
   }
 
 }
