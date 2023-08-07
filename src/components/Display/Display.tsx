@@ -20,7 +20,7 @@ import {
 } from '../../hooks/useWalletERC20Balance';
 import { AssetGrid } from '../CSM/Grid/AssetGrid';
 import { SiteGrid } from '../CSM/Grid/SiteGrid';
-import { AddressInput } from '../CSM/TestOnly/UserInput';
+import { AddressInput } from '../CSM/UserInput/UserInput';
 
 interface ApiAdmin {
   admin: boolean;

@@ -4,14 +4,15 @@ import { Flex } from '@mantine/core';
 
 import Display from 'src/components/Display/Display';
 import 'src/components/Market';
-import { MarketTableFilter } from 'src/components/Market/Filters';
+import { useProvider } from 'src/hooks/useProvider';
 import { ConnectedProvider } from 'src/providers/ConnectProvider';
 
 const HomePage: NextPage = () => {
+  const { isLoaded } = useProvider();
   return (
     <ConnectedProvider>
       <Flex my={'xl'} direction={'column'}>
-        <Display />
+        {isLoaded && <Display />}
       </Flex>
     </ConnectedProvider>
   );
