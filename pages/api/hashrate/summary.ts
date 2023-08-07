@@ -13,7 +13,7 @@ const handler: NextApiHandler = async (
     const result = await fetch('https://api.hashrateindex.com/graphql', {
       method: 'POST',
       headers: {
-        'x-hi-api-key': 'hi.348b7c0e9abaa8579be589ff860d4cd7',
+        'x-hi-api-key': process.env.LUXOR_API_KEY_HASHRATE ?? '', //'hi.348b7c0e9abaa8579be589ff860d4cd7',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({

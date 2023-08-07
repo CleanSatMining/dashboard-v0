@@ -30,8 +30,6 @@ const handler: NextApiHandler = async (
   let json = '';
   const requestBody: APIMiningHistoryQuery = JSON.parse(req.body);
   const { username, first } = requestBody;
-  //const username = 'cleansatmininggamma';
-  //const first = 60;
   console.log('username', username);
   console.log('first', first);
 
@@ -39,9 +37,7 @@ const handler: NextApiHandler = async (
     const result = await fetch('https://api.beta.luxor.tech/graphql', {
       method: 'POST',
       headers: {
-        'x-lux-api-key':
-          process.env.LUXOR_API_KEY_ACCOUNT ??
-          'lxk.7bbaeccc6dedd8c2032a7268a8e7d027',
+        'x-lux-api-key': process.env.LUXOR_API_KEY_ACCOUNT ?? '', //'lxk.7bbaeccc6dedd8c2032a7268a8e7d027',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
