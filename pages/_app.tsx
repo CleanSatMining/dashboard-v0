@@ -86,8 +86,8 @@ const App = ({ Component, pageProps }: AppProps) => {
                     headerNav={<HeaderNav />}
                     head={
                       <Head
-                        title={'CleanSatMining YAM'}
-                        description={'CleanSatMining YAM'}
+                        title={'CleanSatMining Dashboard'}
+                        description={'CleanSatMining Dashboard'}
                       />
                     }
                     newWebsite={{
