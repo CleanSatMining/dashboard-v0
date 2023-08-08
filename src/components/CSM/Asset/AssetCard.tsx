@@ -6,10 +6,18 @@ import {
   Card,
   Flex,
   Group,
+  MantineTheme,
   Text,
   Title,
+  createStyles,
 } from '@mantine/core';
 import { TablerIcon } from '@tabler/icons';
+
+const useStyle = createStyles((theme: MantineTheme) => ({
+  brand: {
+    color: theme.colors.brand[0],
+  },
+}));
 
 export type Data = {
   label: string;
@@ -25,6 +33,7 @@ type SiteProps = {
 };
 
 const _AssetCard: FC<SiteProps> = ({ title, Icon, value, data, subValue }) => {
+  const { classes } = useStyle();
   return (
     <>
       <Card shadow={'sm'} padding={'lg'} radius={'md'} withBorder={true}>
@@ -32,7 +41,7 @@ const _AssetCard: FC<SiteProps> = ({ title, Icon, value, data, subValue }) => {
           <Title order={2}>{title}</Title>
           {Icon && (
             <ActionIcon variant={'transparent'}>
-              <Icon color={'green'}></Icon>
+              <Icon className={classes.brand}></Icon>
             </ActionIcon>
           )}
         </Group>
@@ -45,7 +54,7 @@ const _AssetCard: FC<SiteProps> = ({ title, Icon, value, data, subValue }) => {
           direction={'column'}
           wrap={'wrap'}
         >
-          <Title order={3} color={'green'}>
+          <Title order={3} color={'brand'}>
             {value}
           </Title>
           {subValue !== undefined && <Text color={'dimmed'}>{subValue}</Text>}

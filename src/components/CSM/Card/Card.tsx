@@ -106,7 +106,7 @@ export const UserSiteCard: FC<TableProps> = ({
         wrap={'wrap'}
         sx={{ marginBottom: '10px' }}
       >
-        <Text fz={'28px'} weight={1000} color={'#63b75f'}>
+        <Text fz={'28px'} weight={1000} color={'brand'}>
           {formatPercent(data.apr)}
         </Text>
         <Text fz={'14px'} weight={1000} color={'dimmed'}>

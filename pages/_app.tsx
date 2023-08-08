@@ -12,7 +12,6 @@ import {
   MantineProviders,
   RealtProvider,
   Web3Providers,
-  Websites,
   getConnectors,
   getWalletConnectV2,
   gnosisHooks,
@@ -91,7 +90,7 @@ const App = ({ Component, pageProps }: AppProps) => {
                       />
                     }
                     newWebsite={{
-                      name: 'CleanSatMining',
+                      name: 'CleanSatMining Dashboard',
                       url: '/',
                       logo: () => (
                         <Image src={Logo.src} alt={'CSM Logo'} width={36} />

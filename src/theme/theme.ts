@@ -21,20 +21,20 @@ export const modalStyles: ModalProps['styles'] = {
 export const theme: MantineThemeOverride = {
   colors: {
     brand: [
-      '#1C730F', //116B0B
-      '#228A12', //1B9A11
-      '#249113', //1BAB11
-      '#279E15', //23BE17
-      '#2CB317', //26EB17
-      '#279E15', //28F719
-      '#279E15', //116B0B
+      '#6ab04c', //116B0B
+      '#6ab04c', //1B9A11
+      '#6ab04c', //1BAB11
+      '#6ab04c', //23BE17
+      '#6ab04c', //26EB17
+      '#6ab04c', //28F719
+      '#6ab04c', //116B0B
       '#333',
-      '#279E15', //116B0B
-      '#279E15', //28F719
+      '#6ab04c', //116B0B
+      '#B7CC41', //28F719
     ],
   },
   primaryColor: 'brand',
-  defaultGradient: { deg: 90, from: '#1EA614', to: '#20BD16' },
+  defaultGradient: { deg: 90, from: '#B7CC41', to: '#6ab04c' },
   defaultRadius: 'md',
   cursorType: 'pointer',
   components: {
