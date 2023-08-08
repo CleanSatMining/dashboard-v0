@@ -1,4 +1,4 @@
-import { FC, memo, useEffect, useState } from 'react';
+import { FC, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { SimpleGrid } from '@mantine/core';
@@ -6,7 +6,7 @@ import {
   IconBuildingFactory,
   IconCoinBitcoin,
   IconCoins,
-  IconMoneybag,
+  IconTrendingUp,
 } from '@tabler/icons';
 
 import { CSMStates } from 'src/types/CSMState';
@@ -30,13 +30,13 @@ type AssetProps = {
   account?: string;
 };
 
-const _AssetGrid: FC<AssetProps> = ({ account, btcPrice, states, period }) => {
-  const [address, setAddress] = useState(account);
+const _AssetGrid: FC<AssetProps> = ({ btcPrice, states, period }) => {
+  //const [address, setAddress] = useState(account);
   const { t } = useTranslation('site', { keyPrefix: 'card' });
 
-  useEffect(() => {
-    setAddress(account);
-  }, [account]);
+  // useEffect(() => {
+  //   setAddress(account);
+  // }, [account]);
 
   const dataTokens: Data[] = [];
 
@@ -87,7 +87,7 @@ const _AssetGrid: FC<AssetProps> = ({ account, btcPrice, states, period }) => {
       <AssetCard
         title={t('my-apy')}
         value={formatPercent(yieldApr)}
-        Icon={IconMoneybag}
+        Icon={IconTrendingUp}
         data={dataAPR}
       ></AssetCard>
     </SimpleGrid>
