@@ -10,7 +10,7 @@ import {
 } from '../types/Mining';
 import { Site } from '../types/Site';
 
-export interface SiteMiningState {
+export interface MiningSiteState {
   days: number;
   uptimePercentage: number;
   revenue: number;
@@ -20,23 +20,23 @@ export interface SiteMiningState {
   electricityCost: number;
 }
 
-interface UseSiteMiningState {
-  state: SiteMiningState | undefined;
+interface UseMiningSiteState {
+  state: MiningSiteState | undefined;
 }
 
-export const useSiteMiningState = (
+export const useMiningSiteState = (
   username: string,
   siteId: string,
   days: number
-): UseSiteMiningState => {
-  const [miningState, setMiningState] = useState<SiteMiningState | undefined>(
+): UseMiningSiteState => {
+  const [miningState, setMiningState] = useState<MiningSiteState | undefined>(
     undefined
   );
 
   useEffect(() => {
     (async () => {
-      const getMiningState = async (): Promise<SiteMiningState> => {
-        return new Promise<SiteMiningState>(async (resolve, reject) => {
+      const getMiningState = async (): Promise<MiningSiteState> => {
+        return new Promise<MiningSiteState>(async (resolve, reject) => {
           console.log('https://api.beta.luxor.tech/graphql', username);
           {
             try {
@@ -62,7 +62,7 @@ export const useSiteMiningState = (
                   uptimeTotalMachines,
                   electricityCost,
                 } = calculateRevenue(miningHistory, siteId);
-                const miningState: SiteMiningState = {
+                const miningState: MiningSiteState = {
                   days,
                   revenue,
                   uptimePercentage,
@@ -97,25 +97,25 @@ export const useSiteMiningState = (
   };
 };
 
-interface UseSiteMiningStates {
-  states: SiteMiningState[] | undefined;
+interface UseMiningSiteStates {
+  states: MiningSiteState[] | undefined;
 }
 
-export const useSiteMiningStates = (
+export const useMiningSiteStateByPeriods = (
   username: string,
   siteId: string,
   periods: number[]
-): UseSiteMiningStates => {
+): UseMiningSiteStates => {
   const [siteMiningStates, setSiteMiningStates] = useState<
-    SiteMiningState[] | undefined
+    MiningSiteState[] | undefined
   >(undefined);
 
   useEffect(() => {
     (async () => {
-      const getSiteMiningStates = async (): Promise<SiteMiningState[]> => {
-        return new Promise<SiteMiningState[]>(async (resolve, reject) => {
+      const getSiteMiningStates = async (): Promise<MiningSiteState[]> => {
+        return new Promise<MiningSiteState[]>(async (resolve, reject) => {
           console.log('https://api.beta.luxor.tech/graphql', username);
-          const miningStates: SiteMiningState[] = [];
+          const miningStates: MiningSiteState[] = [];
           if (username !== '') {
             for (const days of periods) {
               try {
@@ -141,7 +141,7 @@ export const useSiteMiningStates = (
                     uptimeTotalMachines,
                     electricityCost,
                   } = calculateRevenue(miningHistory, siteId);
-                  const miningSate: SiteMiningState = {
+                  const miningSate: MiningSiteState = {
                     days,
                     revenue,
                     uptimePercentage,
@@ -178,45 +178,46 @@ export const useSiteMiningStates = (
   };
 };
 
-export type SiteUser = {
+export type MiningSiteUser = {
   siteId: string;
   username: string;
 };
 
-type MiningStates = {
+export type MiningSiteStateByPeriods = {
   siteId: string;
-  states: { [byPeriod: number]: SiteMiningState };
+  states: { [byPeriod: number]: MiningSiteState };
 };
 
-interface UseMiningStates {
-  states: { [siteId: string]: MiningStates };
+interface UseMiningSitesStates {
+  states: { [siteId: string]: MiningSiteStateByPeriods };
 }
 
-export const useMiningStates = (
-  users: SiteUser[],
+export const useMiningSitesStatesByPeriods = (
+  users: MiningSiteUser[],
   periods: number[]
-): UseMiningStates => {
+): UseMiningSitesStates => {
   const [miningStates, setMiningStates] = useState<{
-    [siteId: string]: MiningStates;
+    [siteId: string]: MiningSiteStateByPeriods;
   }>({});
 
   useEffect(() => {
     (async () => {
-      const getMiningStates = async (): Promise<{
-        [siteId: string]: MiningStates;
+      const getSiteMiningStates = async (): Promise<{
+        [siteId: string]: MiningSiteStateByPeriods;
       }> => {
-        return new Promise<{ [siteId: string]: MiningStates }>(
+        return new Promise<{ [siteId: string]: MiningSiteStateByPeriods }>(
           async (resolve, reject) => {
             console.log(
               'https://api.beta.luxor.tech/graphql',
               JSON.stringify(users, null, 4)
             );
 
-            const miningStates: { [siteId: string]: MiningStates } = {};
+            const miningStates: { [siteId: string]: MiningSiteStateByPeriods } =
+              {};
 
             for (const user of users) {
               const username = user.username;
-              const siteMiningStates: { [byPeriod: number]: SiteMiningState } =
+              const siteMiningStates: { [byPeriod: number]: MiningSiteState } =
                 {};
               if (username !== '') {
                 for (const days of periods) {
@@ -277,7 +278,7 @@ export const useMiningStates = (
           }
         );
       };
-      const data = await getMiningStates();
+      const data = await getSiteMiningStates();
       setMiningStates(data);
     })();
 

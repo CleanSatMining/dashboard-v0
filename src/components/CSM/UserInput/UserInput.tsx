@@ -29,7 +29,7 @@ type AddressProps = {
 };
 
 export const AddressInput: FC<AddressProps> = ({
-  initialValue: address = '0x484B0C11bAfb51A74c35449d9F01573f548e7180',
+  initialValue: address = '0xC78f0e746A2e6248eE6D57828985D7fD8d6B33B0',
   setAccount,
   updateAccount,
 }) => {
@@ -37,6 +37,7 @@ export const AddressInput: FC<AddressProps> = ({
   const ref = useRef<HTMLInputElement>(null);
   const [value, setValue] = useState(address);
   const [account, setDisplayedAccount] = useState(address);
+  console.log('WARNING RENDER USER INPUT', account);
   return (
     <Container className={classes.container}>
       <Card shadow={'sm'} padding={'lg'} radius={'md'} withBorder={true}>
@@ -88,6 +89,7 @@ function setAccountValue(
   return (event: any) => {
     setValue(event.currentTarget.value);
     if (event.currentTarget.value.length == 42) {
+      console.log('WARNING USER INPUT CHANGED', event.currentTarget.value);
       setDisplayedAccount(event.currentTarget.value);
       setAccount(event.currentTarget.value);
       updateAccount(event.currentTarget.value);

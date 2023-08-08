@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from 'react';
+import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 
 import { Web3Provider } from '@ethersproject/providers';
@@ -108,11 +108,13 @@ export interface Balance {
 
 interface UseWalletERC20Balances {
   balances: { [tokenAddress: string]: Balance };
+  account: string;
 }
 
 export const useWalletERC20Balances = (
   tokenAddresses: string[],
-  accountAddress: string | undefined = undefined
+  accountAddress: string | undefined = undefined,
+  loadingCompleteCallback?: any
 ): UseWalletERC20Balances => {
   const [balances, setBalances] = useState<{ [tokenAddress: string]: Balance }>(
     {}
@@ -124,6 +126,9 @@ export const useWalletERC20Balances = (
   }
 
   useEffect(() => {
+    if (loadingCompleteCallback) {
+      loadingCompleteCallback(false);
+    }
     const contracts: Erc20[] = [];
     console.log('WARNING account changed : RELOAD for', account);
 
@@ -170,6 +175,10 @@ export const useWalletERC20Balances = (
           JSON.stringify(tokenInfos, null, 4)
         );
         setBalances(extractBalances(tokenInfos));
+        if (loadingCompleteCallback) {
+          loadingCompleteCallback(true);
+        }
+
         resolve(tokenInfos);
       });
     };
@@ -177,7 +186,8 @@ export const useWalletERC20Balances = (
   }, [accountAddress, provider]);
 
   return {
-    balances,
+    balances: balances,
+    account: accountAddress ?? '',
   };
 };
 function extractBalances(data: TokenInfos[]) {
