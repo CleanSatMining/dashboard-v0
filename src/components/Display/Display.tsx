@@ -66,16 +66,19 @@ const Display: FC = () => {
     };
 
     fetchData();
-  }, [accountAddress]);
+  }, [accountAddress, account]);
 
   const [period, setPeriod] = useState(DAYS_PERIODS[0].toString());
 
-  const { users, tokenAddress }: { users: SiteUser[]; tokenAddress: string[] } =
-    getSiteQueryParameters();
+  const {
+    users,
+    tokenAddress: tokenAddresses,
+  }: { users: SiteUser[]; tokenAddress: string[] } =
+    getMiningSiteQueryParameters();
 
   const { price } = useBitcoinOracle();
   const { states } = useMiningStates(users, DAYS_PERIODS);
-  const { balances } = useWalletERC20Balances(tokenAddress, account);
+  const { balances } = useWalletERC20Balances(tokenAddresses, account);
 
   const csmState: CSMStates = getCsmState(balances, states);
 
@@ -90,7 +93,15 @@ const Display: FC = () => {
   return (
     <>
       {adminData && (
-        <AddressInput address={account} setAccount={setAccount}></AddressInput>
+        <AddressInput
+          initialValue={account}
+          setAccount={setAccount}
+          updateAccount={(a: string) => {
+            if (a !== account) {
+              console.log('WARNING account changed', account, a);
+            }
+          }}
+        ></AddressInput>
       )}
       <Flex
         mih={70}
@@ -184,7 +195,7 @@ function getCsmState(
   return csmState;
 }
 
-function getSiteQueryParameters() {
+function getMiningSiteQueryParameters() {
   const users: SiteUser[] = [];
   const tokenAddress: string[] = [];
   for (const siteId of ALLOWED_SITES) {

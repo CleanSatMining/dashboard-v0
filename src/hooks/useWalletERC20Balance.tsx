@@ -111,7 +111,7 @@ interface UseWalletERC20Balances {
 }
 
 export const useWalletERC20Balances = (
-  tokenAddress: string[],
+  tokenAddresses: string[],
   accountAddress: string | undefined = undefined
 ): UseWalletERC20Balances => {
   const [balances, setBalances] = useState<{ [tokenAddress: string]: Balance }>(
@@ -125,8 +125,9 @@ export const useWalletERC20Balances = (
 
   useEffect(() => {
     const contracts: Erc20[] = [];
+    console.log('WARNING account changed : RELOAD for', account);
 
-    for (const token of tokenAddress) {
+    for (const token of tokenAddresses) {
       const abi = getContract<Erc20>(
         token,
         Erc20ABI,
@@ -173,7 +174,7 @@ export const useWalletERC20Balances = (
       });
     };
     getTokensInfos();
-  }, [accountAddress]);
+  }, [accountAddress, provider]);
 
   return {
     balances,

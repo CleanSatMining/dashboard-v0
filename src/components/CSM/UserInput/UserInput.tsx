@@ -4,14 +4,13 @@ import {
   Card,
   Container,
   Flex,
-  Group,
   Text,
   TextInput,
   Title,
   createStyles,
 } from '@mantine/core';
 
-const useStyles = createStyles((theme) => ({
+const useStyles = createStyles(() => ({
   container: {
     fontSize: '1.1rem',
     lineHeight: 1.4,
@@ -24,13 +23,15 @@ const useStyles = createStyles((theme) => ({
 }));
 
 type AddressProps = {
-  address: string;
+  initialValue: string;
   setAccount: any;
+  updateAccount: any;
 };
 
 export const AddressInput: FC<AddressProps> = ({
-  address = '0x484B0C11bAfb51A74c35449d9F01573f548e7180',
+  initialValue: address = '0x484B0C11bAfb51A74c35449d9F01573f548e7180',
   setAccount,
+  updateAccount,
 }) => {
   const { classes } = useStyles();
   const ref = useRef<HTMLInputElement>(null);
@@ -45,7 +46,12 @@ export const AddressInput: FC<AddressProps> = ({
           className={classes.input}
           label={'Enter user account'}
           value={value}
-          onChange={setAccountValue(setValue, setDisplayedAccount, setAccount)}
+          onChange={setAccountValue(
+            setValue,
+            setDisplayedAccount,
+            setAccount,
+            updateAccount
+          )}
         />
         <Text ref={ref} fz={'md'} fw={700}>
           {'Selected account'}
@@ -76,13 +82,15 @@ export const AddressInput: FC<AddressProps> = ({
 function setAccountValue(
   setValue: any,
   setDisplayedAccount: any,
-  setAccount: any
+  setAccount: any,
+  updateAccount: any
 ) {
   return (event: any) => {
     setValue(event.currentTarget.value);
     if (event.currentTarget.value.length == 42) {
       setDisplayedAccount(event.currentTarget.value);
       setAccount(event.currentTarget.value);
+      updateAccount(event.currentTarget.value);
     }
   };
 }

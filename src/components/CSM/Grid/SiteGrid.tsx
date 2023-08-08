@@ -49,4 +49,4 @@ const _SiteGrid: FC<SiteProps> = ({ account, btcPrice, states, period }) => {
   );
 };
 
-export const SiteGrid = memo(_SiteGrid);
+export const SiteGrid = _SiteGrid;
