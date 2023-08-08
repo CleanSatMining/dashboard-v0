@@ -33,6 +33,10 @@ const Display: FC = () => {
   );
   const [adminData, setAdminData] = useState<boolean>(false);
   useEffect(() => {
+    console.log('WARNING DISPLAY CHANGE ACCOUNT', accountAddress);
+    if (accountAddress) {
+      setAccount(accountAddress);
+    }
     const fetchData = async () => {
       const address = accountAddress;
       try {
@@ -48,14 +52,14 @@ const Display: FC = () => {
           setAdminData(false);
           console.error("Erreur lors de la récupération des données de l'API.");
         }
-        console.log('DISPLAY account', account, accountAddress);
+        //console.log('DISPLAY account', account, accountAddress);
       } catch (error) {
         console.error('Erreur réseau : ', error);
       }
     };
 
     fetchData();
-  }, [accountAddress, account]);
+  }, [accountAddress]);
 
   const [period, setPeriod] = useState(DAYS_PERIODS[0].toString());
 
