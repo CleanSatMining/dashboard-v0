@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 
 import { Web3Provider } from '@ethersproject/providers';
@@ -8,6 +8,7 @@ import BigNumber from 'bignumber.js';
 
 import { Erc20, Erc20ABI } from 'src/abis';
 import { WalletERC20Balance } from 'src/components/WalletBalance/WalletERC20Balance';
+import { ALLOWED_CHAINS } from 'src/constants';
 import { getContract } from 'src/utils';
 
 interface TokenInfos {
@@ -32,7 +33,7 @@ export const useWalletERC20Balance = (
   >(undefined);
   const [balance, setBalance] = useState<string | undefined>(undefined);
   const [tokenSymbol, setTokenSymbol] = useState<string | undefined>(undefined);
-  const { account, provider } = useWeb3React();
+  const { account, provider, chainId } = useWeb3React();
 
   if (accountAddress == undefined) {
     accountAddress = account;
@@ -48,7 +49,12 @@ export const useWalletERC20Balance = (
   const getTokenInfos = async (): Promise<TokenInfos> => {
     return new Promise<TokenInfos>(async (resolove, reject) => {
       try {
-        if (!contract || !accountAddress) return;
+        if (
+          !contract ||
+          !accountAddress ||
+          !ALLOWED_CHAINS.includes(chainId ?? 0)
+        )
+          return;
 
         const balance = new BigNumber(
           (await contract.balanceOf(accountAddress)).toString()
@@ -119,7 +125,7 @@ export const useWalletERC20Balances = (
   const [balances, setBalances] = useState<{ [tokenAddress: string]: Balance }>(
     {}
   );
-  const { account, provider } = useWeb3React();
+  const { account, provider, chainId } = useWeb3React();
 
   if (accountAddress == undefined) {
     accountAddress = account;
@@ -148,7 +154,12 @@ export const useWalletERC20Balances = (
         const tokenInfos: TokenInfos[] = [];
         for (const contract of contracts) {
           try {
-            if (!contract || !accountAddress) return;
+            if (
+              !contract ||
+              !accountAddress ||
+              !ALLOWED_CHAINS.includes(chainId ?? 0)
+            )
+              return;
 
             const balance = new BigNumber(
               (await contract.balanceOf(accountAddress)).toString()
@@ -165,7 +176,7 @@ export const useWalletERC20Balances = (
               address: address,
             });
           } catch (err) {
-            console.log('Failed to get wallet balance: ', err);
+            console.log('Failed to get wallet balance: ', accountAddress, err);
             reject(err);
           }
         }

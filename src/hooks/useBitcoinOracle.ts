@@ -68,7 +68,7 @@ export const useBitcoinOverviews = (): UseBitcoinOverviews => {
               reject('Failed to fetch bitcoin hasrate overviews from luxor');
             }
           } catch (err) {
-            console.log('Failed to get wallet balance: ', err);
+            console.log('Failed to get bitcoin oracle: ', err);
             reject(err);
           }
         });
