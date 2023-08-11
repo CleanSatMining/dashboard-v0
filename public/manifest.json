@@ -1,7 +1,7 @@
 {
-  "short_name": "YAM",
-  "name": "Realtoken You and Me",
-  "description": "P2P excange",
+  "short_name": "CSM Dashboard",
+  "name": "CleanSat Mining",
+  "description": "Dashboard",
   "iconPath": "logo_csm.png",
   "icons": [
     {
@@ -12,6 +12,6 @@
   ],
   "start_url": "./index.html",
   "display": "standalone",
-  "theme_color": "#000000",
+  "theme_color": "#B7CC41",
   "background_color": "#ffffff"
 }

@@ -1,8 +1,6 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 
-const ADMIN_ADDRESSES: string[] = [
-  '0xED9E4DFFa08573AA7AbFd9cf891cb9238956E39B',
-];
+import { ADMIN_ADDRESSES } from './admin';
 
 const handler: NextApiHandler = async (
   req: NextApiRequest,
