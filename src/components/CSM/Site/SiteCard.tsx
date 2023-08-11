@@ -21,7 +21,6 @@ type SiteProps = {
 
 const _SiteCard: FC<SiteProps> = ({
   siteId = '1',
-  account,
   btcPrice,
   siteState,
   period,
@@ -30,7 +29,7 @@ const _SiteCard: FC<SiteProps> = ({
 
   const site: Site = SITES[siteId as SiteID];
 
-  console.log('_SiteCard', 'siteState', JSON.stringify(siteState, null, 4));
+  // console.log('_SiteCard', 'siteState', JSON.stringify(siteState, null, 4));
 
   const tokenBalance =
     siteState !== undefined ? siteState.state.user.token.balance : 0;
@@ -126,13 +125,13 @@ const _SiteCard: FC<SiteProps> = ({
     site.mining.asics.units,
   ]);
 
-  console.log(
+  /* console.log(
     'Summary CARD DATA',
     csmPeriod,
     site.name,
     JSON.stringify(csmData, null, 4),
     JSON.stringify(siteState, null, 4)
-  );
+  ); */
 
   return (
     <>

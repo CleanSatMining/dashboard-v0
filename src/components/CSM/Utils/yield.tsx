@@ -61,7 +61,7 @@ export const getYieldBySite = (
           (site.token.supply * site.token.price)
         : 0;
 
-    console.log(
+    /* console.log(
       'YIELD getSiteYield',
       siteState.id,
       ' siteYield => ',
@@ -79,7 +79,7 @@ export const getYieldBySite = (
         null,
         4
       )
-    );
+    ); */
 
     return {
       usd: netIncomePerPeriod,
@@ -113,7 +113,7 @@ export const getUserSiteYield = (
     const site: Site = SITES[siteState.id as SiteID];
     const { usd, apr } = getYieldBySite(siteState, period, btcPrice);
 
-    console.log('getUserSiteYield', siteState.id, usd, apr);
+    // console.log('getUserSiteYield', siteState.id, usd, apr);
 
     const userIncome: number =
       (siteState.state.user.token.balance / site.token.supply) * usd;
@@ -185,14 +185,14 @@ export const getUserYield = (
     for (const siteId of getUserSiteIds(state)) {
       const site: Site = SITES[siteId as SiteID];
       const { usd, apr } = getSiteYield(state, siteId, period, btcPrice);
-      console.log(
-        'getUserSiteYield site',
-        siteId,
-        'data =>',
-        usd,
-        apr,
-        userInvestment
-      );
+      // console.log(
+      //   'getUserSiteYield site',
+      //   siteId,
+      //   'data =>',
+      //   usd,
+      //   apr,
+      //   userInvestment
+      // );
       const tokenBalance: TokenBalance = getUserCSMBalance(state, siteId);
       const tokenPercent: number = tokenBalance.balance / site.token.supply;
       const investmentPercent: number = tokenBalance.usd / userInvestment;
@@ -213,7 +213,7 @@ export const getUserYield = (
       userBtc = userBtc + userIncome / btcPrice;
       userUsd = userUsd + userIncome;
       userApr = userApr + apr * investmentPercent;
-      console.log(
+      /*  console.log(
         'YIELD getUserSiteYield',
         JSON.stringify(
           {
@@ -230,22 +230,22 @@ export const getUserYield = (
           null,
           4
         )
-      );
+      ); */
     }
   }
 
-  console.log(
-    'YIELD user !!',
-    JSON.stringify(
-      {
-        apr: userApr,
-        btc: userBtc,
-        usd: userUsd,
-      },
-      null,
-      4
-    )
-  );
+  // console.log(
+  //   'YIELD user !!',
+  //   JSON.stringify(
+  //     {
+  //       apr: userApr,
+  //       btc: userBtc,
+  //       usd: userUsd,
+  //     },
+  //     null,
+  //     4
+  //   )
+  // );
 
   return {
     apr: userApr,

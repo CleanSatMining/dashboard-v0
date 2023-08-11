@@ -5,10 +5,7 @@ const handler: NextApiHandler = async (
   res: NextApiResponse
 ) => {
   let json = '';
-  const { username } = JSON.parse(req.body);
-  //const input: APIMiningSummaryQuery = req.body;
-  //input.username;
-  console.log('username', username);
+
   try {
     const result = await fetch('https://api.hashrateindex.com/graphql', {
       method: 'POST',
@@ -38,7 +35,6 @@ const handler: NextApiHandler = async (
     });
 
     json = await result.json();
-    console.log(JSON.stringify(json, null, 4));
   } catch (err) {
     console.log('hashrate index error error');
   }

@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import BigNumber from 'bignumber.js';
 
 import { calculateElececticityCostPerDay } from '../components/CSM/Utils/yield';
+import { API_MINING_STATE } from '../constants/apis';
 import { SITES, SiteID } from '../constants/csm';
 import {
   APIMiningHistoryQuery,
@@ -37,7 +38,6 @@ export const useMiningSiteState = (
     (async () => {
       const getMiningState = async (): Promise<MiningSiteState> => {
         return new Promise<MiningSiteState>(async (resolve, reject) => {
-          console.log('https://api.beta.luxor.tech/graphql', username);
           {
             try {
               const body: APIMiningHistoryQuery = {
@@ -45,15 +45,15 @@ export const useMiningSiteState = (
                 first: days,
               };
 
-              const result = await fetch('/api/mining/history', {
-                method: 'POST',
+              const result = await fetch(API_MINING_STATE.url, {
+                method: API_MINING_STATE.method,
                 body: JSON.stringify(body),
               });
 
               if (result.ok) {
                 const miningHistory: APIMiningHistoryResponse =
                   await result.json();
-                console.log(JSON.stringify(miningHistory, null, 4));
+                //console.log(JSON.stringify(miningHistory, null, 4));
                 const {
                   revenue,
                   activeDays,
@@ -114,7 +114,6 @@ export const useMiningSiteStateByPeriods = (
     (async () => {
       const getSiteMiningStates = async (): Promise<MiningSiteState[]> => {
         return new Promise<MiningSiteState[]>(async (resolve, reject) => {
-          console.log('https://api.beta.luxor.tech/graphql', username);
           const miningStates: MiningSiteState[] = [];
           if (username !== '') {
             for (const days of periods) {
@@ -124,15 +123,15 @@ export const useMiningSiteStateByPeriods = (
                   first: days,
                 };
 
-                const result = await fetch('/api/mining/history', {
-                  method: 'POST',
+                const result = await fetch(API_MINING_STATE.url, {
+                  method: API_MINING_STATE.method,
                   body: JSON.stringify(body),
                 });
 
                 if (result.ok) {
                   const miningHistory: APIMiningHistoryResponse =
                     await result.json();
-                  console.log(JSON.stringify(miningHistory, null, 4));
+                  //console.log(JSON.stringify(miningHistory, null, 4));
                   const {
                     revenue,
                     activeDays,
@@ -207,11 +206,6 @@ export const useMiningSitesStatesByPeriods = (
       }> => {
         return new Promise<{ [siteId: string]: MiningSiteStateByPeriods }>(
           async (resolve, reject) => {
-            console.log(
-              'https://api.beta.luxor.tech/graphql',
-              JSON.stringify(users, null, 4)
-            );
-
             const miningStates: { [siteId: string]: MiningSiteStateByPeriods } =
               {};
 
@@ -227,18 +221,18 @@ export const useMiningSitesStatesByPeriods = (
                       first: days,
                     };
 
-                    const result = await fetch('/api/mining/history', {
-                      method: 'POST',
+                    const result = await fetch(API_MINING_STATE.url, {
+                      method: API_MINING_STATE.method,
                       body: JSON.stringify(body),
                     });
 
                     if (result.ok) {
                       const miningHistory: APIMiningHistoryResponse =
                         await result.json();
-                      console.log(
+                      /* console.log(
                         'miningHistory',
                         JSON.stringify(miningHistory, null, 4)
-                      );
+                      ); */
                       const {
                         revenue,
                         activeDays,

@@ -7,6 +7,7 @@ import { useWeb3React } from '@web3-react/core';
 import { Displays } from 'src/types/Displays';
 
 import { ALLOWED_SITES, DAYS_PERIODS, SITES, SiteID } from '../../constants';
+import { API_ADMIN } from '../../constants/apis';
 import { useBitcoinOracle } from '../../hooks/useBitcoinOracle';
 import {
   MiningSiteUser,
@@ -33,15 +34,15 @@ const Display: FC = () => {
   );
   const [adminData, setAdminData] = useState<boolean>(false);
   useEffect(() => {
-    console.log('WARNING DISPLAY CHANGE ACCOUNT', accountAddress);
+    // console.log('WARNING DISPLAY CHANGE ACCOUNT', accountAddress);
     if (accountAddress) {
       setAccount(accountAddress);
     }
     const fetchData = async () => {
-      const address = accountAddress;
+      const address: string = accountAddress ?? '';
       try {
-        const result = await fetch('/api/admin/' + address, {
-          method: 'POST',
+        const result = await fetch(API_ADMIN.url(address), {
+          method: API_ADMIN.method,
           body: JSON.stringify(''),
         });
 
@@ -79,7 +80,7 @@ const Display: FC = () => {
       };
     });
 
-  console.log('WARNING RENDER DISPLAY', account);
+  // console.log('WARNING RENDER DISPLAY', account);
 
   return (
     <>

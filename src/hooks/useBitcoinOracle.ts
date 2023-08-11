@@ -1,91 +1,10 @@
 import { useEffect, useState } from 'react';
 
-interface BitcoinOverviews {
-  timestamp: string;
-  hashpriceUsd: string;
-  networkHashrate7D: string;
-  networkDiff: string;
-  coinbaseRewards24H: string;
-  feesBlocks24H: string;
-  marketcap: string;
-  nextHalvingCount: number;
-  nextHalvingDate: string;
-  txRateAvg7D: string;
-}
-
-interface UseBitcoinOverviews {
-  bitcoinOverviews: BitcoinOverviews | undefined;
-}
+import { API_BITCOIN_ORACLE } from '../constants/apis';
 
 interface BitcoinOracle {
   price: number;
 }
-
-export const useBitcoinOverviews = (): UseBitcoinOverviews => {
-  const [bitcoinOverviews, setBitcoinOverviews] = useState<
-    BitcoinOverviews | undefined
-  >(undefined);
-
-  useEffect(() => {
-    (async () => {
-      const getBitcoinOverviews = async (): Promise<BitcoinOverviews> => {
-        return new Promise<BitcoinOverviews>(async (resolve, reject) => {
-          try {
-            const result = await fetch(
-              'https://api.hashrateindex.com/graphql',
-              {
-                method: 'POST',
-                headers: {
-                  'x-hi-api-key': 'hi.348b7c0e9abaa8579be589ff860d4cd7',
-                  'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                  query: `
-              query bitcoinOverviews($last: Int!) {bitcoinOverviews(last: $last) {
-                nodes{
-                    timestamp
-                    hashpriceUsd
-                    networkHashrate7D
-                    networkDiff
-                    estDiffAdj
-                    coinbaseRewards24H
-                    feesBlocks24H
-                    marketcap
-                    nextHalvingCount
-                    nextHalvingDate
-                    txRateAvg7D
-                }
-            }}`,
-                  variables: { last: 1 },
-                }),
-              }
-            );
-
-            if (result.ok) {
-              const bitcoinOverviews: BitcoinOverviews = await result.json();
-              resolve(bitcoinOverviews);
-            } else {
-              reject('Failed to fetch bitcoin hasrate overviews from luxor');
-            }
-          } catch (err) {
-            console.log('Failed to get bitcoin oracle: ', err);
-            reject(err);
-          }
-        });
-      };
-      const data = await getBitcoinOverviews();
-      setBitcoinOverviews(data);
-    })();
-
-    return () => {
-      // this now gets called when the component unmounts
-    };
-  }, []);
-
-  return {
-    bitcoinOverviews,
-  };
-};
 
 export const useBitcoinOracle = (): BitcoinOracle => {
   const [bitcoinPrice, setBitcoinPrice] = useState<BitcoinOracle | undefined>(
@@ -100,20 +19,20 @@ export const useBitcoinOracle = (): BitcoinOracle => {
             try {
               const body = {};
 
-              const result = await fetch('/api/quote/bitcoin', {
-                method: 'POST',
+              const result = await fetch(API_BITCOIN_ORACLE.url, {
+                method: API_BITCOIN_ORACLE.method,
                 body: JSON.stringify(body),
               });
 
               if (result.ok) {
                 const bitcoinOracle: BitcoinOracle = await result.json();
-                console.log(JSON.stringify(bitcoinOracle, null, 4));
+                //console.log(JSON.stringify(bitcoinOracle, null, 4));
                 resolve(bitcoinOracle);
               } else {
-                reject('Failed to fetch mining summary from luxor');
+                reject('Failed to fetch bitcoin oracle');
               }
             } catch (err) {
-              console.log('Failed to fetch mining summary from luxor: ', err);
+              console.log('Failed to fetch bitcoin oracle: ', err);
               reject(err);
             }
           }

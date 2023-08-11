@@ -1,5 +1,7 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 
+import { API_BITCOIN_QUOTE } from 'src/constants/apis';
+
 type PriceResponse = {
   data: {
     getChartBySlug: {
@@ -27,8 +29,8 @@ const handler: NextApiHandler = async (
   let json = '';
 
   try {
-    const result = await fetch('https://api.hashrateindex.com/graphql', {
-      method: 'POST',
+    const result = await fetch(API_BITCOIN_QUOTE.url, {
+      method: API_BITCOIN_QUOTE.method,
       headers: {
         'x-hi-api-key': process.env.LUXOR_API_KEY_HASHRATE ?? '', //'hi.348b7c0e9abaa8579be589ff860d4cd7',
         'Content-Type': 'application/json',

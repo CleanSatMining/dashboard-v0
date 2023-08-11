@@ -39,11 +39,11 @@ const _UserAssets: FC<UserAssetsProps> = ({
     (loadingComplete: boolean) => setSpinner(!loadingComplete)
   );
 
-  console.log(
+  /* console.log(
     'WARNING RENDER ASSETS',
     account
     //JSON.stringify(balances, null, 4)
-  );
+  ); */
 
   const csmUserState: CSMStates = getCsmState(balances, miningStates);
 

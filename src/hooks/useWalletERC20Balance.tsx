@@ -136,7 +136,7 @@ export const useWalletERC20Balances = (
       loadingCompleteCallback(false);
     }
     const contracts: Erc20[] = [];
-    console.log('WARNING account changed : RELOAD for', account);
+    //console.log('WARNING account changed : RELOAD for', account);
 
     for (const token of tokenAddresses) {
       const abi = getContract<Erc20>(
@@ -180,11 +180,11 @@ export const useWalletERC20Balances = (
             reject(err);
           }
         }
-        console.log(
+        /* console.log(
           'useEffect BALANCE',
           accountAddress,
           JSON.stringify(tokenInfos, null, 4)
-        );
+        ); */
         setBalances(extractBalances(tokenInfos));
         if (loadingCompleteCallback) {
           loadingCompleteCallback(true);
