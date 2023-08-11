@@ -9,7 +9,7 @@ import {
   APIMiningHistoryQuery,
   APIMiningHistoryResponse,
 } from '../types/Mining';
-import { Site } from '../types/Site';
+import { MiningState, Site } from '../types/Site';
 
 export interface MiningSiteState {
   days: number;
@@ -41,7 +41,7 @@ export const useMiningSiteState = (
           {
             try {
               const body: APIMiningHistoryQuery = {
-                username: username,
+                siteId: siteId,
                 first: days,
               };
 
@@ -119,7 +119,7 @@ export const useMiningSiteStateByPeriods = (
             for (const days of periods) {
               try {
                 const body: APIMiningHistoryQuery = {
-                  username: username,
+                  siteId: siteId,
                   first: days,
                 };
 
@@ -192,7 +192,7 @@ interface UseMiningSitesStates {
 }
 
 export const useMiningSitesStatesByPeriods = (
-  users: MiningSiteUser[],
+  siteIds: string[],
   periods: number[]
 ): UseMiningSitesStates => {
   const [miningStates, setMiningStates] = useState<{
@@ -209,15 +209,18 @@ export const useMiningSitesStatesByPeriods = (
             const miningStates: { [siteId: string]: MiningSiteStateByPeriods } =
               {};
 
-            for (const user of users) {
-              const username = user.username;
-              const siteMiningStates: { [byPeriod: number]: MiningSiteState } =
-                {};
-              if (username !== '') {
+            for (const siteId of siteIds) {
+              const site = SITES[siteId as SiteID];
+
+              if (site.miningState !== MiningState.inactive) {
+                const siteMiningStates: {
+                  [byPeriod: number]: MiningSiteState;
+                } = {};
+
                 for (const days of periods) {
                   try {
                     const body: APIMiningHistoryQuery = {
-                      username: username,
+                      siteId: siteId,
                       first: days,
                     };
 
@@ -229,10 +232,10 @@ export const useMiningSitesStatesByPeriods = (
                     if (result.ok) {
                       const miningHistory: APIMiningHistoryResponse =
                         await result.json();
-                      /* console.log(
+                      console.log(
                         'miningHistory',
                         JSON.stringify(miningHistory, null, 4)
-                      ); */
+                      );
                       const {
                         revenue,
                         activeDays,
@@ -240,7 +243,7 @@ export const useMiningSitesStatesByPeriods = (
                         uptimeTotalDays,
                         uptimeTotalMachines,
                         electricityCost,
-                      } = calculateRevenue(miningHistory, user.siteId);
+                      } = calculateRevenue(miningHistory, siteId);
                       siteMiningStates[days] = {
                         days,
                         revenue,
@@ -251,22 +254,20 @@ export const useMiningSitesStatesByPeriods = (
                         electricityCost,
                       };
                     } else {
-                      reject('Failed to fetch mining state from luxor');
+                      reject('Failed to fetch mining state from API');
                     }
                   } catch (err) {
-                    console.log(
-                      'Failed to fetch mining state from luxor: ',
-                      err
-                    );
+                    console.log('Failed to fetch mining state from API: ', err);
                     reject(err);
                   }
                 }
+
+                miningStates[siteId] = {
+                  siteId: siteId,
+                  states: siteMiningStates,
+                };
               }
-              miningStates[user.siteId] = {
-                siteId: user.siteId,
-                states: siteMiningStates,
-              };
-            }
+            } // for sites ids
 
             resolve(miningStates);
           }

@@ -64,11 +64,9 @@ const Display: FC = () => {
 
   const [period, setPeriod] = useState(DAYS_PERIODS[0].toString());
 
-  const { users }: { users: MiningSiteUser[] } = getMiningSiteUsers();
-
   const { price } = useBitcoinOracle();
   const { states: globalState } = useMiningSitesStatesByPeriods(
-    users,
+    ALLOWED_SITES,
     DAYS_PERIODS
   );
 
@@ -121,14 +119,3 @@ const Display: FC = () => {
   );
 };
 export default Display;
-
-function getMiningSiteUsers() {
-  const users: MiningSiteUser[] = [];
-  for (const siteId of ALLOWED_SITES) {
-    const username = SITES[siteId as SiteID].api.username;
-    if (username !== undefined) {
-      users.push({ siteId, username });
-    }
-  }
-  return { users };
-}

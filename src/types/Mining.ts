@@ -1,5 +1,5 @@
 export type APIMiningHistoryQuery = {
-    username: string;
+    siteId: string;
     first: number;
 }
 
