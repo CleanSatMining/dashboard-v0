@@ -14,7 +14,7 @@ const useStyles = createStyles(() => ({
   container: {
     fontSize: '1.1rem',
     lineHeight: 1.4,
-    padding: '10px',
+    padding: '0px',
     marginBottom: '10px',
     width: '100%',
   },
