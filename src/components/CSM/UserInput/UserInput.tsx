@@ -16,6 +16,7 @@ const useStyles = createStyles(() => ({
     lineHeight: 1.4,
     padding: '10px',
     marginBottom: '10px',
+    width: '100%',
   },
   input: {
     marginBottom: '10px',
@@ -57,7 +58,7 @@ export const AddressInput: FC<AddressProps> = ({
         <Text ref={ref} fz={'md'} fw={700}>
           {'Selected account'}
         </Text>
-        <Text ref={ref} fz={'xd'} fw={700}>
+        <Text ref={ref} fz={'xs'} fw={500}>
           {account}
         </Text>
       </Card>

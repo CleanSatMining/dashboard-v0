@@ -9,10 +9,7 @@ import { Displays } from 'src/types/Displays';
 import { ALLOWED_SITES, DAYS_PERIODS, SITES, SiteID } from '../../constants';
 import { API_ADMIN } from '../../constants/apis';
 import { useBitcoinOracle } from '../../hooks/useBitcoinOracle';
-import {
-  MiningSiteUser,
-  useMiningSitesStatesByPeriods,
-} from '../../hooks/useMiningStates';
+import { useMiningSitesStatesByPeriods } from '../../hooks/useMiningStates';
 import { UserAssets } from '../CSM/Assets/UserAssets';
 import { AddressInput } from '../CSM/UserInput/UserInput';
 
