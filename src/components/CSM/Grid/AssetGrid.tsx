@@ -2,6 +2,7 @@ import { FC, memo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { SimpleGrid } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import {
   IconBuildingFactory,
   IconCoinBitcoin,
@@ -31,12 +32,8 @@ type AssetProps = {
 };
 
 const _AssetGrid: FC<AssetProps> = ({ btcPrice, states, period }) => {
-  //const [address, setAddress] = useState(account);
+  const isMobile = useMediaQuery('(max-width: 36em)');
   const { t } = useTranslation('site', { keyPrefix: 'card' });
-
-  // useEffect(() => {
-  //   setAddress(account);
-  // }, [account]);
 
   const dataTokens: Data[] = [];
 
@@ -64,7 +61,8 @@ const _AssetGrid: FC<AssetProps> = ({ btcPrice, states, period }) => {
         { minWidth: 'md', cols: 3 },
         { minWidth: 1200, cols: 4 },
       ]}
-      sx={{ marginBottom: '50px' }}
+      spacing={isMobile ? 'xs' : undefined}
+      sx={{ marginBottom: isMobile ? '20px' : '50px' }}
     >
       <AssetCard
         title={t('my-tokens')}

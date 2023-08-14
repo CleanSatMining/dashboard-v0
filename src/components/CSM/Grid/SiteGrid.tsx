@@ -1,6 +1,7 @@
-import { FC, memo, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import { Flex, Grid } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 
 import { ALLOWED_SITES } from '../../../constants';
 import { CSMStates } from '../../../types/CSMState';
@@ -14,6 +15,7 @@ type SiteProps = {
 };
 
 const _SiteGrid: FC<SiteProps> = ({ account, btcPrice, states, period }) => {
+  const isMobile = useMediaQuery('(max-width: 36em)');
   const [address, setAddress] = useState(account ?? '');
 
   useEffect(() => {
@@ -28,8 +30,8 @@ const _SiteGrid: FC<SiteProps> = ({ account, btcPrice, states, period }) => {
   console.log('SITE GRID', csmPeriod);
 
   return (
-    <Flex gap={'md'} direction={'column'} align={'center'}>
-      <Grid gutterMd={25} style={{ width: '100%' }}>
+    <Flex gap={0} direction={'column'} align={'center'}>
+      <Grid gutter={0} gutterMd={25} gutterXs={'xs'} style={{ width: '100%' }}>
         {ALLOWED_SITES.length > 0
           ? ALLOWED_SITES.map((i) => (
               <Grid.Col md={6} lg={4} key={`grid-${i}`}>

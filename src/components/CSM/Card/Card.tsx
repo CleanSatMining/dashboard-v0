@@ -15,6 +15,7 @@ import {
   Title,
   createStyles,
 } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 
 import { Income } from '../../../types/Site';
 import { MiningState } from '../../../types/Site';
@@ -34,6 +35,39 @@ const useStyle = createStyles((theme: MantineTheme) => ({
     fontWeight: 700,
     fontSize: '18px',
     textDecoration: 'none',
+  },
+
+  border: {
+    border: `1px solid ${
+      theme.colorScheme === 'dark' ? theme.colors.dark[3] : theme.colors.gray[3]
+    }`,
+    borderRadius: '20px',
+    margin: '5px',
+  },
+
+  db: {
+    backgroundColor: 'red',
+  },
+
+  separator: {
+    borderRight: `1px solid ${
+      theme.colorScheme === 'dark' ? theme.colors.dark[3] : theme.colors.gray[3]
+    }`,
+    borderRadius: '20px',
+    borderImage: `
+    linear-gradient(
+      rgba(0, 0, 0, 0), 
+      ${
+        theme.colorScheme === 'dark'
+          ? theme.colors.dark[3]
+          : theme.colors.gray[3]
+      }, 
+      rgba(0, 0, 0, 0)
+    ) 1 100%`,
+  },
+  separator2: {
+    paddingBottom: '10px',
+    marginBottom: '10px',
   },
 }));
 
@@ -80,21 +114,28 @@ export const UserSiteCard: FC<TableProps> = ({
   startingDate,
 }) => {
   const { t } = useTranslation('site', { keyPrefix: 'card' });
+  const isMobile = useMediaQuery('(max-width: 36em)');
   const { classes } = useStyle();
 
   const { badgeColor, badgeState } = calculateSiteState(t, miningState);
 
   return (
-    <Card shadow={'sm'} padding={'lg'} radius={'md'} withBorder={true}>
+    <Card
+      shadow={'sm'}
+      padding={'lg'}
+      radius={'md'}
+      withBorder={true}
+      sx={{ marginBottom: isMobile ? '10px' : 0 }}
+    >
       <Card.Section>
         <Image src={image} height={160} alt={title} />
       </Card.Section>
 
       <Group position={'apart'} mt={'md'} mb={'xs'}>
-        <Title order={1}>{title}</Title>
+        <Title order={isMobile ? 3 : 1}>{title}</Title>
 
         <Badge color={badgeColor} variant={'light'}>
-          <Text fz={'md'}>{badgeState}</Text>
+          <Text fz={isMobile ? 'xs' : 'md'}>{badgeState}</Text>
         </Badge>
       </Group>
 
@@ -104,12 +145,12 @@ export const UserSiteCard: FC<TableProps> = ({
         align={'center'}
         direction={'column'}
         wrap={'wrap'}
-        sx={{ marginBottom: '10px' }}
+        sx={{ marginBottom: isMobile ? '0px' : '10px' }}
       >
-        <Text fz={'28px'} weight={1000} color={'brand'}>
+        <Text fz={isMobile ? '20px' : '28px'} weight={1000} color={'brand'}>
           {formatPercent(data.apr)}
         </Text>
-        <Text fz={'14px'} weight={1000} color={'dimmed'}>
+        <Text fz={isMobile ? '12px' : '14px'} weight={1000} color={'dimmed'}>
           {'APY'}
         </Text>
       </Flex>
@@ -118,12 +159,12 @@ export const UserSiteCard: FC<TableProps> = ({
         cols={2}
         spacing={'xs'}
         verticalSpacing={'xs'}
-        sx={{ marginBottom: '20px' }}
+        className={classes.separator2}
       >
-        <div>
+        <div className={classes.separator}>
           <Flex
             gap={'0'}
-            justify={'center'}
+            justify={'start'}
             align={'center'}
             direction={'row'}
             wrap={'wrap'}
@@ -141,7 +182,7 @@ export const UserSiteCard: FC<TableProps> = ({
           <Flex
             mih={50}
             gap={'0'}
-            justify={'center'}
+            justify={'start'}
             align={'center'}
             direction={'row'}
             wrap={'wrap'}
@@ -181,10 +222,11 @@ export const UserSiteCard: FC<TableProps> = ({
             </Flex>
           </Flex>
         </div>
+
         <div>
           <Flex
             gap={'0'}
-            justify={'center'}
+            justify={'end'}
             align={'center'}
             direction={'row'}
             wrap={'wrap'}
@@ -195,13 +237,17 @@ export const UserSiteCard: FC<TableProps> = ({
             <Avatar
               src={'https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=025'}
               size={'sm'}
-              sx={{ margin: '10px' }}
+              sx={{
+                marginLeft: '10px',
+                marginTop: '10px',
+                marginBottom: '10px',
+              }}
             ></Avatar>
           </Flex>
           <Flex
             mih={50}
             gap={'0'}
-            justify={'center'}
+            justify={'end'}
             align={'center'}
             direction={'row'}
             wrap={'wrap'}
@@ -232,7 +278,11 @@ export const UserSiteCard: FC<TableProps> = ({
         </div>
       </SimpleGrid>
 
-      <Group position={'apart'} mt={'md'} mb={'xs'}>
+      <Group
+        position={'apart'}
+        mt={isMobile ? 0 : 'md'}
+        mb={isMobile ? 0 : 'xs'}
+      >
         <Text weight={500} fz={'md'}>
           {'Tokens'}
         </Text>
@@ -246,42 +296,66 @@ export const UserSiteCard: FC<TableProps> = ({
         </Text>
       </Group>
 
-      <Group position={'apart'} mt={'md'} mb={'xs'}>
+      <Group
+        position={'apart'}
+        mt={isMobile ? 0 : 'xs'}
+        mb={isMobile ? 0 : 'xs'}
+      >
         <Text weight={500} fz={'md'}>
           {t('start-date')}
         </Text>
         <Text fz={'md'}>{startingDate}</Text>
       </Group>
 
-      <Group position={'apart'} mt={'md'} mb={'xs'}>
+      <Group
+        position={'apart'}
+        mt={isMobile ? 0 : 'xs'}
+        mb={isMobile ? 0 : 'xs'}
+      >
         <Text weight={500} fz={'md'}>
           {t('active-days')}
         </Text>
         <Text fz={'md'}>{data.uptime.days}</Text>
       </Group>
 
-      <Group position={'apart'} mt={'md'} mb={'xs'}>
+      <Group
+        position={'apart'}
+        mt={isMobile ? 0 : 'xs'}
+        mb={isMobile ? 0 : 'xs'}
+      >
         <Text weight={500} fz={'md'}>
           {t('active-machines')}
         </Text>
         <Text fz={'md'}>{data.uptime.machine}</Text>
       </Group>
 
-      <Group position={'apart'} mt={'md'} mb={'xs'}>
+      <Group
+        position={'apart'}
+        mt={isMobile ? 0 : 'xs'}
+        mb={isMobile ? 0 : 'xs'}
+      >
         <Text weight={500} fz={'md'}>
           {t('bitcoin-mined')}
         </Text>
         <Text fz={'md'}>{formatBTC(data.mined.btc)}</Text>
       </Group>
 
-      <Group position={'apart'} mt={'md'} mb={'xs'}>
+      <Group
+        position={'apart'}
+        mt={isMobile ? 0 : 'xs'}
+        mb={isMobile ? 0 : 'xs'}
+      >
         <Text weight={500} fz={'md'}>
           {t('site-net-income')}
         </Text>
         <Text fz={'md'}>{formatBTC(data.income.site.btc)}</Text>
       </Group>
 
-      <Group position={'apart'} mt={'md'} mb={'xs'}>
+      <Group
+        position={'apart'}
+        mt={isMobile ? 0 : 'xs'}
+        mb={isMobile ? 0 : 'xs'}
+      >
         <Text weight={500} fz={'md'}>
           {''}
         </Text>

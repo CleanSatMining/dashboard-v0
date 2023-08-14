@@ -44,7 +44,7 @@ const _AssetCard: FC<SiteProps> = ({ title, Icon, value, data, subValue }) => {
         radius={'md'}
         withBorder={true}
       >
-        <Group position={'apart'} mt={'0'} mb={'xs'}>
+        <Group position={'apart'} mt={'0'} mb={isMobile ? 0 : 'xs'}>
           <Title order={isMobile ? 6 : 2}>{title}</Title>
           {Icon && (
             <ActionIcon variant={'transparent'}>
@@ -54,17 +54,21 @@ const _AssetCard: FC<SiteProps> = ({ title, Icon, value, data, subValue }) => {
         </Group>
 
         <Flex
-          mih={isMobile ? 40 : 50}
+          mih={isMobile ? 30 : 50}
           //gap={'md'}
           justify={'flex-start'}
           align={'flex-start'}
           direction={'column'}
           wrap={'wrap'}
         >
-          <Title order={isMobile ? 4 : 3} color={'brand'}>
+          <Title order={isMobile ? 5 : 3} color={'brand'}>
             {value}
           </Title>
-          {subValue !== undefined && <Text color={'dimmed'}>{subValue}</Text>}
+          {subValue !== undefined && (
+            <Text color={'dimmed'} size={isMobile ? 12 : undefined}>
+              {subValue}
+            </Text>
+          )}
         </Flex>
 
         {data.length > 0 && (

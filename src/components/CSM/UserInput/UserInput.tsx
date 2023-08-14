@@ -2,18 +2,15 @@ import { FC, forwardRef, useRef, useState } from 'react';
 
 import {
   Autocomplete,
-  Avatar,
-  Card,
   Container,
   Flex,
   Group,
   MantineColor,
   SelectItemProps,
   Text,
-  TextInput,
-  Title,
   createStyles,
 } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { IconAt } from '@tabler/icons';
 
 const useStyles = createStyles(() => ({
@@ -23,6 +20,7 @@ const useStyles = createStyles(() => ({
     padding: '0px',
     marginBottom: '10px',
     width: '100%',
+    margin: 0,
   },
   input: {
     marginBottom: '10px',
@@ -44,6 +42,7 @@ export const AddressInput: FC<AddressProps> = ({
   const ref = useRef<HTMLInputElement>(null);
   const [value, setValue] = useState(address);
   const [account, setDisplayedAccount] = useState(address);
+  const isMobile = useMediaQuery('(max-width: 36em)');
   // console.log('WARNING RENDER USER INPUT', account);
   return (
     <Container className={classes.container}>
@@ -65,6 +64,7 @@ export const AddressInput: FC<AddressProps> = ({
           setAccount,
           updateAccount
         )}
+        size={isMobile ? 'xs' : 'sm'}
       />
       {(value !== account || getLabel(account)) && (
         <Flex
@@ -79,9 +79,11 @@ export const AddressInput: FC<AddressProps> = ({
               {getLabel(account)}
             </Text>
           )}
-          <Text ref={ref} fz={14} fw={500} color={'brand'}>
-            {account}
-          </Text>
+          {value !== account && (
+            <Text ref={ref} fz={isMobile ? 10 : 14} fw={500} color={'brand'}>
+              {account}
+            </Text>
+          )}
         </Flex>
       )}
     </Container>

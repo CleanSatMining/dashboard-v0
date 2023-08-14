@@ -2,11 +2,12 @@ import React, { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { Flex, SegmentedControl } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { useWeb3React } from '@web3-react/core';
 
 import { Displays } from 'src/types/Displays';
 
-import { ALLOWED_SITES, DAYS_PERIODS, SITES, SiteID } from '../../constants';
+import { ALLOWED_SITES, DAYS_PERIODS } from '../../constants';
 import { API_ADMIN } from '../../constants/apis';
 import { useBitcoinOracle } from '../../hooks/useBitcoinOracle';
 import { useMiningSitesStatesByPeriods } from '../../hooks/useMiningStates';
@@ -23,6 +24,7 @@ interface Display {
 }
 const Display: FC = () => {
   const { t } = useTranslation('site', { keyPrefix: 'card' });
+  const isMobile = useMediaQuery('(max-width: 36em)');
   const { account: accountAddress } = useWeb3React();
   const [account, setAccount] = useState(
     accountAddress
@@ -91,7 +93,7 @@ const Display: FC = () => {
         ></AddressInput>
       )}
       <Flex
-        mih={70}
+        mih={isMobile ? 50 : 70}
         gap={'xl'}
         justify={'center'}
         align={'center'}
