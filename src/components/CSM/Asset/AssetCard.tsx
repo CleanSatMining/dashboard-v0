@@ -11,6 +11,7 @@ import {
   Title,
   createStyles,
 } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { TablerIcon } from '@tabler/icons';
 
 const useStyle = createStyles((theme: MantineTheme) => ({
@@ -34,11 +35,17 @@ type SiteProps = {
 
 const _AssetCard: FC<SiteProps> = ({ title, Icon, value, data, subValue }) => {
   const { classes } = useStyle();
+  const isMobile = useMediaQuery('(max-width: 36em)');
   return (
     <>
-      <Card shadow={'sm'} padding={'lg'} radius={'md'} withBorder={true}>
+      <Card
+        shadow={'sm'}
+        padding={isMobile ? 'xs' : 'lg'}
+        radius={'md'}
+        withBorder={true}
+      >
         <Group position={'apart'} mt={'0'} mb={'xs'}>
-          <Title order={2}>{title}</Title>
+          <Title order={isMobile ? 6 : 2}>{title}</Title>
           {Icon && (
             <ActionIcon variant={'transparent'}>
               <Icon className={classes.brand}></Icon>
@@ -47,14 +54,14 @@ const _AssetCard: FC<SiteProps> = ({ title, Icon, value, data, subValue }) => {
         </Group>
 
         <Flex
-          mih={50}
+          mih={isMobile ? 40 : 50}
           //gap={'md'}
           justify={'flex-start'}
           align={'flex-start'}
           direction={'column'}
           wrap={'wrap'}
         >
-          <Title order={3} color={'brand'}>
+          <Title order={isMobile ? 4 : 3} color={'brand'}>
             {value}
           </Title>
           {subValue !== undefined && <Text color={'dimmed'}>{subValue}</Text>}

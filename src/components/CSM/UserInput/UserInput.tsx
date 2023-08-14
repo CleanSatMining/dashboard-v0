@@ -1,14 +1,20 @@
-import { FC, useRef, useState } from 'react';
+import { FC, forwardRef, useRef, useState } from 'react';
 
 import {
+  Autocomplete,
+  Avatar,
   Card,
   Container,
   Flex,
+  Group,
+  MantineColor,
+  SelectItemProps,
   Text,
   TextInput,
   Title,
   createStyles,
 } from '@mantine/core';
+import { IconAt } from '@tabler/icons';
 
 const useStyles = createStyles(() => ({
   container: {
@@ -41,59 +47,116 @@ export const AddressInput: FC<AddressProps> = ({
   // console.log('WARNING RENDER USER INPUT', account);
   return (
     <Container className={classes.container}>
-      <Card shadow={'sm'} padding={'lg'} radius={'md'} withBorder={true}>
-        <Title order={1}>{'Wallet view'}</Title>
-
-        <TextInput
-          className={classes.input}
-          label={'Enter user account'}
-          value={value}
-          onChange={setAccountValue(
-            setValue,
-            setDisplayedAccount,
-            setAccount,
-            updateAccount
-          )}
-        />
-        <Text ref={ref} fz={'md'} fw={700}>
-          {'Selected account'}
-        </Text>
-        <Text ref={ref} fz={'xs'} fw={500}>
-          {account}
-        </Text>
-      </Card>
-
-      <Flex
-        gap={'md'}
-        justify={'flex-start'}
-        align={'flex-start'}
-        direction={'column'}
-        wrap={'wrap'}
-      >
+      <Autocomplete
+        label={'Wallet'}
+        placeholder={'Enter your custom address or select one'}
+        itemComponent={AutoCompleteItem}
+        data={data}
+        error={value !== account}
+        value={value}
+        icon={<IconAt />}
+        filter={(value, item) =>
+          item.value.toLowerCase().includes(value.toLowerCase().trim()) ||
+          item.label.toLowerCase().includes(value.toLowerCase().trim())
+        }
+        onChange={setAccountAddress(
+          setValue,
+          setDisplayedAccount,
+          setAccount,
+          updateAccount
+        )}
+      />
+      {(value !== account || getLabel(account)) && (
         <Flex
           gap={'0'}
-          justify={'flex-start'}
-          align={'flex-start'}
+          justify={'center'}
+          align={'center'}
           direction={'column'}
           wrap={'wrap'}
-        ></Flex>
-      </Flex>
+        >
+          {getLabel(account) && (
+            <Text ref={ref} fz={14} fw={500} color={'brand'}>
+              {getLabel(account)}
+            </Text>
+          )}
+          <Text ref={ref} fz={14} fw={500} color={'brand'}>
+            {account}
+          </Text>
+        </Flex>
+      )}
     </Container>
   );
 };
-function setAccountValue(
+
+function setAccountAddress(
   setValue: any,
   setDisplayedAccount: any,
   setAccount: any,
   updateAccount: any
 ) {
-  return (event: any) => {
-    setValue(event.currentTarget.value);
-    if (event.currentTarget.value.length == 42) {
+  return (address: string) => {
+    console.log('EVENT', JSON.stringify(address, null, 4));
+    setValue(address);
+    if (
+      address.length == 42 &&
+      address.startsWith('0x') &&
+      onlyLettersAndNumbers(address)
+    ) {
       // console.log('WARNING USER INPUT CHANGED', event.currentTarget.value);
-      setDisplayedAccount(event.currentTarget.value);
-      setAccount(event.currentTarget.value);
-      updateAccount(event.currentTarget.value);
+      setDisplayedAccount(address);
+      setAccount(address);
+      updateAccount(address);
     }
   };
 }
+
+function getLabel(address: string) {
+  return addressList.find((a) => a.address === address)?.label;
+}
+
+function onlyLettersAndNumbers(str: string) {
+  return /^[A-Za-z0-9]*$/.test(str);
+}
+
+const addressList = [
+  {
+    label: 'CSM SA',
+    address: '0xC78f0e746A2e6248eE6D57828985D7fD8d6B33B0',
+  },
+
+  {
+    label: 'User anonyme 1',
+    address: '0x484B0C11bAfb51A74c35449d9F01573f548e7180',
+  },
+  {
+    label: 'User anonyme 2',
+    address: '0x80C733Ea02AC59024FAfb4303a7D1d6aEeF8dd4A',
+  },
+  {
+    label: 'User anonyme 3',
+    address: '0x0969E145C6B1C3455c2Bd856F8326994418b4e3B',
+  },
+];
+
+const data = addressList.map((item) => ({ ...item, value: item.address }));
+
+interface ItemProps extends SelectItemProps {
+  color: MantineColor;
+  address: string;
+}
+
+const AutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
+  ({ value, label, ...others }: ItemProps, ref) => (
+    <div ref={ref} {...others}>
+      <Group noWrap={true}>
+        <div>
+          <Text>{label}</Text>
+          <Text size={'xs'} color={'dimmed'}>
+            {value}
+          </Text>
+        </div>
+      </Group>
+    </div>
+  )
+);
+AutoCompleteItem.displayName = 'AutoCompleteItem';

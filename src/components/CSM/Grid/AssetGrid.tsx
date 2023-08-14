@@ -57,8 +57,9 @@ const _AssetGrid: FC<AssetProps> = ({ btcPrice, states, period }) => {
 
   return (
     <SimpleGrid
+      cols={2}
       breakpoints={[
-        { minWidth: 'xs', cols: 1 },
+        { minWidth: 'xs', cols: 2 },
         { minWidth: 'sm', cols: 2 },
         { minWidth: 'md', cols: 3 },
         { minWidth: 1200, cols: 4 },
