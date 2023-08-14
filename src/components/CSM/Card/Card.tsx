@@ -189,8 +189,8 @@ export const UserSiteCard: FC<TableProps> = ({
           >
             <Flex
               gap={'0'}
-              justify={'flex-end'}
-              align={'flex-end'}
+              justify={'flex-start'}
+              align={'flex-start'}
               direction={'column'}
               wrap={'wrap'}
             >
@@ -283,10 +283,10 @@ export const UserSiteCard: FC<TableProps> = ({
         mt={isMobile ? 0 : 'md'}
         mb={isMobile ? 0 : 'xs'}
       >
-        <Text weight={500} fz={'md'}>
+        <Text weight={500} fz={isMobile ? 'xs' : 'md'}>
           {'Tokens'}
         </Text>
-        <Text fz={'md'}>
+        <Text fz={isMobile ? 'xs' : 'md'}>
           {formatBigNumber(csm) +
             '/' +
             formatBigNumber(csmSupply) +
@@ -301,10 +301,10 @@ export const UserSiteCard: FC<TableProps> = ({
         mt={isMobile ? 0 : 'xs'}
         mb={isMobile ? 0 : 'xs'}
       >
-        <Text weight={500} fz={'md'}>
+        <Text weight={500} fz={isMobile ? 'xs' : 'md'}>
           {t('start-date')}
         </Text>
-        <Text fz={'md'}>{startingDate}</Text>
+        <Text fz={isMobile ? 'xs' : 'md'}>{startingDate}</Text>
       </Group>
 
       <Group
@@ -312,10 +312,10 @@ export const UserSiteCard: FC<TableProps> = ({
         mt={isMobile ? 0 : 'xs'}
         mb={isMobile ? 0 : 'xs'}
       >
-        <Text weight={500} fz={'md'}>
+        <Text weight={500} fz={isMobile ? 'xs' : 'md'}>
           {t('active-days')}
         </Text>
-        <Text fz={'md'}>{data.uptime.days}</Text>
+        <Text fz={isMobile ? 'xs' : 'md'}>{data.uptime.days}</Text>
       </Group>
 
       <Group
@@ -323,10 +323,10 @@ export const UserSiteCard: FC<TableProps> = ({
         mt={isMobile ? 0 : 'xs'}
         mb={isMobile ? 0 : 'xs'}
       >
-        <Text weight={500} fz={'md'}>
+        <Text weight={500} fz={isMobile ? 'xs' : 'md'}>
           {t('active-machines')}
         </Text>
-        <Text fz={'md'}>{data.uptime.machine}</Text>
+        <Text fz={isMobile ? 'xs' : 'md'}>{data.uptime.machine}</Text>
       </Group>
 
       <Group
@@ -334,10 +334,10 @@ export const UserSiteCard: FC<TableProps> = ({
         mt={isMobile ? 0 : 'xs'}
         mb={isMobile ? 0 : 'xs'}
       >
-        <Text weight={500} fz={'md'}>
+        <Text weight={500} fz={isMobile ? 'xs' : 'md'}>
           {t('bitcoin-mined')}
         </Text>
-        <Text fz={'md'}>{formatBTC(data.mined.btc)}</Text>
+        <Text fz={isMobile ? 'xs' : 'md'}>{formatBTC(data.mined.btc)}</Text>
       </Group>
 
       <Group
@@ -345,10 +345,12 @@ export const UserSiteCard: FC<TableProps> = ({
         mt={isMobile ? 0 : 'xs'}
         mb={isMobile ? 0 : 'xs'}
       >
-        <Text weight={500} fz={'md'}>
+        <Text weight={500} fz={isMobile ? 'xs' : 'md'}>
           {t('site-net-income')}
         </Text>
-        <Text fz={'md'}>{formatBTC(data.income.site.btc)}</Text>
+        <Text fz={isMobile ? 'xs' : 'md'}>
+          {formatBTC(data.income.site.btc)}
+        </Text>
       </Group>
 
       <Group
@@ -356,10 +358,12 @@ export const UserSiteCard: FC<TableProps> = ({
         mt={isMobile ? 0 : 'xs'}
         mb={isMobile ? 0 : 'xs'}
       >
-        <Text weight={500} fz={'md'}>
+        <Text weight={500} fz={isMobile ? 'xs' : 'md'}>
           {''}
         </Text>
-        <Text fz={'md'}>{formatUsd(data.income.site.usd)}</Text>
+        <Text fz={isMobile ? 'xs' : 'md'}>
+          {formatUsd(data.income.site.usd)}
+        </Text>
       </Group>
     </Card>
   );
