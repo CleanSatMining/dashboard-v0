@@ -16,6 +16,9 @@ import {
   createStyles,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
+import { IconExternalLink, IconInfoCircle } from '@tabler/icons';
+
+import { openInNewTab } from 'src/utils/window';
 
 import { Income } from '../../../types/Site';
 import { MiningState } from '../../../types/Site';
@@ -29,6 +32,19 @@ import {
 } from '../../../utils/format/format';
 
 const useStyle = createStyles((theme: MantineTheme) => ({
+  urlContainer: {
+    display: 'flex',
+    gap: theme.spacing.sm,
+    borderBottomStyle: 'solid',
+    borderBottomWidth: '2px',
+    borderBottomColor: 'transparent',
+    alignItems: 'center',
+    justifyContent: 'start',
+    '&:hover': {
+      borderBottomColor: theme.colors.brand,
+      cursor: 'pointer',
+    },
+  },
   href: {
     color: theme.colorScheme === 'dark' ? theme.colors.dark[0] : 'black',
     marginLeft: '5px',
@@ -66,8 +82,9 @@ const useStyle = createStyles((theme: MantineTheme) => ({
     ) 1 100%`,
   },
   separator2: {
-    paddingBottom: '10px',
-    marginBottom: '10px',
+    //paddingBottom: '10px',
+    marginBottom: '20px',
+    marginTop: '10px',
   },
 }));
 
@@ -158,124 +175,74 @@ export const UserSiteCard: FC<TableProps> = ({
       <SimpleGrid
         cols={2}
         spacing={'xs'}
-        verticalSpacing={'xs'}
         className={classes.separator2}
+        verticalSpacing={'xs'}
       >
-        <div className={classes.separator}>
-          <Flex
-            gap={'0'}
-            justify={'start'}
-            align={'center'}
-            direction={'row'}
-            wrap={'wrap'}
-          >
-            <Text weight={500} fz={'lg'} align={'center'}>
+        <Card shadow={'sm'} padding={'xs'} radius={'md'} withBorder={true}>
+          <Group position={'apart'} sx={{ marginBottom: '5px' }}>
+            <Text weight={500} fz={'lg'} align={'center'} color={'dimmed'}>
               {t('my-tokens')}
             </Text>
             <Avatar
               src={'https://cleansatmining.com/data/files/logo_csm.png'}
               size={'sm'}
-              sx={{ margin: '10px' }}
             ></Avatar>
-          </Flex>
+          </Group>
 
-          <Flex
-            mih={50}
-            gap={'0'}
-            justify={'start'}
-            align={'center'}
-            direction={'row'}
-            wrap={'wrap'}
-          >
-            <Flex
-              gap={'0'}
-              justify={'flex-start'}
-              align={'flex-start'}
-              direction={'column'}
-              wrap={'wrap'}
-            >
-              <Text
-                fz={'lg'}
-                fw={700}
-                sx={{
-                  marginTop: '0px',
-                  marginLeft: '0px',
-                  marginRight: '0px',
-                  marginBottom: '5px',
-                  lineHeight: 'normal',
-                }}
-              >
-                {formatToken(csm)}
-                <a
-                  href={tokenUrl}
-                  target={'_blank'}
-                  rel={'noreferrer'}
-                  className={classes.href}
-                >
-                  {csmSymbol}
-                </a>
-              </Text>
-
-              <Text fz={'xs'} color={'dimmed'}>
-                {formatUsd(csmUsd)}
-              </Text>
-            </Flex>
-          </Flex>
-        </div>
-
-        <div>
-          <Flex
-            gap={'0'}
-            justify={'end'}
-            align={'center'}
-            direction={'row'}
-            wrap={'wrap'}
-          >
+          <Group position={'left'} mt={'0'} mb={'0'}>
             <Text weight={500} fz={'lg'} align={'center'}>
-              {t('my-income')}
+              {formatToken(csm)}
             </Text>
-            <Avatar
-              src={'https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=025'}
-              size={'sm'}
-              sx={{
-                marginLeft: '10px',
-                marginTop: '10px',
-                marginBottom: '10px',
-              }}
-            ></Avatar>
-          </Flex>
-          <Flex
-            mih={50}
-            gap={'0'}
-            justify={'end'}
-            align={'center'}
-            direction={'row'}
-            wrap={'wrap'}
-          >
             <Flex
-              gap={'0'}
-              justify={'flex-end'}
-              align={'flex-end'}
-              direction={'column'}
-              wrap={'wrap'}
+              className={classes.urlContainer}
+              onClick={() => openInNewTab(tokenUrl)}
             >
-              <HoverCard width={280} shadow={'md'}>
-                <HoverCard.Target>
-                  <Text fz={'lg'} fw={700}>
-                    {formatBTC(data.income.user.btc)}
-                  </Text>
-                </HoverCard.Target>
-                <HoverCard.Dropdown>
-                  <Text size={'sm'}>{t('fee-explained')}</Text>
-                </HoverCard.Dropdown>
-              </HoverCard>
-
-              <Text fz={'xs'} color={'dimmed'}>
-                {formatUsd(data.income.user.usd)}
-              </Text>
+              <Text>{csmSymbol}</Text>
+              <IconExternalLink size={16} />
             </Flex>
-          </Flex>
-        </div>
+          </Group>
+          <Text fz={'xs'} color={'dimmed'}>
+            {formatUsd(csmUsd)}
+          </Text>
+        </Card>
+        <HoverCard width={280} shadow={'md'}>
+          <Card shadow={'sm'} padding={'xs'} radius={'md'} withBorder={true}>
+            <Group position={'apart'} sx={{ marginBottom: '5px' }}>
+              <HoverCard.Target>
+                <Flex sx={{ cursor: 'help' }}>
+                  <Text
+                    weight={500}
+                    fz={'lg'}
+                    align={'center'}
+                    color={'dimmed'}
+                    sx={{ marginRight: '2px' }}
+                  >
+                    {t('my-income')}
+                  </Text>
+                  <IconInfoCircle size={16} />
+                </Flex>
+              </HoverCard.Target>
+
+              <Avatar
+                src={'https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=025'}
+                size={'sm'}
+                sx={{ margin: '0px' }}
+              ></Avatar>
+            </Group>
+
+            <Group position={'right'} mt={'0'} mb={'0'}>
+              <Text weight={500} fz={'lg'} align={'center'}>
+                {formatBTC(data.income.user.btc)}
+              </Text>
+            </Group>
+            <Text fz={'xs'} color={'dimmed'} ta={'right'}>
+              {formatUsd(data.income.user.usd)}
+            </Text>
+          </Card>
+          <HoverCard.Dropdown>
+            <Text size={'sm'}>{t('fee-explained')}</Text>
+          </HoverCard.Dropdown>
+        </HoverCard>
       </SimpleGrid>
 
       <Group
@@ -283,7 +250,7 @@ export const UserSiteCard: FC<TableProps> = ({
         mt={isMobile ? 0 : 'md'}
         mb={isMobile ? 0 : 'xs'}
       >
-        <Text weight={500} fz={isMobile ? 'xs' : 'md'}>
+        <Text weight={500} fz={isMobile ? 'xs' : 'md'} color={'dimmed'}>
           {'Tokens'}
         </Text>
         <Text fz={isMobile ? 'xs' : 'md'}>
@@ -301,7 +268,7 @@ export const UserSiteCard: FC<TableProps> = ({
         mt={isMobile ? 0 : 'xs'}
         mb={isMobile ? 0 : 'xs'}
       >
-        <Text weight={500} fz={isMobile ? 'xs' : 'md'}>
+        <Text weight={500} fz={isMobile ? 'xs' : 'md'} color={'dimmed'}>
           {t('start-date')}
         </Text>
         <Text fz={isMobile ? 'xs' : 'md'}>{startingDate}</Text>
@@ -312,7 +279,7 @@ export const UserSiteCard: FC<TableProps> = ({
         mt={isMobile ? 0 : 'xs'}
         mb={isMobile ? 0 : 'xs'}
       >
-        <Text weight={500} fz={isMobile ? 'xs' : 'md'}>
+        <Text weight={500} fz={isMobile ? 'xs' : 'md'} color={'dimmed'}>
           {t('active-days')}
         </Text>
         <Text fz={isMobile ? 'xs' : 'md'}>{data.uptime.days}</Text>
@@ -323,7 +290,7 @@ export const UserSiteCard: FC<TableProps> = ({
         mt={isMobile ? 0 : 'xs'}
         mb={isMobile ? 0 : 'xs'}
       >
-        <Text weight={500} fz={isMobile ? 'xs' : 'md'}>
+        <Text weight={500} fz={isMobile ? 'xs' : 'md'} color={'dimmed'}>
           {t('active-machines')}
         </Text>
         <Text fz={isMobile ? 'xs' : 'md'}>{data.uptime.machine}</Text>
@@ -334,7 +301,7 @@ export const UserSiteCard: FC<TableProps> = ({
         mt={isMobile ? 0 : 'xs'}
         mb={isMobile ? 0 : 'xs'}
       >
-        <Text weight={500} fz={isMobile ? 'xs' : 'md'}>
+        <Text weight={500} fz={isMobile ? 'xs' : 'md'} color={'dimmed'}>
           {t('bitcoin-mined')}
         </Text>
         <Text fz={isMobile ? 'xs' : 'md'}>{formatBTC(data.mined.btc)}</Text>
@@ -345,7 +312,7 @@ export const UserSiteCard: FC<TableProps> = ({
         mt={isMobile ? 0 : 'xs'}
         mb={isMobile ? 0 : 'xs'}
       >
-        <Text weight={500} fz={isMobile ? 'xs' : 'md'}>
+        <Text weight={500} fz={isMobile ? 'xs' : 'md'} color={'dimmed'}>
           {t('site-net-income')}
         </Text>
         <Text fz={isMobile ? 'xs' : 'md'}>
@@ -353,18 +320,9 @@ export const UserSiteCard: FC<TableProps> = ({
         </Text>
       </Group>
 
-      <Group
-        position={'apart'}
-        mt={isMobile ? 0 : 'xs'}
-        mb={isMobile ? 0 : 'xs'}
-      >
-        <Text weight={500} fz={isMobile ? 'xs' : 'md'}>
-          {''}
-        </Text>
-        <Text fz={isMobile ? 'xs' : 'md'}>
-          {formatUsd(data.income.site.usd)}
-        </Text>
-      </Group>
+      <Text fz={isMobile ? 'xs' : 'md'} ta={'right'}>
+        {formatUsd(data.income.site.usd)}
+      </Text>
     </Card>
   );
 };
