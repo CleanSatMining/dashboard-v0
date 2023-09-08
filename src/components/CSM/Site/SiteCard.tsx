@@ -17,6 +17,7 @@ type SiteProps = {
   account: string;
   siteState: CSMSsite;
   period: number;
+  shallDisplay: (siteId: number, shallDisplay: boolean) => void;
 };
 
 const _SiteCard: FC<SiteProps> = ({
@@ -24,6 +25,7 @@ const _SiteCard: FC<SiteProps> = ({
   btcPrice,
   siteState,
   period,
+  shallDisplay,
 }) => {
   const [csmPeriod, setCsmPeriod] = useState(period);
 
@@ -43,6 +45,8 @@ const _SiteCard: FC<SiteProps> = ({
         ? siteState.state.incomes.byPeriod[csmPeriod].revenue
         : 0
       : 0;
+
+  shallDisplay(Number(siteId), tokenBalance > 0);
 
   useEffect(() => {
     setCsmPeriod(period);

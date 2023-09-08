@@ -10,6 +10,7 @@ export enum SiteID {
   beta = '2',
   gamma = '3',
   omega = '4',
+  delta = '5',
 }
 
 export const SITES: Record<SiteID, Site> = {
@@ -99,8 +100,7 @@ export const SITES: Record<SiteID, Site> = {
   },
   [SiteID.omega]: {
     name: 'CMS omega',
-    image:
-      'https://cleansatmining.com/data/files/capturedecran2023-04-15a17.34.32.png',
+    image: 'https://cleansatmining.com/data/files/434184-1260x630-finlande.jpg',
     token: {
       address: '0x71C86CbB71846425De5f3a693e989F4BDd97E98d',
       supply: 100000,
@@ -122,6 +122,34 @@ export const SITES: Record<SiteID, Site> = {
       },
       electricity: {
         usdPricePerKWH: 0,
+      },
+    },
+  },
+  [SiteID.delta]: {
+    name: 'CMS delta',
+    image:
+      'https://cleansatmining.com/data/files/mount-hood-reflected-in-mirror-lake-oregon.jpg',
+    token: {
+      address: '0x20D2F2d4b839710562D25274A3e98Ea1F0392D24',
+      supply: 100000,
+      price: 6.7,
+      symbol: 'CSM-omega',
+      gnosisscanUrl:
+        'https://gnosisscan.io/token/0x20D2F2d4b839710562D25274A3e98Ea1F0392D24',
+    },
+    miningState: MiningState.inactive,
+    api: {
+      username: undefined,
+      url: undefined,
+    },
+    mining: {
+      startingDate: '-',
+      asics: {
+        powerW: 0,
+        units: 0,
+      },
+      electricity: {
+        usdPricePerKWH: 4.6,
       },
     },
   },
