@@ -1,7 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 
 import { Flex, Grid } from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks';
 
 import { ALLOWED_SITES } from '../../../constants';
 import { CSMStates } from '../../../types/CSMState';
@@ -15,9 +14,7 @@ type SiteProps = {
 };
 
 const _SiteGrid: FC<SiteProps> = ({ account, btcPrice, states, period }) => {
-  const [hasBalance, setHasBalance] = useState<boolean[]>(
-    ALLOWED_SITES.map(() => true)
-  );
+  const [hasBalance] = useState<boolean[]>(ALLOWED_SITES.map(() => true));
   const [address, setAddress] = useState(account ?? '');
 
   useEffect(() => {
@@ -28,8 +25,6 @@ const _SiteGrid: FC<SiteProps> = ({ account, btcPrice, states, period }) => {
   useEffect(() => {
     setCsmPeriod(period);
   }, [setCsmPeriod, period]);
-
-  console.log('SITE GRID', csmPeriod);
 
   function setShallDisplay(siteId: number, shallDisplay: boolean): void {
     // const display = [...hasBalance];

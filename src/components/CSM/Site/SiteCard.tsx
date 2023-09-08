@@ -1,5 +1,4 @@
 import { FC, memo, useEffect, useState } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import { SITES, SiteID } from '../../../constants';
 import { CSMSsite } from '../../../types/CSMState';

@@ -72,8 +72,7 @@ export const SITES: Record<SiteID, Site> = {
 
   [SiteID.gamma]: {
     name: 'CMS gamma',
-    image:
-      'https://cleansatmining.com/data/files/shutterstock_1996306160_c.jpg',
+    image: 'https://cleansatmining.com/data/files/img_3861.jpg',
     token: {
       address: '0x203A5080450FFC3e038284082FBF5EBCdc9B053f',
       supply: 100000,
@@ -157,4 +156,11 @@ export const SITES: Record<SiteID, Site> = {
 
 export const ALLOWED_SITES = Array.from(Object.keys(SITES));
 
-export const DAYS_PERIODS: number[] = [1, 7, 30, 60];
+export const DAYS_PERIODS: number[] = [1, 7, 30, 90, 180, 365];
+export const DAYS_PERIODS_MOBILE_FILTER = [1, 7, 30, 90];
+
+export function filterMobile(
+  isMobile: boolean
+): (value: number, index: number, array: number[]) => unknown {
+  return (p) => !isMobile || DAYS_PERIODS_MOBILE_FILTER.includes(p);
+}
