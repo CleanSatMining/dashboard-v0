@@ -47,6 +47,8 @@ const _SiteCard: FC<SiteProps> = ({
 
   shallDisplay(Number(siteId), tokenBalance > 0);
 
+  //console.log('SITECARD', siteId, JSON.stringify(tokenBalance));
+
   useEffect(() => {
     setCsmPeriod(period);
   }, [setCsmPeriod, period]);

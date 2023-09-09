@@ -97,7 +97,6 @@ function setAccountAddress(
   updateAccount: any
 ) {
   return (address: string) => {
-    console.log('EVENT', JSON.stringify(address, null, 4));
     setValue(address);
     if (
       address.length == 42 &&

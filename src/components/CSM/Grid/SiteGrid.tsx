@@ -31,27 +31,29 @@ const _SiteGrid: FC<SiteProps> = ({ account, btcPrice, states, period }) => {
     // display[siteId] = shallDisplay;
     // setHasBalance(() => display);
 
-    hasBalance[siteId] = shallDisplay;
+    hasBalance[siteId - 1] = shallDisplay;
   }
 
   return (
     <Flex gap={0} direction={'column'} align={'center'}>
       <Grid gutter={0} gutterMd={25} gutterXs={'xs'} style={{ width: '100%' }}>
         {ALLOWED_SITES.length > 0
-          ? ALLOWED_SITES.filter((id) => hasBalance[Number(id)]).map((i) => (
-              <Grid.Col md={6} lg={4} key={`grid-${i}`}>
-                <SiteCard
-                  siteId={i}
-                  siteState={states[i]}
-                  account={address}
-                  btcPrice={btcPrice}
-                  period={csmPeriod}
-                  shallDisplay={(siteId: number, shallDisplay: boolean) =>
-                    setShallDisplay(siteId, shallDisplay)
-                  }
-                ></SiteCard>
-              </Grid.Col>
-            ))
+          ? ALLOWED_SITES.filter((id) => hasBalance[Number(id) - 1]).map(
+              (i) => (
+                <Grid.Col md={6} lg={4} key={`grid-${i}`}>
+                  <SiteCard
+                    siteId={i}
+                    siteState={states[i]}
+                    account={address}
+                    btcPrice={btcPrice}
+                    period={csmPeriod}
+                    shallDisplay={(siteId: number, shallDisplay: boolean) =>
+                      setShallDisplay(siteId, shallDisplay)
+                    }
+                  ></SiteCard>
+                </Grid.Col>
+              )
+            )
           : // TODO: add message when no offers
             undefined}
       </Grid>
