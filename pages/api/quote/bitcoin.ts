@@ -26,7 +26,7 @@ const handler: NextApiHandler = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
-  let json = '';
+  let json;
 
   try {
     const result = await fetch(API_BITCOIN_QUOTE.url, {
@@ -48,16 +48,16 @@ const handler: NextApiHandler = async (
 
     if (result.ok) {
       const response: PriceResponse = await result.json();
-      console.log('Bitcoin Quote', JSON.stringify(response, null, 4));
+      //console.log('Bitcoin Quote', JSON.stringify(response, null, 4));
       const quote: Quote = {
         price: response.data.getChartBySlug.data[0].close,
       };
-      json = JSON.stringify(quote);
+      json = quote; // JSON.stringify(quote);
     } else {
       const erreur = {
         message: await result.json(),
       };
-      json = JSON.stringify(erreur);
+      json = erreur; //JSON.stringify(erreur);
     }
   } catch (err) {
     console.log('Error api BTC price');

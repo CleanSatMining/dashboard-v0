@@ -1,13 +1,13 @@
-export type CSMStates = {
-   [id: string]:CSMSsite;
+export type MiningSitesStates = {
+   [id: string]:MiningSiteStates;
 }
 
-export type CSMSsite = {
+export type MiningSiteStates = {
    id: string;
-   state:CSMUserState & CSMSiteState;
+   state:UserState & SiteState;
 }
 
-export type CSMUserState = {
+export type UserState = {
    user: {
       token: {
          balance : number;
@@ -15,15 +15,15 @@ export type CSMUserState = {
    }
 }
 
-export type CSMSiteState = {
+export type SiteState = {
    incomes :{
       byPeriod: {
-         [days: number] : CSMPeriodState;
+         [days: number] : PeriodState;
       }
    }
 }
 
-export type CSMPeriodState = {
+export type PeriodState = {
    days: number;
    revenue:number;
    uptimePercentage:number;

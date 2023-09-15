@@ -1,12 +1,19 @@
 import { FC, memo, useEffect, useState } from 'react';
 
+import { useAppSelector } from 'src/hooks/react-hooks';
+import { selectMiningState } from 'src/store/features/miningData/miningDataSelector';
+import { selectUsersState } from 'src/store/features/userData/userDataSelector';
+
 import { SITES, SiteID } from '../../../constants';
-import { CSMSsite } from '../../../types/CSMState';
-import { Site } from '../../../types/Site';
+import { Site } from '../../../types/mining/Site';
 import { SiteData, UserSiteCard } from '../Card/Card';
+import { getRealPeriod } from '../Utils/yield';
 import {
+  getMinedBtcBySite,
   getUptimeBySite,
-  getUserSiteYield,
+  getUserSiteShare,
+  getUserTokenBalance,
+  getUserYieldBySite,
   getYieldBySite,
 } from '../Utils/yield';
 
@@ -14,52 +21,56 @@ type SiteProps = {
   siteId: string;
   btcPrice: number;
   account: string;
-  siteState: CSMSsite;
   period: number;
-  shallDisplay: (siteId: number, shallDisplay: boolean) => void;
+  shallDisplay?: (siteId: number, shallDisplay: boolean) => void;
 };
 
 const _SiteCard: FC<SiteProps> = ({
   siteId = '1',
   btcPrice,
-  siteState,
   period,
+  account,
   shallDisplay,
 }) => {
   const [csmPeriod, setCsmPeriod] = useState(period);
+  const usersState = useAppSelector(selectUsersState);
+  const miningState = useAppSelector(selectMiningState);
 
   const site: Site = SITES[siteId as SiteID];
-
-  // console.log('_SiteCard', 'siteState', JSON.stringify(siteState, null, 4));
-
-  const tokenBalance =
-    siteState !== undefined ? siteState.state.user.token.balance : 0;
-  const csmPercent =
-    siteState !== undefined ? tokenBalance / site.token.supply : 0;
-  const tokenValue =
-    siteState !== undefined ? tokenBalance * site.token.price : 0;
-  const minedBTC =
-    siteState !== undefined
-      ? siteState.state.incomes.byPeriod[csmPeriod] !== undefined
-        ? siteState.state.incomes.byPeriod[csmPeriod].revenue
-        : 0
-      : 0;
-
-  shallDisplay(Number(siteId), tokenBalance > 0);
-
-  //console.log('SITECARD', siteId, JSON.stringify(tokenBalance));
 
   useEffect(() => {
     setCsmPeriod(period);
   }, [setCsmPeriod, period]);
 
-  const yieldSite = getYieldBySite(siteState, period, btcPrice);
-  const yieldUser = getUserSiteYield(siteState, period, btcPrice);
-  const uptime = getUptimeBySite(siteState, period);
+  const yieldSite = getYieldBySite(miningState, siteId, period, btcPrice);
+  const yieldUser = getUserYieldBySite(
+    miningState,
+    usersState,
+    siteId,
+    account,
+    period,
+    btcPrice
+  );
+
+  const minedBTC = getMinedBtcBySite(miningState, siteId, period).toNumber();
+  const token = getUserTokenBalance(usersState, account, siteId);
+  const tokenBalance = token.balance;
+  const tokenValue = token.usd;
+  const csmPercent = getUserSiteShare(
+    miningState,
+    usersState,
+    siteId,
+    account
+  ).toNumber();
+  const uptime = getUptimeBySite(miningState, siteId, period);
+
+  if (shallDisplay) {
+    //console.log('SHALL DISPLAY', siteId, tokenBalance, tokenBalance > 0);
+    shallDisplay(Number(siteId), tokenBalance > 0);
+  }
 
   const onTotalMachines =
     uptime.machines > 0 ? '/' + site.mining.asics.units : '';
-
   const data: SiteData = {
     apr: yieldSite.apr,
     id: csmPeriod.toString(),
@@ -79,24 +90,32 @@ const _SiteCard: FC<SiteProps> = ({
       usd: minedBTC * btcPrice,
     },
     uptime: {
-      days: uptime.days.toString() + '/' + period,
+      days:
+        uptime.days > 0
+          ? uptime.days.toString() + '/' + getRealPeriod(site, period)
+          : '0',
       machine: uptime.machines.toFixed(0) + onTotalMachines,
     },
   };
 
   const [csmData, setCsmData] = useState<SiteData>(data);
   useEffect(() => {
-    const yieldSite = getYieldBySite(siteState, period, btcPrice);
-    const yieldUser = getUserSiteYield(siteState, period, btcPrice);
-    const uptime = getUptimeBySite(siteState, period);
-    const minedBTC =
-      siteState !== undefined
-        ? siteState.state.incomes.byPeriod[csmPeriod] !== undefined
-          ? siteState.state.incomes.byPeriod[csmPeriod].revenue
-          : 0
-        : 0;
+    const yieldSite = getYieldBySite(miningState, siteId, period, btcPrice);
+    const yieldUser = getUserYieldBySite(
+      miningState,
+      usersState,
+      siteId,
+      account,
+      period,
+      btcPrice
+    );
+
+    const minedBTC = getMinedBtcBySite(miningState, siteId, period).toNumber();
+    const uptime = getUptimeBySite(miningState, siteId, period);
+
     const onTotalMachines =
       uptime.machines > 0 ? '/' + site.mining.asics.units : '';
+
     setCsmData({
       apr: yieldSite.apr,
       id: csmPeriod.toString(),
@@ -116,27 +135,30 @@ const _SiteCard: FC<SiteProps> = ({
         usd: minedBTC * btcPrice,
       },
       uptime: {
-        days: uptime.days.toString() + '/' + period,
+        days:
+          uptime.days > 0
+            ? uptime.days.toString() + '/' + getRealPeriod(site, period)
+            : '0',
         machine: uptime.machines.toFixed(0) + onTotalMachines,
       },
     });
+    if (shallDisplay) {
+      shallDisplay(Number(siteId), tokenBalance > 0);
+    }
   }, [
+    tokenBalance,
+    shallDisplay,
     setCsmData,
     csmPeriod,
     btcPrice,
     site.token.supply,
-    siteState,
     period,
     site.mining.asics.units,
+    account,
+    miningState,
+    siteId,
+    usersState,
   ]);
-
-  /* console.log(
-    'Summary CARD DATA',
-    csmPeriod,
-    site.name,
-    JSON.stringify(csmData, null, 4),
-    JSON.stringify(siteState, null, 4)
-  ); */
 
   return (
     <>
@@ -151,7 +173,7 @@ const _SiteCard: FC<SiteProps> = ({
           image={site.image}
           tokenUrl={site.token.gnosisscanUrl}
           data={csmData}
-          miningState={site.miningState}
+          miningState={site.status}
           startingDate={site.mining.startingDate}
         />
       )}

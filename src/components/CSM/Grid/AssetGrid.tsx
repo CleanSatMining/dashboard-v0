@@ -1,4 +1,4 @@
-import { FC, memo } from 'react';
+import { FC, memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { SimpleGrid } from '@mantine/core';
@@ -10,7 +10,10 @@ import {
   IconTrendingUp,
 } from '@tabler/icons';
 
-import { CSMStates } from 'src/types/CSMState';
+import { useAppSelector } from 'src/hooks/react-hooks';
+import { selectMiningState } from 'src/store/features/miningData/miningDataSelector';
+import { selectUsersState } from 'src/store/features/userData/userDataSelector';
+import { Yield } from 'src/types/mining/Site';
 
 import {
   formatBTC,
@@ -19,21 +22,28 @@ import {
 } from '../../../utils/format/format';
 import { AssetCard, Data } from '../Asset/AssetCard';
 import {
-  getUserAssetValue,
+  getUserInvestment,
   getUserSiteIds,
   getUserYield,
 } from '../Utils/yield';
 
 type AssetProps = {
   btcPrice: number;
-  states: CSMStates;
   period: number;
-  account?: string;
+  account: string;
 };
 
-const _AssetGrid: FC<AssetProps> = ({ btcPrice, states, period }) => {
+const _AssetGrid: FC<AssetProps> = ({ btcPrice, period, account }) => {
   const isMobile = useMediaQuery('(max-width: 36em)');
   const { t } = useTranslation('site', { keyPrefix: 'card' });
+  const usersState = useAppSelector(selectUsersState);
+  const miningState = useAppSelector(selectMiningState);
+  const [userYield, setUserYield] = useState<Yield>(
+    getUserYield(miningState, usersState, account, period, btcPrice)
+  );
+
+  //console.log('REDUX USERS', JSON.stringify(usersState, null, 4));
+  //console.log('REDUX SITEs', JSON.stringify(miningState, null, 4));
 
   const dataTokens: Data[] = [];
 
@@ -43,14 +53,23 @@ const _AssetGrid: FC<AssetProps> = ({ btcPrice, states, period }) => {
 
   const dataAPR: Data[] = [];
 
-  const {
-    apr: yieldApr,
-    btc: yieldBtc,
-    usd: yieldUsd,
-  } = getUserYield(states, period, btcPrice);
+  const numberOfSite = getUserSiteIds(usersState, account).length;
+  const investment = getUserInvestment(usersState, account);
 
-  const assetValue = getUserAssetValue(states);
-  const numberOfSite = getUserSiteIds(states).length;
+  // console.log(
+  //   'REDUX',
+  //   numberOfSite,
+  //   investment.toNumber(),
+  //   userYield.usd,
+  //   userYield.btc,
+  //   userYield.apr
+  // );
+
+  useEffect(() => {
+    setUserYield(
+      getUserYield(miningState, usersState, account, period, btcPrice)
+    );
+  }, [usersState, miningState, account, btcPrice, period]);
 
   return (
     <SimpleGrid
@@ -66,7 +85,7 @@ const _AssetGrid: FC<AssetProps> = ({ btcPrice, states, period }) => {
     >
       <AssetCard
         title={t('my-tokens')}
-        value={formatUsd(assetValue.usd)}
+        value={formatUsd(investment.toNumber())}
         data={dataTokens}
         Icon={IconCoins}
       ></AssetCard>
@@ -78,14 +97,14 @@ const _AssetGrid: FC<AssetProps> = ({ btcPrice, states, period }) => {
       ></AssetCard>
       <AssetCard
         title={t('my-yield')}
-        value={formatBTC(yieldBtc)}
-        subValue={formatUsd(yieldUsd)}
+        value={formatBTC(userYield.btc)}
+        subValue={formatUsd(userYield.usd)}
         data={dataBTC}
         Icon={IconCoinBitcoin}
       ></AssetCard>
       <AssetCard
         title={t('my-apy')}
-        value={formatPercent(yieldApr)}
+        value={formatPercent(userYield.apr)}
         Icon={IconTrendingUp}
         data={dataAPR}
       ></AssetCard>

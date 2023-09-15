@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { TFunction, useTranslation } from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 import {
   Avatar,
@@ -20,8 +20,8 @@ import { IconExternalLink, IconInfoCircle } from '@tabler/icons';
 
 import { openInNewTab } from 'src/utils/window';
 
-import { Income } from '../../../types/Site';
-import { MiningState } from '../../../types/Site';
+import { Income } from '../../../types/mining/Site';
+import { MiningState } from '../../../types/mining/Site';
 import {
   formatBTC,
   formatBigNumber,
@@ -86,6 +86,11 @@ const useStyle = createStyles((theme: MantineTheme) => ({
     marginBottom: '20px',
     marginTop: '10px',
   },
+
+  icon: {
+    height: '16px',
+    width: '16px',
+  },
 }));
 
 export type SiteData = {
@@ -136,6 +141,8 @@ export const UserSiteCard: FC<TableProps> = ({
 
   const { badgeColor, badgeState } = calculateSiteState(t, miningState);
 
+  //console.log('MOUNT UserSiteCard', title, data.apr);
+
   return (
     <Card
       shadow={'sm'}
@@ -180,12 +187,17 @@ export const UserSiteCard: FC<TableProps> = ({
       >
         <Card shadow={'sm'} padding={'xs'} radius={'md'} withBorder={true}>
           <Group position={'apart'} sx={{ marginBottom: '5px' }}>
-            <Text weight={500} fz={'lg'} align={'center'} color={'dimmed'}>
+            <Text
+              weight={500}
+              fz={isMobile ? 'md' : 'lg'}
+              align={'center'}
+              color={'dimmed'}
+            >
               {t('my-tokens')}
             </Text>
             <Avatar
               src={'https://cleansatmining.com/data/files/logo_csm.png'}
-              size={'sm'}
+              size={isMobile ? 'xs' : 'sm'}
             ></Avatar>
           </Group>
 
@@ -196,8 +208,9 @@ export const UserSiteCard: FC<TableProps> = ({
             <Flex
               className={classes.urlContainer}
               onClick={() => openInNewTab(tokenUrl)}
+              sx={{ padding: '0', margin: '0' }}
             >
-              <Text>{csmSymbol}</Text>
+              <Text sx={{ padding: '0', margin: '0' }}>{csmSymbol}</Text>
               <IconExternalLink size={16} />
             </Flex>
           </Group>
@@ -212,20 +225,20 @@ export const UserSiteCard: FC<TableProps> = ({
                 <Flex sx={{ cursor: 'help' }}>
                   <Text
                     weight={500}
-                    fz={'lg'}
+                    fz={isMobile ? 'md' : 'lg'}
                     align={'center'}
                     color={'dimmed'}
                     sx={{ marginRight: '2px' }}
                   >
                     {t('my-income')}
                   </Text>
-                  <IconInfoCircle size={16} />
+                  <IconInfoCircle size={14} />
                 </Flex>
               </HoverCard.Target>
 
               <Avatar
                 src={'https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=025'}
-                size={'sm'}
+                size={isMobile ? 'xs' : 'sm'}
                 sx={{ margin: '0px' }}
               ></Avatar>
             </Group>
@@ -257,7 +270,7 @@ export const UserSiteCard: FC<TableProps> = ({
           {formatBigNumber(csm) +
             '/' +
             formatBigNumber(csmSupply) +
-            ' (' +
+            ' (~' +
             formatSmallPercent(csmPercent) +
             ')'}
         </Text>
@@ -327,10 +340,7 @@ export const UserSiteCard: FC<TableProps> = ({
   );
 };
 
-function calculateSiteState(
-  t: TFunction<'site', 'card'>,
-  miningState: MiningState
-) {
+function calculateSiteState(t: any, miningState: MiningState) {
   let badgeColor = 'gray';
   let badgeState = t('inactive');
 

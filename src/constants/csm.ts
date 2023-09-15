@@ -1,4 +1,4 @@
-import { MiningState, Site } from '../types/Site';
+import { Contractor, MiningState, Site } from '../types/mining/Site';
 
 export const FEE_RATE_CSM = 0.1;
 export const FEE_RATE_BBGS = 0.05;
@@ -25,19 +25,36 @@ export const SITES: Record<SiteID, Site> = {
       gnosisscanUrl:
         'https://gnosisscan.io/address/0xf8419b6527A24007c2BD81bD1aA3b5a735C1F4c9',
     },
-    miningState: MiningState.inactive,
+    status: MiningState.active,
     api: {
-      username: undefined,
-      url: undefined,
+      username: 'bbgs-csma',
+      url: 'https://antpool.com/api/paymentHistoryV2.htm',
+      contractor: Contractor.ANTPOOL,
     },
     mining: {
-      startingDate: '-',
+      startingDate: '2023-09-01',
       asics: {
-        powerW: 0,
-        units: 0,
+        powerW: 3100,
+        units: 441,
+        hashrateHs: 100000000000000,
       },
       electricity: {
-        usdPricePerKWH: 0,
+        usdPricePerKWH: 0.038,
+      },
+      intallationCosts: {
+        equipement: 747020,
+      },
+    },
+    fees: {
+      crowdfunding: {
+        csm: 0.1,
+      },
+      operational: {
+        operator: 0.15,
+        csm: 0.05,
+        pool: 0.015,
+        taxe: 0.1357,
+        provision: 0.2,
       },
     },
   },
@@ -53,23 +70,39 @@ export const SITES: Record<SiteID, Site> = {
       gnosisscanUrl:
         'https://gnosisscan.io/address/0x364D1aAF7a98e26A1F072e926032f154428481d1',
     },
-    miningState: MiningState.inactive,
+    status: MiningState.inactive,
     api: {
       username: undefined,
-      url: undefined,
+      url: 'https://antpool.com/api/paymentHistoryV2.htm',
+      contractor: Contractor.ANTPOOL,
     },
     mining: {
       startingDate: '-',
       asics: {
-        powerW: 0,
-        units: 0,
+        powerW: 3100,
+        units: 375,
+        hashrateHs: 100000000000000,
       },
       electricity: {
-        usdPricePerKWH: 0,
+        usdPricePerKWH: 0.058,
+      },
+      intallationCosts: {
+        equipement: 1606587,
+      },
+    },
+    fees: {
+      crowdfunding: {
+        csm: 0.1,
+      },
+      operational: {
+        operator: 0.1,
+        csm: 0.05,
+        pool: 0.015,
+        taxe: 0.1357,
+        provision: 0.2,
       },
     },
   },
-
   [SiteID.gamma]: {
     name: 'CMS gamma',
     image: 'https://cleansatmining.com/data/files/img_3861.jpg',
@@ -81,19 +114,36 @@ export const SITES: Record<SiteID, Site> = {
       gnosisscanUrl:
         'https://gnosisscan.io/address/0x71C86CbB71846425De5f3a693e989F4BDd97E98d',
     },
-    miningState: MiningState.active,
+    status: MiningState.active,
     api: {
       username: 'cleansatmininggamma',
       url: 'https://api.beta.luxor.tech/graphql',
+      contractor: Contractor.LUXOR,
     },
     mining: {
-      startingDate: '20/06/2023',
+      startingDate: '2023-06-20',
       asics: {
-        powerW: 3000,
+        powerW: 3010,
         units: 189,
+        hashrateHs: 141000000000000,
       },
       electricity: {
         usdPricePerKWH: 0.078,
+      },
+      intallationCosts: {
+        equipement: 726565,
+      },
+    },
+    fees: {
+      crowdfunding: {
+        csm: 0.1,
+      },
+      operational: {
+        operator: 0,
+        csm: 0.05,
+        pool: 0.015,
+        taxe: 0.1357,
+        provision: 0.2,
       },
     },
   },
@@ -108,19 +158,36 @@ export const SITES: Record<SiteID, Site> = {
       gnosisscanUrl:
         'https://gnosisscan.io/address/0x203A5080450FFC3e038284082FBF5EBCdc9B053f',
     },
-    miningState: MiningState.inactive,
+    status: MiningState.active,
     api: {
-      username: undefined,
-      url: undefined,
+      username: 'bbgs-fin',
+      url: 'https://antpool.com/api/paymentHistoryV2.htm',
+      contractor: Contractor.ANTPOOL,
     },
     mining: {
-      startingDate: '-',
+      startingDate: '2023-08-18',
       asics: {
-        powerW: 0,
-        units: 0,
+        powerW: 3400,
+        units: 352,
+        hashrateHs: 122000000000000,
       },
       electricity: {
-        usdPricePerKWH: 0,
+        usdPricePerKWH: 0.059,
+      },
+      intallationCosts: {
+        equipement: 1021739,
+      },
+    },
+    fees: {
+      crowdfunding: {
+        csm: 0.1,
+      },
+      operational: {
+        operator: 0.1,
+        csm: 0.05,
+        pool: 0.015,
+        taxe: 0.1357,
+        provision: 0.2,
       },
     },
   },
@@ -136,19 +203,36 @@ export const SITES: Record<SiteID, Site> = {
       gnosisscanUrl:
         'https://gnosisscan.io/token/0x20D2F2d4b839710562D25274A3e98Ea1F0392D24',
     },
-    miningState: MiningState.inactive,
+    status: MiningState.inactive,
     api: {
       username: undefined,
       url: undefined,
+      contractor: undefined,
     },
     mining: {
       startingDate: '-',
       asics: {
-        powerW: 0,
-        units: 0,
+        powerW: 3300,
+        units: 352,
+        hashrateHs: 122000000000000,
       },
       electricity: {
-        usdPricePerKWH: 4.6,
+        usdPricePerKWH: 0.046,
+      },
+      intallationCosts: {
+        equipement: 650000,
+      },
+    },
+    fees: {
+      crowdfunding: {
+        csm: 0.1,
+      },
+      operational: {
+        operator: 0.15,
+        csm: 0,
+        pool: 0.015,
+        taxe: 0.1357,
+        provision: 0.2,
       },
     },
   },

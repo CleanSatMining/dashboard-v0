@@ -5,14 +5,24 @@ import { Flex, SegmentedControl } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { useWeb3React } from '@web3-react/core';
 
+import { useAppDispatch } from 'src/hooks/react-hooks';
+import { siteAddedDispatchType } from 'src/store/features/miningData/miningDataSlice';
+import { userAddedDispatchType } from 'src/store/features/userData/userDataSlice';
 import { Displays } from 'src/types/Displays';
+import {
+  MiningSummaryPerDay,
+  SiteMiningSummary,
+  UserSummary,
+} from 'src/types/mining/Mining';
 
 import { ALLOWED_SITES, DAYS_PERIODS, filterMobile } from '../../constants';
 import { API_ADMIN } from '../../constants/apis';
 import { useBitcoinOracle } from '../../hooks/useBitcoinOracle';
-import { useMiningSitesStatesByPeriods } from '../../hooks/useMiningStates';
+import { useMiningSitesSummary } from '../../hooks/useMiningSummary';
+import { useWalletERC20Balances } from '../../hooks/useWalletERC20Balance';
 import { UserAssets } from '../CSM/Assets/UserAssets';
 import { AddressInput } from '../CSM/UserInput/UserInput';
+import { getCSMTokenAddress, getCSMTokenAddresses } from '../CSM/Utils/yield';
 
 interface ApiAdmin {
   admin: boolean;
@@ -25,6 +35,7 @@ interface Display {
 const Display: FC = () => {
   const { t } = useTranslation('site', { keyPrefix: 'card' });
   const isMobile = useMediaQuery('(max-width: 36em)');
+  const dispatch = useAppDispatch();
   const { account: accountAddress } = useWeb3React();
   const [account, setAccount] = useState(
     accountAddress
@@ -37,7 +48,7 @@ const Display: FC = () => {
     if (accountAddress) {
       setAccount(accountAddress);
     }
-    const fetchData = async () => {
+    const fetchAdminData = async () => {
       const address: string = accountAddress ?? '';
       try {
         const result = await fetch(API_ADMIN.url(address), {
@@ -58,7 +69,7 @@ const Display: FC = () => {
       }
     };
 
-    fetchData();
+    fetchAdminData();
   }, [accountAddress]);
 
   const [period, setPeriod] = useState(
@@ -66,37 +77,47 @@ const Display: FC = () => {
   );
 
   const { price } = useBitcoinOracle();
-  const { states: globalState } = useMiningSitesStatesByPeriods(
+  const { states: globalState } = useMiningSitesSummary(
     ALLOWED_SITES,
-    DAYS_PERIODS.filter(filterMobile(isMobile))
+    Math.max(...DAYS_PERIODS)
   );
 
-  const dataSegmentedControl: { label: string; value: string }[] =
-    DAYS_PERIODS.filter(filterMobile(isMobile)).map((d) => {
-      let label = '';
-      if (d >= 360 && d <= 366) {
-        label = 1 + t('year');
-      } else if (Math.round(d / 30) === d / 30) {
-        label =
-          Math.round(d / 30) +
-          (Math.round(d / 30) > 1 ? t('months') : t('month'));
-      } else if (Math.round(d / 31) === d / 31) {
-        label =
-          Math.round(d / 31) +
-          (Math.round(d / 31) > 1 ? t('months') : t('month'));
-      } else if (Math.ceil(d / 30) >= d / 30 && Math.ceil(d / 31) <= d / 31) {
-        label =
-          Math.ceil(d / 31) +
-          (Math.ceil(d / 31) > 1 ? t('months') : t('month'));
-      } else {
-        label = d > 1 ? d + t('days') : d + t('day');
-      }
+  const { tokenAddress: tokenAddresses }: { tokenAddress: string[] } =
+    getCSMTokenAddresses();
+  const {
+    balances,
+    isLoaded,
+    account: balanceAccount,
+  } = useWalletERC20Balances(
+    tokenAddresses,
+    account
+    //(loadingComplete: boolean) => setSpinner(!loadingComplete),
+  );
 
-      return {
-        label: label,
-        value: d.toString(),
-      };
-    });
+  dispatchMiningSummary();
+
+  useEffect(() => {
+    dispatchMiningSummary();
+
+    function dispatchMiningSummary() {
+      for (const siteId of ALLOWED_SITES) {
+        if (globalState[siteId] && globalState[siteId].days) {
+          const days: MiningSummaryPerDay[] = globalState[siteId].days;
+          const data: SiteMiningSummary = {
+            id: siteId,
+            mining: { days },
+            token: { byUser: {} },
+          };
+          dispatch({ type: siteAddedDispatchType, payload: data });
+        }
+      }
+    }
+  }, [globalState, dispatch]);
+
+  dispatchUserSummary();
+
+  const dataSegmentedControl: { label: string; value: string }[] =
+    fillSegmentedControl();
 
   // console.log('WARNING RENDER DISPLAY', account);
 
@@ -134,8 +155,83 @@ const Display: FC = () => {
         miningStates={globalState}
         period={Number(period)}
         price={price}
+        balances={balances}
       ></UserAssets>
     </>
   );
+
+  /**
+   * dispatchUserSummary
+   */
+  function dispatchUserSummary() {
+    let isUpdated = false;
+    const user: UserSummary = {
+      address: account,
+      bySite: {},
+    };
+    for (const siteId of ALLOWED_SITES) {
+      if (balances && balances[getCSMTokenAddress(siteId)]) {
+        user.bySite[siteId] = {
+          token: {
+            balance: balances[getCSMTokenAddress(siteId)].balance,
+          },
+        };
+        isUpdated = true;
+      }
+    }
+
+    if (isUpdated && isLoaded && account === balanceAccount) {
+      dispatch({ type: userAddedDispatchType, payload: user });
+    }
+  }
+
+  /**
+   * fillSegmentedControl
+   * @returns
+   */
+  function fillSegmentedControl(): { label: string; value: string }[] {
+    return DAYS_PERIODS.filter(filterMobile(isMobile)).map((d) => {
+      let label = '';
+      if (d >= 360 && d <= 366) {
+        label = 1 + t('year');
+      } else if (Math.round(d / 30) === d / 30) {
+        label =
+          Math.round(d / 30) +
+          (Math.round(d / 30) > 1 ? t('months') : t('month'));
+      } else if (Math.round(d / 31) === d / 31) {
+        label =
+          Math.round(d / 31) +
+          (Math.round(d / 31) > 1 ? t('months') : t('month'));
+      } else if (Math.ceil(d / 30) >= d / 30 && Math.ceil(d / 31) <= d / 31) {
+        label =
+          Math.ceil(d / 31) +
+          (Math.ceil(d / 31) > 1 ? t('months') : t('month'));
+      } else {
+        label = d > 1 ? d + t('days') : d + t('day');
+      }
+
+      return {
+        label: label,
+        value: d.toString(),
+      };
+    });
+  }
+
+  /**
+   * dispatchMiningSummary
+   */
+  function dispatchMiningSummary() {
+    for (const siteId of ALLOWED_SITES) {
+      if (globalState[siteId] && globalState[siteId].days) {
+        const days: MiningSummaryPerDay[] = globalState[siteId].days;
+        const data: SiteMiningSummary = {
+          id: siteId,
+          mining: { days },
+          token: { byUser: {} },
+        };
+        dispatch({ type: siteAddedDispatchType, payload: data });
+      }
+    }
+  }
 };
 export default Display;

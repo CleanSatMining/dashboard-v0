@@ -21,7 +21,7 @@ interface TokenInfos {
 interface UseWalletERC20Balance {
   bigNumberbalance: BigNumber | undefined;
   balance: string | undefined;
-  WalletERC20Balance: any;
+  WalletERC20Balance: FC;
 }
 
 export const useWalletERC20Balance = (
@@ -115,23 +115,27 @@ export interface Balance {
 interface UseWalletERC20Balances {
   balances: { [tokenAddress: string]: Balance };
   account: string;
+  isLoaded: boolean;
 }
 
 export const useWalletERC20Balances = (
   tokenAddresses: string[],
   accountAddress: string | undefined = undefined,
-  loadingCompleteCallback?: any
+  loadingCompleteCallback?: (loadingComplete: boolean) => void
 ): UseWalletERC20Balances => {
   const [balances, setBalances] = useState<{ [tokenAddress: string]: Balance }>(
     {}
   );
-  const { account, provider, chainId } = useWeb3React();
+  const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
-  if (accountAddress == undefined) {
-    accountAddress = account;
-  }
+  const { account, provider, chainId } = useWeb3React();
+  const [addressUsed, setAddressUsed] = useState<string>(
+    accountAddress ? accountAddress : account ? account : ''
+  );
 
   useEffect(() => {
+    setIsLoaded(false);
+    console.log('DISPATCH USER IS LOADED', false);
     if (loadingCompleteCallback) {
       loadingCompleteCallback(false);
     }
@@ -143,7 +147,7 @@ export const useWalletERC20Balances = (
         token,
         Erc20ABI,
         provider as Web3Provider,
-        accountAddress
+        addressUsed
       );
       if (abi !== undefined) {
         contracts.push(abi);
@@ -156,19 +160,27 @@ export const useWalletERC20Balances = (
           try {
             if (
               !contract ||
-              !accountAddress ||
+              !addressUsed ||
               !ALLOWED_CHAINS.includes(chainId ?? 0)
             )
               return;
 
             const balance = new BigNumber(
-              (await contract.balanceOf(accountAddress)).toString()
+              (await contract.balanceOf(addressUsed)).toString()
             );
             const decimals = new BigNumber(
               (await contract.decimals()).toString()
             );
             const tokenSymbol = await contract?.symbol();
             const address = contract.address;
+            console.log(
+              'FETCH BALANCE for',
+              addressUsed,
+              'contract',
+              balance.toNumber(),
+              'balance',
+              contract.address
+            );
             tokenInfos.push({
               balance: balance,
               symbol: tokenSymbol ?? '',
@@ -176,29 +188,50 @@ export const useWalletERC20Balances = (
               address: address,
             });
           } catch (err) {
-            console.log('Failed to get wallet balance: ', accountAddress, err);
+            console.log('Failed to get wallet balance: ', addressUsed, err);
             reject(err);
           }
         }
-        /* console.log(
-          'useEffect BALANCE',
-          accountAddress,
-          JSON.stringify(tokenInfos, null, 4)
-        ); */
-        setBalances(extractBalances(tokenInfos));
+
+        setBalances(() => extractBalances(tokenInfos));
         if (loadingCompleteCallback) {
           loadingCompleteCallback(true);
         }
-
+        console.log('DISPATCH USER IS LOADED', true);
+        setIsLoaded(true);
         resolve(tokenInfos);
       });
     };
     getTokensInfos();
-  }, [accountAddress, provider]);
+  }, [addressUsed]);
+
+  useEffect(() => {
+    setBalances({});
+    const calcAddress: string | undefined =
+      addressUsed === accountAddress && account !== undefined
+        ? account
+        : accountAddress;
+    console.log(
+      'FETCH BALANCE calc address',
+      calcAddress,
+      'addressUsed',
+      addressUsed,
+      'account',
+      account,
+      'given',
+      accountAddress
+    );
+    if (calcAddress) {
+      setAddressUsed(calcAddress);
+    }
+  }, [accountAddress, account]);
+
+  console.log('FETCH BALANCE for', addressUsed, ':', JSON.stringify(balances));
 
   return {
     balances: balances,
-    account: accountAddress ?? '',
+    account: addressUsed ?? '',
+    isLoaded: isLoaded,
   };
 };
 function extractBalances(data: TokenInfos[]) {
