@@ -107,7 +107,7 @@ export const SITES: Record<SiteID, Site> = {
     name: 'CMS gamma',
     image: 'https://cleansatmining.com/data/files/img_3861.jpg',
     token: {
-      address: '0x203A5080450FFC3e038284082FBF5EBCdc9B053f',
+      address: '0x71C86CbB71846425De5f3a693e989F4BDd97E98d',
       supply: 100000,
       price: 9.99,
       symbol: 'CSM-gamma',
@@ -151,7 +151,7 @@ export const SITES: Record<SiteID, Site> = {
     name: 'CMS omega',
     image: 'https://cleansatmining.com/data/files/434184-1260x630-finlande.jpg',
     token: {
-      address: '0x71C86CbB71846425De5f3a693e989F4BDd97E98d',
+      address: '0x203A5080450FFC3e038284082FBF5EBCdc9B053f',
       supply: 100000,
       price: 14.35,
       symbol: 'CSM-omega',
