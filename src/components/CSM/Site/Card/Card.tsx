@@ -30,6 +30,7 @@ import {
   formatToken,
   formatUsd,
 } from '../../../../utils/format/format';
+import { ACTIVATE_DISPLAY_APY } from 'src/constants/csm';
 
 const useStyle = createStyles((theme: MantineTheme) => ({
   title: {
@@ -182,21 +183,23 @@ export const UserSiteCard: FC<TableProps> = ({
         </BackgroundImage>
       </Card.Section>
 
-      <Flex
-        gap={'0'}
-        justify={'flex-start'}
-        align={'center'}
-        direction={'column'}
-        wrap={'wrap'}
-        sx={{ marginBottom: isMobile ? '0px' : '10px' }}
-      >
-        <Text fz={isMobile ? '20px' : '28px'} weight={1000} color={'brand'}>
-          {formatPercent(data.apr)}
-        </Text>
-        <Text fz={isMobile ? '12px' : '14px'} weight={1000} color={'dimmed'}>
-          {'APY'}
-        </Text>
-      </Flex>
+      {ACTIVATE_DISPLAY_APY && (
+        <Flex
+          gap={'0'}
+          justify={'flex-start'}
+          align={'center'}
+          direction={'column'}
+          wrap={'wrap'}
+          sx={{ marginBottom: isMobile ? '0px' : '10px' }}
+        >
+          <Text fz={isMobile ? '20px' : '28px'} weight={1000} color={'brand'}>
+            {formatPercent(data.apr)}
+          </Text>
+          <Text fz={isMobile ? '12px' : '14px'} weight={1000} color={'dimmed'}>
+            {'APY'}
+          </Text>
+        </Flex>
+      )}
 
       <SimpleGrid
         cols={2}

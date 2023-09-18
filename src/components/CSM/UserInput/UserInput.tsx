@@ -62,7 +62,7 @@ export const AddressInput: FC<AddressProps> = ({
           setValue,
           setDisplayedAccount,
           setAccount,
-          updateAccount
+          updateAccount,
         )}
         size={isMobile ? 'xs' : 'sm'}
       />
@@ -75,12 +75,12 @@ export const AddressInput: FC<AddressProps> = ({
           wrap={'wrap'}
         >
           {getLabel(account) && (
-            <Text ref={ref} fz={14} fw={500} color={'brand'}>
+            <Text fz={14} fw={500} color={'brand'}>
               {getLabel(account)}
             </Text>
           )}
           {value !== account && (
-            <Text ref={ref} fz={isMobile ? 10 : 14} fw={500} color={'brand'}>
+            <Text fz={isMobile ? 10 : 14} fw={500} color={'brand'}>
               {account}
             </Text>
           )}
@@ -94,7 +94,7 @@ function setAccountAddress(
   setValue: any,
   setDisplayedAccount: any,
   setAccount: any,
-  updateAccount: any
+  updateAccount: any,
 ) {
   return (address: string) => {
     setValue(address);
@@ -158,6 +158,6 @@ const AutoCompleteItem = forwardRef<HTMLDivElement, ItemProps>(
         </div>
       </Group>
     </div>
-  )
+  ),
 );
 AutoCompleteItem.displayName = 'AutoCompleteItem';

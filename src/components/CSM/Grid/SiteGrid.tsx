@@ -6,7 +6,6 @@ import { useAppSelector } from 'src/hooks/react-hooks';
 import { selectUsersState } from 'src/store/features/userData/userDataSelector';
 
 import { ALLOWED_SITES } from '../../../constants';
-import { MiningSitesStates } from '../../../types/mining/CSMState';
 import { SiteCard } from '../Site/SiteCard';
 
 type SiteProps = {
@@ -18,7 +17,7 @@ type SiteProps = {
 const _SiteGrid: FC<SiteProps> = ({ account, btcPrice, period }) => {
   const usersState = useAppSelector(selectUsersState);
   const [hasBalance, setHasBalance] = useState<boolean[]>(
-    ALLOWED_SITES.map((siteId) => getShallDisplay(siteId))
+    ALLOWED_SITES.map((siteId) => getShallDisplay(siteId)),
   );
   useEffect(() => {
     function getShallDisplay(siteId: string): boolean {
@@ -77,7 +76,7 @@ const _SiteGrid: FC<SiteProps> = ({ account, btcPrice, period }) => {
                     //</Grid.Col>shallDisplay={(siteId: number, shallDisplay: boolean) => setShallDisplay(siteId, shallDisplay)
                   ></SiteCard>
                 </Grid.Col>
-              )
+              ),
             )
           : // TODO: add message when no offers
             undefined}

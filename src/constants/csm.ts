@@ -4,6 +4,7 @@ export const FEE_RATE_CSM = 0.1;
 export const FEE_RATE_BBGS = 0.05;
 export const PROVISION_RATE = 0.2;
 export const SWISS_TAXE = 0.1357;
+export const ACTIVATE_DISPLAY_APY = false;
 
 export enum SiteID {
   alpha = '1',

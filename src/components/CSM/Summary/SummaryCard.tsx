@@ -33,7 +33,13 @@ type SiteProps = {
   subValue?: string;
 };
 
-const _AssetCard: FC<SiteProps> = ({ title, Icon, value, data, subValue }) => {
+const _SummaryCard: FC<SiteProps> = ({
+  title,
+  Icon,
+  value,
+  data,
+  subValue,
+}) => {
   const { classes } = useStyle();
   const isMobile = useMediaQuery('(max-width: 36em)');
   return (
@@ -45,7 +51,7 @@ const _AssetCard: FC<SiteProps> = ({ title, Icon, value, data, subValue }) => {
         withBorder={true}
       >
         <Group position={'apart'} mt={'0'} mb={isMobile ? 0 : 'xs'}>
-          <Title order={isMobile ? 6 : 2}>{title}</Title>
+          <Title order={isMobile ? 6 : 3}>{title}</Title>
           {Icon && (
             <ActionIcon variant={'transparent'}>
               <Icon className={classes.brand}></Icon>
@@ -61,7 +67,7 @@ const _AssetCard: FC<SiteProps> = ({ title, Icon, value, data, subValue }) => {
           direction={'column'}
           wrap={'wrap'}
         >
-          <Title order={isMobile ? 5 : 3} color={'brand'}>
+          <Title order={isMobile ? 5 : 4} color={'brand'}>
             {value}
           </Title>
           {subValue !== undefined && (
@@ -112,4 +118,4 @@ const _AssetCard: FC<SiteProps> = ({ title, Icon, value, data, subValue }) => {
   );
 };
 
-export const AssetCard = memo(_AssetCard);
+export const SummaryCard = memo(_SummaryCard);

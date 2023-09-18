@@ -14,13 +14,14 @@ import { useAppSelector } from 'src/hooks/react-hooks';
 import { selectMiningState } from 'src/store/features/miningData/miningDataSelector';
 import { selectUsersState } from 'src/store/features/userData/userDataSelector';
 import { Yield } from 'src/types/mining/Site';
+import { ACTIVATE_DISPLAY_APY } from 'src/constants/csm';
 
 import {
   formatBTC,
   formatPercent,
   formatUsd,
 } from '../../../utils/format/format';
-import { AssetCard, Data } from '../Summary/SummaryCard';
+import { SummaryCard, Data } from '../Summary/SummaryCard';
 import {
   getUserInvestment,
   getUserSiteIds,
@@ -78,36 +79,38 @@ const _Summary: FC<AssetProps> = ({ btcPrice, period, account }) => {
         { minWidth: 'xs', cols: 2 },
         { minWidth: 'sm', cols: 2 },
         { minWidth: 'md', cols: 3 },
-        { minWidth: 1200, cols: 4 },
+        { minWidth: 1200, cols: ACTIVATE_DISPLAY_APY ? 4 : 3 },
       ]}
       spacing={isMobile ? 'xs' : undefined}
       sx={{ marginBottom: isMobile ? '20px' : '50px' }}
     >
-      <AssetCard
+      <SummaryCard
         title={t('my-tokens')}
         value={formatUsd(investment.toNumber())}
         data={dataTokens}
         Icon={IconCoins}
-      ></AssetCard>
-      <AssetCard
+      ></SummaryCard>
+      <SummaryCard
         title={t('my-sites')}
         value={numberOfSite.toString()}
         data={dataSites}
         Icon={IconBuildingFactory}
-      ></AssetCard>
-      <AssetCard
+      ></SummaryCard>
+      <SummaryCard
         title={t('my-yield')}
         value={formatBTC(userYield.btc)}
         subValue={formatUsd(userYield.usd)}
         data={dataBTC}
         Icon={IconCoinBitcoin}
-      ></AssetCard>
-      <AssetCard
-        title={t('my-apy')}
-        value={formatPercent(userYield.apr)}
-        Icon={IconTrendingUp}
-        data={dataAPR}
-      ></AssetCard>
+      ></SummaryCard>
+      {ACTIVATE_DISPLAY_APY && (
+        <SummaryCard
+          title={t('my-apy')}
+          value={formatPercent(userYield.apr)}
+          Icon={IconTrendingUp}
+          data={dataAPR}
+        ></SummaryCard>
+      )}
     </SimpleGrid>
   );
 };
