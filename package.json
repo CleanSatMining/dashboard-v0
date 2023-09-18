@@ -32,7 +32,7 @@
     "clsx": "^2.0.0",
     "cookies-next": "^4.0.0",
     "dotenv": "^16.0.3",
-    "graphql": "^16.6.0",
+    "graphql": "^16.8.0",
     "i18next": "^23.5.1",
     "image-exists": "^1.1.0",
     "jotai": "^2.4.2",
