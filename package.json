@@ -33,7 +33,7 @@
     "cookies-next": "^2.0.5",
     "dotenv": "^16.0.3",
     "graphql": "^16.6.0",
-    "i18next": "^21.8.11",
+    "i18next": "^23.5.1",
     "image-exists": "^1.1.0",
     "jotai": "^1.11.0",
     "loadash": "^1.0.0",
