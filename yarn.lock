@@ -2468,7 +2468,7 @@
   dependencies:
     "@babel/runtime" "^7.13.10"
 
-"@realtoken/realt-commons@^1.2.4":
+"@realtoken/realt-commons@^1.2.5":
   version "1.2.5"
   resolved "https://registry.yarnpkg.com/@realtoken/realt-commons/-/realt-commons-1.2.5.tgz#b24f17b660068a2e4a6afa60e89bcac6a6377962"
   integrity sha512-NiWMJtCYirJkfpKW5Uc2p2ADQHTbLtHc/XBdFgmHvcC9S4rmfkcPgw4LxWZrccpPBLU38k+gPe6aTZZXZ8EJIA==
