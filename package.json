@@ -52,7 +52,7 @@
     "@babel/core": "^7.22.17",
     "@coinbase/wallet-sdk": "^3.3.0",
     "@graphprotocol/client-cli": "^2.2.16",
-    "@radix-ui/react-scroll-area": "^0.1.5-rc.44",
+    "@radix-ui/react-scroll-area": "^1.0.4",
     "@trivago/prettier-plugin-sort-imports": "^3.2.0",
     "@typechain/ethers-v5": "^11.1.1",
     "@types/lodash": "^4.14.198",
