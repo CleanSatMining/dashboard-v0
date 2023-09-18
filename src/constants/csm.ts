@@ -16,6 +16,7 @@ export enum SiteID {
 export const SITES: Record<SiteID, Site> = {
   [SiteID.alpha]: {
     name: 'CMS alpha',
+    location: 'location-alpha',
     image: 'https://cleansatmining.com/data/files/virunga-congo.jpg',
     token: {
       address: '0xf8419b6527A24007c2BD81bD1aA3b5a735C1F4c9',
@@ -60,6 +61,7 @@ export const SITES: Record<SiteID, Site> = {
   },
   [SiteID.beta]: {
     name: 'CMS beta',
+    location: 'location-beta',
     image:
       'https://cleansatmining.com/data/files/barrage-d-itaipu_1_croped_1681572415.jpg',
     token: {
@@ -103,52 +105,9 @@ export const SITES: Record<SiteID, Site> = {
       },
     },
   },
-  [SiteID.gamma]: {
-    name: 'CMS gamma',
-    image: 'https://cleansatmining.com/data/files/img_3861.jpg',
-    token: {
-      address: '0x71C86CbB71846425De5f3a693e989F4BDd97E98d',
-      supply: 100000,
-      price: 9.99,
-      symbol: 'CSM-gamma',
-      gnosisscanUrl:
-        'https://gnosisscan.io/address/0x71C86CbB71846425De5f3a693e989F4BDd97E98d',
-    },
-    status: MiningState.active,
-    api: {
-      username: 'cleansatmininggamma',
-      url: 'https://api.beta.luxor.tech/graphql',
-      contractor: Contractor.LUXOR,
-    },
-    mining: {
-      startingDate: '2023-06-20',
-      asics: {
-        powerW: 3010,
-        units: 189,
-        hashrateHs: 141000000000000,
-      },
-      electricity: {
-        usdPricePerKWH: 0.078,
-      },
-      intallationCosts: {
-        equipement: 726565,
-      },
-    },
-    fees: {
-      crowdfunding: {
-        csm: 0.1,
-      },
-      operational: {
-        operator: 0,
-        csm: 0.05,
-        pool: 0.015,
-        taxe: 0.1357,
-        provision: 0.2,
-      },
-    },
-  },
   [SiteID.omega]: {
     name: 'CMS omega',
+    location: 'location-omega',
     image: 'https://cleansatmining.com/data/files/434184-1260x630-finlande.jpg',
     token: {
       address: '0x203A5080450FFC3e038284082FBF5EBCdc9B053f',
@@ -191,8 +150,55 @@ export const SITES: Record<SiteID, Site> = {
       },
     },
   },
+  [SiteID.gamma]: {
+    name: 'CMS gamma',
+    location: 'location-gamma',
+    image: 'https://cleansatmining.com/data/files/img_3861.jpg',
+    token: {
+      address: '0x71C86CbB71846425De5f3a693e989F4BDd97E98d',
+      supply: 100000,
+      price: 9.99,
+      symbol: 'CSM-gamma',
+      gnosisscanUrl:
+        'https://gnosisscan.io/address/0x71C86CbB71846425De5f3a693e989F4BDd97E98d',
+    },
+    status: MiningState.active,
+    api: {
+      username: 'cleansatmininggamma',
+      url: 'https://api.beta.luxor.tech/graphql',
+      contractor: Contractor.LUXOR,
+    },
+    mining: {
+      startingDate: '2023-06-20',
+      asics: {
+        powerW: 3010,
+        units: 189,
+        hashrateHs: 141000000000000,
+      },
+      electricity: {
+        usdPricePerKWH: 0.078,
+      },
+      intallationCosts: {
+        equipement: 726565,
+      },
+    },
+    fees: {
+      crowdfunding: {
+        csm: 0.1,
+      },
+      operational: {
+        operator: 0,
+        csm: 0.05,
+        pool: 0.015,
+        taxe: 0.1357,
+        provision: 0.2,
+      },
+    },
+  },
+
   [SiteID.delta]: {
     name: 'CMS delta',
+    location: 'location-delta',
     image:
       'https://cleansatmining.com/data/files/mount-hood-reflected-in-mirror-lake-oregon.jpg',
     token: {
@@ -240,11 +246,11 @@ export const SITES: Record<SiteID, Site> = {
 
 export const ALLOWED_SITES = Array.from(Object.keys(SITES));
 
-export const DAYS_PERIODS: number[] = [1, 7, 30, 90, 180, 365];
+export const DAYS_PERIODS: number[] = [1, 7, 30, 90, 180];
 export const DAYS_PERIODS_MOBILE_FILTER = [1, 7, 30, 90];
 
 export function filterMobile(
-  isMobile: boolean
+  isMobile: boolean,
 ): (value: number, index: number, array: number[]) => unknown {
   return (p) => !isMobile || DAYS_PERIODS_MOBILE_FILTER.includes(p);
 }

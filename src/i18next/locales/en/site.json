@@ -1,5 +1,10 @@
 {
   "card": {
+    "location-alpha": "Virunga Park (DRC)",
+    "location-beta": "Itaipu Dam (Paraguay)",
+    "location-omega": "South Karelia (Finland)",
+    "location-gamma": "Åsele (Sweden)",
+    "location-delta": "Oregon (USA)",
     "inactive": "inactive",
     "active": "active",
     "stoped": "stoped",

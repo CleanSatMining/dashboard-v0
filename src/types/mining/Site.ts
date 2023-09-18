@@ -1,5 +1,6 @@
 export type Site = {
     name: string;
+    location: string;
     image: string;
     token: Token;
     status: MiningState;

@@ -7,7 +7,7 @@ import { selectUsersState } from 'src/store/features/userData/userDataSelector';
 
 import { MiningSiteSummary } from '../../../hooks/useMiningSummary';
 import { Balance } from '../../../hooks/useWalletERC20Balance';
-import { AssetGrid } from '../Grid/AssetGrid';
+import { SummaryGrid } from '../Grid/SummaryGrid';
 import { SiteGrid } from '../Grid/SiteGrid';
 
 type UserAssetsProps = {
@@ -18,7 +18,7 @@ type UserAssetsProps = {
   balances: { [tokenAddress: string]: Balance };
 };
 
-const _UserAssets: FC<UserAssetsProps> = ({ account, price, period }) => {
+const _Dashboard: FC<UserAssetsProps> = ({ account, price, period }) => {
   const userState = useAppSelector(selectUsersState);
   //const dispatch = useAppDispatch();
   const [spinner, setSpinner] = useState(true);
@@ -27,7 +27,7 @@ const _UserAssets: FC<UserAssetsProps> = ({ account, price, period }) => {
     setSpinner(
       userState.byAddress[account] === undefined ||
         userState.byAddress[account].bySite === undefined ||
-        userState.byAddress[account].bySite['1'] === undefined
+        userState.byAddress[account].bySite['1'] === undefined,
     );
   }, [userState, account, spinner]);
 
@@ -43,11 +43,11 @@ const _UserAssets: FC<UserAssetsProps> = ({ account, price, period }) => {
 
       {!spinner && (
         <>
-          <AssetGrid
+          <SummaryGrid
             account={account}
             btcPrice={price}
             period={period}
-          ></AssetGrid>
+          ></SummaryGrid>
           <SiteGrid
             account={account}
             btcPrice={price}
@@ -59,4 +59,4 @@ const _UserAssets: FC<UserAssetsProps> = ({ account, price, period }) => {
   );
 };
 
-export const UserAssets = _UserAssets;
+export const Dashboard = _Dashboard;

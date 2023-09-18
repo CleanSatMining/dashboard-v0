@@ -6,7 +6,7 @@ import { selectUsersState } from 'src/store/features/userData/userDataSelector';
 
 import { SITES, SiteID } from '../../../constants';
 import { Site } from '../../../types/mining/Site';
-import { SiteData, UserSiteCard } from '../Card/Card';
+import { SiteData, UserSiteCard } from './Card/Card';
 import { getRealPeriod } from '../Utils/yield';
 import {
   getMinedBtcBySite,
@@ -49,7 +49,7 @@ const _SiteCard: FC<SiteProps> = ({
     siteId,
     account,
     period,
-    btcPrice
+    btcPrice,
   );
 
   const minedBTC = getMinedBtcBySite(miningState, siteId, period).toNumber();
@@ -60,7 +60,7 @@ const _SiteCard: FC<SiteProps> = ({
     miningState,
     usersState,
     siteId,
-    account
+    account,
   ).toNumber();
   const uptime = getUptimeBySite(miningState, siteId, period);
 
@@ -107,7 +107,7 @@ const _SiteCard: FC<SiteProps> = ({
       siteId,
       account,
       period,
-      btcPrice
+      btcPrice,
     );
 
     const minedBTC = getMinedBtcBySite(miningState, siteId, period).toNumber();
@@ -165,6 +165,7 @@ const _SiteCard: FC<SiteProps> = ({
       {tokenBalance > 0 && (
         <UserSiteCard
           title={site.name}
+          subTitle={site.location}
           csm={tokenBalance}
           csmPercent={csmPercent}
           csmUsd={tokenValue}

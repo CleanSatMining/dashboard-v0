@@ -20,7 +20,7 @@ import { API_ADMIN } from '../../constants/apis';
 import { useBitcoinOracle } from '../../hooks/useBitcoinOracle';
 import { useMiningSitesSummary } from '../../hooks/useMiningSummary';
 import { useWalletERC20Balances } from '../../hooks/useWalletERC20Balance';
-import { UserAssets } from '../CSM/Assets/UserAssets';
+import { Dashboard } from '../CSM/Dashboard/Dashboard';
 import { AddressInput } from '../CSM/UserInput/UserInput';
 import { getCSMTokenAddress, getCSMTokenAddresses } from '../CSM/Utils/yield';
 
@@ -40,7 +40,7 @@ const Display: FC = () => {
   const [account, setAccount] = useState(
     accountAddress
       ? accountAddress
-      : '0xC78f0e746A2e6248eE6D57828985D7fD8d6B33B0'
+      : '0xC78f0e746A2e6248eE6D57828985D7fD8d6B33B0',
   );
   const [adminData, setAdminData] = useState<boolean>(false);
   useEffect(() => {
@@ -73,13 +73,13 @@ const Display: FC = () => {
   }, [accountAddress]);
 
   const [period, setPeriod] = useState(
-    DAYS_PERIODS.filter(filterMobile(isMobile))[0].toString()
+    DAYS_PERIODS.filter(filterMobile(isMobile))[0].toString(),
   );
 
   const { price } = useBitcoinOracle();
   const { states: globalState } = useMiningSitesSummary(
     ALLOWED_SITES,
-    Math.max(...DAYS_PERIODS)
+    Math.max(...DAYS_PERIODS),
   );
 
   const { tokenAddress: tokenAddresses }: { tokenAddress: string[] } =
@@ -90,7 +90,7 @@ const Display: FC = () => {
     account: balanceAccount,
   } = useWalletERC20Balances(
     tokenAddresses,
-    account
+    account,
     //(loadingComplete: boolean) => setSpinner(!loadingComplete),
   );
 
@@ -150,13 +150,13 @@ const Display: FC = () => {
           onChange={setPeriod}
         />
       </Flex>
-      <UserAssets
+      <Dashboard
         account={account}
         miningStates={globalState}
         period={Number(period)}
         price={price}
         balances={balances}
-      ></UserAssets>
+      ></Dashboard>
     </>
   );
 

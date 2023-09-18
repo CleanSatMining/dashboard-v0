@@ -20,7 +20,7 @@ import {
   formatPercent,
   formatUsd,
 } from '../../../utils/format/format';
-import { AssetCard, Data } from '../Asset/AssetCard';
+import { AssetCard, Data } from '../Summary/SummaryCard';
 import {
   getUserInvestment,
   getUserSiteIds,
@@ -33,13 +33,13 @@ type AssetProps = {
   account: string;
 };
 
-const _AssetGrid: FC<AssetProps> = ({ btcPrice, period, account }) => {
+const _Summary: FC<AssetProps> = ({ btcPrice, period, account }) => {
   const isMobile = useMediaQuery('(max-width: 36em)');
   const { t } = useTranslation('site', { keyPrefix: 'card' });
   const usersState = useAppSelector(selectUsersState);
   const miningState = useAppSelector(selectMiningState);
   const [userYield, setUserYield] = useState<Yield>(
-    getUserYield(miningState, usersState, account, period, btcPrice)
+    getUserYield(miningState, usersState, account, period, btcPrice),
   );
 
   //console.log('REDUX USERS', JSON.stringify(usersState, null, 4));
@@ -67,7 +67,7 @@ const _AssetGrid: FC<AssetProps> = ({ btcPrice, period, account }) => {
 
   useEffect(() => {
     setUserYield(
-      getUserYield(miningState, usersState, account, period, btcPrice)
+      getUserYield(miningState, usersState, account, period, btcPrice),
     );
   }, [usersState, miningState, account, btcPrice, period]);
 
@@ -112,4 +112,4 @@ const _AssetGrid: FC<AssetProps> = ({ btcPrice, period, account }) => {
   );
 };
 
-export const AssetGrid = memo(_AssetGrid);
+export const SummaryGrid = memo(_Summary);

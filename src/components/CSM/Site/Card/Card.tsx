@@ -8,20 +8,20 @@ import {
   Flex,
   Group,
   HoverCard,
-  Image,
   MantineTheme,
   SimpleGrid,
   Text,
   Title,
   createStyles,
+  BackgroundImage,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconExternalLink, IconInfoCircle } from '@tabler/icons';
 
 import { openInNewTab } from 'src/utils/window';
 
-import { Income } from '../../../types/mining/Site';
-import { MiningState } from '../../../types/mining/Site';
+import { Income } from '../../../../types/mining/Site';
+import { MiningState } from '../../../../types/mining/Site';
 import {
   formatBTC,
   formatBigNumber,
@@ -29,9 +29,13 @@ import {
   formatSmallPercent,
   formatToken,
   formatUsd,
-} from '../../../utils/format/format';
+} from '../../../../utils/format/format';
 
 const useStyle = createStyles((theme: MantineTheme) => ({
+  title: {
+    textAlign: 'center',
+  },
+
   urlContainer: {
     display: 'flex',
     gap: theme.spacing.sm,
@@ -110,6 +114,7 @@ export type SiteData = {
 
 type TableProps = {
   title: string;
+  subTitle?: string;
   image: string;
   csm: number;
   csmUsd: number;
@@ -123,7 +128,8 @@ type TableProps = {
 };
 
 export const UserSiteCard: FC<TableProps> = ({
-  title = 'NA',
+  title,
+  subTitle,
   image = 'https://cleansatmining.com/data/files/capturedecran2023-04-19.png',
   csm = 0,
   csmUsd = 0,
@@ -139,7 +145,7 @@ export const UserSiteCard: FC<TableProps> = ({
   const isMobile = useMediaQuery('(max-width: 36em)');
   const { classes } = useStyle();
 
-  const { badgeColor, badgeState } = calculateSiteState(t, miningState);
+  const { badgeColor, badgeState } = calculateSiteState(miningState);
 
   //console.log('MOUNT UserSiteCard', title, data.apr);
 
@@ -152,16 +158,29 @@ export const UserSiteCard: FC<TableProps> = ({
       sx={{ marginBottom: isMobile ? '10px' : 0 }}
     >
       <Card.Section>
-        <Image src={image} height={160} alt={title} />
+        <BackgroundImage src={image} h={160}>
+          <Flex
+            gap={'md'}
+            justify={'center'}
+            align={'center'}
+            direction={'column'}
+            h={'100%'}
+          >
+            <div className={classes.title}>
+              <Title order={isMobile ? 3 : 2} color={'#fff'}>
+                {title}
+              </Title>
+              {subTitle && (
+                <Text fz={isMobile ? 'xs' : 'md'}>{t(subTitle)}</Text>
+              )}
+            </div>
+
+            <Badge color={badgeColor} variant={'filled'}>
+              <Text fz={isMobile ? 'xs' : 'md'}>{t(badgeState)}</Text>
+            </Badge>
+          </Flex>
+        </BackgroundImage>
       </Card.Section>
-
-      <Group position={'apart'} mt={'md'} mb={'xs'}>
-        <Title order={isMobile ? 3 : 1}>{title}</Title>
-
-        <Badge color={badgeColor} variant={'light'}>
-          <Text fz={isMobile ? 'xs' : 'md'}>{badgeState}</Text>
-        </Badge>
-      </Group>
 
       <Flex
         gap={'0'}
@@ -340,27 +359,27 @@ export const UserSiteCard: FC<TableProps> = ({
   );
 };
 
-function calculateSiteState(t: any, miningState: MiningState) {
+function calculateSiteState(miningState: MiningState) {
   let badgeColor = 'gray';
-  let badgeState = t('inactive');
+  let badgeState = 'inactive';
 
   switch (miningState) {
     case MiningState.active: {
       //statements;
-      badgeState = t('active');
+      badgeState = 'active';
       badgeColor = 'green';
       break;
     }
     case MiningState.inactive: {
       //statements;
-      badgeState = t('inactive');
-      badgeColor = 'dark';
+      badgeState = 'inactive';
+      badgeColor = 'red';
       break;
     }
     case MiningState.stopped: {
       //statements;
-      badgeState = t('stoped');
-      badgeColor = 'red';
+      badgeState = 'stoped';
+      badgeColor = 'orange';
       break;
     }
     default: {
