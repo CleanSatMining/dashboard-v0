@@ -155,17 +155,17 @@ function calculateProgressColor(data: CardData) {
   } else if (data.site.uptime.percent < 40) {
     hashrateColor = 'yellow';
   } else if (data.site.uptime.percent < 50) {
-    hashrateColor = 'blue';
+    hashrateColor = 'indigo';
   } else if (data.site.uptime.percent < 60) {
-    hashrateColor = 'cyan';
+    hashrateColor = 'blue';
   } else if (data.site.uptime.percent < 70) {
-    hashrateColor = 'lime';
+    hashrateColor = 'cyan';
   } else if (data.site.uptime.percent < 80) {
-    hashrateColor = 'lime'; //yellow
+    hashrateColor = 'teal'; //yellow
   } else if (data.site.uptime.percent < 90) {
     hashrateColor = 'green'; //orange
   } else {
-    hashrateColor = 'teal'; //red
+    hashrateColor = 'lime'; //red
   }
   return hashrateColor;
 }
