@@ -21,20 +21,28 @@ const useStyle = createStyles((theme: MantineTheme) => ({
   },
 }));
 
-type SummaryProps = {
+type SummariesProps = {
   title?: string;
   Icon?: TablerIcon;
-  value?: string;
+  valueTitle1?: string;
+  value1?: string;
+  subValue1?: string;
+  valueTitle2?: string;
+  value2?: string;
+  subValue2?: string;
   data: Data[];
-  subValue?: string;
 };
 
-const _SummaryCard: FC<SummaryProps> = ({
+const _SummariesCard: FC<SummariesProps> = ({
   title,
   Icon,
-  value,
+  valueTitle1,
+  value1,
+  subValue1,
+  valueTitle2,
+  value2,
+  subValue2,
   data,
-  subValue,
 }) => {
   const { classes } = useStyle();
   const isMobile = useMediaQuery('(max-width: 36em)');
@@ -46,7 +54,7 @@ const _SummaryCard: FC<SummaryProps> = ({
         radius={'md'}
         withBorder={true}
       >
-        <Group position={'apart'} mt={'0'} mb={isMobile ? 0 : 'xs'}>
+        <Group position={'apart'} mt={'0'} mb={0}>
           <Title order={isMobile ? 6 : 3}>{title}</Title>
           {Icon && (
             <ActionIcon variant={'transparent'}>
@@ -54,24 +62,48 @@ const _SummaryCard: FC<SummaryProps> = ({
             </ActionIcon>
           )}
         </Group>
-
-        <Flex
-          mih={isMobile ? 30 : 50}
-          //gap={'md'}
-          justify={'flex-start'}
-          align={'flex-start'}
-          direction={'column'}
-          wrap={'wrap'}
-        >
-          <Title order={isMobile ? 5 : 4} color={'brand'}>
-            {value}
-          </Title>
-          {subValue !== undefined && (
+        <Group position={'apart'} mt={'0'} mb={0}>
+          <Flex
+            mih={isMobile ? 30 : 50}
+            //gap={'md'}
+            justify={'flex-start'}
+            align={'flex-start'}
+            direction={'column'}
+            wrap={'wrap'}
+          >
             <Text color={'dimmed'} size={isMobile ? 12 : undefined}>
-              {subValue}
+              {valueTitle1}
             </Text>
-          )}
-        </Flex>
+            <Title order={isMobile ? 5 : 4} color={'brand'}>
+              {value1}
+            </Title>
+            {subValue1 !== undefined && (
+              <Text color={'dimmed'} size={isMobile ? 12 : undefined}>
+                {subValue1}
+              </Text>
+            )}
+          </Flex>
+          <Flex
+            mih={isMobile ? 30 : 50}
+            //gap={'md'}
+            justify={'flex-end'}
+            align={'flex-end'}
+            direction={'column'}
+            wrap={'wrap'}
+          >
+            <Text color={'dimmed'} size={isMobile ? 12 : undefined}>
+              {valueTitle2}
+            </Text>
+            <Title order={isMobile ? 5 : 4} color={'brand'}>
+              {value2}
+            </Title>
+            {subValue2 !== undefined && (
+              <Text color={'dimmed'} size={isMobile ? 12 : undefined}>
+                {subValue2}
+              </Text>
+            )}
+          </Flex>
+        </Group>
 
         {data.length > 0 && (
           <Accordion
@@ -114,4 +146,4 @@ const _SummaryCard: FC<SummaryProps> = ({
   );
 };
 
-export const SummaryCard = memo(_SummaryCard);
+export const SummariesCard = memo(_SummariesCard);

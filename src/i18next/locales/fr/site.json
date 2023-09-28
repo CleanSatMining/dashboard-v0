@@ -35,6 +35,8 @@
     "cost-taxes": "Taxes",
     "cost-provision": "Provision",
     "incomes": "Revenus",
+    "incomes-net": "Revenus net",
+    "incomes-gross": "Revenus brut",
     "income-net": "Net",
     "income-gross": "Brut",
     "over": " sur ",

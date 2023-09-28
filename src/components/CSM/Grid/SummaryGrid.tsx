@@ -21,7 +21,9 @@ import {
   formatPercent,
   formatUsd,
 } from '../../../utils/format/format';
-import { SummaryCard, Data } from '../Summary/SummaryCard';
+import { SummaryCard } from '../Summary/SummaryCard';
+import { SummariesCard } from '../Summary/SummariesCard';
+import { Data } from '../Summary/SummaryType';
 import {
   getUserInvestment,
   getUserSiteIds,
@@ -39,7 +41,7 @@ const _Summary: FC<AssetProps> = ({ btcPrice, period, account }) => {
   const { t } = useTranslation('site', { keyPrefix: 'card' });
   const usersState = useAppSelector(selectUsersState);
   const miningState = useAppSelector(selectMiningState);
-  const [userYield, setUserYield] = useState<Yield>(
+  const [userYield, setUserYield] = useState<{ net: Yield; brut: Yield }>(
     getUserYield(miningState, usersState, account, period, btcPrice),
   );
 
@@ -96,17 +98,41 @@ const _Summary: FC<AssetProps> = ({ btcPrice, period, account }) => {
         data={dataSites}
         Icon={IconBuildingFactory}
       ></SummaryCard>
-      <SummaryCard
-        title={t('my-yield')}
-        value={formatBTC(userYield.btc)}
-        subValue={formatUsd(userYield.usd)}
-        data={dataBTC}
-        Icon={IconCoinBitcoin}
-      ></SummaryCard>
+      {!isMobile && (
+        <SummariesCard
+          title={t('my-yield')}
+          valueTitle1={t('income-net')}
+          value1={formatBTC(userYield.net.btc)}
+          subValue1={formatUsd(userYield.net.usd)}
+          valueTitle2={t('income-gross')}
+          value2={formatBTC(userYield.brut.btc)}
+          subValue2={formatUsd(userYield.brut.usd)}
+          data={dataBTC}
+          Icon={IconCoinBitcoin}
+        ></SummariesCard>
+      )}
+      {isMobile && (
+        <>
+          <SummaryCard
+            title={t('incomes-net')}
+            value={formatBTC(userYield.net.btc)}
+            subValue={formatUsd(userYield.net.usd)}
+            data={dataBTC}
+            Icon={IconCoinBitcoin}
+          ></SummaryCard>
+          <SummaryCard
+            title={t('incomes-gross')}
+            value={formatBTC(userYield.brut.btc)}
+            subValue={formatUsd(userYield.brut.usd)}
+            data={dataBTC}
+            Icon={IconCoinBitcoin}
+          ></SummaryCard>
+        </>
+      )}
       {ACTIVATE_DISPLAY_APY && (
         <SummaryCard
-          title={t('my-apy')}
-          value={formatPercent(userYield.apr)}
+          title={t('my-yield')}
+          value={formatPercent(userYield.net.apr)}
           Icon={IconTrendingUp}
           data={dataAPR}
         ></SummaryCard>

@@ -35,6 +35,8 @@
     "cost-taxes": "Taxes",
     "cost-provision": "Provision",
     "incomes": "Incomes",
+    "incomes-net": "Net incomes",
+    "incomes-gross": "Gross incomes",
     "income-net": "Net",
     "income-gross": "Gross",
     "over": " over ",
