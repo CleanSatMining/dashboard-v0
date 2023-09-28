@@ -646,9 +646,9 @@ export const getUserYield = (
       netBtc = netBtc.plus(siteYield.net.btc);
       netUsd = netUsd.plus(siteYield.net.usd);
       netApr = netApr.plus(siteInvestementShare.times(siteYield.net.apr));
-      brutBtc = netBtc.plus(siteYield.brut.btc);
-      brutUsd = netUsd.plus(siteYield.brut.usd);
-      brutApr = netApr.plus(siteInvestementShare.times(siteYield.brut.apr));
+      brutBtc = brutBtc.plus(siteYield.brut.btc);
+      brutUsd = brutUsd.plus(siteYield.brut.usd);
+      brutApr = brutApr.plus(siteInvestementShare.times(siteYield.brut.apr));
     }
 
     netYield.btc = netBtc.toNumber();
