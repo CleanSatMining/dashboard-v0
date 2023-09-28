@@ -34,6 +34,7 @@ import { modals } from '../src/components';
 import { HeaderNav } from '../src/components/HeaderNav';
 import { CHAINS, ChainsID, Chain as CustomChain } from '../src/constants';
 import { modalStyles, theme } from '../src/theme';
+import { useMediaQuery } from '@mantine/hooks';
 
 export const i18n = initLanguage(resources);
 
@@ -53,13 +54,13 @@ const [walletConnectV2, walletConnectV2Hooks] = getWalletConnectV2<CustomChain>(
   customChains,
   env,
   walletConnectKey,
-  showAllNetworks
+  showAllNetworks,
 );
 
 const libraryConnectors = getConnectors(
   [metaMask, metaMaskHooks],
   [gnosisSafe, gnosisHooks],
-  [walletConnectV2, walletConnectV2Hooks]
+  [walletConnectV2, walletConnectV2Hooks],
 );
 
 type AppProps = NextAppProps & { colorScheme: ColorScheme; locale: string };
@@ -67,6 +68,7 @@ type AppProps = NextAppProps & { colorScheme: ColorScheme; locale: string };
 const queryClient = new QueryClient({});
 
 const App = ({ Component, pageProps }: AppProps) => {
+  const isMobile = useMediaQuery('(max-width: 36em)');
   return (
     <QueryClientProvider client={queryClient}>
       <JotaiProvider>
@@ -85,12 +87,18 @@ const App = ({ Component, pageProps }: AppProps) => {
                     headerNav={<HeaderNav />}
                     head={
                       <Head
-                        title={'CleanSatMining Dashboard'}
+                        title={
+                          isMobile
+                            ? 'CSM Dashboard'
+                            : 'CleanSatMining Dashboard'
+                        }
                         description={'CleanSatMining Dashboard'}
                       />
                     }
                     newWebsite={{
-                      name: 'CleanSatMining Dashboard',
+                      name: isMobile
+                        ? 'CSM Dashboard'
+                        : 'CleanSatMining Dashboard',
                       url: '/',
                       logo: () => (
                         <Image src={Logo.src} alt={'CSM Logo'} width={36} />

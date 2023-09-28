@@ -147,25 +147,25 @@ export const CardSiteData: FC<CardSiteDataProps> = ({ data }) => {
 function calculateProgressColor(data: CardData) {
   let hashrateColor = 'violet';
   if (data.site.uptime.percent < 10) {
-    hashrateColor = 'violet';
+    hashrateColor = 'red';
   } else if (data.site.uptime.percent < 20) {
-    hashrateColor = 'indigo';
+    hashrateColor = 'red';
   } else if (data.site.uptime.percent < 30) {
-    hashrateColor = 'blue';
+    hashrateColor = 'orange';
   } else if (data.site.uptime.percent < 40) {
-    hashrateColor = 'cyan';
+    hashrateColor = 'yellow';
   } else if (data.site.uptime.percent < 50) {
-    hashrateColor = 'teal';
+    hashrateColor = 'blue';
   } else if (data.site.uptime.percent < 60) {
-    hashrateColor = 'green';
+    hashrateColor = 'cyan';
   } else if (data.site.uptime.percent < 70) {
     hashrateColor = 'lime';
   } else if (data.site.uptime.percent < 80) {
-    hashrateColor = 'yellow';
+    hashrateColor = 'lime'; //yellow
   } else if (data.site.uptime.percent < 90) {
-    hashrateColor = 'orange';
+    hashrateColor = 'green'; //orange
   } else {
-    hashrateColor = 'red';
+    hashrateColor = 'teal'; //red
   }
   return hashrateColor;
 }

@@ -36,7 +36,7 @@ export const CardHeader: FC<HeaderProps> = ({
   const { badgeColor, badgeState } = calculateSiteState(miningState);
 
   return (
-    <BackgroundImage src={image} h={160}>
+    <BackgroundImage src={image} h={isMobile ? 100 : 150}>
       <Flex
         gap={'md'}
         justify={'center'}
