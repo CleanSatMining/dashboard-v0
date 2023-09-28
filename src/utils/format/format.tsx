@@ -2,9 +2,10 @@ import { BigNumber } from 'bignumber.js';
 
 export const formatUsd = (
   tvl: number,
+  digit = 0,
   symbol = '$',
   currency = 'USD',
-  oraclePrice = 1
+  oraclePrice = 1,
 ) => {
   // TODO: bignum?
   if (oraclePrice) {
@@ -28,8 +29,8 @@ export const formatUsd = (
     : tvl.toLocaleString('en-US', {
         style: 'currency',
         currency: currency,
-        maximumFractionDigits: 0,
-        minimumFractionDigits: 0,
+        maximumFractionDigits: digit,
+        minimumFractionDigits: digit,
       });
 };
 
@@ -42,7 +43,7 @@ export const formatUsd = (
 export const formatPercent = (
   percent: number | null | undefined,
   dp = 2,
-  placeholder: any = '?'
+  placeholder: string = '?',
 ) => {
   if (!percent && percent !== 0) return placeholder;
 
@@ -80,7 +81,7 @@ export function formatSmallPercent(
   percent: number,
   maxPlaces = 2,
   minPlaces = 0,
-  formatZero = false
+  formatZero = false,
 ): string {
   return !formatZero && percent === 0
     ? '0%'
@@ -122,10 +123,10 @@ export function getBigNumOrder(num: BigNumber): number {
   return Math.floor(exp / 3);
 }
 
-export function formatFullBigNumber(
+export function formatFullNumber(
   num: number,
   maxDp = 2,
-  roundMode: BigNumber.RoundingMode = BigNumber.ROUND_FLOOR
+  roundMode: BigNumber.RoundingMode = BigNumber.ROUND_FLOOR,
 ) {
   let value = new BigNumber(num);
   value = value.decimalPlaces(2, BigNumber.ROUND_FLOOR);
@@ -139,7 +140,26 @@ export function formatFullBigNumber(
       fractionGroupSeparator: '.',
       fractionGroupSize: 0,
       suffix: '',
-    })
+    }),
+  );
+}
+export function formatFullBigNumber(
+  value: BigNumber,
+  maxDp = 2,
+  roundMode: BigNumber.RoundingMode = BigNumber.ROUND_FLOOR,
+) {
+  value = value.decimalPlaces(2, BigNumber.ROUND_FLOOR);
+  return stripTrailingZeros(
+    value.toFormat(maxDp, roundMode, {
+      prefix: '',
+      decimalSeparator: '.',
+      groupSeparator: ',',
+      groupSize: 3,
+      secondaryGroupSize: 0,
+      fractionGroupSeparator: '.',
+      fractionGroupSize: 0,
+      suffix: '',
+    }),
   );
 }
 
@@ -163,5 +183,11 @@ export function formatBTC(num: number) {
 }
 
 export function formatToken(num: number, symbol = '') {
-  return formatFullBigNumber(num) + (symbol == '' ? '' : ' ' + symbol);
+  return formatFullNumber(num) + (symbol == '' ? '' : ' ' + symbol);
+}
+
+export function formatHashrate(num: number) {
+  const numBig = new BigNumber(num);
+  const value = numBig.dividedBy(new BigNumber(10).exponentiatedBy(12));
+  return formatFullBigNumber(value, 0, 0) + ' TH/s';
 }

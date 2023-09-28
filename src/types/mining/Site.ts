@@ -3,7 +3,7 @@ export type Site = {
     location: string;
     image: string;
     token: Token;
-    status: MiningState;
+    status: MiningStatus;
     api: Api;
     mining: Mining;
     fees: Fees;
@@ -31,7 +31,7 @@ export type Site = {
   }
 
 
-  export enum MiningState {
+  export enum MiningStatus {
     active = 'active',
     inactive = 'inactive',
     stopped = 'stopped',

@@ -26,7 +26,7 @@ interface UseWalletERC20Balance {
 
 export const useWalletERC20Balance = (
   tokenAddress: string | undefined,
-  accountAddress: string | undefined = undefined
+  accountAddress: string | undefined = undefined,
 ): UseWalletERC20Balance => {
   const [bigNumberbalance, setBigNumberbalance] = useState<
     BigNumber | undefined
@@ -43,7 +43,7 @@ export const useWalletERC20Balance = (
     tokenAddress ?? '',
     Erc20ABI,
     provider as Web3Provider,
-    accountAddress
+    accountAddress,
   );
 
   const getTokenInfos = async (): Promise<TokenInfos> => {
@@ -57,7 +57,7 @@ export const useWalletERC20Balance = (
           return;
 
         const balance = new BigNumber(
-          (await contract.balanceOf(accountAddress)).toString()
+          (await contract.balanceOf(accountAddress)).toString(),
         );
         const decimals = new BigNumber((await contract.decimals()).toString());
         const tokenSymbol = await contract?.symbol();
@@ -121,21 +121,21 @@ interface UseWalletERC20Balances {
 export const useWalletERC20Balances = (
   tokenAddresses: string[],
   accountAddress: string | undefined = undefined,
-  loadingCompleteCallback?: (loadingComplete: boolean) => void
+  loadingCompleteCallback?: (loadingComplete: boolean) => void,
 ): UseWalletERC20Balances => {
   const [balances, setBalances] = useState<{ [tokenAddress: string]: Balance }>(
-    {}
+    {},
   );
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   const { account, provider, chainId } = useWeb3React();
   const [addressUsed, setAddressUsed] = useState<string>(
-    accountAddress ? accountAddress : account ? account : ''
+    accountAddress ? accountAddress : account ? account : '',
   );
 
   useEffect(() => {
     setIsLoaded(false);
-    console.log('DISPATCH USER IS LOADED', false);
+    //console.log('DISPATCH USER IS LOADED', false);
     if (loadingCompleteCallback) {
       loadingCompleteCallback(false);
     }
@@ -147,7 +147,7 @@ export const useWalletERC20Balances = (
         token,
         Erc20ABI,
         provider as Web3Provider,
-        addressUsed
+        addressUsed,
       );
       if (abi !== undefined) {
         contracts.push(abi);
@@ -166,21 +166,21 @@ export const useWalletERC20Balances = (
               return;
 
             const balance = new BigNumber(
-              (await contract.balanceOf(addressUsed)).toString()
+              (await contract.balanceOf(addressUsed)).toString(),
             );
             const decimals = new BigNumber(
-              (await contract.decimals()).toString()
+              (await contract.decimals()).toString(),
             );
             const tokenSymbol = await contract?.symbol();
             const address = contract.address;
-            console.log(
-              'FETCH BALANCE for',
-              addressUsed,
-              'contract',
-              balance.toNumber(),
-              'balance',
-              contract.address
-            );
+            // console.log(
+            //   'FETCH BALANCE for',
+            //   addressUsed,
+            //   'contract',
+            //   balance.toNumber(),
+            //   'balance',
+            //   contract.address,
+            // );
             tokenInfos.push({
               balance: balance,
               symbol: tokenSymbol ?? '',
@@ -197,7 +197,7 @@ export const useWalletERC20Balances = (
         if (loadingCompleteCallback) {
           loadingCompleteCallback(true);
         }
-        console.log('DISPATCH USER IS LOADED', true);
+        //console.log('DISPATCH USER IS LOADED', true);
         setIsLoaded(true);
         resolve(tokenInfos);
       });
@@ -211,22 +211,22 @@ export const useWalletERC20Balances = (
       addressUsed === accountAddress && account !== undefined
         ? account
         : accountAddress;
-    console.log(
-      'FETCH BALANCE calc address',
-      calcAddress,
-      'addressUsed',
-      addressUsed,
-      'account',
-      account,
-      'given',
-      accountAddress
-    );
+    // console.log(
+    //   'FETCH BALANCE calc address',
+    //   calcAddress,
+    //   'addressUsed',
+    //   addressUsed,
+    //   'account',
+    //   account,
+    //   'given',
+    //   accountAddress,
+    // );
     if (calcAddress) {
       setAddressUsed(calcAddress);
     }
   }, [accountAddress, account]);
 
-  console.log('FETCH BALANCE for', addressUsed, ':', JSON.stringify(balances));
+  //console.log('FETCH BALANCE for', addressUsed, ':', JSON.stringify(balances));
 
   return {
     balances: balances,
@@ -239,7 +239,7 @@ function extractBalances(data: TokenInfos[]) {
   for (const tokenInfo of data) {
     tempBalances[tokenInfo.address ?? ''] = {
       balance: Number(
-        tokenInfo.balance.shiftedBy(-tokenInfo.decimals).toFixed(10)
+        tokenInfo.balance.shiftedBy(-tokenInfo.decimals).toFixed(10),
       ),
       bigBalance: tokenInfo.balance,
       symbol: tokenInfo.symbol,

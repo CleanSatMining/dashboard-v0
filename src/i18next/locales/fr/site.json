@@ -25,8 +25,19 @@
     "years": " ans",
     "my-yield": "Mes revenus",
     "start-date": "Date de démarrage",
-    "active-days": "Jours actifs",
-    "active-machines": "Machines actives (moyenne)",
+    "uptime-days": "Jours actifs",
+    "uptime-machines": "Uptime",
+    "uptime-hashrate": "Hashrate",
+    "costs": "Coûts",
+    "cost-electricity": "Electricité",
+    "cost-fees-csm": "Frais CSM",
+    "cost-fees-operator": "Frais operateur",
+    "cost-taxes": "Taxes",
+    "cost-provision": "Provision",
+    "incomes": "Revenus",
+    "income-net": "Net",
+    "income-gross": "Brut",
+    "over": " sur ",
     "fee-explained": "Les Bitcoins minés sont soustraits du prix de l'électricité, des frais administratifs CSM (5%), des taxes sur les profits suisses (13,57%) et de la provision pour le renouvellement des ASICs (20%)."
   }
 

@@ -10,7 +10,7 @@ import {
   APIMiningHistoryQuery,
   APIMiningHistoryResponse,
 } from '../types/mining/MiningAPI';
-import { MiningState } from '../types/mining/Site';
+import { MiningStatus } from '../types/mining/Site';
 
 //----------------------------------------------------------------------
 
@@ -26,7 +26,7 @@ interface UseMiningSitesSummary {
 
 export const useMiningSitesSummary = (
   siteIds: string[],
-  days: number
+  days: number,
 ): UseMiningSitesSummary => {
   const dispatch = useAppDispatch();
   const [miningStates, setMiningStates] = useState<{
@@ -49,7 +49,7 @@ export const useMiningSitesSummary = (
             for (const siteId of siteIds) {
               const site = SITES[siteId as SiteID];
 
-              if (site.status !== MiningState.inactive) {
+              if (site.status !== MiningStatus.inactive) {
                 try {
                   const body: APIMiningHistoryQuery = {
                     siteId: siteId,
@@ -100,7 +100,7 @@ export const useMiningSitesSummary = (
             } // for sites ids
             setIsLoaded(true);
             resolve(miningStates);
-          }
+          },
         );
       };
       const data = await getSiteMiningStates();

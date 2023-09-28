@@ -1,4 +1,4 @@
-import { Contractor, MiningState, Site } from '../types/mining/Site';
+import { Contractor, MiningStatus, Site } from '../types/mining/Site';
 
 export const FEE_RATE_CSM = 0.1;
 export const FEE_RATE_BBGS = 0.05;
@@ -27,7 +27,7 @@ export const SITES: Record<SiteID, Site> = {
       gnosisscanUrl:
         'https://gnosisscan.io/address/0xf8419b6527A24007c2BD81bD1aA3b5a735C1F4c9',
     },
-    status: MiningState.active,
+    status: MiningStatus.active,
     api: {
       username: 'bbgs-csma',
       url: 'https://antpool.com/api/paymentHistoryV2.htm',
@@ -73,7 +73,7 @@ export const SITES: Record<SiteID, Site> = {
       gnosisscanUrl:
         'https://gnosisscan.io/address/0x364D1aAF7a98e26A1F072e926032f154428481d1',
     },
-    status: MiningState.inactive,
+    status: MiningStatus.inactive,
     api: {
       username: undefined,
       url: 'https://antpool.com/api/paymentHistoryV2.htm',
@@ -118,7 +118,7 @@ export const SITES: Record<SiteID, Site> = {
       gnosisscanUrl:
         'https://gnosisscan.io/address/0x203A5080450FFC3e038284082FBF5EBCdc9B053f',
     },
-    status: MiningState.active,
+    status: MiningStatus.active,
     api: {
       username: 'bbgs-fin',
       url: 'https://antpool.com/api/paymentHistoryV2.htm',
@@ -163,7 +163,7 @@ export const SITES: Record<SiteID, Site> = {
       gnosisscanUrl:
         'https://gnosisscan.io/address/0x71C86CbB71846425De5f3a693e989F4BDd97E98d',
     },
-    status: MiningState.active,
+    status: MiningStatus.active,
     api: {
       username: 'cleansatmininggamma',
       url: 'https://api.beta.luxor.tech/graphql',
@@ -210,7 +210,7 @@ export const SITES: Record<SiteID, Site> = {
       gnosisscanUrl:
         'https://gnosisscan.io/token/0x20D2F2d4b839710562D25274A3e98Ea1F0392D24',
     },
-    status: MiningState.inactive,
+    status: MiningStatus.inactive,
     api: {
       username: undefined,
       url: undefined,

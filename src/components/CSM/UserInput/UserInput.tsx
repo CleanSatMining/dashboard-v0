@@ -29,8 +29,8 @@ const useStyles = createStyles(() => ({
 
 type AddressProps = {
   initialValue: string;
-  setAccount: any;
-  updateAccount: any;
+  setAccount: React.Dispatch<React.SetStateAction<string>>;
+  updateAccount: (p: string) => void;
 };
 
 export const AddressInput: FC<AddressProps> = ({
@@ -80,7 +80,7 @@ export const AddressInput: FC<AddressProps> = ({
             </Text>
           )}
           {value !== account && (
-            <Text fz={isMobile ? 10 : 14} fw={500} color={'brand'}>
+            <Text ref={ref} fz={isMobile ? 10 : 14} fw={500} color={'brand'}>
               {account}
             </Text>
           )}
@@ -91,10 +91,10 @@ export const AddressInput: FC<AddressProps> = ({
 };
 
 function setAccountAddress(
-  setValue: any,
-  setDisplayedAccount: any,
-  setAccount: any,
-  updateAccount: any,
+  setValue: React.Dispatch<React.SetStateAction<string>>,
+  setDisplayedAccount: React.Dispatch<React.SetStateAction<string>>,
+  setAccount: React.Dispatch<React.SetStateAction<string>>,
+  updateAccount: (p: string) => void,
 ) {
   return (address: string) => {
     setValue(address);

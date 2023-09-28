@@ -25,8 +25,19 @@
     "years": " years",
     "my-yield": "Yield",
     "start-date": "Starting date",
-    "active-days": "Uptime days",
-    "active-machines": "Uptime machines",
+    "uptime-days": "Uptime days",
+    "uptime-machines": "Uptime",
+    "uptime-hashrate": "Hashrate",
+    "costs": "Costs",
+    "cost-electricity": "Electricity",
+    "cost-fees-csm": "CSM Fees",
+    "cost-fees-operator": "Operator Fees",
+    "cost-taxes": "Taxes",
+    "cost-provision": "Provision",
+    "incomes":"Incomes",
+    "income-net": "Net",
+    "income-gross": "Gross",
+    "over": " over ",
     "fee-explained": "Bitcoins mined are subtracted from the cost of electricity, CSM administrative fees (5%), taxes on Swiss profits (13.57%), and the provision for ASIC renewal (20%)."
   }
 }

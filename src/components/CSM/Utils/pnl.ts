@@ -9,7 +9,7 @@ import {
   SiteID,
 } from 'src/constants';
 import { MiningState } from 'src/types/mining/Mining';
-import { Site } from 'src/types/mining/Site';
+import { Site, Fees } from 'src/types/mining/Site';
 
 import {
   formatBTC,
@@ -30,10 +30,10 @@ const YEAR_IN_DAYS = new BigNumber(365);
 export function calculateElececticityCostPerDay(
   site: Site,
   totalMachines: number,
-  uptimePercentage: number
+  uptimePercentage: number,
 ): BigNumber {
   const consumption_kwh_per_day_per_machine = new BigNumber(
-    site.mining.asics.powerW
+    site.mining.asics.powerW,
   )
     .times(24)
     .dividedBy(1000);
@@ -58,7 +58,7 @@ export function calculateElececticityCostPerDay(
 export function calculateElececticityCostPerPeriod(
   miningState: MiningState,
   siteId: string,
-  period: number
+  period: number,
 ): BigNumber {
   const site: Site = SITES[siteId as SiteID];
   let electricityCost: BigNumber = new BigNumber(0);
@@ -77,7 +77,7 @@ export function calculateElececticityCostPerPeriod(
         const electricityCostPerDay = calculateElececticityCostPerDay(
           site,
           site.mining.asics.units,
-          miningState.byId[siteId].mining.days[i].uptimePercentage / 100
+          miningState.byId[siteId].mining.days[i].uptimePercentage / 100,
         );
 
         electricityCost = electricityCost.plus(electricityCostPerDay);
@@ -103,7 +103,7 @@ export function calculateYield_deprecated(
   btcIncome: BigNumber,
   btcPrice: number,
   electricityCostPerPeriod: BigNumber,
-  period: number
+  period: number,
 ): {
   incomeUsd: BigNumber;
   incomeBtc: BigNumber;
@@ -142,7 +142,7 @@ export function calculateYield_deprecated(
 }
 
 /**
- * calculatYield
+ * calculateNetYield
  * @param siteId
  * @param btcIncome
  * @param btcPrice
@@ -150,16 +150,16 @@ export function calculateYield_deprecated(
  * @param period
  * @returns
  */
-export function calculateYield(
+export function calculateNetYield(
   siteId: string,
   btcIncome: BigNumber,
   btcPrice: number,
   electricityCost: BigNumber,
-  period: number
+  period: number,
 ): {
   netUsdIncome: BigNumber;
   netBtcIncome: BigNumber;
-  apr: BigNumber;
+  netApr: BigNumber;
 } {
   const site: Site = SITES[siteId as SiteID];
   const fees = site.fees;
@@ -167,35 +167,40 @@ export function calculateYield(
   const equipement = new BigNumber(site.mining.intallationCosts.equipement);
   const realPeriod = getRealPeriod(site, period);
 
-  const feeCsmUsd = usdIncome
-    .minus(electricityCost)
-    .times(fees.operational.csm);
-  const feeOperatorUsd = usdIncome
-    .minus(electricityCost)
-    .times(fees.operational.operator);
-  const EBITDA = usdIncome
-    .minus(electricityCost)
-    .minus(feeCsmUsd)
-    .minus(feeOperatorUsd);
-  const provision = equipement
-    .times(fees.operational.provision)
-    .dividedBy(YEAR_IN_DAYS)
-    .times(realPeriod);
-  const EBITDA_CUT_LOST = BigNumber.max(
-    EBITDA.minus(provision),
-    new BigNumber(0)
+  const { taxe, EBITDA, provision } = calculateCostsAndEBITDAByPeriod(
+    usdIncome,
+    electricityCost,
+    fees,
+    equipement,
+    realPeriod,
   );
-  const taxe = EBITDA_CUT_LOST.times(SWISS_TAXE);
-  const netUsdIncome = EBITDA_CUT_LOST.minus(taxe);
+
+  // const feeCsmUsd = usdIncome
+  //   .minus(electricityCost)
+  //   .times(fees.operational.csm);
+  // const feeOperatorUsd = usdIncome
+  //   .minus(electricityCost)
+  //   .times(fees.operational.operator);
+  // const EBITDA_I = usdIncome
+  //   .minus(electricityCost)
+  //   .minus(feeCsmUsd)
+  //   .minus(feeOperatorUsd);
+  // const provision_i = equipement
+  //   .times(fees.operational.provision)
+  //   .dividedBy(YEAR_IN_DAYS)
+  //   .times(realPeriod);
+  const EBITDA_MINUS_PROVISION = EBITDA.minus(provision); //BigNumber.max(    EBITDA.minus(provision),    new BigNumber(0),  );
+  //const taxe_i = EBITDA_MINUS_PROVISION.times(SWISS_TAXE);
+  const netUsdIncome = EBITDA_MINUS_PROVISION.minus(taxe);
   const netBtcIncome = netUsdIncome.dividedBy(btcPrice);
   const netUsdIncomeAYear =
     realPeriod > 0
       ? netUsdIncome.times(YEAR_IN_DAYS.dividedBy(realPeriod))
       : new BigNumber(0);
   const totalShareValue = new BigNumber(site.token.supply).times(
-    site.token.price
+    site.token.price,
   );
-  const apr = totalShareValue.gt(0)
+  const netApr = totalShareValue.gt(0)
     ? netUsdIncomeAYear.dividedBy(totalShareValue)
     : new BigNumber(0);
 
@@ -247,6 +252,145 @@ export function calculateYield(
   return {
     netUsdIncome,
     netBtcIncome,
+    netApr,
+  };
+}
+
+export function calculateYield(
+  siteId: string,
+  minedBtc: BigNumber,
+  btcPrice: number,
+  electricityCost: BigNumber,
+  period: number,
+): {
+  usdIncome: BigNumber;
+  btcIncome: BigNumber;
+  apr: BigNumber;
+} {
+  const site: Site = SITES[siteId as SiteID];
+  const fees = site.fees;
+  const minedBtcValue = minedBtc.times(btcPrice);
+  const realPeriod = getRealPeriod(site, period);
+
+  const { taxe, EBITDA } = calculateCostsAndEBITDAByPeriod(
+    minedBtcValue,
+    electricityCost,
+    fees,
+    new BigNumber(0),
+    realPeriod,
+  );
+
+  // const feeCsmUsd = minedBtcValue
+  //   .minus(electricityCost)
+  //   .times(fees.operational.csm);
+  // const feeOperatorUsd = minedBtcValue
+  //   .minus(electricityCost)
+  //   .times(fees.operational.operator);
+  // const EBITDA = minedBtcValue
+  //   .minus(electricityCost)
+  //   .minus(feeCsmUsd)
+  //   .minus(feeOperatorUsd);
+
+  // const taxe = EBITDA.times(SWISS_TAXE);
+  const usdIncome = EBITDA.minus(taxe);
+  const btcIncome = usdIncome.dividedBy(btcPrice);
+  const netUsdIncomeAYear =
+    realPeriod > 0
+      ? usdIncome.times(YEAR_IN_DAYS.dividedBy(realPeriod))
+      : new BigNumber(0);
+  const totalShareValue = new BigNumber(site.token.supply).times(
+    site.token.price,
+  );
+  const apr = totalShareValue.gt(0)
+    ? netUsdIncomeAYear.dividedBy(totalShareValue)
+    : new BigNumber(0);
+
+  /* console.log('PNL', siteId, 'period', period, 'vs', realPeriod);
+  console.log('PNL', siteId, 'btcPrice', formatBTC(btcPrice));
+  console.log('PNL', siteId, 'usdIncome', formatUsd(usdIncome.toNumber()));
+  console.log('PNL', siteId, 'btcIncome', formatBTC(btcIncome.toNumber()));
+  console.log(
+    'PNL',
+    siteId,
+    'electricityCost',
+    formatUsd(electricityCost.toNumber())
+  );
+  console.log('PNL', siteId, 'feeCsmUsd', formatUsd(feeCsmUsd.toNumber()));
+  console.log(
+    'PNL',
+    siteId,
+    'feeOperatorUsd',
+    formatUsd(feeOperatorUsd.toNumber())
+  );
+  console.log('PNL', siteId, 'EBITDA', formatUsd(EBITDA.toNumber()));
+  console.log(
+    'PNL',
+    siteId,
+    'EBITDA_CUT_LOST',
+    formatUsd(EBITDA_CUT_LOST.toNumber())
+  );
+  console.log('PNL', siteId, 'provision', formatUsd(provision.toNumber()));
+  console.log('PNL', siteId, 'taxe', formatUsd(taxe.toNumber()));
+  console.log(
+    'PNL',
+    siteId,
+    'netUsdIncome',
+    formatUsd(netUsdIncome.toNumber())
+  );
+  console.log(
+    'PNL',
+    siteId,
+    'netBtcIncome',
+    formatBTC(netBtcIncome.toNumber())
+  );
+  console.log(
+    'PNL',
+    siteId,
+    'netUsdIncomeAYear',
+    formatUsd(netUsdIncomeAYear.toNumber())
+  ); */
+
+  return {
+    usdIncome,
+    btcIncome,
     apr,
+  };
+}
+
+export function calculateCostsAndEBITDAByPeriod(
+  usdIncome: BigNumber,
+  electricityCost: BigNumber,
+  feeParameters: Fees,
+  equipementValue: BigNumber,
+  realPeriod: number,
+): {
+  feeCsm: BigNumber;
+  feeOperator: BigNumber;
+  taxe: BigNumber;
+  provision: BigNumber;
+  EBITDA: BigNumber;
+} {
+  const feeCsmUsd = usdIncome
+    .minus(electricityCost)
+    .times(feeParameters.operational.csm);
+  const feeOperatorUsd = usdIncome
+    .minus(electricityCost)
+    .times(feeParameters.operational.operator);
+  const EBITDA = usdIncome
+    .minus(electricityCost)
+    .minus(feeCsmUsd)
+    .minus(feeOperatorUsd);
+  const provision = equipementValue
+    .times(feeParameters.operational.provision)
+    .dividedBy(YEAR_IN_DAYS)
+    .times(realPeriod);
+  const EBITDA_MINUS_PROVISION = EBITDA.minus(provision);
+  const taxe = EBITDA_MINUS_PROVISION.times(SWISS_TAXE);
+  return {
+    feeCsm: feeCsmUsd,
+    feeOperator: feeOperatorUsd,
+    taxe: taxe,
+    provision: provision,
+    EBITDA: EBITDA,
   };
 }
