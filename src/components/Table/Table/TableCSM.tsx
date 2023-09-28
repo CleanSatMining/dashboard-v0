@@ -1,8 +1,7 @@
 import { FC } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import { Table as MantineTable, createStyles } from '@mantine/core';
-import { Table as ReactTable, Row, flexRender } from '@tanstack/react-table';
+import { Row } from '@tanstack/react-table';
 
 export type TableSubRowProps<T> = { row: Row<T> };
 
@@ -22,9 +21,7 @@ type TableProps = {
   title: string | undefined;
 };
 
-export const Table: FC<TableProps> = ({ title }) => {
-  const { classes } = useStyles();
-
+export const Table: FC<TableProps> = ({}) => {
   const elements: {
     name: string;
     position: number;
@@ -51,10 +48,10 @@ export const Table: FC<TableProps> = ({ title }) => {
     <MantineTable>
       <thead>
         <tr>
-          <th>Element position</th>
-          <th>Element name</th>
-          <th>Symbol</th>
-          <th>Atomic mass</th>
+          <th>{'Element position'}</th>
+          <th>{'Element name'}</th>
+          <th>{'Symbol'}</th>
+          <th>{'Atomic mass'}</th>
         </tr>
       </thead>
       <tbody>{rows}</tbody>

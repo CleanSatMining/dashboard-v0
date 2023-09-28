@@ -67,7 +67,7 @@ export const BuyModal: FC<ContextModalProps<BuyModalProps>> = ({
 
   const activeChain = useActiveChain();
   const realTokenYamUpgradeable = useContract(
-    ContractsID.realTokenYamUpgradeable
+    ContractsID.realTokenYamUpgradeable,
   );
 
   const offers = useAppSelector(selectPublicOffers);
@@ -83,8 +83,8 @@ export const BuyModal: FC<ContextModalProps<BuyModalProps>> = ({
     setAmountMax(
       Number(
         offers.find((offer) => offer.offerId === values.offerId)
-          ?.amount as string
-      )
+          ?.amount as string,
+      ),
     );
   }, [offers, values]);
 
@@ -117,7 +117,7 @@ export const BuyModal: FC<ContextModalProps<BuyModalProps>> = ({
             .toString(),
           new BigNumber(formValues.amount.toString())
             .shiftedBy(Number(offerTokenDecimals))
-            .toString()
+            .toString(),
         );
 
         const notificationPayload = {
@@ -127,7 +127,7 @@ export const BuyModal: FC<ContextModalProps<BuyModalProps>> = ({
         };
 
         showNotification(
-          NOTIFICATIONS[NotificationsID.buyOfferLoading](notificationPayload)
+          NOTIFICATIONS[NotificationsID.buyOfferLoading](notificationPayload),
         );
 
         transaction
@@ -138,8 +138,8 @@ export const BuyModal: FC<ContextModalProps<BuyModalProps>> = ({
                 status === 1
                   ? NotificationsID.buyOfferSuccess
                   : NotificationsID.buyOfferError
-              ](notificationPayload)
-            )
+              ](notificationPayload),
+            ),
           );
       } catch (e) {
         console.error('Error in BuyModal', e);
@@ -158,7 +158,7 @@ export const BuyModal: FC<ContextModalProps<BuyModalProps>> = ({
       activeChain?.blockExplorerUrl,
       triggerTableRefresh,
       onClose,
-    ]
+    ],
   );
 
   return (

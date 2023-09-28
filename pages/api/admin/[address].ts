@@ -2,7 +2,7 @@ import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 
 const handler: NextApiHandler = async (
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) => {
   const { address } = req.query;
   let status = false;
@@ -12,11 +12,11 @@ const handler: NextApiHandler = async (
     'ADMIN_LIST',
     ADMIN_LIST.map((a) => a.toLowerCase()),
     'admin',
-    address.toString().toLowerCase()
+    address?.toString().toLowerCase(),
   );
   if (
     ADMIN_LIST.map((a) => a.toLowerCase()).includes(
-      address.toString().toLowerCase()
+      address ? address.toString().toLowerCase() : '',
     )
   ) {
     status = true;

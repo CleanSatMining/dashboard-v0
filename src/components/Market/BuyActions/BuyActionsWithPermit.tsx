@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useCallback, useEffect, useMemo } from 'react';
+import { FC, useCallback, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ActionIcon, Group, Title } from '@mantine/core';
@@ -20,7 +20,7 @@ type BuyActions = {
 export const BuyActionsWithPermit: FC<BuyActions> = ({
   buyOffer,
   buttonClassName,
-  groupClassName
+  groupClassName,
 }) => {
   const { account } = useWeb3React();
   const modals = useModals();
@@ -34,14 +34,14 @@ export const BuyActionsWithPermit: FC<BuyActions> = ({
     (offer: Offer) => {
       modals.openContextModal('buyPermit', {
         title: <Title order={3}>{t('buy.title')}</Title>,
-        size: "lg",
+        size: 'lg',
         innerProps: {
           offer: offer,
           triggerTableRefresh: refreshOffers,
         },
       });
     },
-    [modals, refreshOffers, t]
+    [modals, refreshOffers, t],
   );
 
   const onOpenWalletModal = useCallback(() => {
@@ -52,30 +52,29 @@ export const BuyActionsWithPermit: FC<BuyActions> = ({
   }, [modals, t]);
 
   const isAccountOffer: boolean = useMemo(() => {
-    if(!buyOffer || !account) return false;
-    return buyOffer.sellerAddress == account.toLowerCase()
-  },[buyOffer, account])
+    if (!buyOffer || !account) return false;
+    return buyOffer.sellerAddress == account.toLowerCase();
+  }, [buyOffer, account]);
 
   return (
     <>
-      { !offersIsLoading ? 
-        (
-          <Group position={'center'} className={groupClassName ?? ""}>
-            { !isAccountOffer ?
-              <ActionIcon
-                color={'green'}
-                onClick={() =>
-                  account ? onOpenBuyModal(buyOffer) : onOpenWalletModal()
-                }
-                className={buttonClassName ?? ""}
-              >
-                <IconShoppingCart size={16} aria-label={'Buy'} />
-              </ActionIcon>
-              :
-              <ActionIcon disabled={true} variant={"transparent"}/>
-            }
-          </Group> 
-        ): undefined }
+      {!offersIsLoading ? (
+        <Group position={'center'} className={groupClassName ?? ''}>
+          {!isAccountOffer ? (
+            <ActionIcon
+              color={'green'}
+              onClick={() =>
+                account ? onOpenBuyModal(buyOffer) : onOpenWalletModal()
+              }
+              className={buttonClassName ?? ''}
+            >
+              <IconShoppingCart size={16} aria-label={'Buy'} />
+            </ActionIcon>
+          ) : (
+            <ActionIcon disabled={true} variant={'transparent'} />
+          )}
+        </Group>
+      ) : undefined}
     </>
   );
 };

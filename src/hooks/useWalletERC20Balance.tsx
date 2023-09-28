@@ -203,7 +203,9 @@ export const useWalletERC20Balances = (
       });
     };
     getTokensInfos();
+    /* eslint-disable */
   }, [addressUsed]);
+  /* eslint-enable  */
 
   useEffect(() => {
     setBalances({});
@@ -224,8 +226,9 @@ export const useWalletERC20Balances = (
     if (calcAddress) {
       setAddressUsed(calcAddress);
     }
+    /* eslint-disable */
   }, [accountAddress, account]);
-
+  /* eslint-enable  */
   //console.log('FETCH BALANCE for', addressUsed, ':', JSON.stringify(balances));
 
   return {

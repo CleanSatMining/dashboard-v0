@@ -9,31 +9,22 @@ import {
   useReactTable,
 } from '@tanstack/react-table';
 
-import { useTokenInfo } from 'src/hooks';
 import { Offer } from 'src/types/offer/Offer';
 
 import { Table, TableSubRowProps } from '../../Table';
 
-type TokenInfoShow = {
-  fullName: string;
-  initialPrice: string;
-  offerPrice: string;
-  priceDifference: string;
-};
 export const MarketSubRow: FC<TableSubRowProps<Offer>> = ({
-  row: {
-    original: offer,
-  },
+  row: { original: offer },
 }) => {
   const { t } = useTranslation('buy', { keyPrefix: 'subRow' });
 
-  const columns = useMemo<ColumnDef<Offer,string>[]>(
+  const columns = useMemo<ColumnDef<Offer, string>[]>(
     () => [
       {
         id: 'sellerAddress',
         accessorKey: 'sellerAddress',
-        header: () => <Title order={6}>{t("sellerAddress")}</Title>,
-        cell: ({ getValue }: CellContext<Offer,string>) => (
+        header: () => <Title order={6}>{t('sellerAddress')}</Title>,
+        cell: ({ getValue }: CellContext<Offer, string>) => (
           <Text
             size={'sm'}
             sx={{
@@ -50,7 +41,7 @@ export const MarketSubRow: FC<TableSubRowProps<Offer>> = ({
         meta: { colSpan: 1 },
       },
     ],
-    [t]
+    [t],
   );
 
   const table = useReactTable({

@@ -1,7 +1,7 @@
 import { Translation } from 'react-i18next';
 
 import { Anchor, Stack, Text } from '@mantine/core';
-import { NextLink } from '@mantine/next';
+
 import { NotificationProps } from '@mantine/notifications';
 import { IconCheck, IconX } from '@tabler/icons';
 
@@ -28,9 +28,9 @@ export enum NotificationsID {
   createOfferInvalid = 'createOfferInvalid',
   buyOfferInvalid = 'buyOfferInvalid',
 
-  grantRoleLoading = "grantRoleLoading",
-  grantRoleSuccess = "grantRoleSuccess",
-  grantRoleInvalid = "grantRoleInvalid",
+  grantRoleLoading = 'grantRoleLoading',
+  grantRoleSuccess = 'grantRoleSuccess',
+  grantRoleInvalid = 'grantRoleInvalid',
 }
 
 export const NOTIFICATIONS = asConst<
@@ -59,7 +59,7 @@ export const NOTIFICATIONS = asConst<
         {(t) => (
           <Stack spacing={1}>
             {`${t('grantRoleLoading.message')}`}
-            <Anchor component={NextLink} href={payload.href} target={'_blank'}>
+            <Anchor href={payload.href} target={'_blank'}>
               <Text>{`(${shortenString(payload.hash)})`}</Text>
             </Anchor>
           </Stack>
@@ -86,7 +86,7 @@ export const NOTIFICATIONS = asConst<
         {(t) => (
           <Stack spacing={1}>
             {`${t('grantRoleSuccess.message')}`}
-            <Anchor component={NextLink} href={payload.href} target={'_blank'}>
+            <Anchor href={payload.href} target={'_blank'}>
               <Text>{`(${shortenString(payload.hash)})`}</Text>
             </Anchor>
           </Stack>
@@ -113,7 +113,7 @@ export const NOTIFICATIONS = asConst<
         {(t) => (
           <Stack spacing={1}>
             {`${t('grantRoleInvalid.message')}`}
-            <Anchor component={NextLink} href={payload.href} target={'_blank'}>
+            <Anchor href={payload.href} target={'_blank'}>
               <Text>{`(${shortenString(payload.hash)})`}</Text>
             </Anchor>
           </Stack>
@@ -170,7 +170,7 @@ export const NOTIFICATIONS = asConst<
         {(t) => (
           <Stack spacing={1}>
             {`${t('createOfferLoading.message')}`}
-            <Anchor component={NextLink} href={payload.href} target={'_blank'}>
+            <Anchor href={payload.href} target={'_blank'}>
               <Text>{`(${shortenString(payload.hash)})`}</Text>
             </Anchor>
           </Stack>
@@ -196,7 +196,7 @@ export const NOTIFICATIONS = asConst<
         {(t) => (
           <Stack spacing={1}>
             {`${t('createOfferSuccess.message')}`}
-            <Anchor component={NextLink} href={payload.href} target={'_blank'}>
+            <Anchor href={payload.href} target={'_blank'}>
               <Text>{`(${shortenString(payload.hash)})`}</Text>
             </Anchor>
           </Stack>
@@ -222,7 +222,7 @@ export const NOTIFICATIONS = asConst<
         {(t) => (
           <Stack spacing={1}>
             {`${t('createOfferError.message')}`}
-            <Anchor component={NextLink} href={payload.href} target={'_blank'}>
+            <Anchor href={payload.href} target={'_blank'}>
               <Text>{`(${shortenString(payload.hash)})`}</Text>
             </Anchor>
           </Stack>
@@ -249,7 +249,7 @@ export const NOTIFICATIONS = asConst<
         {(t) => (
           <Stack spacing={1}>
             {`${t('buyOfferLoading.message')}`}
-            <Anchor component={NextLink} href={payload.href} target={'_blank'}>
+            <Anchor href={payload.href} target={'_blank'}>
               <Text>{`(${shortenString(payload.hash)})`}</Text>
             </Anchor>
           </Stack>
@@ -275,7 +275,7 @@ export const NOTIFICATIONS = asConst<
         {(t) => (
           <Stack spacing={1}>
             {`${t('buyOfferSuccess.message')}`}
-            <Anchor component={NextLink} href={payload.href} target={'_blank'}>
+            <Anchor href={payload.href} target={'_blank'}>
               <Text>{`(${shortenString(payload.hash)})`}</Text>
             </Anchor>
           </Stack>
@@ -301,7 +301,7 @@ export const NOTIFICATIONS = asConst<
         {(t) => (
           <Stack spacing={1}>
             {`${t('buyOfferError.message')}`}
-            <Anchor component={NextLink} href={payload.href} target={'_blank'}>
+            <Anchor href={payload.href} target={'_blank'}>
               <Text>{`(${shortenString(payload.hash)})`}</Text>
             </Anchor>
           </Stack>
@@ -328,7 +328,7 @@ export const NOTIFICATIONS = asConst<
         {(t) => (
           <Stack spacing={1}>
             {`${t('approveOfferLoading.message')}`}
-            <Anchor component={NextLink} href={payload.href} target={'_blank'}>
+            <Anchor href={payload.href} target={'_blank'}>
               <Text>{`(${shortenString(payload.hash)})`}</Text>
             </Anchor>
           </Stack>
@@ -354,7 +354,7 @@ export const NOTIFICATIONS = asConst<
         {(t) => (
           <Stack spacing={1}>
             {`${t('approveOfferSuccess.message')}`}
-            <Anchor component={NextLink} href={payload.href} target={'_blank'}>
+            <Anchor href={payload.href} target={'_blank'}>
               <Text>{`(${shortenString(payload.hash)})`}</Text>
             </Anchor>
           </Stack>
@@ -380,7 +380,7 @@ export const NOTIFICATIONS = asConst<
         {(t) => (
           <Stack spacing={1}>
             {`${t('approveOfferError.message')}`}
-            <Anchor component={NextLink} href={payload.href} target={'_blank'}>
+            <Anchor href={payload.href} target={'_blank'}>
               <Text>{`(${shortenString(payload.hash)})`}</Text>
             </Anchor>
           </Stack>
@@ -407,7 +407,7 @@ export const NOTIFICATIONS = asConst<
         {(t) => (
           <Stack spacing={1}>
             {`${t('updateOfferLoading.message')}`}
-            <Anchor component={NextLink} href={payload.href} target={'_blank'}>
+            <Anchor href={payload.href} target={'_blank'}>
               <Text>{`(${shortenString(payload.hash)})`}</Text>
             </Anchor>
           </Stack>
@@ -433,7 +433,7 @@ export const NOTIFICATIONS = asConst<
         {(t) => (
           <Stack spacing={1}>
             {`${t('updateOfferSuccess.message')}`}
-            <Anchor component={NextLink} href={payload.href} target={'_blank'}>
+            <Anchor href={payload.href} target={'_blank'}>
               <Text>{`(${shortenString(payload.hash)})`}</Text>
             </Anchor>
           </Stack>
@@ -459,7 +459,7 @@ export const NOTIFICATIONS = asConst<
         {(t) => (
           <Stack spacing={1}>
             {`${t('updateOfferError.message')}`}
-            <Anchor component={NextLink} href={payload.href} target={'_blank'}>
+            <Anchor href={payload.href} target={'_blank'}>
               <Text>{`(${shortenString(payload.hash)})`}</Text>
             </Anchor>
           </Stack>
@@ -486,7 +486,7 @@ export const NOTIFICATIONS = asConst<
         {(t) => (
           <Stack spacing={1}>
             {`${t('deleteOfferLoading.message')}`}
-            <Anchor component={NextLink} href={payload.href} target={'_blank'}>
+            <Anchor href={payload.href} target={'_blank'}>
               <Text>{`(${shortenString(payload.hash)})`}</Text>
             </Anchor>
           </Stack>
@@ -512,7 +512,7 @@ export const NOTIFICATIONS = asConst<
         {(t) => (
           <Stack spacing={1}>
             {`${t('deleteOfferSuccess.message')}`}
-            <Anchor component={NextLink} href={payload.href} target={'_blank'}>
+            <Anchor href={payload.href} target={'_blank'}>
               <Text>{`(${shortenString(payload.hash)})`}</Text>
             </Anchor>
           </Stack>
@@ -538,7 +538,7 @@ export const NOTIFICATIONS = asConst<
         {(t) => (
           <Stack spacing={1}>
             {`${t('deleteOfferError.message')}`}
-            <Anchor component={NextLink} href={payload.href} target={'_blank'}>
+            <Anchor href={payload.href} target={'_blank'}>
               <Text>{`(${shortenString(payload.hash)})`}</Text>
             </Anchor>
           </Stack>

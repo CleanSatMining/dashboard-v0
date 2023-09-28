@@ -72,19 +72,19 @@ export const BuyModalWithPermit: FC<
     string | undefined
   >('');
   const { name: offerTokenName, symbol: offerTokenSymbol } = useERC20TokenInfo(
-    offer.offerTokenAddress
+    offer.offerTokenAddress,
   );
   const { symbol: buyTokenSymbol, address: buyerTokenAddress } =
     useERC20TokenInfo(offer.buyerTokenAddress);
 
   const realTokenYamUpgradeable = useContract(
-    ContractsID.realTokenYamUpgradeable
+    ContractsID.realTokenYamUpgradeable,
   );
   const offerToken = getContract<Erc20>(
     offer.offerTokenAddress,
     Erc20ABI,
     provider as Web3Provider,
-    account
+    account,
   );
 
   const getOfferTokenInfos = async () => {
@@ -111,8 +111,7 @@ export const BuyModalWithPermit: FC<
     context.closeModal(id);
   }, [context, id, reset]);
 
-  const { balance, WalletERC20Balance } =
-    useWalletERC20Balance(buyerTokenAddress);
+  const { balance } = useWalletERC20Balance(buyerTokenAddress);
 
   const total = values?.amount * values?.price;
 
@@ -134,7 +133,7 @@ export const BuyModalWithPermit: FC<
         formValues.amount,
         connector,
         setSubmitting,
-        onFinished
+        onFinished,
       );
     },
     [
@@ -146,7 +145,7 @@ export const BuyModalWithPermit: FC<
       connector,
       onClose,
       triggerTableRefresh,
-    ]
+    ],
   );
 
   const maxTokenBuy: number | undefined = useMemo(() => {
@@ -165,7 +164,7 @@ export const BuyModalWithPermit: FC<
       [OFFER_TYPE.BUY, t('buyOfferTypePrice')],
       [OFFER_TYPE.SELL, t('sellOfferTypePrice')],
       [OFFER_TYPE.EXCHANGE, t('exchangeOfferTypePrice')],
-    ]
+    ],
   );
 
   const amountTranslation: Map<OFFER_TYPE, string> = new Map<
@@ -202,7 +201,7 @@ export const BuyModalWithPermit: FC<
               <Text>
                 {BigNumber.minimum(
                   offer.amount,
-                  offerTokenSellerBalance!
+                  offerTokenSellerBalance!,
                 ).toString()}
               </Text>
             </Flex>
@@ -237,9 +236,9 @@ export const BuyModalWithPermit: FC<
             <Text size={'xl'}>{t('summary')}</Text>
             <Text size={'md'} mb={10}>
               {` ${t('summaryText1')} ${values?.amount} ${offerTokenSymbol} ${t(
-                'summaryText2'
+                'summaryText2',
               )} ${cleanNumber(values?.price)} ${buyTokenSymbol} ${t(
-                'summaryText3'
+                'summaryText3',
               )} ${total} ${buyTokenSymbol}`}
             </Text>
 

@@ -1,10 +1,8 @@
 import { FC } from 'react';
-import { useTranslation } from 'react-i18next';
 
 import {
   Card,
   Flex,
-  Group,
   MantineTheme,
   Space,
   Text,
@@ -13,13 +11,7 @@ import {
 import { useMediaQuery } from '@mantine/hooks';
 
 import { MiningStatus } from '../../../../types/mining/Site';
-import {
-  formatBTC,
-  formatBigNumber,
-  formatPercent,
-  formatSmallPercent,
-  formatUsd,
-} from 'src/utils/format/format';
+import { formatPercent } from 'src/utils/format/format';
 import { ACTIVATE_DISPLAY_APY } from 'src/constants/csm';
 import { CardHeader } from './Components/CardHeader';
 import { CardToken } from './Components/CardToken';
@@ -108,7 +100,6 @@ export const UserSiteCard: FC<CardProps> = ({
   data,
   status,
 }) => {
-  const { t } = useTranslation('site', { keyPrefix: 'card' });
   const isMobile = useMediaQuery('(max-width: 36em)');
 
   //console.log('MOUNT UserSiteCard', title, data.apr);

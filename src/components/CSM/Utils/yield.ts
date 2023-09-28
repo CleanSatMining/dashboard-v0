@@ -18,7 +18,6 @@ import {
 } from '../../../types/mining/CSMState';
 import { Site, TokenBalance, Yield } from '../../../types/mining/Site';
 import {
-  calculateElececticityCostPerDay,
   calculateElececticityCostPerPeriod,
   calculateNetYield,
   calculateYield,
@@ -55,14 +54,6 @@ export const getYieldBySite_deprecated = (
     const income: PeriodState = siteState.state.incomes.byPeriod[period];
     const usdRevenue = income.activeDays > 0 ? income.revenue * btcPrice : 0;
 
-    const electricityCostPerDay = calculateElececticityCostPerDay(
-      site,
-      income.uptimeTotalMachines,
-      income.uptimePercentage / 100,
-    );
-    const electricityCostPerPeriod1 = electricityCostPerDay.times(
-      income.activeDays,
-    );
     const electricityCostPerPeriod = income.electricityCost;
     const feeCSMUsd = (usdRevenue - electricityCostPerPeriod) * FEE_RATE_CSM;
     const feeBBGSUsd = (usdRevenue - electricityCostPerPeriod) * FEE_RATE_BBGS;

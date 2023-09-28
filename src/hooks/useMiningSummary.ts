@@ -110,8 +110,9 @@ export const useMiningSitesSummary = (
     return () => {
       // this now gets called when the component unmounts
     };
+    /* eslint-disable */
   }, [miningStates, days, siteIds]);
-
+  /* eslint-enable */
   return {
     states: miningStates,
     isLoaded: isLoaded,

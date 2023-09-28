@@ -21,6 +21,9 @@ export const useContract = <T extends ContractsID>(contractId: T) => {
 
     if (!contract) return undefined;
 
-    return Object.assign(contract, { metadata }) as TypedContract<T>;
+    const unknownContract: unknown = Object.assign(contract, { metadata });
+    const typedContract: TypedContract<T> = unknownContract as TypedContract<T>;
+
+    return typedContract; // Object.assign(contract, { metadata }) as TypedContract<T>;
   }, [account, activeChain, contractId, provider]);
 };

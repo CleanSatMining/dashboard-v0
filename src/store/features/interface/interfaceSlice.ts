@@ -72,23 +72,23 @@ export const pricesChangedDispatchType = 'interface/pricesChanged';
 //ACTIONS
 export const offersChanged = createAction<Offer[]>(offersChangedDispatchType);
 export const offersIsloading = createAction<boolean>(
-  offersIsLoadingDispatchType
+  offersIsLoadingDispatchType,
 );
 export const offersReset = createAction<undefined>(offersResetDispatchType);
 export const propertiesChanged = createAction<PropertiesToken[]>(
-  propertiesChangedDispatchType
+  propertiesChangedDispatchType,
 );
 export const propertiesIsLoading = createAction<boolean>(
-  propertiesIsLoadingDispatchType
+  propertiesIsLoadingDispatchType,
 );
 export const wlPropertiesIdChanged = createAction<number[]>(
-  wlPropertiesIdChangedDispatchType
+  wlPropertiesIdChangedDispatchType,
 );
 export const wlPropertiesIdIsloading = createAction<boolean>(
-  wlPropertiesIdIsloadingChangedDispatchType
+  wlPropertiesIdIsloadingChangedDispatchType,
 );
 export const pricesIsLoadingChanged = createAction<boolean>(
-  pricesIsLoadingChangedDispatchType
+  pricesIsLoadingChangedDispatchType,
 );
 export const pricesChanged = createAction<Price>(pricesChangedDispatchType);
 
@@ -97,12 +97,12 @@ export function fetchOffers(
   provider: Web3Provider,
   account: string,
   chainId: number,
-  properties: PropertiesToken[]
+  properties: PropertiesToken[],
 ) {
   // TODO: look for type
   return async function fetchOffersThunk(
     dispatch: AppDispatch,
-    getState: () => RootState
+    getState: () => RootState,
   ) {
     dispatch({ type: offersResetDispatchType });
     dispatch({ type: offersIsLoadingDispatchType, payload: true });
@@ -117,7 +117,7 @@ export function fetchOffers(
         account,
         chainId,
         properties,
-        prices
+        prices,
       );
     }
     // else{
@@ -128,6 +128,7 @@ export function fetchOffers(
     dispatch({ type: offersIsLoadingDispatchType, payload: false });
   };
 }
+/* eslint-disable */
 export function fetchProperties(chainId: number) {
   return async function fetchPropertiesThunk(dispatch: AppDispatch) {
     // try {
@@ -145,6 +146,7 @@ export function fetchProperties(chainId: number) {
     // }
   };
 }
+/* eslint-enable  */
 export function fetchAddressWlProperties(address: string, chainId: number) {
   return async function fetchAddressWlPropertiesThunk(dispatch: AppDispatch) {
     try {
@@ -190,8 +192,8 @@ export function fetchPrices(chainId: number, provider: Web3Provider) {
       const tokens = getRightAllowBuyTokens(chainId);
       const p = await Promise.all(
         tokens.map((allowedToken: AllowedToken) =>
-          getPrice(provider, allowedToken)
-        )
+          getPrice(provider, allowedToken),
+        ),
       );
 
       const prices: Price = {};
@@ -236,5 +238,5 @@ export const interfaceReducers = createReducer(
       .addCase(pricesIsLoadingChanged, (state, action) => {
         state.prices.isLoading = action.payload;
       });
-  }
+  },
 );

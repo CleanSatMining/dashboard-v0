@@ -36,15 +36,10 @@ const _SiteCard: FC<SiteProps> = ({
   account,
   shallDisplay,
 }) => {
-  const [csmPeriod, setCsmPeriod] = useState(period);
   const usersState = useAppSelector(selectUsersState);
   const miningState = useAppSelector(selectMiningState);
 
   const site: Site = SITES[siteId as SiteID];
-
-  useEffect(() => {
-    setCsmPeriod(period);
-  }, [setCsmPeriod, period]);
 
   const userToken = getUserTokenBalance(usersState, account, siteId);
   const tokenBalance = userToken.balance;
@@ -128,6 +123,7 @@ const _SiteCard: FC<SiteProps> = ({
     if (shallDisplay) {
       shallDisplay(Number(siteId), tokenBalance > 0);
     }
+    /* eslint-disable */
   }, [
     account,
     btcPrice,
@@ -141,6 +137,7 @@ const _SiteCard: FC<SiteProps> = ({
     //userToken,
     //usersState,
   ]);
+  /* eslint-enable */
 
   return (
     <>

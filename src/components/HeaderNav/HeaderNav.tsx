@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/router';
 
 import { Flex, Text } from '@mantine/core';
-import { NextLink } from '@mantine/next';
+import Link from 'next/link';
 
 import { useRole } from 'src/hooks/useRole';
 import { USER_ROLE, isRole } from 'src/types/admin';
@@ -24,7 +24,7 @@ export const HeaderNav: FC = () => {
         <Text
           size={'xl'}
           weight={700}
-          component={NextLink}
+          component={Link}
           href={'/admin'}
           color={router.pathname === '/admin' ? colorSelected : ''}
         >

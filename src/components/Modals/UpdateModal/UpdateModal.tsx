@@ -75,11 +75,10 @@ export const UpdateModal: FC<ContextModalProps<UpdateModalProps>> = ({
 
   const activeChain = useActiveChain();
   const realTokenYamUpgradeable = useContract(
-    ContractsID.realTokenYamUpgradeable
+    ContractsID.realTokenYamUpgradeable,
   );
 
   const offers = useAppSelector(selectPublicOffers);
-  const { refreshOffers } = useRefreshOffers(false);
 
   const { t } = useTranslation('modals', { keyPrefix: 'update' });
 
@@ -92,9 +91,10 @@ export const UpdateModal: FC<ContextModalProps<UpdateModalProps>> = ({
     setAmountMax(
       Number(
         offers.find((offer) => offer.offerId === values.offerId)
-          ?.amount as string
-      )
+          ?.amount as string,
+      ),
     );
+    /* eslint-disable */
   }, [values]);
 
   useEffect(() => {
@@ -126,7 +126,7 @@ export const UpdateModal: FC<ContextModalProps<UpdateModalProps>> = ({
             .toString(),
           new BigNumber(formValues.amount.toString())
             .shiftedBy(Number(offerTokenDecimals))
-            .toString()
+            .toString(),
         );
 
         const notificationPayload = {
@@ -136,7 +136,9 @@ export const UpdateModal: FC<ContextModalProps<UpdateModalProps>> = ({
         };
 
         showNotification(
-          NOTIFICATIONS[NotificationsID.updateOfferLoading](notificationPayload)
+          NOTIFICATIONS[NotificationsID.updateOfferLoading](
+            notificationPayload,
+          ),
         );
 
         transaction
@@ -147,8 +149,8 @@ export const UpdateModal: FC<ContextModalProps<UpdateModalProps>> = ({
                 status === 1
                   ? NotificationsID.updateOfferSuccess
                   : NotificationsID.updateOfferError
-              ](notificationPayload)
-            )
+              ](notificationPayload),
+            ),
           );
       } catch (e) {
         console.error('Error UpdateModal', e);
@@ -158,6 +160,7 @@ export const UpdateModal: FC<ContextModalProps<UpdateModalProps>> = ({
         onClose();
       }
     },
+    /* eslint-disable */
     [
       account,
       activeChain,
@@ -165,7 +168,7 @@ export const UpdateModal: FC<ContextModalProps<UpdateModalProps>> = ({
       onClose,
       provider,
       triggerTableRefresh,
-    ]
+    ],
   );
 
   return (

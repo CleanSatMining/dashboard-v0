@@ -1,4 +1,4 @@
-import { Dispatch, FC, SetStateAction, useCallback } from 'react';
+import { FC, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { ActionIcon, Group, Title } from '@mantine/core';
@@ -13,13 +13,11 @@ type DeleteActions = {
   deleteOffer: Offer;
 };
 
-export const DeleteActions: FC<DeleteActions> = ({
-  deleteOffer,
-}) => {
+export const DeleteActions: FC<DeleteActions> = ({ deleteOffer }) => {
   const { account } = useWeb3React();
   const modals = useModals();
 
-  const { refreshOffers } = useRefreshOffers(false); 
+  const { refreshOffers } = useRefreshOffers(false);
 
   const { t } = useTranslation('modals');
 
@@ -27,14 +25,14 @@ export const DeleteActions: FC<DeleteActions> = ({
     (offer: Offer) => {
       modals.openContextModal('delete', {
         title: <Title order={3}>{t('delete.title')}</Title>,
-        size: "lg",
+        size: 'lg',
         innerProps: {
           offerIds: [offer.offerId],
           onSuccess: refreshOffers,
         },
       });
     },
-    [modals, refreshOffers, t]
+    [modals, refreshOffers, t],
   );
 
   const onOpenWalletModal = useCallback(() => {

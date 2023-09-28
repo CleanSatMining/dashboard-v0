@@ -5,8 +5,6 @@ import {
   Progress,
   Text,
   Group,
-  createStyles,
-  MantineTheme,
   Divider,
   ActionIcon,
   Flex,
@@ -24,28 +22,11 @@ import { useTranslation } from 'react-i18next';
 import { CardData } from './../Type';
 import { CardSiteAccounting } from './CardSiteAccounting';
 
-export const useStyle = createStyles((theme: MantineTheme) => ({
-  urlContainer: {
-    display: 'flex',
-    gap: theme.spacing.sm,
-    borderBottomStyle: 'solid',
-    borderBottomWidth: '2px',
-    borderBottomColor: 'transparent',
-    alignItems: 'center',
-    justifyContent: 'start',
-    '&:hover': {
-      borderBottomColor: theme.colors.brand,
-      cursor: 'pointer',
-    },
-  },
-}));
-
 export type CardSiteDataProps = {
   data: CardData;
 };
 
 export const CardSiteData: FC<CardSiteDataProps> = ({ data }) => {
-  const { classes } = useStyle();
   const isMobile = useMediaQuery('(max-width: 36em)');
   const { t } = useTranslation('site', { keyPrefix: 'card' });
 
