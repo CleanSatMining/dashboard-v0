@@ -15,6 +15,7 @@ import { getSite } from 'src/components/CSM/Utils/site';
 import { useMediaQuery } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
 import { CardData } from '../Type';
+import { InfoText } from 'src/components/InfoText/InfoText';
 
 export const useStyle = createStyles((theme: MantineTheme) => ({
   accordionContainer: {
@@ -140,13 +141,19 @@ export const CardSiteAccounting: FC<CardSiteAccountingProps> = ({ data }) => {
               </Text>
             </Group>
             <Group position={'apart'} mt={'0'} mb={'0'}>
-              <Text
+              <InfoText
+                fz={isMobile ? 'xs' : 'sm'}
+                color={'dimmed'}
+                text={t('cost-provision')}
+                tooltipText={t('provision-explained')}
+              ></InfoText>
+              {/* <Text
                 fz={isMobile ? 'xs' : 'sm'}
                 align={'center'}
                 color={'dimmed'}
               >
                 {t('cost-provision')}
-              </Text>
+              </Text> */}
               <Text weight={500} fz={isMobile ? 'xs' : 'sm'} align={'center'}>
                 {formatUsd(data.site.uptime.costs.provision, 2)}
               </Text>

@@ -43,6 +43,7 @@
     "income-gross-explained": "Gross income is the result of subtracting the bitcoins obtained through mining from the incurred expenses. These expenses encompass electricity costs, operational fees, CSM charges, and taxes, but do not take into account the provision for addressing mining equipment obsolescence.",
     "income-detail": "See the income details.",
     "over": " over ",
+    "provision-explained": "Each year, 20% of the value of the mining equipment on the site is deducted to be added to the provision.",
     "fee-explained": "Bitcoins mined are subtracted from the cost of electricity, CSM administrative fees (5%), taxes on Swiss profits (13.57%), and the provision for ASIC renewal (20%)."
   }
 }
