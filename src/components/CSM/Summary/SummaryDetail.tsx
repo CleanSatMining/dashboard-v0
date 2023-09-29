@@ -45,11 +45,19 @@ const _SummaryDetailCard: FC<SummaryDetailProps> = ({ data }) => {
         </Accordion.Control>
         <Accordion.Panel sx={{ padding: 0, margin: 0 }}>
           {data?.map((setting, i) => (
-            <Group position={'apart'} mt={'0'} mb={'0'} key={`group-${i}`}>
+            <Group
+              position={'apart'}
+              mt={'0'}
+              mb={'0'}
+              key={`group-${i}`}
+              grow={false}
+            >
               <Text fz={'sm'} color={'dimmed'}>
                 {setting.label}
               </Text>
-              <Text fz={'sm'}>{setting.value}</Text>
+              <Text truncate={true} fz={'sm'}>
+                {setting.value}
+              </Text>
             </Group>
           ))}
         </Accordion.Panel>

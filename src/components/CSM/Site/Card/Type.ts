@@ -9,7 +9,7 @@ export type CardData = {
       balance: Income;
       apy: number;
     };
-    brut: {
+    gross: {
       balance: Income;
       apy: number;
     };

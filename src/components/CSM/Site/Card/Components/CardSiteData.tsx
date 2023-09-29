@@ -8,6 +8,7 @@ import {
   Divider,
   ActionIcon,
   Flex,
+  HoverCard,
 } from '@mantine/core';
 import { IconPlus, IconMinus } from '@tabler/icons';
 import Image from 'next/image';
@@ -72,21 +73,27 @@ export const CardSiteData: FC<CardSiteDataProps> = ({ data }) => {
 
       <Space h={'xs'} />
       <Group position={'apart'} mt={isMobile ? 0 : 0} mb={isMobile ? 0 : 0}>
-        <Flex gap={'xs'} align={'center'}>
-          <Text fz={isMobile ? 'xs' : 'sm'} color={'dimmed'}>
-            {t('site-net-income')}
-          </Text>
-          <ActionIcon
-            size={'xs'}
-            variant={'light'}
-            radius={'sm'}
-            onClick={() => setDisplayDetail(!displayDetail)}
-          >
-            {!displayDetail && <IconPlus size={'0.875rem'} />}
-            {displayDetail && <IconMinus size={'0.875rem'} />}
-          </ActionIcon>
-        </Flex>
-
+        <HoverCard width={200} shadow={'md'}>
+          <HoverCard.Target>
+            <Flex gap={'xs'} align={'center'}>
+              <Text fz={isMobile ? 'xs' : 'sm'} color={'dimmed'}>
+                {t('site-net-income')}
+              </Text>
+              <ActionIcon
+                size={'xs'}
+                variant={'light'}
+                radius={'sm'}
+                onClick={() => setDisplayDetail(!displayDetail)}
+              >
+                {!displayDetail && <IconPlus size={'0.875rem'} />}
+                {displayDetail && <IconMinus size={'0.875rem'} />}
+              </ActionIcon>
+            </Flex>
+          </HoverCard.Target>
+          <HoverCard.Dropdown>
+            <Text size={'sm'}>{t('income-detail')}</Text>
+          </HoverCard.Dropdown>
+        </HoverCard>
         <Text weight={500} fz={isMobile ? 'xs' : 'sm'}>
           {formatBTC(data.site.uptime.earned.btc)}
         </Text>

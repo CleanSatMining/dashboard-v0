@@ -44,7 +44,7 @@ const _Summary: FC<AssetProps> = ({ btcPrice, period, account }) => {
   const { t } = useTranslation('site', { keyPrefix: 'card' });
   const usersState = useAppSelector(selectUsersState);
   const miningState = useAppSelector(selectMiningState);
-  const [userYield, setUserYield] = useState<{ net: Yield; brut: Yield }>(
+  const [userYield, setUserYield] = useState<{ net: Yield; gross: Yield }>(
     getUserYield(miningState, usersState, account, period, btcPrice),
   );
 
@@ -89,7 +89,7 @@ const _Summary: FC<AssetProps> = ({ btcPrice, period, account }) => {
 
     const dataYieldGross: Data = {
       label: site.name,
-      value: formatBTC(yields.brut.btc),
+      value: formatBTC(yields.gross.btc),
     };
 
     dataTokens.push(dataToken);
@@ -144,8 +144,8 @@ const _Summary: FC<AssetProps> = ({ btcPrice, period, account }) => {
           value1={formatBTC(userYield.net.btc)}
           subValue1={formatUsd(userYield.net.usd)}
           valueTitle2={t('income-gross')}
-          value2={formatBTC(userYield.brut.btc)}
-          subValue2={formatUsd(userYield.brut.usd)}
+          value2={formatBTC(userYield.gross.btc)}
+          subValue2={formatUsd(userYield.gross.usd)}
           data={dataIncomeNet}
           Icon={IconCoinBitcoin}
         ></SummariesCard>
@@ -154,6 +154,7 @@ const _Summary: FC<AssetProps> = ({ btcPrice, period, account }) => {
         <>
           <SummaryCard
             title={t('incomes-net')}
+            toolTip={t('income-net-explained')}
             value={formatBTC(userYield.net.btc)}
             subValue={formatUsd(userYield.net.usd)}
             data={dataIncomeNet}
@@ -161,8 +162,9 @@ const _Summary: FC<AssetProps> = ({ btcPrice, period, account }) => {
           ></SummaryCard>
           <SummaryCard
             title={t('incomes-gross')}
-            value={formatBTC(userYield.brut.btc)}
-            subValue={formatUsd(userYield.brut.usd)}
+            toolTip={t('income-gross-explained')}
+            value={formatBTC(userYield.gross.btc)}
+            subValue={formatUsd(userYield.gross.usd)}
             data={dataIncomeGross}
             Icon={IconCoinBitcoin}
           ></SummaryCard>

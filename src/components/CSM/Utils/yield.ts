@@ -136,7 +136,7 @@ export const getYieldBySite = (
   siteId: string,
   period: number,
   btcPrice: number,
-): { net: Yield; brut: Yield } => {
+): { net: Yield; gross: Yield } => {
   const netYield: { usd: number; btc: number; apr: number } = {
     usd: 0,
     btc: 0,
@@ -190,7 +190,7 @@ export const getYieldBySite = (
     brutYield.apr = apr.toNumber();
   }
 
-  return { net: netYield, brut: brutYield };
+  return { net: netYield, gross: brutYield };
 };
 
 /**
@@ -211,7 +211,7 @@ export const getUserYieldBySite = (
   userAddress: string,
   period: number,
   btcPrice: number,
-): { net: Yield; brut: Yield } => {
+): { net: Yield; gross: Yield } => {
   const netYield: { usd: number; btc: number; apr: number } = {
     usd: 0,
     btc: 0,
@@ -243,12 +243,12 @@ export const getUserYieldBySite = (
     netYield.btc = userShare.times(siteYield.net.btc).toNumber();
     netYield.usd = userShare.times(siteYield.net.usd).toNumber();
     netYield.apr = siteYield.net.apr;
-    brutYield.btc = userShare.times(siteYield.brut.btc).toNumber();
-    brutYield.usd = userShare.times(siteYield.brut.usd).toNumber();
-    brutYield.apr = siteYield.brut.apr;
+    brutYield.btc = userShare.times(siteYield.gross.btc).toNumber();
+    brutYield.usd = userShare.times(siteYield.gross.usd).toNumber();
+    brutYield.apr = siteYield.gross.apr;
   }
 
-  return { net: netYield, brut: brutYield };
+  return { net: netYield, gross: brutYield };
 };
 
 /**
@@ -348,7 +348,7 @@ export const getUserYield = (
   userAddress: string,
   period: number,
   btcPrice: number,
-): { net: Yield; brut: Yield } => {
+): { net: Yield; gross: Yield } => {
   const netYield: { usd: number; btc: number; apr: number } = {
     usd: 0,
     btc: 0,
@@ -384,9 +384,9 @@ export const getUserYield = (
       netBtc = netBtc.plus(siteYield.net.btc);
       netUsd = netUsd.plus(siteYield.net.usd);
       netApr = netApr.plus(siteInvestementShare.times(siteYield.net.apr));
-      brutBtc = brutBtc.plus(siteYield.brut.btc);
-      brutUsd = brutUsd.plus(siteYield.brut.usd);
-      brutApr = brutApr.plus(siteInvestementShare.times(siteYield.brut.apr));
+      brutBtc = brutBtc.plus(siteYield.gross.btc);
+      brutUsd = brutUsd.plus(siteYield.gross.usd);
+      brutApr = brutApr.plus(siteInvestementShare.times(siteYield.gross.apr));
     }
 
     netYield.btc = netBtc.toNumber();
@@ -397,7 +397,7 @@ export const getUserYield = (
     brutYield.apr = brutApr.toNumber();
   }
 
-  return { net: netYield, brut: brutYield };
+  return { net: netYield, gross: brutYield };
 };
 
 /**

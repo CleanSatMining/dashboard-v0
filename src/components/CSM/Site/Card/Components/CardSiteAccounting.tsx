@@ -6,7 +6,12 @@ import {
   MantineTheme,
   Accordion,
 } from '@mantine/core';
-import { formatUsd } from 'src/utils/format/format';
+import {
+  formatUsd,
+  formatUsdCentsPerKWh,
+  formatPercent,
+} from 'src/utils/format/format';
+import { getSite } from 'src/components/CSM/Utils/site';
 import { useMediaQuery } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
 import { CardData } from '../Type';
@@ -33,6 +38,7 @@ export const CardSiteAccounting: FC<CardSiteAccountingProps> = ({ data }) => {
   const { classes } = useStyle();
   const isMobile = useMediaQuery('(max-width: 36em)');
   const { t } = useTranslation('site', { keyPrefix: 'card' });
+  const site = getSite(data.id);
 
   return (
     <div className={classes.accordionContainer}>
@@ -81,7 +87,12 @@ export const CardSiteAccounting: FC<CardSiteAccountingProps> = ({ data }) => {
                 align={'center'}
                 color={'dimmed'}
               >
-                {t('cost-electricity')}
+                {t('cost-electricity') +
+                  formatExplained(
+                    formatUsdCentsPerKWh(
+                      site.mining.electricity.usdPricePerKWH,
+                    ),
+                  )}
               </Text>
               <Text weight={500} fz={isMobile ? 'xs' : 'sm'} align={'center'}>
                 {formatUsd(data.site.uptime.costs.electricity, 2)}
@@ -93,7 +104,8 @@ export const CardSiteAccounting: FC<CardSiteAccountingProps> = ({ data }) => {
                 align={'center'}
                 color={'dimmed'}
               >
-                {t('cost-fees-csm')}
+                {t('cost-fees-csm') +
+                  formatExplained(formatPercent(site.fees.operational.csm, 0))}
               </Text>
               <Text weight={500} fz={isMobile ? 'xs' : 'sm'} align={'center'}>
                 {formatUsd(data.site.uptime.costs.feeCSM, 2)}
@@ -105,7 +117,10 @@ export const CardSiteAccounting: FC<CardSiteAccountingProps> = ({ data }) => {
                 align={'center'}
                 color={'dimmed'}
               >
-                {t('cost-fees-operator')}
+                {t('cost-fees-operator') +
+                  formatExplained(
+                    formatPercent(site.fees.operational.operator, 0),
+                  )}
               </Text>
               <Text weight={500} fz={isMobile ? 'xs' : 'sm'} align={'center'}>
                 {formatUsd(data.site.uptime.costs.feeOperator, 2)}
@@ -117,7 +132,8 @@ export const CardSiteAccounting: FC<CardSiteAccountingProps> = ({ data }) => {
                 align={'center'}
                 color={'dimmed'}
               >
-                {t('cost-taxes')}
+                {t('cost-taxes') +
+                  formatExplained(formatPercent(site.fees.operational.taxe, 2))}
               </Text>
               <Text weight={500} fz={isMobile ? 'xs' : 'sm'} align={'center'}>
                 {formatUsd(data.site.uptime.costs.taxe, 2)}
@@ -166,3 +182,7 @@ function AccordionLabel({
     </Group>
   );
 }
+
+const formatExplained = (text: string) => {
+  return ' (' + text + ')';
+};

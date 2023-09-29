@@ -39,6 +39,9 @@
     "incomes-gross": "Revenus brut",
     "income-net": "Net",
     "income-gross": "Brut",
+    "income-net-explained": "Le revenu net est le résultat de la soustraction entre les bitcoins obtenus par le minage et les dépenses encourues. Ces dépenses englobent les coûts liés à l'électricité, les frais opérationnels, les charges CSM, les taxes, ainsi que la provision pour faire face à l'obsolescence des équipements de minage.",
+    "income-gross-explained": "Le revenu brut est le résultat de la soustraction entre les bitcoins obtenus par le minage et les dépenses encourues. Ces dépenses englobent les coûts liés à l'électricité, les frais opérationnels, les charges CSM et les taxes, mais ne tient pas compte de la provision pour faire face à l'obsolescence des équipements de minage.",
+    "income-detail": "Voir les détails du revenu.",
     "over": " sur ",
     "fee-explained": "Les Bitcoins minés sont soustraits du prix de l'électricité, des frais administratifs CSM (5%), des taxes sur les profits suisses (13,57%) et de la provision pour le renouvellement des ASICs (20%)."
   }

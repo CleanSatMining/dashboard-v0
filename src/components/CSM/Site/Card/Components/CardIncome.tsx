@@ -14,6 +14,7 @@ import { formatBTC, formatUsd } from 'src/utils/format/format';
 import { useMediaQuery } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
 import { CardData } from './../Type';
+import { InfoText } from 'src/components/InfoText/InfoText';
 
 export const useStyle = createStyles((theme: MantineTheme) => ({
   urlContainer: {
@@ -71,20 +72,32 @@ export const CardIncome: FC<CardIncomeProps> = ({ data }) => {
       <Divider my={'sm'} />
 
       <Group position={'apart'} mt={'0'} mb={'0'}>
-        <Text fz={'sm'} align={'center'} color={'dimmed'}>
+        <InfoText
+          text={t('income-gross')}
+          color={'dimmed'}
+          fz={'sm'}
+          tooltipText={t('income-gross-explained')}
+        ></InfoText>
+        {/* <Text fz={'sm'} align={'center'} color={'dimmed'}>
           {t('income-gross')}
-        </Text>
+        </Text> */}
         <Text weight={500} fz={'sm'} align={'center'}>
-          {formatBTC(data.income.brut.balance.btc)}
+          {formatBTC(data.income.gross.balance.btc)}
         </Text>
       </Group>
       <Text fz={'xs'} color={'dimmed'} ta={'right'}>
-        {formatUsd(data.income.brut.balance.usd)}
+        {formatUsd(data.income.gross.balance.usd)}
       </Text>
       <Group position={'apart'} mt={'0'} mb={'0'}>
-        <Text fz={'sm'} align={'center'} color={'dimmed'}>
+        <InfoText
+          text={t('income-net')}
+          color={'dimmed'}
+          fz={'sm'}
+          tooltipText={t('income-net-explained')}
+        ></InfoText>
+        {/* <Text fz={'sm'} align={'center'} color={'dimmed'}>
           {t('income-net')}
-        </Text>
+        </Text> */}
         <Text weight={500} fz={'sm'} align={'center'}>
           {formatBTC(data.income.net.balance.btc)}
         </Text>

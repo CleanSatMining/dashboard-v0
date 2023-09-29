@@ -191,3 +191,16 @@ export function formatHashrate(num: number) {
   const value = numBig.dividedBy(new BigNumber(10).exponentiatedBy(12));
   return formatFullBigNumber(value, 0, 0) + ' TH/s';
 }
+
+export const formatUsdCentsPerKWh = (
+  tvl: number,
+  digit = 0,
+  symbol = '$',
+  currency = 'USD',
+  oraclePrice = 1,
+) => {
+  const usd = formatUsd(tvl, digit, symbol, currency, oraclePrice);
+  const suffix = ' cts/kWh';
+
+  return usd + suffix;
+};

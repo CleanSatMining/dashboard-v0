@@ -177,8 +177,8 @@ function buildUserSiteData(
     value: BigNumber;
   },
   userShare: BigNumber,
-  userYield: { net: Yield; brut: Yield },
-  siteYield: { net: Yield; brut: Yield },
+  userYield: { net: Yield; gross: Yield },
+  siteYield: { net: Yield; gross: Yield },
   userToken: TokenBalance,
   siteUptime: {
     machines: number;
@@ -207,12 +207,12 @@ function buildUserSiteData(
         },
         apy: userYield.net.apr,
       },
-      brut: {
+      gross: {
         balance: {
-          btc: userYield.brut.btc,
-          usd: userYield.brut.usd,
+          btc: userYield.gross.btc,
+          usd: userYield.gross.usd,
         },
-        apy: userYield.brut.apr,
+        apy: userYield.gross.apr,
       },
     },
 

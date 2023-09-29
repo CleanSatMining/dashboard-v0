@@ -40,71 +40,84 @@ export const useMiningSitesSummary = (
         [siteId: string]: MiningSiteSummary;
       }> => {
         setIsLoaded(false);
+
         return new Promise<{ [siteId: string]: MiningSiteSummary }>(
           async (resolve, reject) => {
             const miningDaysHistory: {
               [siteId: string]: MiningSummaryPerDay[];
             } = {};
 
-            for (const siteId of siteIds) {
-              const site = SITES[siteId as SiteID];
+            try {
+              for (const siteId of siteIds) {
+                const site = SITES[siteId as SiteID];
 
-              if (site.status !== MiningStatus.inactive) {
-                try {
-                  const body: APIMiningHistoryQuery = {
-                    siteId: siteId,
-                    first: days,
-                  };
-
-                  const result = await fetch(API_MINING_STATE.url, {
-                    method: API_MINING_STATE.method,
-                    body: JSON.stringify(body),
-                  });
-
-                  if (result.ok) {
-                    const miningHistory: APIMiningHistoryResponse =
-                      await result.json();
-                    const history = miningHistory.days.filter((d) => {
-                      //filter old date
-                      const hitoryDay = new Date(d.date).getTime();
-                      const nowDay = new Date(d.date).getTime();
-                      const diffDays = nowDay - hitoryDay;
-                      return diffDays <= days;
-                    });
-                    miningDaysHistory[siteId] = history;
-                    const data: SiteMiningSummary = {
-                      id: siteId,
-                      mining: { days: history },
-                      token: { byUser: {} },
+                if (site.status !== MiningStatus.inactive) {
+                  try {
+                    const body: APIMiningHistoryQuery = {
+                      siteId: siteId,
+                      first: days,
                     };
-                    dispatch({ type: siteAddedDispatchType, payload: data });
-                    // console.log(
-                    //   'FETCH HISTORY',
-                    //   siteId,
-                    //   JSON.stringify(miningHistory.days, null, 4)
-                    // );
-                  } else {
-                    reject('Failed to fetch mining state from API');
-                  }
-                } catch (err) {
-                  console.log('Failed to fetch mining state from API: ', err);
-                  reject(err);
-                }
-                //}
 
-                miningStates[siteId] = {
-                  siteId: siteId,
-                  days: miningDaysHistory[siteId],
-                };
-              }
-            } // for sites ids
+                    const result = await fetch(API_MINING_STATE.url, {
+                      method: API_MINING_STATE.method,
+                      body: JSON.stringify(body),
+                    });
+
+                    if (result.ok) {
+                      const miningHistory: APIMiningHistoryResponse =
+                        await result.json();
+                      const history = miningHistory.days.filter((d) => {
+                        //filter old date
+                        const hitoryDay = new Date(d.date).getTime();
+                        const nowDay = new Date(d.date).getTime();
+                        const diffDays = nowDay - hitoryDay;
+                        return diffDays <= days;
+                      });
+                      miningDaysHistory[siteId] = history;
+                      const data: SiteMiningSummary = {
+                        id: siteId,
+                        mining: { days: history },
+                        token: { byUser: {} },
+                      };
+                      dispatch({ type: siteAddedDispatchType, payload: data });
+                      // console.log(
+                      //   'FETCH HISTORY',
+                      //   siteId,
+                      //   JSON.stringify(miningHistory.days, null, 4)
+                      // );
+                    } else {
+                      reject('Failed to fetch mining state from API');
+                    }
+                  } catch (err) {
+                    console.log('Failed to fetch mining state from API: ', err);
+                    reject(err);
+                  }
+                  //}
+
+                  miningStates[siteId] = {
+                    siteId: siteId,
+                    days: miningDaysHistory[siteId],
+                  };
+                }
+              } // for sites ids
+            } catch (e) {
+              console.warn(
+                'Error while fetching mining summary: ' + JSON.stringify(e),
+              );
+            }
+
             setIsLoaded(true);
             resolve(miningStates);
           },
         );
       };
-      const data = await getSiteMiningStates();
-      setMiningStates(data);
+
+      try {
+        const data = await getSiteMiningStates();
+        setMiningStates(data);
+      } catch (e) {
+        console.warn('Error getSiteMiningStates' + JSON.stringify(e));
+      }
     })();
 
     return () => {
