@@ -1,7 +1,7 @@
 import { FC, memo } from 'react';
 
 import {
-  Accordion,
+  Space,
   ActionIcon,
   Card,
   Flex,
@@ -14,6 +14,7 @@ import {
 import { useMediaQuery } from '@mantine/hooks';
 import { TablerIcon } from '@tabler/icons';
 import { Data } from './SummaryType';
+import { SummaryDetailCard } from './SummaryDetail';
 
 const useStyle = createStyles((theme: MantineTheme) => ({
   brand: {
@@ -106,40 +107,10 @@ const _SummariesCard: FC<SummariesProps> = ({
         </Group>
 
         {data.length > 0 && (
-          <Accordion
-            radius={'xl'}
-            variant={'separated'}
-            defaultValue={''}
-            styles={{
-              item: {
-                // styles added to all items
-                backgroundColor: 'transparent',
-                border: '0',
-
-                // styles added to expanded item
-                '&[data-active]': {
-                  backgroundColor: 'transparent',
-                },
-              },
-            }}
-          >
-            <Accordion.Item value={'detail'}>
-              <Accordion.Control>{'Detail'}</Accordion.Control>
-              <Accordion.Panel>
-                {data?.map((setting, i) => (
-                  <Group
-                    position={'apart'}
-                    mt={'xs'}
-                    mb={'xs'}
-                    key={`group-${i}`}
-                  >
-                    <Text fz={'sm'}>{setting.label}</Text>
-                    <Text fz={'sm'}>{setting.value}</Text>
-                  </Group>
-                ))}
-              </Accordion.Panel>
-            </Accordion.Item>
-          </Accordion>
+          <>
+            <Space h={'20px'}></Space>{' '}
+            <SummaryDetailCard data={data}></SummaryDetailCard>
+          </>
         )}
       </Card>
     </>

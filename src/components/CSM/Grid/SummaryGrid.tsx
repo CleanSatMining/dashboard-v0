@@ -21,6 +21,7 @@ import {
   formatPercent,
   formatUsd,
 } from '../../../utils/format/format';
+import { getSite } from '../Utils/site';
 import { SummaryCard } from '../Summary/SummaryCard';
 import { SummariesCard } from '../Summary/SummariesCard';
 import { Data } from '../Summary/SummaryType';
@@ -28,6 +29,8 @@ import {
   getUserInvestment,
   getUserSiteIds,
   getUserYield,
+  getUserYieldBySite,
+  getUserTokenBalance,
 } from '../Utils/yield';
 
 type AssetProps = {
@@ -48,16 +51,52 @@ const _Summary: FC<AssetProps> = ({ btcPrice, period, account }) => {
   //console.log('REDUX USERS', JSON.stringify(usersState, null, 4));
   //console.log('REDUX SITEs', JSON.stringify(miningState, null, 4));
 
+  const siteIds = getUserSiteIds(usersState, account);
+  const investment = getUserInvestment(usersState, account);
+  const numberOfSite = siteIds.length;
+
   const dataTokens: Data[] = [];
 
   const dataSites: Data[] = [];
 
-  const dataBTC: Data[] = [];
+  const dataIncomeNet: Data[] = [];
+
+  const dataIncomeGross: Data[] = [];
 
   const dataAPR: Data[] = [];
 
-  const numberOfSite = getUserSiteIds(usersState, account).length;
-  const investment = getUserInvestment(usersState, account);
+  for (const siteId of siteIds) {
+    const token = getUserTokenBalance(usersState, account, siteId);
+    const site = getSite(siteId);
+    const yields = getUserYieldBySite(
+      miningState,
+      usersState,
+      siteId,
+      account,
+      period,
+      btcPrice,
+    );
+
+    const dataToken: Data = {
+      label: token.symbol,
+      value: formatUsd(token.usd),
+    };
+    const dataSite: Data = { label: site.name, value: t(site.location) };
+    const dataYieldNet: Data = {
+      label: site.name,
+      value: formatBTC(yields.net.btc),
+    };
+
+    const dataYieldGross: Data = {
+      label: site.name,
+      value: formatBTC(yields.brut.btc),
+    };
+
+    dataTokens.push(dataToken);
+    dataSites.push(dataSite);
+    dataIncomeNet.push(dataYieldNet);
+    dataIncomeGross.push(dataYieldGross);
+  }
 
   // console.log(
   //   'REDUX',
@@ -81,7 +120,7 @@ const _Summary: FC<AssetProps> = ({ btcPrice, period, account }) => {
         { minWidth: 'xs', cols: 2 },
         { minWidth: 'sm', cols: 2 },
         { minWidth: 'md', cols: 3 },
-        { minWidth: 1200, cols: ACTIVATE_DISPLAY_APY ? 4 : 3 },
+        { minWidth: 1200, cols: ACTIVATE_DISPLAY_APY ? 5 : 4 },
       ]}
       spacing={isMobile ? 'xs' : undefined}
       sx={{ marginBottom: isMobile ? '20px' : '50px' }}
@@ -98,7 +137,7 @@ const _Summary: FC<AssetProps> = ({ btcPrice, period, account }) => {
         data={dataSites}
         Icon={IconBuildingFactory}
       ></SummaryCard>
-      {!isMobile && (
+      {/* {!isMobile && (
         <SummariesCard
           title={t('my-yield')}
           valueTitle1={t('income-net')}
@@ -107,28 +146,28 @@ const _Summary: FC<AssetProps> = ({ btcPrice, period, account }) => {
           valueTitle2={t('income-gross')}
           value2={formatBTC(userYield.brut.btc)}
           subValue2={formatUsd(userYield.brut.usd)}
-          data={dataBTC}
+          data={dataIncomeNet}
           Icon={IconCoinBitcoin}
         ></SummariesCard>
-      )}
-      {isMobile && (
+      )} */}
+      {
         <>
           <SummaryCard
             title={t('incomes-net')}
             value={formatBTC(userYield.net.btc)}
             subValue={formatUsd(userYield.net.usd)}
-            data={dataBTC}
+            data={dataIncomeNet}
             Icon={IconCoinBitcoin}
           ></SummaryCard>
           <SummaryCard
             title={t('incomes-gross')}
             value={formatBTC(userYield.brut.btc)}
             subValue={formatUsd(userYield.brut.usd)}
-            data={dataBTC}
+            data={dataIncomeGross}
             Icon={IconCoinBitcoin}
           ></SummaryCard>
         </>
-      )}
+      }
       {ACTIVATE_DISPLAY_APY && (
         <SummaryCard
           title={t('my-yield')}

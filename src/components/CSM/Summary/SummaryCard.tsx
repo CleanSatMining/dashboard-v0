@@ -1,7 +1,6 @@
 import { FC, memo } from 'react';
 
 import {
-  Accordion,
   ActionIcon,
   Card,
   Flex,
@@ -14,6 +13,7 @@ import {
 import { useMediaQuery } from '@mantine/hooks';
 import { TablerIcon } from '@tabler/icons';
 import { Data } from './SummaryType';
+import { SummaryDetailCard } from './SummaryDetail';
 
 const useStyle = createStyles((theme: MantineTheme) => ({
   brand: {
@@ -46,69 +46,52 @@ const _SummaryCard: FC<SummaryProps> = ({
         radius={'md'}
         withBorder={true}
       >
-        <Group position={'apart'} mt={'0'} mb={isMobile ? 0 : 'xs'}>
-          <Title order={isMobile ? 6 : 3}>{title}</Title>
-          {Icon && (
-            <ActionIcon variant={'transparent'}>
-              <Icon className={classes.brand}></Icon>
-            </ActionIcon>
-          )}
-        </Group>
+        <Flex direction={'column'} h={'100%'}>
+          <Group position={'apart'} mt={'0'} mb={isMobile ? 0 : 'xs'}>
+            <Title order={isMobile ? 6 : 3}>{title}</Title>
+            {Icon && (
+              <ActionIcon variant={'transparent'}>
+                <Icon className={classes.brand}></Icon>
+              </ActionIcon>
+            )}
+          </Group>
 
-        <Flex
-          mih={isMobile ? 30 : 50}
-          //gap={'md'}
-          justify={'flex-start'}
-          align={'flex-start'}
-          direction={'column'}
-          wrap={'wrap'}
-        >
-          <Title order={isMobile ? 5 : 4} color={'brand'}>
-            {value}
-          </Title>
-          {subValue !== undefined && (
-            <Text color={'dimmed'} size={isMobile ? 12 : undefined}>
-              {subValue}
-            </Text>
-          )}
-        </Flex>
-
-        {data.length > 0 && (
-          <Accordion
-            radius={'xl'}
-            variant={'separated'}
-            defaultValue={''}
-            styles={{
-              item: {
-                // styles added to all items
-                backgroundColor: 'transparent',
-                border: '0',
-
-                // styles added to expanded item
-                '&[data-active]': {
-                  backgroundColor: 'transparent',
-                },
-              },
-            }}
+          <Flex
+            mih={isMobile ? 30 : 50}
+            //gap={'md'}
+            justify={'flex-start'}
+            align={'flex-start'}
+            direction={'column'}
           >
-            <Accordion.Item value={'detail'}>
-              <Accordion.Control>{'Detail'}</Accordion.Control>
-              <Accordion.Panel>
-                {data?.map((setting, i) => (
-                  <Group
-                    position={'apart'}
-                    mt={'xs'}
-                    mb={'xs'}
-                    key={`group-${i}`}
-                  >
-                    <Text fz={'sm'}>{setting.label}</Text>
-                    <Text fz={'sm'}>{setting.value}</Text>
-                  </Group>
-                ))}
-              </Accordion.Panel>
-            </Accordion.Item>
-          </Accordion>
-        )}
+            <Title order={isMobile ? 5 : 4} color={'brand'}>
+              {value}
+            </Title>
+            {subValue !== undefined && (
+              <Text
+                color={'dimmed'}
+                size={isMobile ? 12 : undefined}
+                sx={{ marginBottom: '10px' }}
+              >
+                {subValue}
+              </Text>
+            )}
+          </Flex>
+          <Flex
+            //mih={100}
+            //bg='rgba(0, 0, 0, .3)'
+            //gap='md'
+            justify={'flex-end'}
+            align={'flex-start'}
+            direction={'column'}
+            wrap={'wrap'}
+            h={'100%'}
+            w={'100%'}
+          >
+            {data.length > 0 && !isMobile && (
+              <SummaryDetailCard data={data}></SummaryDetailCard>
+            )}
+          </Flex>
+        </Flex>
       </Card>
     </>
   );

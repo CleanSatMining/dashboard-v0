@@ -11,11 +11,6 @@ import {
 import { MiningState } from 'src/types/mining/Mining';
 import { Site, Fees } from 'src/types/mining/Site';
 
-import {
-  formatBTC,
-  formatPercent,
-  formatUsd,
-} from '../../../utils/format/format';
 import { getRealPeriod } from './yield';
 
 const YEAR_IN_DAYS = new BigNumber(365);
@@ -385,7 +380,10 @@ export function calculateCostsAndEBITDAByPeriod(
     .dividedBy(YEAR_IN_DAYS)
     .times(realPeriod);
   const EBITDA_MINUS_PROVISION = EBITDA.minus(provision);
-  const taxe = EBITDA_MINUS_PROVISION.times(SWISS_TAXE);
+  const taxe = BigNumber.max(
+    EBITDA_MINUS_PROVISION.times(SWISS_TAXE),
+    new BigNumber(0),
+  );
   return {
     feeCsm: feeCsmUsd,
     feeOperator: feeOperatorUsd,
