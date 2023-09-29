@@ -35,7 +35,7 @@ export async function antpoolHistory(
   url: string,
   username: string,
   first: number,
-  siteId: string
+  siteId: string,
 ) {
   let json;
   const site = SITES[siteId as SiteID];
@@ -56,7 +56,7 @@ export async function antpoolHistory(
         page: page.toString(),
         type: 'recv',
       });
-      console.log('ANTPOOL input', post_data, apiKey);
+      //console.log('ANTPOOL input', post_data, apiKey);
 
       try {
         const result = await fetch(url, {
@@ -82,7 +82,7 @@ export async function antpoolHistory(
           };
           json = erreur; // JSON.stringify(erreur);
           console.error(
-            'ANTPOOL Revenu summary error' + JSON.stringify(erreur)
+            'ANTPOOL Revenu summary error' + JSON.stringify(erreur),
           );
         }
       } catch (err) {
@@ -94,13 +94,13 @@ export async function antpoolHistory(
 
   const totalMachines = new BigNumber(site.mining.asics.units);
   const hashrateMax = new BigNumber(site.mining.asics.hashrateHs).times(
-    totalMachines
+    totalMachines,
   );
 
   const result: MiningSummaryPerDay[] = periodsData.map<MiningSummaryPerDay>(
     (day) => {
       const efficiency = new BigNumber(day.hashrate_unit).dividedBy(
-        hashrateMax
+        hashrateMax,
       );
       return {
         date: day.timestamp,
@@ -113,11 +113,11 @@ export async function antpoolHistory(
         uptimeTotalMinutes: efficiency.times(24 * 60).toNumber(),
         uptimeTotalMachines: efficiency.times(totalMachines).toNumber(),
       };
-    }
+    },
   );
 
   json = { days: result };
-  console.log('ANTPOOL RESULT', json);
+  //console.log('ANTPOOL RESULT', json);
   return json;
 }
 
@@ -130,7 +130,7 @@ function getApiSecrets(username: string) {
   let apiSign = ['', 0];
   let apiKey = '';
   let apiSecret = '';
-  console.log('ANTPOOL username', username, apiSign);
+  //console.log('ANTPOOL username', username, apiSign);
 
   switch (username) {
     case SITES[SiteID.alpha].api.username: {

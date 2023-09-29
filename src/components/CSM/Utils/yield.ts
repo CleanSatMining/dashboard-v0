@@ -699,7 +699,7 @@ export const getUptimeBySite = (
   miningState: MiningState,
   siteId: string,
   period: number,
-): { machines: number; days: number; percent: number } => {
+): { machines: number; days: number; percent: number; hashrate: number } => {
   if (
     miningState &&
     miningState.byId &&
@@ -709,23 +709,27 @@ export const getUptimeBySite = (
     const site: Site = SITES[siteId as SiteID];
     const realPeriod = getRealPeriod(site, period);
     const days = miningState.byId[siteId].mining.days;
+    let uptimeHashrate: BigNumber = new BigNumber(0);
     let uptimePercentage: BigNumber = new BigNumber(0);
     let uptimeTotalMachines: BigNumber = new BigNumber(0);
     const activeDays = Math.min(realPeriod, days.length);
     for (let i = 0; i < activeDays; i++) {
       const day = days[i];
+      uptimeHashrate = uptimeHashrate.plus(day.hashrate);
       uptimePercentage = uptimePercentage.plus(day.uptimePercentage);
       uptimeTotalMachines = uptimeTotalMachines.plus(day.uptimeTotalMachines);
     }
 
     return {
       days: activeDays,
+      hashrate: uptimeHashrate.dividedBy(realPeriod).toNumber(),
       machines: uptimeTotalMachines.dividedBy(realPeriod).toNumber(),
       percent: uptimePercentage.dividedBy(realPeriod).toNumber(),
     };
   }
   return {
     days: 0,
+    hashrate: 0,
     machines: 0,
     percent: 0,
   };

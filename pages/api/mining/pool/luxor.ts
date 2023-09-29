@@ -12,7 +12,7 @@ interface RevenueHistory {
           uptimePercentage: number;
           uptimeTotalMinutes: number;
           uptimeTotalMachines: number;
-        }
+        },
       ];
     };
   };
@@ -21,10 +21,17 @@ interface RevenueHistory {
 export async function luxorHistory(
   url: string,
   username: string,
-  first: number
+  first: number,
 ) {
   let json;
   try {
+    console.log(
+      'LUXOR API PARAMETERS: x-lux-api-key',
+      process.env.LUXOR_API_KEY_ACCOUNT,
+    );
+    console.log('LUXOR API PARAMETERS: username', username);
+    console.log('LUXOR API PARAMETERS: url', url);
+
     const result = await fetch(url, {
       method: 'POST',
       headers: {

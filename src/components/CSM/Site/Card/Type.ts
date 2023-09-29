@@ -32,7 +32,7 @@ export type CardData = {
       onPeriod: number;
       days: number;
       machines: number;
-      percent: number;
+      hashratePercent: number;
       mined: Income;
       hashrate: number;
       earned: Income;

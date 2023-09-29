@@ -115,11 +115,14 @@ export const CardSiteData: FC<CardSiteDataProps> = ({ data }) => {
             formatHashrate(data.site.hashrate)}
         </Text>
       </Group>
-      <Progress value={data.site.uptime.percent} color={hashrateColor} />
+      <Progress
+        value={data.site.uptime.hashratePercent}
+        color={hashrateColor}
+      />
       <Group position={'apart'} mt={isMobile ? 0 : 5} mb={isMobile ? 0 : 5}>
         <Text fz={isMobile ? 'xs' : 'sm'} color={'dimmed'}></Text>
         <Text weight={500} fz={isMobile ? 'xs' : 'sm'}>
-          {formatSmallPercent(data.site.uptime.percent / 100)}
+          {formatSmallPercent(data.site.uptime.hashratePercent / 100)}
         </Text>
       </Group>
     </>
@@ -127,23 +130,23 @@ export const CardSiteData: FC<CardSiteDataProps> = ({ data }) => {
 };
 function calculateProgressColor(data: CardData) {
   let hashrateColor = 'violet';
-  if (data.site.uptime.percent < 10) {
+  if (data.site.uptime.hashratePercent < 10) {
     hashrateColor = 'red';
-  } else if (data.site.uptime.percent < 20) {
+  } else if (data.site.uptime.hashratePercent < 20) {
     hashrateColor = 'red';
-  } else if (data.site.uptime.percent < 30) {
+  } else if (data.site.uptime.hashratePercent < 30) {
     hashrateColor = 'orange';
-  } else if (data.site.uptime.percent < 40) {
+  } else if (data.site.uptime.hashratePercent < 40) {
     hashrateColor = 'yellow';
-  } else if (data.site.uptime.percent < 50) {
+  } else if (data.site.uptime.hashratePercent < 50) {
     hashrateColor = 'indigo';
-  } else if (data.site.uptime.percent < 60) {
+  } else if (data.site.uptime.hashratePercent < 60) {
     hashrateColor = 'blue';
-  } else if (data.site.uptime.percent < 70) {
+  } else if (data.site.uptime.hashratePercent < 70) {
     hashrateColor = 'cyan';
-  } else if (data.site.uptime.percent < 80) {
+  } else if (data.site.uptime.hashratePercent < 80) {
     hashrateColor = 'teal'; //yellow
-  } else if (data.site.uptime.percent < 90) {
+  } else if (data.site.uptime.hashratePercent < 90) {
     hashrateColor = 'green'; //orange
   } else {
     hashrateColor = 'lime'; //red

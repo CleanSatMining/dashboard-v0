@@ -180,7 +180,12 @@ function buildUserSiteData(
   userYield: { net: Yield; brut: Yield },
   siteYield: { net: Yield; brut: Yield },
   userToken: TokenBalance,
-  siteUptime: { machines: number; days: number; percent: number },
+  siteUptime: {
+    machines: number;
+    days: number;
+    percent: number;
+    hashrate: number;
+  },
   costs: CardCost,
   period: number,
 ): CardData {
@@ -224,11 +229,14 @@ function buildUserSiteData(
       machines: site.mining.asics.units,
       hashrate: siteHashrate,
       uptime: {
-        hashrate: (siteUptime.percent * siteHashrate) / 100,
+        hashrate: siteUptime.hashrate,
+        hashratePercent: new BigNumber(siteUptime.hashrate)
+          .dividedBy(siteHashrate)
+          .times(100)
+          .toNumber(),
         onPeriod: period,
         days: siteUptime.days,
         machines: siteUptime.machines,
-        percent: siteUptime.percent,
         mined: {
           btc: siteMinedBTC.quantity.toNumber(),
           usd: siteMinedBTC.value.toNumber(),
