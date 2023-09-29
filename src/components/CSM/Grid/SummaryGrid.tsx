@@ -23,7 +23,6 @@ import {
 } from '../../../utils/format/format';
 import { getSite } from '../Utils/site';
 import { SummaryCard } from '../Summary/SummaryCard';
-import { SummariesCard } from '../Summary/SummariesCard';
 import { Data } from '../Summary/SummaryType';
 import {
   getUserInvestment,
@@ -159,6 +158,7 @@ const _Summary: FC<AssetProps> = ({ btcPrice, period, account }) => {
             subValue={formatUsd(userYield.net.usd)}
             data={dataIncomeNet}
             Icon={IconCoinBitcoin}
+            warning={userYield.net.usd < 0}
           ></SummaryCard>
           <SummaryCard
             title={t('incomes-gross')}

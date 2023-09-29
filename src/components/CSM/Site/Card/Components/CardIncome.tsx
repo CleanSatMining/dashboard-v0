@@ -39,6 +39,7 @@ export type CardIncomeProps = {
 export const CardIncome: FC<CardIncomeProps> = ({ data }) => {
   const isMobile = useMediaQuery('(max-width: 36em)');
   const { t } = useTranslation('site', { keyPrefix: 'card' });
+  const lost = data.income.net.balance.btc < 0;
 
   return (
     <HoverCard width={280} shadow={'md'}>
@@ -98,9 +99,20 @@ export const CardIncome: FC<CardIncomeProps> = ({ data }) => {
         {/* <Text fz={'sm'} align={'center'} color={'dimmed'}>
           {t('income-net')}
         </Text> */}
-        <Text weight={500} fz={'sm'} align={'center'}>
-          {formatBTC(data.income.net.balance.btc)}
-        </Text>
+        {!lost && (
+          <Text weight={500} fz={'sm'} align={'center'}>
+            {formatBTC(data.income.net.balance.btc)}
+          </Text>
+        )}
+        {lost && (
+          <InfoText
+            text={formatBTC(data.income.net.balance.btc)}
+            color={'yellow'}
+            fz={'sm'}
+            tooltipText={t('lost-explained')}
+            weight={500}
+          ></InfoText>
+        )}
       </Group>
       <Text fz={'xs'} color={'dimmed'} ta={'right'}>
         {formatUsd(data.income.net.balance.usd)}

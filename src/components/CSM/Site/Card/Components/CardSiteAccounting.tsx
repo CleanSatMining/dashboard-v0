@@ -145,15 +145,12 @@ export const CardSiteAccounting: FC<CardSiteAccountingProps> = ({ data }) => {
                 fz={isMobile ? 'xs' : 'sm'}
                 color={'dimmed'}
                 text={t('cost-provision')}
-                tooltipText={t('provision-explained')}
+                tooltipText={t('provision-explained').replace(
+                  '$',
+                  formatUsd(site.mining.intallationCosts.equipement),
+                )}
               ></InfoText>
-              {/* <Text
-                fz={isMobile ? 'xs' : 'sm'}
-                align={'center'}
-                color={'dimmed'}
-              >
-                {t('cost-provision')}
-              </Text> */}
+
               <Text weight={500} fz={isMobile ? 'xs' : 'sm'} align={'center'}>
                 {formatUsd(data.site.uptime.costs.provision, 2)}
               </Text>

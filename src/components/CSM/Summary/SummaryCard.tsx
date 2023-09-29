@@ -1,5 +1,5 @@
 import { FC, memo } from 'react';
-
+import { useTranslation } from 'react-i18next';
 import {
   ActionIcon,
   Card,
@@ -30,6 +30,7 @@ type SummaryProps = {
   value?: string;
   data: Data[];
   subValue?: string;
+  warning?: boolean;
 };
 
 const _SummaryCard: FC<SummaryProps> = ({
@@ -39,9 +40,11 @@ const _SummaryCard: FC<SummaryProps> = ({
   value,
   data,
   subValue,
+  warning,
 }) => {
   const { classes } = useStyle();
   const isMobile = useMediaQuery('(max-width: 36em)');
+  const { t } = useTranslation('site', { keyPrefix: 'card' });
   return (
     <>
       <HoverCard width={350} shadow={'md'} disabled={toolTip ? false : true}>
@@ -77,9 +80,20 @@ const _SummaryCard: FC<SummaryProps> = ({
               align={'flex-start'}
               direction={'column'}
             >
-              <Title order={isMobile ? 5 : 4} color={'brand'}>
-                {value}
-              </Title>
+              {warning && (
+                <InfoTitle
+                  title={value}
+                  order={isMobile ? 5 : 4}
+                  color={'yellow'}
+                  tooltipText={t('lost-explained')}
+                  width={300}
+                ></InfoTitle>
+              )}
+              {!warning && (
+                <Title order={isMobile ? 5 : 4} color={'brand'}>
+                  {value}
+                </Title>
+              )}
               {subValue !== undefined && (
                 <Text
                   color={'dimmed'}

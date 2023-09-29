@@ -34,16 +34,17 @@
     "cost-fees-operator": "Operator Fees",
     "cost-taxes": "Taxes",
     "cost-provision": "Provision",
-    "incomes": "Incomes",
-    "incomes-net": "Net incomes",
-    "incomes-gross": "Gross incomes",
-    "income-net": "Net",
-    "income-gross": "Gross",
+    "incomes": "Estimated Incomes",
+    "incomes-net": "Estimated Net incomes",
+    "incomes-gross": "Estimated Gross incomes",
+    "income-net": "Estimated Net",
+    "income-gross": "Estimated Gross",
     "income-net-explained": "Net income is the result of subtracting the bitcoins obtained through mining from the incurred expenses. These expenses encompass electricity costs, operational fees, CSM charges, taxes, as well as a provision to address mining equipment obsolescence.",
     "income-gross-explained": "Gross income is the result of subtracting the bitcoins obtained through mining from the incurred expenses. These expenses encompass electricity costs, operational fees, CSM charges, and taxes, but do not take into account the provision for addressing mining equipment obsolescence.",
     "income-detail": "See the income details.",
     "over": " over ",
-    "provision-explained": "Each year, 20% of the value of the mining equipment on the site is deducted to be added to the provision.",
+    "lost-explained":"During this period, the number of mined bitcoins is not sufficient to amortize the machines.",
+    "provision-explained": "Every year, 20% of the value of the mining equipment on the site (which is $ here) is deducted to be added to the provision.",
     "fee-explained": "Bitcoins mined are subtracted from the cost of electricity, CSM administrative fees (5%), taxes on Swiss profits (13.57%), and the provision for ASIC renewal (20%)."
   }
 }
