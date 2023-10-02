@@ -1,5 +1,5 @@
 import { FC, Dispatch, SetStateAction } from 'react';
-
+import { useTranslation } from 'react-i18next';
 import { Flex, SegmentedControl } from '@mantine/core';
 import { FilterStatus, FilterSite } from 'src/types/mining/Site';
 
@@ -9,6 +9,7 @@ type FilterProps = {
 };
 
 const _Filters: FC<FilterProps> = ({ ownerFilter, stateFilter }) => {
+  const { t } = useTranslation('menu', { keyPrefix: 'filter' });
   return (
     <Flex
       justify={'flex-start'}
@@ -24,8 +25,8 @@ const _Filters: FC<FilterProps> = ({ ownerFilter, stateFilter }) => {
         value={ownerFilter.value}
         onChange={ownerFilter.setValue}
         data={[
-          { label: 'All Sites', value: FilterSite.all.toString() },
-          { label: 'My Sites', value: FilterSite.my.toString() },
+          { label: t('all-sites'), value: FilterSite.all.toString() },
+          { label: t('my-sites'), value: FilterSite.my.toString() },
         ]}
       />
       <SegmentedControl
@@ -34,9 +35,12 @@ const _Filters: FC<FilterProps> = ({ ownerFilter, stateFilter }) => {
         value={stateFilter.value}
         onChange={stateFilter.setValue}
         data={[
-          { label: 'All States', value: FilterStatus.all.toString() },
-          { label: 'Active', value: FilterStatus.active.toString() },
-          { label: 'Inactive', value: FilterStatus.inactive.toString() },
+          { label: t('all-status'), value: FilterStatus.all.toString() },
+          { label: t('active-status'), value: FilterStatus.active.toString() },
+          {
+            label: t('inactive-status'),
+            value: FilterStatus.inactive.toString(),
+          },
         ]}
       />
     </Flex>
