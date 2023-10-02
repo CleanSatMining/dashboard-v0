@@ -47,6 +47,8 @@
     "over": " sur ",
     "over-start": "sur ",
     "no-data": "No Data",
+    "token-value": "Valeur",
+    "token-value-explained": "XXX...",
     "lost-explained":"Sur cette periode le nombre de bitcoin miné ne suffit pas à amortir les machines.",
     "provision-explained": "Chaque année, 20% de la valeur de l'équipement de minage du site (soit $ ici) sont prélevés pour être ajoutés à la provision.",
     "operator-explained": "Les coûts de l'opérateur sont inclus dans le coût de l'électricité.",

@@ -19,6 +19,7 @@ import { openInNewTab } from 'src/utils/window';
 import { useMediaQuery } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
 import { CardData } from './../Type';
+import { InfoText } from 'src/components/InfoText/InfoText';
 
 export const useStyle = createStyles((theme: MantineTheme) => ({
   urlContainer: {
@@ -94,9 +95,15 @@ export const CardToken: FC<CardTokenProps> = ({ data }) => {
       </Group>
 
       <Group position={'apart'} mt={'0'} mb={'0'}>
-        <Text fz={'sm'} align={'center'} color={'dimmed'}>
+        <InfoText
+          fz={'sm'}
+          color={'dimmed'}
+          text={t('token-value')}
+          tooltipText={t('token-value-explained')}
+        ></InfoText>
+        {/* <Text fz={'sm'} align={'center'} color={'dimmed'}>
           {'Valeur'}
-        </Text>
+        </Text> */}
         <Text fz={'sm'} weight={500}>
           {formatUsd(value)}
         </Text>

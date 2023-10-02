@@ -143,7 +143,7 @@ export const UserSiteCard: FC<CardProps> = ({
       <CardToken data={data}></CardToken>
       <Space h={'sm'}></Space>
       <CardSiteData data={data}></CardSiteData>
-      <Space h={'5px'}></Space>
+      <Space h={'xs'}></Space>
       <CardIncome data={data}></CardIncome>
     </Card>
   );

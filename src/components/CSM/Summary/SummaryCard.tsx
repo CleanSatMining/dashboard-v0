@@ -113,27 +113,27 @@ const _SummaryCard: FC<SummaryProps> = ({
                 <Text
                   color={'dimmed'}
                   size={isMobile ? 12 : undefined}
-                  sx={{ marginBottom: '10px' }}
+                  sx={{ marginBottom: isMobile ? 0 : '10px' }}
                 >
                   {subValue}
                 </Text>
               )}
             </Flex>
-            <Flex
-              //mih={100}
-              //bg='rgba(0, 0, 0, .3)'
-              //gap='md'
-              justify={'flex-end'}
-              align={'flex-start'}
-              direction={'column'}
-              wrap={'wrap'}
-              h={'100%'}
-              w={'100%'}
-            >
-              {data.length > 0 && !isMobile && (
+            {data.length > 0 && !isMobile && (
+              <Flex
+                //mih={100}
+                //bg='rgba(0, 0, 0, .3)'
+                //gap='md'
+                justify={'flex-end'}
+                align={'flex-start'}
+                direction={'column'}
+                wrap={'wrap'}
+                h={'100%'}
+                w={'100%'}
+              >
                 <SummaryDetailCard data={data}></SummaryDetailCard>
-              )}
-            </Flex>
+              </Flex>
+            )}
           </Flex>
         </Card>
         <HoverCard.Dropdown>
