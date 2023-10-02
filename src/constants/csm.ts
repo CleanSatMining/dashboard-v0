@@ -29,6 +29,7 @@ export const SITES: Record<SiteID, Site> = {
     },
     status: MiningStatus.active,
     api: {
+      enable: true,
       username: 'bbgs-csma',
       url: 'https://antpool.com/api/paymentHistoryV2.htm',
       contractor: Contractor.ANTPOOL,
@@ -73,14 +74,15 @@ export const SITES: Record<SiteID, Site> = {
       gnosisscanUrl:
         'https://gnosisscan.io/address/0x364D1aAF7a98e26A1F072e926032f154428481d1',
     },
-    status: MiningStatus.inactive,
+    status: MiningStatus.active,
     api: {
+      enable: false,
       username: undefined,
-      url: 'https://antpool.com/api/paymentHistoryV2.htm',
-      contractor: Contractor.ANTPOOL,
+      url: undefined, //'https://antpool.com/api/paymentHistoryV2.htm',
+      contractor: undefined, // Contractor.ANTPOOL,
     },
     mining: {
-      startingDate: '-',
+      startingDate: '2023-09-01',
       asics: {
         powerW: 3100,
         units: 375,
@@ -120,6 +122,7 @@ export const SITES: Record<SiteID, Site> = {
     },
     status: MiningStatus.active,
     api: {
+      enable: true,
       username: 'bbgs-fin',
       url: 'https://antpool.com/api/paymentHistoryV2.htm',
       contractor: Contractor.ANTPOOL,
@@ -165,6 +168,7 @@ export const SITES: Record<SiteID, Site> = {
     },
     status: MiningStatus.active,
     api: {
+      enable: true,
       username: 'cleansatmininggamma',
       url: 'https://api.beta.luxor.tech/graphql',
       contractor: Contractor.LUXOR,
@@ -212,6 +216,7 @@ export const SITES: Record<SiteID, Site> = {
     },
     status: MiningStatus.inactive,
     api: {
+      enable: false,
       username: undefined,
       url: undefined,
       contractor: undefined,

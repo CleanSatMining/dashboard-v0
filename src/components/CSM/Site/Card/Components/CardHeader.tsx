@@ -7,9 +7,12 @@ import {
   Title,
   BackgroundImage,
   createStyles,
+  Group,
+  Button,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { MiningStatus } from '../../../../../types/mining/Site';
+import { useColorScheme } from '@mantine/hooks';
 
 export const useStyle = createStyles(() => ({
   title: {
@@ -22,6 +25,7 @@ export type HeaderProps = {
   title: string;
   subTitle?: string;
   miningState: MiningStatus;
+  dataEnable?: boolean;
 };
 
 export const CardHeader: FC<HeaderProps> = ({
@@ -29,6 +33,7 @@ export const CardHeader: FC<HeaderProps> = ({
   title,
   subTitle,
   miningState,
+  dataEnable = true,
 }) => {
   const { classes } = useStyle();
   const isMobile = useMediaQuery('(max-width: 36em)');
@@ -54,10 +59,16 @@ export const CardHeader: FC<HeaderProps> = ({
             </Text>
           )}
         </div>
-
-        <Badge color={badgeColor} variant={'filled'}>
-          <Text fz={isMobile ? 'xs' : 'md'}>{t(badgeState)}</Text>
-        </Badge>
+        <Group position={'center'}>
+          <Badge color={badgeColor} variant={'filled'}>
+            <Text fz={isMobile ? 'xs' : 'md'}>{t(badgeState)}</Text>
+          </Badge>
+          {!dataEnable && miningState === MiningStatus.active && (
+            <Badge color={'yellow.5'} variant={'filled'}>
+              <Text fz={'xs'}>{t('no-data')}</Text>
+            </Badge>
+          )}
+        </Group>
       </Flex>
     </BackgroundImage>
   );

@@ -118,6 +118,7 @@ export const UserSiteCard: FC<CardProps> = ({
           miningState={status}
           title={title}
           subTitle={subTitle}
+          dataEnable={data.income.available && status !== MiningStatus.inactive}
         ></CardHeader>
       </Card.Section>
 
@@ -141,88 +142,9 @@ export const UserSiteCard: FC<CardProps> = ({
 
       <CardToken data={data}></CardToken>
       <Space h={'sm'}></Space>
-      <CardIncome data={data}></CardIncome>
-      <Space h={'5px'}></Space>
       <CardSiteData data={data}></CardSiteData>
-
-      {/*      <Group
-        position={'apart'}
-        mt={isMobile ? 0 : 'md'}
-        mb={isMobile ? 0 : 'xs'}
-      >
-        <Text weight={500} fz={isMobile ? 'xs' : 'md'} color={'dimmed'}>
-          {'Tokens'}
-        </Text>
-        <Text fz={isMobile ? 'xs' : 'md'}>
-          {formatBigNumber(csm) +
-            '/' +
-            formatBigNumber(csmSupply) +
-            ' (~' +
-            formatSmallPercent(csmPercent) +
-            ')'}
-        </Text>
-      </Group>
-
-      <Group
-        position={'apart'}
-        mt={isMobile ? 0 : 'xs'}
-        mb={isMobile ? 0 : 'xs'}
-      >
-        <Text weight={500} fz={isMobile ? 'xs' : 'md'} color={'dimmed'}>
-          {t('start-date')}
-        </Text>
-        <Text fz={isMobile ? 'xs' : 'md'}>{startingDate}</Text>
-      </Group>
-
-      <Group
-        position={'apart'}
-        mt={isMobile ? 0 : 'xs'}
-        mb={isMobile ? 0 : 'xs'}
-      >
-        <Text weight={500} fz={isMobile ? 'xs' : 'md'} color={'dimmed'}>
-          {t('uptime-days')}
-        </Text>
-        <Text fz={isMobile ? 'xs' : 'md'}>{data.uptime.days}</Text>
-      </Group>
-
-      <Group
-        position={'apart'}
-        mt={isMobile ? 0 : 'xs'}
-        mb={isMobile ? 0 : 'xs'}
-      >
-        <Text weight={500} fz={isMobile ? 'xs' : 'md'} color={'dimmed'}>
-          {t('uptime-machines')}
-        </Text>
-        <Text fz={isMobile ? 'xs' : 'md'}>{data.uptime.machine}</Text>
-      </Group>
-
-      <Group
-        position={'apart'}
-        mt={isMobile ? 0 : 'xs'}
-        mb={isMobile ? 0 : 'xs'}
-      >
-        <Text weight={500} fz={isMobile ? 'xs' : 'md'} color={'dimmed'}>
-          {t('bitcoin-mined')}
-        </Text>
-        <Text fz={isMobile ? 'xs' : 'md'}>{formatBTC(data.mined.btc)}</Text>
-      </Group>
-
-      <Group
-        position={'apart'}
-        mt={isMobile ? 0 : 'xs'}
-        mb={isMobile ? 0 : 'xs'}
-      >
-        <Text weight={500} fz={isMobile ? 'xs' : 'md'} color={'dimmed'}>
-          {t('site-net-income')}
-        </Text>
-        <Text fz={isMobile ? 'xs' : 'md'}>
-          {formatBTC(data.site.uptime.mined.btc)}
-        </Text>
-      </Group>
-
-      <Text fz={isMobile ? 'xs' : 'md'} ta={'right'}>
-        {formatUsd(data.site.uptime.mined.usd)}
-      </Text> */}
+      <Space h={'5px'}></Space>
+      <CardIncome data={data}></CardIncome>
     </Card>
   );
 };

@@ -7,7 +7,10 @@ export const formatUsd = (
   symbol = '$',
   currency = 'USD',
   oraclePrice = 1,
+  hasData = true,
 ) => {
+  if (!hasData) return ' - ' + symbol;
+
   // TODO: bignum?
   if (oraclePrice) {
     tvl /= oraclePrice;
@@ -24,9 +27,10 @@ export const formatUsd = (
     unitToDisplay = units[order];
   }
   const prefix = symbol;
+  const digitSmallNumber = digit === 0 ? 2 : digit;
 
   return num < 999
-    ? prefix + num.toFixed(2) + unitToDisplay
+    ? prefix + num.toFixed(digitSmallNumber) + unitToDisplay
     : tvl.toLocaleString('en-US', {
         style: 'currency',
         currency: currency,
@@ -83,7 +87,9 @@ export function formatSmallPercent(
   maxPlaces = 2,
   minPlaces = 0,
   formatZero = false,
+  hasData = true,
 ): string {
+  if (!hasData) return '- %';
   return !formatZero && percent === 0
     ? '0%'
     : (percent * 100).toLocaleString('en-US', {
@@ -179,8 +185,8 @@ export function formatBigDecimals(num: number, maxPlaces = 8, strip = true) {
   return strip ? stripTrailingZeros(fixed) : fixed;
 }
 
-export function formatBTC(num: number) {
-  return formatBigDecimals(num) + ' BTC';
+export function formatBTC(num: number, hasData = true) {
+  return (hasData ? formatBigDecimals(num) : '- ') + ' BTC';
 }
 
 export function formatToken(num: number, symbol = '') {
@@ -189,7 +195,8 @@ export function formatToken(num: number, symbol = '') {
   return formatFullNumber(num, maxDp) + (symbol == '' ? '' : ' ' + symbol);
 }
 
-export function formatHashrate(num: number) {
+export function formatHashrate(num: number, hasData = true) {
+  if (!hasData) return '- TH/s';
   const numBig = new BigNumber(num);
   const value = numBig.dividedBy(new BigNumber(10).exponentiatedBy(12));
   return formatFullBigNumber(value, 0, 0) + ' TH/s';
@@ -197,7 +204,7 @@ export function formatHashrate(num: number) {
 
 export const formatUsdCentsPerKWh = (
   tvl: number,
-  digit = 0,
+  digit = 4,
   symbol = '$',
   currency = 'USD',
   oraclePrice = 1,

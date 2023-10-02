@@ -36,6 +36,8 @@ export const CardSiteData: FC<CardSiteDataProps> = ({ data }) => {
   const hashrateColor = calculateProgressColor(data);
   const [displayDetail, setDisplayDetail] = useState<boolean>(false);
 
+  const hasData = data.income.available;
+
   return (
     <>
       <Group
@@ -66,17 +68,26 @@ export const CardSiteData: FC<CardSiteDataProps> = ({ data }) => {
           {t('bitcoin-mined')}
         </Text>
         <Text weight={500} fz={isMobile ? 'xs' : 'sm'}>
-          {formatBTC(data.site.uptime.mined.btc)}
+          {formatBTC(data.site.uptime.mined.btc, hasData)}
         </Text>
       </Group>
       <Group position={'apart'} mt={isMobile ? 0 : 0} mb={isMobile ? 0 : 0}>
         <Text fz={'xs'} color={'dimmed'}>
-          {formatParenthesis(
-            t('over-start') + formatPeriod(data.site.uptime.days, t, true),
-          )}
+          {hasData
+            ? formatParenthesis(
+                t('over-start') + formatPeriod(data.site.uptime.days, t, true),
+              )
+            : ''}
         </Text>
         <Text fz={'xs'} color={'dimmed'}>
-          {formatUsd(data.site.uptime.mined.usd)}
+          {formatUsd(
+            data.site.uptime.mined.usd,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            hasData,
+          )}
         </Text>
       </Group>
 
@@ -104,17 +115,26 @@ export const CardSiteData: FC<CardSiteDataProps> = ({ data }) => {
           </HoverCard.Dropdown>
         </HoverCard>
         <Text weight={500} fz={isMobile ? 'xs' : 'sm'}>
-          {formatBTC(data.site.uptime.earned.btc)}
+          {formatBTC(data.site.uptime.earned.btc, hasData)}
         </Text>
       </Group>
       <Group position={'apart'} mt={isMobile ? 0 : 0} mb={isMobile ? 0 : 0}>
         <Text fz={'xs'} color={'dimmed'}>
-          {formatParenthesis(
-            t('over-start') + formatPeriod(data.site.uptime.days, t, true),
-          )}
+          {hasData
+            ? formatParenthesis(
+                t('over-start') + formatPeriod(data.site.uptime.days, t, true),
+              )
+            : ''}
         </Text>
         <Text fz={'xs'} color={'dimmed'}>
-          {formatUsd(data.site.uptime.earned.usd)}
+          {formatUsd(
+            data.site.uptime.earned.usd,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            hasData,
+          )}
         </Text>
       </Group>
 
@@ -134,7 +154,7 @@ export const CardSiteData: FC<CardSiteDataProps> = ({ data }) => {
           {t('uptime-hashrate')}
         </Text>
         <Text weight={500} fz={isMobile ? 'xs' : 'sm'}>
-          {formatHashrate(data.site.uptime.hashrate) +
+          {formatHashrate(data.site.uptime.hashrate, hasData) +
             t('over') +
             formatHashrate(data.site.hashrate)}
         </Text>
@@ -145,12 +165,20 @@ export const CardSiteData: FC<CardSiteDataProps> = ({ data }) => {
       />
       <Group position={'apart'} mt={isMobile ? 0 : 5} mb={isMobile ? 0 : 5}>
         <Text fz={'xs'} color={'dimmed'}>
-          {formatParenthesis(
-            t('over-start') + formatPeriod(data.site.uptime.days, t, true),
-          )}
+          {hasData
+            ? formatParenthesis(
+                t('over-start') + formatPeriod(data.site.uptime.days, t, true),
+              )
+            : ''}
         </Text>
         <Text weight={500} fz={isMobile ? 'xs' : 'sm'}>
-          {formatSmallPercent(data.site.uptime.hashratePercent / 100)}
+          {formatSmallPercent(
+            data.site.uptime.hashratePercent / 100,
+            undefined,
+            undefined,
+            undefined,
+            hasData,
+          )}
         </Text>
       </Group>
     </>

@@ -4,6 +4,7 @@ export type CardData = {
   id: string;
   label: string;
   income: {
+    available: boolean;
     mined: Income;
     net: {
       balance: Income;

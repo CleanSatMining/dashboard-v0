@@ -47,6 +47,8 @@ export const CardIncome: FC<CardIncomeProps> = ({ data }) => {
   const { t } = useTranslation('site', { keyPrefix: 'card' });
   const lost = data.income.net.balance.btc < 0;
 
+  const hasData = data.income.available;
+
   return (
     <HoverCard width={280} shadow={'md'}>
       <Group position={'apart'}>
@@ -87,17 +89,26 @@ export const CardIncome: FC<CardIncomeProps> = ({ data }) => {
           width={isMobile ? 300 : 400}
         ></InfoText>
         <Text weight={500} fz={'sm'} align={'center'}>
-          {formatBTC(data.income.gross.balance.btc)}
+          {formatBTC(data.income.gross.balance.btc, hasData)}
         </Text>
       </Group>
       <Group position={'apart'} mt={'0'} mb={'0'}>
         <Text fz={'xs'} color={'dimmed'}>
-          {formatParenthesis(
-            t('over-start') + formatPeriod(data.site.uptime.days, t, true),
-          )}
+          {hasData
+            ? formatParenthesis(
+                t('over-start') + formatPeriod(data.site.uptime.days, t, true),
+              )
+            : ''}
         </Text>
         <Text fz={'xs'} color={'dimmed'}>
-          {formatUsd(data.income.gross.balance.usd)}
+          {formatUsd(
+            data.income.gross.balance.usd,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            hasData,
+          )}
         </Text>
       </Group>
       <Space h={'5px'}></Space>
@@ -112,7 +123,7 @@ export const CardIncome: FC<CardIncomeProps> = ({ data }) => {
 
         {!lost && (
           <Text weight={500} fz={'sm'} align={'center'}>
-            {formatBTC(data.income.net.balance.btc)}
+            {formatBTC(data.income.net.balance.btc, hasData)}
           </Text>
         )}
         {lost && (
@@ -128,12 +139,21 @@ export const CardIncome: FC<CardIncomeProps> = ({ data }) => {
       </Group>
       <Group position={'apart'} mt={'0'} mb={'0'}>
         <Text fz={'xs'} color={'dimmed'}>
-          {formatParenthesis(
-            t('over-start') + formatPeriod(data.site.uptime.days, t, true),
-          )}
+          {hasData
+            ? formatParenthesis(
+                t('over-start') + formatPeriod(data.site.uptime.days, t, true),
+              )
+            : ''}
         </Text>
         <Text fz={'xs'} color={'dimmed'}>
-          {formatUsd(data.income.net.balance.usd)}
+          {formatUsd(
+            data.income.net.balance.usd,
+            undefined,
+            undefined,
+            undefined,
+            undefined,
+            hasData,
+          )}
         </Text>
       </Group>
 

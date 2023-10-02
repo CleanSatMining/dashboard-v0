@@ -124,19 +124,7 @@ const _SiteCard: FC<SiteProps> = ({
       shallDisplay(Number(siteId), tokenBalance > 0);
     }
     /* eslint-disable */
-  }, [
-    account,
-    btcPrice,
-    miningState,
-    period,
-    shallDisplay,
-    site,
-    siteId,
-    //tokenBalance,
-    //userShare,
-    //userToken,
-    //usersState,
-  ]);
+  }, [account, btcPrice, miningState, period, shallDisplay, site, siteId]);
   /* eslint-enable */
 
   return (
@@ -196,6 +184,7 @@ function buildUserSiteData(
     id: siteId,
     label: site.name,
     income: {
+      available: site.api.enable,
       mined: {
         btc: siteMinedBTC.quantity.times(userShare).toNumber(),
         usd: siteMinedBTC.value.times(userShare).toNumber(),

@@ -25,6 +25,7 @@ export type Site = {
   }
 
   export type Api = {
+    enable: boolean;
     username: string | undefined;
     url: string | undefined;
     contractor: Contractor | undefined;

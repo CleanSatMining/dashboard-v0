@@ -40,6 +40,7 @@ export const CardSiteAccounting: FC<CardSiteAccountingProps> = ({ data }) => {
   const isMobile = useMediaQuery('(max-width: 36em)');
   const { t } = useTranslation('site', { keyPrefix: 'card' });
   const site = getSite(data.id);
+  const hasData = data.income.available;
 
   return (
     <div className={classes.accordionContainer}>
@@ -50,7 +51,14 @@ export const CardSiteAccounting: FC<CardSiteAccountingProps> = ({ data }) => {
               {...{
                 isMobile: isMobile,
                 label: t('incomes'),
-                value: formatUsd(data.site.uptime.mined.usd),
+                value: formatUsd(
+                  data.site.uptime.mined.usd,
+                  undefined,
+                  undefined,
+                  undefined,
+                  undefined,
+                  hasData,
+                ),
                 color: 'green',
               }}
             />
@@ -65,7 +73,14 @@ export const CardSiteAccounting: FC<CardSiteAccountingProps> = ({ data }) => {
                 {t('bitcoin-mined')}
               </Text>
               <Text weight={500} fz={isMobile ? 'xs' : 'sm'} align={'center'}>
-                {formatUsd(data.site.uptime.mined.usd)}
+                {formatUsd(
+                  data.site.uptime.mined.usd,
+                  undefined,
+                  undefined,
+                  undefined,
+                  undefined,
+                  hasData,
+                )}
               </Text>
             </Group>
           </Accordion.Panel>
@@ -76,7 +91,14 @@ export const CardSiteAccounting: FC<CardSiteAccountingProps> = ({ data }) => {
               {...{
                 isMobile: isMobile,
                 label: t('costs'),
-                value: formatUsd(data.site.uptime.costs.total),
+                value: formatUsd(
+                  data.site.uptime.costs.total,
+                  undefined,
+                  undefined,
+                  undefined,
+                  undefined,
+                  hasData,
+                ),
                 color: 'red',
               }}
             />
@@ -96,7 +118,14 @@ export const CardSiteAccounting: FC<CardSiteAccountingProps> = ({ data }) => {
                   )}
               </Text>
               <Text weight={500} fz={isMobile ? 'xs' : 'sm'} align={'center'}>
-                {formatUsd(data.site.uptime.costs.electricity, 2)}
+                {formatUsd(
+                  data.site.uptime.costs.electricity,
+                  2,
+                  undefined,
+                  undefined,
+                  undefined,
+                  hasData,
+                )}
               </Text>
             </Group>
             <Group position={'apart'} mt={'0'} mb={'0'}>
@@ -109,7 +138,14 @@ export const CardSiteAccounting: FC<CardSiteAccountingProps> = ({ data }) => {
                   formatExplained(formatPercent(site.fees.operational.csm, 0))}
               </Text>
               <Text weight={500} fz={isMobile ? 'xs' : 'sm'} align={'center'}>
-                {formatUsd(data.site.uptime.costs.feeCSM, 2)}
+                {formatUsd(
+                  data.site.uptime.costs.feeCSM,
+                  2,
+                  undefined,
+                  undefined,
+                  undefined,
+                  hasData,
+                )}
               </Text>
             </Group>
             <Group position={'apart'} mt={'0'} mb={'0'}>
@@ -124,7 +160,14 @@ export const CardSiteAccounting: FC<CardSiteAccountingProps> = ({ data }) => {
                   )}
               </Text>
               <Text weight={500} fz={isMobile ? 'xs' : 'sm'} align={'center'}>
-                {formatUsd(data.site.uptime.costs.feeOperator, 2)}
+                {formatUsd(
+                  data.site.uptime.costs.feeOperator,
+                  2,
+                  undefined,
+                  undefined,
+                  undefined,
+                  hasData,
+                )}
               </Text>
             </Group>
             <Group position={'apart'} mt={'0'} mb={'0'}>
@@ -137,7 +180,14 @@ export const CardSiteAccounting: FC<CardSiteAccountingProps> = ({ data }) => {
                   formatExplained(formatPercent(site.fees.operational.taxe, 2))}
               </Text>
               <Text weight={500} fz={isMobile ? 'xs' : 'sm'} align={'center'}>
-                {formatUsd(data.site.uptime.costs.taxe, 2)}
+                {formatUsd(
+                  data.site.uptime.costs.taxe,
+                  2,
+                  undefined,
+                  undefined,
+                  undefined,
+                  hasData,
+                )}
               </Text>
             </Group>
             <Group position={'apart'} mt={'0'} mb={'0'}>
@@ -147,12 +197,26 @@ export const CardSiteAccounting: FC<CardSiteAccountingProps> = ({ data }) => {
                 text={t('cost-provision')}
                 tooltipText={t('provision-explained').replace(
                   '$',
-                  formatUsd(site.mining.intallationCosts.equipement),
+                  formatUsd(
+                    site.mining.intallationCosts.equipement,
+                    undefined,
+                    undefined,
+                    undefined,
+                    undefined,
+                    hasData,
+                  ),
                 )}
               ></InfoText>
 
               <Text weight={500} fz={isMobile ? 'xs' : 'sm'} align={'center'}>
-                {formatUsd(data.site.uptime.costs.provision, 2)}
+                {formatUsd(
+                  data.site.uptime.costs.provision,
+                  2,
+                  undefined,
+                  undefined,
+                  undefined,
+                  hasData,
+                )}
               </Text>
             </Group>
           </Accordion.Panel>
