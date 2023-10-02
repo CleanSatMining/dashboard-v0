@@ -43,7 +43,7 @@ export const CardSiteAccounting: FC<CardSiteAccountingProps> = ({ data }) => {
 
   return (
     <div className={classes.accordionContainer}>
-      <Accordion variant={'contained'} defaultValue={'income'}>
+      <Accordion variant={'contained'}>
         <Accordion.Item value={'income'} key={'Income'}>
           <Accordion.Control>
             <AccordionLabel

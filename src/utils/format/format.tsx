@@ -1,4 +1,5 @@
 import { BigNumber } from 'bignumber.js';
+import { TFunction } from 'react-i18next';
 
 export const formatUsd = (
   tvl: number,
@@ -183,7 +184,9 @@ export function formatBTC(num: number) {
 }
 
 export function formatToken(num: number, symbol = '') {
-  return formatFullNumber(num) + (symbol == '' ? '' : ' ' + symbol);
+  let maxDp = 1;
+  if (num > 10) maxDp = 0;
+  return formatFullNumber(num, maxDp) + (symbol == '' ? '' : ' ' + symbol);
 }
 
 export function formatHashrate(num: number) {
@@ -204,3 +207,33 @@ export const formatUsdCentsPerKWh = (
 
   return usd + suffix;
 };
+
+export function formatPeriod(
+  d: number,
+  t: TFunction<'site', 'card'>,
+  inDay = false,
+): string {
+  let label = '';
+  if (inDay) {
+    label = d > 1 ? d + t('days') : d + t('day');
+  } else if (d >= 360 && d <= 366) {
+    label = 1 + t('year');
+  } else if (Math.round(d / 30) === d / 30) {
+    label =
+      Math.round(d / 30) + (Math.round(d / 30) > 1 ? t('months') : t('month'));
+  } else if (Math.round(d / 31) === d / 31) {
+    label =
+      Math.round(d / 31) + (Math.round(d / 31) > 1 ? t('months') : t('month'));
+  } else if (Math.ceil(d / 30) >= d / 30 && Math.ceil(d / 31) <= d / 31) {
+    label =
+      Math.ceil(d / 31) + (Math.ceil(d / 31) > 1 ? t('months') : t('month'));
+  } else {
+    label = d > 1 ? d + t('days') : d + t('day');
+  }
+
+  return label;
+}
+
+export function formatParenthesis(text: string): string {
+  return '(' + text + ')';
+}

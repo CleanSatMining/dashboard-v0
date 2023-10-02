@@ -23,6 +23,7 @@ import { useWalletERC20Balances } from '../../hooks/useWalletERC20Balance';
 import { Dashboard } from '../CSM/Dashboard/Dashboard';
 import { AddressInput } from '../CSM/UserInput/UserInput';
 import { getCSMTokenAddress, getCSMTokenAddresses } from '../CSM/Utils/yield';
+import { formatPeriod } from 'src/utils/format/format';
 
 interface ApiAdmin {
   admin: boolean;
@@ -191,24 +192,7 @@ const Display: FC = () => {
    */
   function fillSegmentedControl(): { label: string; value: string }[] {
     return DAYS_PERIODS.filter(filterMobile(isMobile)).map((d) => {
-      let label = '';
-      if (d >= 360 && d <= 366) {
-        label = 1 + t('year');
-      } else if (Math.round(d / 30) === d / 30) {
-        label =
-          Math.round(d / 30) +
-          (Math.round(d / 30) > 1 ? t('months') : t('month'));
-      } else if (Math.round(d / 31) === d / 31) {
-        label =
-          Math.round(d / 31) +
-          (Math.round(d / 31) > 1 ? t('months') : t('month'));
-      } else if (Math.ceil(d / 30) >= d / 30 && Math.ceil(d / 31) <= d / 31) {
-        label =
-          Math.ceil(d / 31) +
-          (Math.ceil(d / 31) > 1 ? t('months') : t('month'));
-      } else {
-        label = d > 1 ? d + t('days') : d + t('day');
-      }
+      const label = formatPeriod(d, t);
 
       return {
         label: label,

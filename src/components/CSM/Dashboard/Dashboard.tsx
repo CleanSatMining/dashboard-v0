@@ -9,6 +9,8 @@ import { MiningSiteSummary } from '../../../hooks/useMiningSummary';
 import { Balance } from '../../../hooks/useWalletERC20Balance';
 import { SummaryGrid } from '../Grid/SummaryGrid';
 import { SiteGrid } from '../Grid/SiteGrid';
+import { Filters } from '../Filter/Filters';
+import { FilterSite, FilterStatus } from 'src/types/mining/Site';
 
 type UserAssetsProps = {
   account: string;
@@ -22,6 +24,12 @@ const _Dashboard: FC<UserAssetsProps> = ({ account, price, period }) => {
   const userState = useAppSelector(selectUsersState);
   //const dispatch = useAppDispatch();
   const [spinner, setSpinner] = useState(true);
+  const [ownerFilter, setOwnerFilter] = useState<string>(
+    FilterSite.my.toString(),
+  );
+  const [stateFilter, setStateFilter] = useState<string>(
+    FilterStatus.all.toString(),
+  );
 
   useEffect(() => {
     setSpinner(
@@ -48,10 +56,16 @@ const _Dashboard: FC<UserAssetsProps> = ({ account, price, period }) => {
             btcPrice={price}
             period={period}
           ></SummaryGrid>
+          <Filters
+            ownerFilter={{ value: ownerFilter, setValue: setOwnerFilter }}
+            stateFilter={{ value: stateFilter, setValue: setStateFilter }}
+          ></Filters>
           <SiteGrid
             account={account}
             btcPrice={price}
             period={period}
+            ownerFilter={ownerFilter as FilterSite}
+            stateFilter={stateFilter as FilterStatus}
           ></SiteGrid>
         </>
       )}

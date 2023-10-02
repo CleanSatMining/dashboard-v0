@@ -7,14 +7,24 @@ import { selectUsersState } from 'src/store/features/userData/userDataSelector';
 
 import { ALLOWED_SITES } from '../../../constants';
 import { SiteCard } from '../Site/SiteCard';
+import { FilterStatus, FilterSite, MiningStatus } from 'src/types/mining/Site';
+import { getSite } from 'src/components/CSM/Utils/site';
 
 type SiteProps = {
   btcPrice: number;
   period: number;
   account: string;
+  ownerFilter: FilterSite;
+  stateFilter: FilterStatus;
 };
 
-const _SiteGrid: FC<SiteProps> = ({ account, btcPrice, period }) => {
+const _SiteGrid: FC<SiteProps> = ({
+  account,
+  btcPrice,
+  period,
+  ownerFilter,
+  stateFilter,
+}) => {
   const usersState = useAppSelector(selectUsersState);
   const [hasBalance, setHasBalance] = useState<boolean[]>(
     ALLOWED_SITES.map((siteId) => getShallDisplay(siteId)),
@@ -61,25 +71,29 @@ const _SiteGrid: FC<SiteProps> = ({ account, btcPrice, period }) => {
     return false;
   }
 
+  const displayedSites = ALLOWED_SITES.filter(
+    (id) =>
+      (ownerFilter === FilterSite.all || hasBalance[Number(id) - 1]) &&
+      (stateFilter === FilterStatus.all ||
+        (stateFilter === FilterStatus.active &&
+          getSite(id).status === MiningStatus.active) ||
+        (stateFilter === FilterStatus.inactive &&
+          getSite(id).status === MiningStatus.inactive)),
+  );
   return (
     <Flex gap={0} direction={'column'} align={'center'}>
       <Grid gutter={0} gutterMd={25} gutterXs={'xs'} style={{ width: '100%' }}>
-        {ALLOWED_SITES.length > 0
-          ? ALLOWED_SITES.filter((id) => hasBalance[Number(id) - 1]).map(
-              (i) => (
-                <Grid.Col md={6} lg={4} key={`grid-${i}`}>
-                  <SiteCard
-                    siteId={i}
-                    account={address}
-                    btcPrice={btcPrice}
-                    period={csmPeriod}
-                    //</Grid.Col>shallDisplay={(siteId: number, shallDisplay: boolean) => setShallDisplay(siteId, shallDisplay)
-                  ></SiteCard>
-                </Grid.Col>
-              ),
-            )
-          : // TODO: add message when no offers
-            undefined}
+        {displayedSites.map((i) => (
+          <Grid.Col md={6} lg={4} key={`grid-${i}`}>
+            <SiteCard
+              siteId={i}
+              account={address}
+              btcPrice={btcPrice}
+              period={csmPeriod}
+              //</Grid.Col>shallDisplay={(siteId: number, shallDisplay: boolean) => setShallDisplay(siteId, shallDisplay)
+            ></SiteCard>
+          </Grid.Col>
+        ))}
       </Grid>
     </Flex>
   );

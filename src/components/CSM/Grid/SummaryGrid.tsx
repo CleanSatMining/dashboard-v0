@@ -122,7 +122,7 @@ const _Summary: FC<AssetProps> = ({ btcPrice, period, account }) => {
         { minWidth: 1200, cols: ACTIVATE_DISPLAY_APY ? 5 : 4 },
       ]}
       spacing={isMobile ? 'xs' : undefined}
-      sx={{ marginBottom: isMobile ? '20px' : '50px' }}
+      sx={{ marginBottom: isMobile ? '10px' : '20px' }}
     >
       <SummaryCard
         title={t('my-tokens')}
@@ -152,7 +152,7 @@ const _Summary: FC<AssetProps> = ({ btcPrice, period, account }) => {
       {
         <>
           <SummaryCard
-            title={t('incomes-net')}
+            title={isMobile ? t('incomes-net-short') : t('incomes-net')}
             toolTip={t('income-net-explained')}
             value={formatBTC(userYield.net.btc)}
             subValue={formatUsd(userYield.net.usd)}
@@ -161,7 +161,7 @@ const _Summary: FC<AssetProps> = ({ btcPrice, period, account }) => {
             warning={userYield.net.usd < 0}
           ></SummaryCard>
           <SummaryCard
-            title={t('incomes-gross')}
+            title={isMobile ? t('incomes-gross-short') : t('incomes-gross')}
             toolTip={t('income-gross-explained')}
             value={formatBTC(userYield.gross.btc)}
             subValue={formatUsd(userYield.gross.usd)}

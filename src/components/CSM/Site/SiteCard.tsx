@@ -141,7 +141,7 @@ const _SiteCard: FC<SiteProps> = ({
 
   return (
     <>
-      {tokenBalance > 0 && (
+      {
         <UserSiteCard
           title={site.name}
           subTitle={site.location}
@@ -149,7 +149,7 @@ const _SiteCard: FC<SiteProps> = ({
           data={userSiteData}
           status={site.status}
         />
-      )}
+      }
     </>
   );
 };

@@ -8,9 +8,15 @@ import {
   Divider,
   Avatar,
   HoverCard,
+  Space,
 } from '@mantine/core';
 import { IconInfoCircle } from '@tabler/icons';
-import { formatBTC, formatUsd } from 'src/utils/format/format';
+import {
+  formatBTC,
+  formatUsd,
+  formatPeriod,
+  formatParenthesis,
+} from 'src/utils/format/format';
 import { useMediaQuery } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
 import { CardData } from './../Type';
@@ -80,16 +86,21 @@ export const CardIncome: FC<CardIncomeProps> = ({ data }) => {
           tooltipText={t('income-gross-explained')}
           width={isMobile ? 300 : 400}
         ></InfoText>
-        {/* <Text fz={'sm'} align={'center'} color={'dimmed'}>
-          {t('income-gross')}
-        </Text> */}
         <Text weight={500} fz={'sm'} align={'center'}>
           {formatBTC(data.income.gross.balance.btc)}
         </Text>
       </Group>
-      <Text fz={'xs'} color={'dimmed'} ta={'right'}>
-        {formatUsd(data.income.gross.balance.usd)}
-      </Text>
+      <Group position={'apart'} mt={'0'} mb={'0'}>
+        <Text fz={'xs'} color={'dimmed'}>
+          {formatParenthesis(
+            t('over-start') + formatPeriod(data.site.uptime.days, t, true),
+          )}
+        </Text>
+        <Text fz={'xs'} color={'dimmed'}>
+          {formatUsd(data.income.gross.balance.usd)}
+        </Text>
+      </Group>
+      <Space h={'5px'}></Space>
       <Group position={'apart'} mt={'0'} mb={'0'}>
         <InfoText
           text={t('income-net')}
@@ -98,9 +109,7 @@ export const CardIncome: FC<CardIncomeProps> = ({ data }) => {
           tooltipText={t('income-net-explained')}
           width={isMobile ? 300 : 400}
         ></InfoText>
-        {/* <Text fz={'sm'} align={'center'} color={'dimmed'}>
-          {t('income-net')}
-        </Text> */}
+
         {!lost && (
           <Text weight={500} fz={'sm'} align={'center'}>
             {formatBTC(data.income.net.balance.btc)}
@@ -117,9 +126,16 @@ export const CardIncome: FC<CardIncomeProps> = ({ data }) => {
           ></InfoText>
         )}
       </Group>
-      <Text fz={'xs'} color={'dimmed'} ta={'right'}>
-        {formatUsd(data.income.net.balance.usd)}
-      </Text>
+      <Group position={'apart'} mt={'0'} mb={'0'}>
+        <Text fz={'xs'} color={'dimmed'}>
+          {formatParenthesis(
+            t('over-start') + formatPeriod(data.site.uptime.days, t, true),
+          )}
+        </Text>
+        <Text fz={'xs'} color={'dimmed'}>
+          {formatUsd(data.income.net.balance.usd)}
+        </Text>
+      </Group>
 
       <HoverCard.Dropdown>
         <Text size={'sm'}>{t('fee-explained')}</Text>

@@ -16,7 +16,7 @@ export enum SiteID {
 
 export const SITES: Record<SiteID, Site> = {
   [SiteID.alpha]: {
-    name: 'CMS alpha',
+    name: 'CSM Alpha',
     location: 'location-alpha',
     image: 'https://cleansatmining.com/data/files/virunga-congo.jpg',
     token: {
@@ -61,7 +61,7 @@ export const SITES: Record<SiteID, Site> = {
     },
   },
   [SiteID.beta]: {
-    name: 'CMS beta',
+    name: 'CSM Beta',
     location: 'location-beta',
     image:
       'https://cleansatmining.com/data/files/barrage-d-itaipu_1_croped_1681572415.jpg',
@@ -107,7 +107,7 @@ export const SITES: Record<SiteID, Site> = {
     },
   },
   [SiteID.omega]: {
-    name: 'CMS omega',
+    name: 'CSM Omega',
     location: 'location-omega',
     image: 'https://cleansatmining.com/data/files/434184-1260x630-finlande.jpg',
     token: {
@@ -152,7 +152,7 @@ export const SITES: Record<SiteID, Site> = {
     },
   },
   [SiteID.gamma]: {
-    name: 'CMS gamma',
+    name: 'CSM Gamma',
     location: 'location-gamma',
     image: 'https://cleansatmining.com/data/files/img_3861.jpg',
     token: {
@@ -198,7 +198,7 @@ export const SITES: Record<SiteID, Site> = {
   },
 
   [SiteID.delta]: {
-    name: 'CMS delta',
+    name: 'CSM Delta',
     location: 'location-delta',
     image:
       'https://cleansatmining.com/data/files/mount-hood-reflected-in-mirror-lake-oregon.jpg',

@@ -80,3 +80,14 @@ export type Site = {
       provision:number;
     }
   }
+
+  export enum FilterStatus {
+    active = 'active',
+    inactive = 'inactive',
+    all = 'all-status',
+  }
+
+  export enum FilterSite {
+    my = 'my-site',
+    all = 'all-status',
+  }

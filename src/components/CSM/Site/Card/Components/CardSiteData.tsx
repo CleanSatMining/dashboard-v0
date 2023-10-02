@@ -17,6 +17,8 @@ import {
   formatUsd,
   formatBTC,
   formatHashrate,
+  formatPeriod,
+  formatParenthesis,
 } from 'src/utils/format/format';
 import { useMediaQuery } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
@@ -67,9 +69,16 @@ export const CardSiteData: FC<CardSiteDataProps> = ({ data }) => {
           {formatBTC(data.site.uptime.mined.btc)}
         </Text>
       </Group>
-      <Text fz={'xs'} color={'dimmed'} ta={'right'}>
-        {formatUsd(data.site.uptime.mined.usd)}
-      </Text>
+      <Group position={'apart'} mt={isMobile ? 0 : 0} mb={isMobile ? 0 : 0}>
+        <Text fz={'xs'} color={'dimmed'}>
+          {formatParenthesis(
+            t('over-start') + formatPeriod(data.site.uptime.days, t, true),
+          )}
+        </Text>
+        <Text fz={'xs'} color={'dimmed'}>
+          {formatUsd(data.site.uptime.mined.usd)}
+        </Text>
+      </Group>
 
       <Space h={'xs'} />
       <Group position={'apart'} mt={isMobile ? 0 : 0} mb={isMobile ? 0 : 0}>
@@ -98,9 +107,17 @@ export const CardSiteData: FC<CardSiteDataProps> = ({ data }) => {
           {formatBTC(data.site.uptime.earned.btc)}
         </Text>
       </Group>
-      <Text fz={'xs'} color={'dimmed'} ta={'right'}>
-        {formatUsd(data.site.uptime.earned.usd)}
-      </Text>
+      <Group position={'apart'} mt={isMobile ? 0 : 0} mb={isMobile ? 0 : 0}>
+        <Text fz={'xs'} color={'dimmed'}>
+          {formatParenthesis(
+            t('over-start') + formatPeriod(data.site.uptime.days, t, true),
+          )}
+        </Text>
+        <Text fz={'xs'} color={'dimmed'}>
+          {formatUsd(data.site.uptime.earned.usd)}
+        </Text>
+      </Group>
+
       {displayDetail && <CardSiteAccounting data={data}></CardSiteAccounting>}
 
       <Group position={'apart'} mt={'xs'} mb={isMobile ? 0 : 'xs'}>
@@ -127,7 +144,11 @@ export const CardSiteData: FC<CardSiteDataProps> = ({ data }) => {
         color={hashrateColor}
       />
       <Group position={'apart'} mt={isMobile ? 0 : 5} mb={isMobile ? 0 : 5}>
-        <Text fz={isMobile ? 'xs' : 'sm'} color={'dimmed'}></Text>
+        <Text fz={'xs'} color={'dimmed'}>
+          {formatParenthesis(
+            t('over-start') + formatPeriod(data.site.uptime.days, t, true),
+          )}
+        </Text>
         <Text weight={500} fz={isMobile ? 'xs' : 'sm'}>
           {formatSmallPercent(data.site.uptime.hashratePercent / 100)}
         </Text>
@@ -135,6 +156,7 @@ export const CardSiteData: FC<CardSiteDataProps> = ({ data }) => {
     </>
   );
 };
+
 function calculateProgressColor(data: CardData) {
   let hashrateColor = 'violet';
   if (data.site.uptime.hashratePercent < 10) {
