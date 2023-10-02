@@ -92,7 +92,7 @@ export const InfoText: FC<InfoTextProps> = ({
         <Flex
           direction={'row'}
           align={'center'}
-          gap={'xs'}
+          gap={'5px'}
           className={classes.container}
         >
           <Text color={color} fw={fw} fs={fs} fz={fz} weight={weight}>

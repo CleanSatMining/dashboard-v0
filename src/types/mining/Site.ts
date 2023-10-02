@@ -74,7 +74,10 @@ export type Site = {
       csm: number;
     }
     operational:{
-      operator: number; //BBGS, OP
+      operator: {
+        includeWithElectricity : boolean;
+        rate : number; //BBGS, OP
+      }
       csm:number;
       pool:number;
       taxe: number;

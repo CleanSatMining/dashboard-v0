@@ -370,7 +370,7 @@ export function calculateCostsAndEBITDAByPeriod(
     .times(feeParameters.operational.csm);
   const feeOperatorUsd = usdIncome
     .minus(electricityCost)
-    .times(feeParameters.operational.operator);
+    .times(feeParameters.operational.operator.rate);
   const EBITDA = usdIncome
     .minus(electricityCost)
     .minus(feeCsmUsd)

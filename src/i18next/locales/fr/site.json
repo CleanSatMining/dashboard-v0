@@ -49,7 +49,8 @@
     "no-data": "No Data",
     "lost-explained":"Sur cette periode le nombre de bitcoin miné ne suffit pas à amortir les machines.",
     "provision-explained": "Chaque année, 20% de la valeur de l'équipement de minage du site (soit $ ici) sont prélevés pour être ajoutés à la provision.",
-    "fee-explained": "Les Bitcoins minés sont soustraits du prix de l'électricité, des frais administratifs CSM (5%), des taxes sur les profits suisses (13,57%) et de la provision pour le renouvellement des ASICs (20%)."
+    "operator-explained": "Les coûts de l'opérateur sont inclus dans le coût de l'électricité.",
+    "fee-explained": "XXX"
   }
 
 }

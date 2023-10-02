@@ -149,16 +149,30 @@ export const CardSiteAccounting: FC<CardSiteAccountingProps> = ({ data }) => {
               </Text>
             </Group>
             <Group position={'apart'} mt={'0'} mb={'0'}>
-              <Text
-                fz={isMobile ? 'xs' : 'sm'}
-                align={'center'}
-                color={'dimmed'}
-              >
-                {t('cost-fees-operator') +
-                  formatExplained(
-                    formatPercent(site.fees.operational.operator, 0),
-                  )}
-              </Text>
+              {site.fees.operational.operator.includeWithElectricity ? (
+                <InfoText
+                  fz={isMobile ? 'xs' : 'sm'}
+                  color={'dimmed'}
+                  text={
+                    t('cost-fees-operator') +
+                    formatExplained(
+                      formatPercent(site.fees.operational.operator.rate, 0),
+                    )
+                  }
+                  tooltipText={t('operator-explained')}
+                ></InfoText>
+              ) : (
+                <Text
+                  fz={isMobile ? 'xs' : 'sm'}
+                  align={'center'}
+                  color={'dimmed'}
+                >
+                  {t('cost-fees-operator') +
+                    formatExplained(
+                      formatPercent(site.fees.operational.operator.rate, 0),
+                    )}
+                </Text>
+              )}
               <Text weight={500} fz={isMobile ? 'xs' : 'sm'} align={'center'}>
                 {formatUsd(
                   data.site.uptime.costs.feeOperator,

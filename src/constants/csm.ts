@@ -53,7 +53,10 @@ export const SITES: Record<SiteID, Site> = {
         csm: 0.1,
       },
       operational: {
-        operator: 0.15,
+        operator: {
+          rate: 0.15,
+          includeWithElectricity: false,
+        },
         csm: 0.05,
         pool: 0.015,
         taxe: 0.1357,
@@ -100,7 +103,10 @@ export const SITES: Record<SiteID, Site> = {
         csm: 0.1,
       },
       operational: {
-        operator: 0.1,
+        operator: {
+          includeWithElectricity: false,
+          rate: 0.1,
+        },
         csm: 0.05,
         pool: 0.015,
         taxe: 0.1357,
@@ -146,7 +152,10 @@ export const SITES: Record<SiteID, Site> = {
         csm: 0.1,
       },
       operational: {
-        operator: 0.1,
+        operator: {
+          includeWithElectricity: false,
+          rate: 0.1,
+        },
         csm: 0.05,
         pool: 0.015,
         taxe: 0.1357,
@@ -192,7 +201,10 @@ export const SITES: Record<SiteID, Site> = {
         csm: 0.1,
       },
       operational: {
-        operator: 0,
+        operator: {
+          includeWithElectricity: true,
+          rate: 0,
+        },
         csm: 0.05,
         pool: 0.015,
         taxe: 0.1357,
@@ -240,7 +252,10 @@ export const SITES: Record<SiteID, Site> = {
         csm: 0.1,
       },
       operational: {
-        operator: 0.15,
+        operator: {
+          includeWithElectricity: false,
+          rate: 0.15,
+        },
         csm: 0,
         pool: 0.015,
         taxe: 0.1357,
