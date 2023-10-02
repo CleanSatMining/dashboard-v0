@@ -90,15 +90,15 @@ const App = ({ Component, pageProps }: AppProps) => {
                         title={
                           isMobile
                             ? 'CSM Dashboard'
-                            : 'CleanSatMining Dashboard'
+                            : 'CleanSat Mining Dashboard'
                         }
-                        description={'CleanSatMining Dashboard'}
+                        description={'CleanSat Mining Dashboard'}
                       />
                     }
                     newWebsite={{
                       name: isMobile
                         ? 'CSM Dashboard'
-                        : 'CleanSatMining Dashboard',
+                        : 'CleanSat Mining Dashboard',
                       url: '/',
                       logo: () => (
                         <Image src={Logo.src} alt={'CSM Logo'} width={36} />
@@ -107,8 +107,8 @@ const App = ({ Component, pageProps }: AppProps) => {
                     }}
                     disableHeaderMultisite={true}
                     footerParam={{
-                      name: 'CleanSatMining',
-                      copyright: 'CleanSatMining, All rights reserved @2023',
+                      name: 'CleanSat Mining',
+                      copyright: 'CleanSat Mining, All rights reserved @2023',
                       logo: () => (
                         <Image src={Logo.src} alt={'CSM Logo'} width={36} />
                       ),

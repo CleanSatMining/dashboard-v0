@@ -113,9 +113,9 @@ export const CardToken: FC<CardTokenProps> = ({ data }) => {
           {'Ratio'}
         </Text>
         <Text fz={'sm'} weight={500}>
-          {formatBigNumber(balance) +
+          {formatToken(balance) +
             '/' +
-            formatBigNumber(supply) +
+            formatToken(supply) +
             ' (~' +
             formatSmallPercent(percent) +
             ')'}

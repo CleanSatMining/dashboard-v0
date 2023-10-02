@@ -96,7 +96,7 @@ export const CardIncome: FC<CardIncomeProps> = ({ data }) => {
         <Text fz={'xs'} color={'dimmed'}>
           {hasData
             ? formatParenthesis(
-                t('over-start') + formatPeriod(data.site.uptime.days, t, true),
+                t('over-start') + formatPeriod(data.site.uptime.days, t),
               )
             : ''}
         </Text>
@@ -141,7 +141,7 @@ export const CardIncome: FC<CardIncomeProps> = ({ data }) => {
         <Text fz={'xs'} color={'dimmed'}>
           {hasData
             ? formatParenthesis(
-                t('over-start') + formatPeriod(data.site.uptime.days, t, true),
+                t('over-start') + formatPeriod(data.site.uptime.days, t),
               )
             : ''}
         </Text>

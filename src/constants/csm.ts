@@ -42,7 +42,7 @@ export const SITES: Record<SiteID, Site> = {
         hashrateHs: 100000000000000,
       },
       electricity: {
-        usdPricePerKWH: 0.038,
+        usdPricePerKWH: 0.0375,
       },
       intallationCosts: {
         equipement: 747020,
@@ -92,7 +92,7 @@ export const SITES: Record<SiteID, Site> = {
         hashrateHs: 100000000000000,
       },
       electricity: {
-        usdPricePerKWH: 0.058,
+        usdPricePerKWH: 0.0575,
       },
       intallationCosts: {
         equipement: 1606587,
@@ -154,7 +154,7 @@ export const SITES: Record<SiteID, Site> = {
       operational: {
         operator: {
           includeWithElectricity: false,
-          rate: 0.1,
+          rate: 0.05,
         },
         csm: 0.05,
         pool: 0.015,
@@ -190,7 +190,7 @@ export const SITES: Record<SiteID, Site> = {
         hashrateHs: 141000000000000,
       },
       electricity: {
-        usdPricePerKWH: 0.078,
+        usdPricePerKWH: 0.063,
       },
       intallationCosts: {
         equipement: 726565,

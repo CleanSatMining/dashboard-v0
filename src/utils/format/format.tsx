@@ -133,10 +133,10 @@ export function getBigNumOrder(num: BigNumber): number {
 export function formatFullNumber(
   num: number,
   maxDp = 2,
-  roundMode: BigNumber.RoundingMode = BigNumber.ROUND_FLOOR,
+  roundMode: BigNumber.RoundingMode = BigNumber.ROUND_HALF_UP,
 ) {
   let value = new BigNumber(num);
-  value = value.decimalPlaces(2, BigNumber.ROUND_FLOOR);
+  value = value.decimalPlaces(2, BigNumber.ROUND_HALF_UP);
   return stripTrailingZeros(
     value.toFormat(maxDp, roundMode, {
       prefix: '',
@@ -153,9 +153,9 @@ export function formatFullNumber(
 export function formatFullBigNumber(
   value: BigNumber,
   maxDp = 2,
-  roundMode: BigNumber.RoundingMode = BigNumber.ROUND_FLOOR,
+  roundMode: BigNumber.RoundingMode = BigNumber.ROUND_HALF_UP,
 ) {
-  value = value.decimalPlaces(2, BigNumber.ROUND_FLOOR);
+  value = value.decimalPlaces(2, BigNumber.ROUND_HALF_UP);
   return stripTrailingZeros(
     value.toFormat(maxDp, roundMode, {
       prefix: '',
@@ -190,7 +190,7 @@ export function formatBTC(num: number, hasData = true) {
 }
 
 export function formatToken(num: number, symbol = '') {
-  let maxDp = 1;
+  let maxDp = 2;
   if (num > 10) maxDp = 0;
   return formatFullNumber(num, maxDp) + (symbol == '' ? '' : ' ' + symbol);
 }
