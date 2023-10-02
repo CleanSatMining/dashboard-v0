@@ -43,7 +43,15 @@ const _SummaryCard: FC<SummaryProps> = ({
   warning,
 }) => {
   const { classes } = useStyle();
-  const isMobile = useMediaQuery('(max-width: 36em)');
+  const isMobile = useMediaQuery('(max-width: 40em)');
+  const up4 = useMediaQuery('(max-width: 1520px)');
+  const down4 = useMediaQuery('(min-width: 1199px)');
+  const up3 = useMediaQuery('(max-width: 1095px)');
+  const down3 = useMediaQuery('(min-width: 992px)');
+  const up2 = useMediaQuery('(max-width: 784px)');
+  const isTooShort = (up4 && down4) || (up3 && down3) || up2;
+  const titleSize = isTooShort ? 4 : 3;
+
   const { t } = useTranslation('site', { keyPrefix: 'card' });
   return (
     <>
@@ -56,12 +64,19 @@ const _SummaryCard: FC<SummaryProps> = ({
         >
           <Flex direction={'column'} h={'100%'}>
             <HoverCard.Target>
-              <Group position={'apart'} mt={'0'} mb={isMobile ? 0 : 'xs'}>
-                {!toolTip && <Title order={isMobile ? 6 : 3}>{title}</Title>}
+              <Group
+                position={'apart'}
+                mt={'0'}
+                mb={isMobile ? 0 : 'xs'}
+                spacing={0}
+              >
+                {!toolTip && (
+                  <Title order={isMobile ? 6 : titleSize}>{title}</Title>
+                )}
                 {toolTip && (
                   <InfoTitle
                     title={title}
-                    order={isMobile ? 6 : 3}
+                    order={isMobile ? 6 : titleSize}
                     icon={!isMobile}
                   ></InfoTitle>
                 )}

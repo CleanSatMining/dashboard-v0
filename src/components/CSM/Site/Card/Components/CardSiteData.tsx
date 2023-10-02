@@ -73,7 +73,7 @@ export const CardSiteData: FC<CardSiteDataProps> = ({ data }) => {
 
       <Space h={'xs'} />
       <Group position={'apart'} mt={isMobile ? 0 : 0} mb={isMobile ? 0 : 0}>
-        <HoverCard width={200} shadow={'md'}>
+        <HoverCard width={200} shadow={'md'} disabled={isMobile ? true : false}>
           <HoverCard.Target>
             <Flex gap={'xs'} align={'center'}>
               <Text fz={isMobile ? 'xs' : 'sm'} color={'dimmed'}>

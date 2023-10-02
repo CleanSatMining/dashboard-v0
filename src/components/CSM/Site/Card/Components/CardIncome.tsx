@@ -78,6 +78,7 @@ export const CardIncome: FC<CardIncomeProps> = ({ data }) => {
           color={'dimmed'}
           fz={'sm'}
           tooltipText={t('income-gross-explained')}
+          width={isMobile ? 300 : 400}
         ></InfoText>
         {/* <Text fz={'sm'} align={'center'} color={'dimmed'}>
           {t('income-gross')}
@@ -95,6 +96,7 @@ export const CardIncome: FC<CardIncomeProps> = ({ data }) => {
           color={'dimmed'}
           fz={'sm'}
           tooltipText={t('income-net-explained')}
+          width={isMobile ? 300 : 400}
         ></InfoText>
         {/* <Text fz={'sm'} align={'center'} color={'dimmed'}>
           {t('income-net')}
@@ -111,6 +113,7 @@ export const CardIncome: FC<CardIncomeProps> = ({ data }) => {
             fz={'sm'}
             tooltipText={t('lost-explained')}
             weight={500}
+            width={isMobile ? 300 : 400}
           ></InfoText>
         )}
       </Group>

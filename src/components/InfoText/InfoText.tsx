@@ -151,7 +151,7 @@ export const InfoTitle: FC<InfoTitleProps> = ({
         <Flex
           direction={'row'}
           align={'center'}
-          gap={'xs'}
+          gap={'5px'}
           className={classes.container}
         >
           <Title order={order} color={color}>

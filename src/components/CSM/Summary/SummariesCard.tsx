@@ -55,7 +55,7 @@ const _SummariesCard: FC<SummariesProps> = ({
         radius={'md'}
         withBorder={true}
       >
-        <Group position={'apart'} mt={'0'} mb={0}>
+        <Group position={'apart'} noWrap={false} spacing={0}>
           <Title order={isMobile ? 6 : 3}>{title}</Title>
           {Icon && (
             <ActionIcon variant={'transparent'}>
