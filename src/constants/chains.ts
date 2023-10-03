@@ -33,8 +33,8 @@ export const CHAINS: Record<ChainsID, Chain> = {
     contracts: {
       [ContractsID.realTokenYamUpgradeable]: {
         abi: realTokenYamUpgradeableABI,
-        address: '0xc759aa7f9dd9720a1502c104dae4f9852bb17c14',
-        metadata: { fromBlock: 25530390 },
+        address: '0x7ac028f8fe6e7705292dc13e46a609dd95fc84ba',
+        metadata: { fromBlock: 27516835 },
       },
     },
   },
@@ -45,11 +45,11 @@ export const URLS = Object.keys(CHAINS).reduce<Record<number, string>>(
     accumulator[Number(chainId)] = CHAINS[Number(chainId) as ChainsID].rpcUrl;
     return accumulator;
   },
-  {}
+  {},
 );
 
 export const ALLOWED_CHAINS = Object.keys(URLS).map((chainId) =>
-  Number(chainId)
+  Number(chainId),
 );
 
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000';
