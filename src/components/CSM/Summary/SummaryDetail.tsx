@@ -3,12 +3,14 @@ import { FC, memo } from 'react';
 import { Accordion, Group, Text } from '@mantine/core';
 
 import { Data } from './SummaryType';
+import { useTranslation } from 'react-i18next';
 
 type SummaryDetailProps = {
   data: Data[];
 };
 
 const _SummaryDetailCard: FC<SummaryDetailProps> = ({ data }) => {
+  const { t } = useTranslation('site', { keyPrefix: 'card' });
   return (
     <Accordion
       radius={'xl'}
@@ -41,7 +43,7 @@ const _SummaryDetailCard: FC<SummaryDetailProps> = ({ data }) => {
     >
       <Accordion.Item value={'detail'} sx={{ padding: 0, margin: 0 }}>
         <Accordion.Control sx={{ padding: 0, margin: 0 }}>
-          {'Detail'}
+          {t('detail')}
         </Accordion.Control>
         <Accordion.Panel sx={{ padding: 0, margin: 0 }}>
           {data?.map((setting, i) => (

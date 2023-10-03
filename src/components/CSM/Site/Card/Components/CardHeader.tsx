@@ -9,18 +9,37 @@ import {
   createStyles,
   Group,
 } from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks';
+import Image from 'next/image';
 import { MiningStatus } from '../../../../../types/mining/Site';
 
-export const useStyle = createStyles(() => ({
+export const useStyle = createStyles((theme) => ({
   title: {
     textAlign: 'center',
+    marginTop: '-50px',
+  },
+  flag: {
+    height: '30px',
+    transform: 'rotate(45deg)',
+    marginRight: '-12px',
+    marginTop: '-7px',
+  },
+  flagMobile: {
+    transform: 'rotate(45deg)',
+    marginRight: '-8px',
+    marginTop: '-4px',
+  },
+  background: {
+    backgroundColor:
+      theme.colorScheme === 'dark'
+        ? theme.colors.dark[5]
+        : theme.colors.gray[4],
   },
 }));
 
 export type HeaderProps = {
   image: string;
   title: string;
+  countryCode: string;
   subTitle?: string;
   miningState: MiningStatus;
   dataEnable?: boolean;
@@ -32,6 +51,7 @@ export const CardHeader: FC<HeaderProps> = ({
   title,
   subTitle,
   miningState,
+  countryCode,
   dataEnable = true,
   isMobile,
 }) => {
@@ -46,6 +66,7 @@ export const CardHeader: FC<HeaderProps> = ({
           miningState={miningState}
           dataEnable={dataEnable}
           image={image}
+          countryCode={countryCode}
         ></MobileHeaderContent>
       ) : (
         <HeaderContent
@@ -54,6 +75,7 @@ export const CardHeader: FC<HeaderProps> = ({
           miningState={miningState}
           dataEnable={dataEnable}
           image={image}
+          countryCode={countryCode}
         ></HeaderContent>
       )}
     </>
@@ -63,6 +85,7 @@ export const CardHeader: FC<HeaderProps> = ({
 export type HeaderContentProps = {
   title: string;
   subTitle?: string;
+  countryCode: string;
   miningState: MiningStatus;
   dataEnable?: boolean;
   image: string;
@@ -72,16 +95,29 @@ const MobileHeaderContent: FC<HeaderContentProps> = ({
   title,
   subTitle,
   miningState,
-  image,
   dataEnable = true,
+  countryCode,
 }) => {
   const { t } = useTranslation('site', { keyPrefix: 'card' });
   const { badgeColor, badgeState } = calculateSiteState(miningState);
-
+  const { classes } = useStyle();
   return (
-    <BackgroundImage src={image} h={70}>
+    <BackgroundImage src={''} h={70} className={classes.background}>
+      <Group position={'right'}>
+        <Image
+          width={30}
+          height={20}
+          alt={'United States'}
+          src={
+            'http://purecatamphetamine.github.io/country-flag-icons/3x2/' +
+            countryCode +
+            '.svg'
+          }
+          className={classes.flagMobile}
+        />
+      </Group>
       <Group position={'apart'} sx={{ padding: '10px' }}>
-        <div>
+        <div style={{ marginTop: '-18px' }}>
           <Title order={3} color={'#fff'}>
             {title}
           </Title>
@@ -117,13 +153,26 @@ const HeaderContent: FC<HeaderContentProps> = ({
   subTitle,
   miningState,
   dataEnable = true,
-  image,
+  countryCode,
 }) => {
   const { t } = useTranslation('site', { keyPrefix: 'card' });
   const { badgeColor, badgeState } = calculateSiteState(miningState);
   const { classes } = useStyle();
   return (
-    <BackgroundImage src={image} h={150}>
+    <BackgroundImage src={''} h={120} className={classes.background}>
+      <Group position={'right'}>
+        <Image
+          width={45}
+          height={30}
+          alt={'United States'}
+          src={
+            'http://purecatamphetamine.github.io/country-flag-icons/3x2/' +
+            countryCode +
+            '.svg'
+          }
+          className={classes.flag}
+        />
+      </Group>
       <Flex
         gap={'md'}
         justify={'center'}

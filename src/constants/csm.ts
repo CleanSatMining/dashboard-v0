@@ -17,7 +17,10 @@ export enum SiteID {
 export const SITES: Record<SiteID, Site> = {
   [SiteID.alpha]: {
     name: 'CSM Alpha',
-    location: 'location-alpha',
+    location: {
+      countryCode: 'CD',
+      name: 'location-alpha',
+    },
     image: 'https://cleansatmining.com/data/files/virunga-congo.jpg',
     token: {
       address: '0xf8419b6527A24007c2BD81bD1aA3b5a735C1F4c9',
@@ -66,7 +69,10 @@ export const SITES: Record<SiteID, Site> = {
   },
   [SiteID.beta]: {
     name: 'CSM Beta',
-    location: 'location-beta',
+    location: {
+      countryCode: 'PY',
+      name: 'location-beta',
+    },
     image:
       'https://cleansatmining.com/data/files/barrage-d-itaipu_1_croped_1681572415.jpg',
     token: {
@@ -116,7 +122,10 @@ export const SITES: Record<SiteID, Site> = {
   },
   [SiteID.omega]: {
     name: 'CSM Omega',
-    location: 'location-omega',
+    location: {
+      countryCode: 'FI',
+      name: 'location-omega',
+    },
     image: 'https://cleansatmining.com/data/files/434184-1260x630-finlande.jpg',
     token: {
       address: '0x203A5080450FFC3e038284082FBF5EBCdc9B053f',
@@ -165,7 +174,10 @@ export const SITES: Record<SiteID, Site> = {
   },
   [SiteID.gamma]: {
     name: 'CSM Gamma',
-    location: 'location-gamma',
+    location: {
+      countryCode: 'SE',
+      name: 'location-gamma',
+    },
     image: 'https://cleansatmining.com/data/files/img_3861.jpg',
     token: {
       address: '0x71C86CbB71846425De5f3a693e989F4BDd97E98d',
@@ -215,14 +227,17 @@ export const SITES: Record<SiteID, Site> = {
 
   [SiteID.delta]: {
     name: 'CSM Delta',
-    location: 'location-delta',
+    location: {
+      countryCode: 'US',
+      name: 'location-delta',
+    },
     image:
       'https://cleansatmining.com/data/files/mount-hood-reflected-in-mirror-lake-oregon.jpg',
     token: {
       address: '0x20D2F2d4b839710562D25274A3e98Ea1F0392D24',
       supply: 100000,
       price: 6.7,
-      symbol: 'CSM-omega',
+      symbol: 'CSM-delta',
       gnosisscanUrl:
         'https://gnosisscan.io/token/0x20D2F2d4b839710562D25274A3e98Ea1F0392D24',
     },

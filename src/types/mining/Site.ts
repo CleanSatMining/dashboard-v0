@@ -1,6 +1,9 @@
 export type Site = {
     name: string;
-    location: string;
+    location: {
+      countryCode: string;
+      name: string;
+    };
     image: string;
     token: Token;
     status: MiningStatus;

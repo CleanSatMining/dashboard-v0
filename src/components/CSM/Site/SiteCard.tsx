@@ -11,7 +11,7 @@ import { UserSiteCardMobile } from './Card/UserSiteCardMobile';
 import { CardData, CardCost } from './Card/Type';
 import BigNumber from 'bignumber.js';
 import { Yield } from 'src/types/mining/Site';
-import { useMediaQuery } from '@mantine/hooks';
+
 import {
   getMinedBtcBySite,
   getUptimeBySite,
@@ -137,15 +137,17 @@ const _SiteCard: FC<SiteProps> = ({
       {isMobile ? (
         <UserSiteCardMobile
           title={site.name}
-          subTitle={site.location}
+          subTitle={site.location.name}
           image={site.image}
+          countryCode={site.location.countryCode}
           data={userSiteData}
           status={site.status}
         />
       ) : (
         <UserSiteCard
           title={site.name}
-          subTitle={site.location}
+          subTitle={site.location.name}
+          countryCode={site.location.countryCode}
           image={site.image}
           data={userSiteData}
           status={site.status}

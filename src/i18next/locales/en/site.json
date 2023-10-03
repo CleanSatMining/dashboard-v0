@@ -43,17 +43,18 @@
     "incomes-gross-short": "Est. Gross incomes",
     "income-net": "Estimated Net",
     "income-gross": "Estimated Gross",
-    "income-net-explained": "Net income is the result of subtracting the bitcoins obtained through mining from the incurred expenses. These expenses encompass electricity costs, operational fees, CSM charges, taxes, as well as a provision to address mining equipment obsolescence.",
+    "income-net-explained": "Net income is the result of subtracting the bitcoins obtained through mining from the incurred expenses. These expenses encompass electricity costs, operational fees, CSM charges, as well as taxes. Additionally, a provision to address mining equipment obsolescence is subtracted. This provision is held in BTC within the company's treasury.",
     "income-gross-explained": "Gross income is the result of subtracting the bitcoins obtained through mining from the incurred expenses. These expenses encompass electricity costs, operational fees, CSM charges, and taxes, but do not take into account the provision for addressing mining equipment obsolescence.",
     "income-detail": "See the income details.",
     "over": " over ",
     "over-start": "Over ",
     "no-data": "No Data",
+    "detail": "Detail",
     "token-value": "Value",
-    "token-value-explained": "XXX",
+    "token-value-explained": "The displayed value here is based on the initial selling price of tokens during CleanSat Mining fundraisers. However, the value of CSM tokens can freely fluctuate on the secondary market depending on supply and demand.",
     "lost-explained":"During this period, the number of mined bitcoins is not sufficient to amortize the machines.",
     "provision-explained": "Every year, 20% of the value of the mining equipment on the site (which is $ here) is deducted to be added to the provision.",
     "operator-explained": "The operator costs are included in the cost of electricity.",
-    "fee-explained": "XXX"
+    "income-explained": "The revenues presented here are only estimates. Dividends to be paid to CleanSat Mining company shareholders will be calculated precisely on a quarterly basis during an interim financial statement."
   }
 }

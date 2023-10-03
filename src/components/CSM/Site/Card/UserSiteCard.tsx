@@ -88,6 +88,7 @@ export const useStyle = createStyles((theme: MantineTheme) => ({
 type CardProps = {
   title: string;
   subTitle?: string;
+  countryCode: string;
   image: string;
   status: MiningStatus;
   data: CardData;
@@ -96,6 +97,7 @@ type CardProps = {
 export const UserSiteCard: FC<CardProps> = ({
   title,
   subTitle,
+  countryCode,
   image = 'https://cleansatmining.com/data/files/capturedecran2023-04-19.png',
   data,
   status,
@@ -118,6 +120,7 @@ export const UserSiteCard: FC<CardProps> = ({
           subTitle={subTitle}
           dataEnable={data.income.available && status !== MiningStatus.inactive}
           isMobile={false}
+          countryCode={countryCode}
         ></CardHeader>
       </Card.Section>
 

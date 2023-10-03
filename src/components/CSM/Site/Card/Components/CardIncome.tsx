@@ -74,7 +74,7 @@ export const CardIncome: FC<CardIncomeProps> = ({ data }) => {
       <CardIncomeContent data={data} padding={'0px 5px'}></CardIncomeContent>
 
       <HoverCard.Dropdown>
-        <Text size={'sm'}>{t('fee-explained')}</Text>
+        <Text size={'sm'}>{t('income-explained')}</Text>
       </HoverCard.Dropdown>
     </HoverCard>
   );

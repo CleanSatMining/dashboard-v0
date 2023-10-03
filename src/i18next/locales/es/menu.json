@@ -1,38 +1,38 @@
 {
   "wallet": {
-    "control": "Connect wallet",
-    "copy": "Copy address",
-    "viewOn": "View on explorer",
-    "disconnect": "Disconnect",
-    "network": "Network"
+    "control": "Conectar billetera",
+    "copy": "Copiar dirección",
+    "viewOn": "Ver en el explorador",
+    "disconnect": "Desconectar",
+    "network": "Red"
   },
   "settings": {
-    "title": "Language",
-    "french": "French",
-    "english": "English",
-    "spanish": "Spanish",
-    "light": "Light",
-    "dark": "Dark"
+    "title": "Idioma",
+    "french": "Francés",
+    "english": "Inglés",
+    "spanish": "Español",
+    "light": "Claro",
+    "dark": "Oscuro"
   },
   "subMenuMyOffer": {
-    "myOffers": "My offers",
-    "addOffer": "Add offers",
-    "privateOffers": "Private Offers"
+    "myOffers": "Mis ofertas",
+    "addOffer": "Agregar ofertas",
+    "privateOffers": "Ofertas privadas"
   },
   "subMenuAdmin": {
-    "adminMarketTable": "Manage offers",
-    "adminActions": "Managed actions"
+    "adminMarketTable": "Administrar ofertas",
+    "adminActions": "Acciones administradas"
   },
   "messages": {
-    "DisabledGnosisSafe": "Direct connection to Safe is not possible, to connect to a GnosisSafe, please go to safe.global and connect to your Safe. In the \"App\" section, add a \"custom app\" using the url of the yam website (https://yam.realtoken.network). You will be able to have the YAM directly in the interface of your Safe"
+    "DisabledGnosisSafe": "No es posible la conexión directa a GnosisSafe. Para conectarte a un GnosisSafe, por favor, ve a safe.global y conecta tu Safe. En la sección \"Aplicación\", agrega una \"aplicación personalizada\" utilizando la URL del sitio web de YAM (https://yam.realtoken.network). Podrás tener acceso a YAM directamente en la interfaz de tu Safe."
   },
   "filter": {
-    "all-sites": "All Sites",
-    "all-sites-short": "All",
-    "my-sites": "My Sites",
-    "all-status": "All Status",
-    "all-status-short": "All",
-    "active-status": "Active",
-    "inactive-status":"Inactive"
+    "all-sites": "Todos los Sitios",
+    "all-sites-short": "Todos",
+    "my-sites": "Mis Sitios",
+    "all-status": "Todos los Estados",
+    "all-status-short": "Todos",
+    "active-status": "Activo",
+    "inactive-status": "Inactivo"
   }
 }

@@ -16,7 +16,7 @@
     "my-income": "Mes revenus estimés",
     "my-income-short": "Mes revenus est.",
     "my-site": "Le site",
-    "bitcoin-mined": "Production total",
+    "bitcoin-mined": "Production totale",
     "my-sites": "Mes sites",
     "my-apy": "APY",
     "day": " jour",
@@ -43,18 +43,19 @@
     "incomes-gross-short": "Revenus brut est.",
     "income-net": "Net estimé",
     "income-gross": "Brut estimé",
-    "income-net-explained": "Le revenu net est le résultat de la soustraction entre les bitcoins obtenus par le minage et les dépenses encourues. Ces dépenses englobent les coûts liés à l'électricité, les frais opérationnels, les charges CSM, les taxes, ainsi que la provision pour faire face à l'obsolescence des équipements de minage.",
+    "income-net-explained": "Le revenu net est le résultat de la soustraction entre les bitcoins obtenus par le minage et les dépenses encourues. Ces dépenses englobent les coûts liés à l'électricité, les frais opérationnels, les charges CSM, ainsi que les impôts. Est également soustrait, une provision pour faire face à l'obsolescence des équipements de minage. Cette provision est conservée en BTC dans la trésorerie de l'entreprise.",
     "income-gross-explained": "Le revenu brut est le résultat de la soustraction entre les bitcoins obtenus par le minage et les dépenses encourues. Ces dépenses englobent les coûts liés à l'électricité, les frais opérationnels, les charges CSM et les taxes, mais ne tient pas compte de la provision pour faire face à l'obsolescence des équipements de minage.",
     "income-detail": "Voir les détails du revenu.",
     "over": " sur ",
     "over-start": "sur ",
     "no-data": "No Data",
+    "detail": "Détail",
     "token-value": "Valeur",
-    "token-value-explained": "XXX...",
+    "token-value-explained": "La valeur affichée ici se base sur le prix de vente initial des tokens lors des levées de fonds CleanSat Mining. Cependant, la valeur des CSM tokens peut librement fluctuer sur le marché secondaire en fonction de l’offre et de la demande.",
     "lost-explained":"Sur cette periode le nombre de bitcoin miné ne suffit pas à amortir les machines.",
     "provision-explained": "Chaque année, 20% de la valeur de l'équipement de minage du site (soit $ ici) sont prélevés pour être ajoutés à la provision.",
     "operator-explained": "Les coûts de l'opérateur sont inclus dans le coût de l'électricité.",
-    "fee-explained": "XXX"
+    "income-explained": "Les revenus présentés ici ne sont que des estimations. Les dividendes à verser aux actionnaires des sociétés CleanSat Mining seront calculés précisément de manière trimestrielle lors d'un bilan comptable intermédiaire."
   }
 
 }

@@ -24,6 +24,7 @@ type CardMobileProps = {
   title: string;
   subTitle?: string;
   image: string;
+  countryCode: string;
   status: MiningStatus;
   data: CardData;
 };
@@ -34,6 +35,7 @@ export const UserSiteCardMobile: FC<CardMobileProps> = ({
   image = 'https://cleansatmining.com/data/files/capturedecran2023-04-19.png',
   data,
   status,
+  countryCode,
 }) => {
   const { t } = useTranslation('site', { keyPrefix: 'card' });
   //console.log('MOUNT UserSiteCard', title, data.apr);
@@ -59,6 +61,7 @@ export const UserSiteCardMobile: FC<CardMobileProps> = ({
           subTitle={subTitle}
           dataEnable={data.income.available && status !== MiningStatus.inactive}
           isMobile={true}
+          countryCode={countryCode}
         ></CardHeader>
       </Card.Section>
 
