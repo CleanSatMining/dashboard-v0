@@ -22,23 +22,29 @@ const _Filters: FC<FilterProps> = ({ ownerFilter, stateFilter }) => {
     >
       <SegmentedControl
         radius={'md'}
-        size={isMobile ? 'xs' : 'sm'}
+        size={'sm'}
         color={'brand'}
         value={ownerFilter.value}
         onChange={ownerFilter.setValue}
         data={[
-          { label: t('all-sites'), value: FilterSite.all.toString() },
+          {
+            label: isMobile ? t('all-sites-short') : t('all-sites'),
+            value: FilterSite.all.toString(),
+          },
           { label: t('my-sites'), value: FilterSite.my.toString() },
         ]}
       />
       <SegmentedControl
         radius={'md'}
         color={'brand'}
-        size={isMobile ? 'xs' : 'sm'}
+        size={'sm'}
         value={stateFilter.value}
         onChange={stateFilter.setValue}
         data={[
-          { label: t('all-status'), value: FilterStatus.all.toString() },
+          {
+            label: isMobile ? t('all-status-short') : t('all-status'),
+            value: FilterStatus.all.toString(),
+          },
           { label: t('active-status'), value: FilterStatus.active.toString() },
           {
             label: t('inactive-status'),

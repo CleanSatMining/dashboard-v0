@@ -27,10 +27,12 @@
     "DisabledGnosisSafe": "La connexion directe au Safe n'est pas possible, pour se connecter à un GnosisSafe, veuillez vous rendre sur safe.global et vous connecter à votre Safe. Dans la section \"Apps\", ajoutez une \"custom app\" en utilisant l'url du site yam (https://yam.realtoken.network). Vous pourrez alors avoir le YAM directement dans l'interface de votre safe."
   },
   "filter": {
-    "all-sites": "Tous les sites",
+    "all-sites": "Tous",
+    "all-sites-short": "Tous sites",
     "my-sites": "Mes sites",
-    "all-status": "Tous les statuts",
-    "active-status": "Actifs",
+    "all-status": "Tous",
+    "all-status-short": "Tous status",
+    "active-status": "Actif",
     "inactive-status":"Inactif"
   }
 }

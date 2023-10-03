@@ -8,11 +8,9 @@ import {
   BackgroundImage,
   createStyles,
   Group,
-  Button,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { MiningStatus } from '../../../../../types/mining/Site';
-import { useColorScheme } from '@mantine/hooks';
 
 export const useStyle = createStyles(() => ({
   title: {
@@ -35,44 +33,114 @@ export const CardHeader: FC<HeaderProps> = ({
   miningState,
   dataEnable = true,
 }) => {
-  const { classes } = useStyle();
   const isMobile = useMediaQuery('(max-width: 36em)');
+
+  return (
+    <BackgroundImage src={image} h={isMobile ? 70 : 150}>
+      {isMobile ? (
+        <MobileHeaderContent
+          title={title}
+          subTitle={subTitle}
+          miningState={miningState}
+          dataEnable={dataEnable}
+        ></MobileHeaderContent>
+      ) : (
+        <HeaderContent
+          title={title}
+          subTitle={subTitle}
+          miningState={miningState}
+          dataEnable={dataEnable}
+        ></HeaderContent>
+      )}
+    </BackgroundImage>
+  );
+};
+
+export type HeaderContentProps = {
+  title: string;
+  subTitle?: string;
+  miningState: MiningStatus;
+  dataEnable?: boolean;
+};
+
+const MobileHeaderContent: FC<HeaderContentProps> = ({
+  title,
+  subTitle,
+  miningState,
+  dataEnable = true,
+}) => {
   const { t } = useTranslation('site', { keyPrefix: 'card' });
   const { badgeColor, badgeState } = calculateSiteState(miningState);
 
   return (
-    <BackgroundImage src={image} h={isMobile ? 100 : 150}>
-      <Flex
-        gap={'md'}
-        justify={'center'}
-        align={'center'}
-        direction={'column'}
-        h={'100%'}
-      >
-        <div className={classes.title}>
-          <Title order={isMobile ? 3 : 2} color={'#fff'}>
-            {title}
-          </Title>
-          {subTitle && (
-            <Text weight={450} fz={isMobile ? 'xs' : 'md'} color={'#fff'}>
-              {t(subTitle)}
-            </Text>
-          )}
-        </div>
-        <Group position={'center'}>
-          <Badge color={badgeColor} variant={'filled'}>
-            <Text fz={isMobile ? 'xs' : 'md'}>{t(badgeState)}</Text>
+    <Group position={'apart'} sx={{ padding: '10px' }}>
+      <div>
+        <Title order={3} color={'#fff'}>
+          {title}
+        </Title>
+        {subTitle && (
+          <Text weight={450} fz={'xs'} color={'#fff'}>
+            {t(subTitle)}
+          </Text>
+        )}
+      </div>
+
+      <Flex gap={'xs'} justify={'center'} align={'center'} direction={'column'}>
+        <Badge color={badgeColor} variant={'filled'}>
+          <Text fz={'xs'}>{t(badgeState)}</Text>
+        </Badge>
+        {!dataEnable && miningState === MiningStatus.active && (
+          <Badge color={'yellow.5'} variant={'filled'}>
+            <Text fz={'xs'}>{t('no-data')}</Text>
           </Badge>
-          {!dataEnable && miningState === MiningStatus.active && (
-            <Badge color={'yellow.5'} variant={'filled'}>
-              <Text fz={'xs'}>{t('no-data')}</Text>
-            </Badge>
-          )}
-        </Group>
+        )}
       </Flex>
-    </BackgroundImage>
+    </Group>
   );
 };
+
+const HeaderContent: FC<HeaderContentProps> = ({
+  title,
+  subTitle,
+  miningState,
+  dataEnable = true,
+}) => {
+  const { t } = useTranslation('site', { keyPrefix: 'card' });
+  const { badgeColor, badgeState } = calculateSiteState(miningState);
+  const { classes } = useStyle();
+  return (
+    <Flex
+      gap={'md'}
+      justify={'center'}
+      align={'center'}
+      direction={'column'}
+      h={'100%'}
+    >
+      <div className={classes.title}>
+        <Title order={2} color={'#fff'}>
+          {title}
+        </Title>
+        {subTitle && (
+          <Text weight={450} fz={'md'} color={'#fff'}>
+            {t(subTitle)}
+          </Text>
+        )}
+      </div>
+
+      <Group position={'center'}>
+        <Badge color={badgeColor} variant={'filled'}>
+          <Text fz={'md'}>{t(badgeState)}</Text>
+        </Badge>
+        {!dataEnable && miningState === MiningStatus.active && (
+          <Badge color={'yellow.5'} variant={'filled'}>
+            <Text fz={'xs'}>{t('no-data')}</Text>
+          </Badge>
+        )}
+      </Group>
+    </Flex>
+  );
+};
+
 /**
  *
  * @param miningState

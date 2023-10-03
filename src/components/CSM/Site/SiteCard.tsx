@@ -7,10 +7,11 @@ import { selectUsersState } from 'src/store/features/userData/userDataSelector';
 import { SITES, SiteID } from '../../../constants';
 import { Site, TokenBalance } from '../../../types/mining/Site';
 import { UserSiteCard } from './Card/UserSiteCard';
+import { UserSiteCardMobile } from './Card/UserSiteCardMobile';
 import { CardData, CardCost } from './Card/Type';
 import BigNumber from 'bignumber.js';
 import { Yield } from 'src/types/mining/Site';
-
+import { useMediaQuery } from '@mantine/hooks';
 import {
   getMinedBtcBySite,
   getUptimeBySite,
@@ -36,6 +37,7 @@ const _SiteCard: FC<SiteProps> = ({
   account,
   shallDisplay,
 }) => {
+  const isMobile = useMediaQuery('(max-width: 36em)');
   const usersState = useAppSelector(selectUsersState);
   const miningState = useAppSelector(selectMiningState);
 
@@ -81,6 +83,7 @@ const _SiteCard: FC<SiteProps> = ({
   );
 
   const [userSiteData, setUserSiteData] = useState<CardData>(data);
+
   useEffect(() => {
     const userYield = getUserYieldBySite(
       miningState,
@@ -129,7 +132,15 @@ const _SiteCard: FC<SiteProps> = ({
 
   return (
     <>
-      {
+      {isMobile ? (
+        <UserSiteCardMobile
+          title={site.name}
+          subTitle={site.location}
+          image={site.image}
+          data={userSiteData}
+          status={site.status}
+        />
+      ) : (
         <UserSiteCard
           title={site.name}
           subTitle={site.location}
@@ -137,7 +148,7 @@ const _SiteCard: FC<SiteProps> = ({
           data={userSiteData}
           status={site.status}
         />
-      }
+      )}
     </>
   );
 };

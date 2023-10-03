@@ -17,6 +17,7 @@ import { CardHeader } from './Components/CardHeader';
 import { CardToken } from './Components/CardToken';
 import { CardIncome } from './Components/CardIncome';
 import { CardSiteData } from './Components/CardSiteData';
+import { CardSiteHashrate } from './Components/CardSiteHashrate';
 import { CardData } from './Type';
 
 export const useStyle = createStyles((theme: MantineTheme) => ({
@@ -143,7 +144,8 @@ export const UserSiteCard: FC<CardProps> = ({
       <CardToken data={data}></CardToken>
       <Space h={'sm'}></Space>
       <CardSiteData data={data}></CardSiteData>
-      <Space h={'xs'}></Space>
+
+      <Space h={'sm'}></Space>
       <CardIncome data={data}></CardIncome>
     </Card>
   );

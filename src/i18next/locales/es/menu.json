@@ -28,8 +28,10 @@
   },
   "filter": {
     "all-sites": "All Sites",
+    "all-sites-short": "All",
     "my-sites": "My Sites",
     "all-status": "All Status",
+    "all-status-short": "All",
     "active-status": "Active",
     "inactive-status":"Inactive"
   }

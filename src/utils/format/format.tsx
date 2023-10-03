@@ -39,6 +39,17 @@ export const formatUsd = (
       });
 };
 
+export const formatSimpleUsd = (
+  tvl: number,
+  hasData = true,
+  digit = 0,
+  symbol = '$',
+  currency = 'USD',
+  oraclePrice = 1,
+) => {
+  return formatUsd(tvl, digit, symbol, currency, oraclePrice, hasData);
+};
+
 /**
  * Formats a number to output as a percent% string
  * @param percent as decimal e.g. 0.01 to represent 1%

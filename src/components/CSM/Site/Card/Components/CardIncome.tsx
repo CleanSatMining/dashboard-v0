@@ -8,19 +8,13 @@ import {
   Divider,
   Avatar,
   HoverCard,
-  Space,
 } from '@mantine/core';
 import { IconInfoCircle } from '@tabler/icons';
-import {
-  formatBTC,
-  formatUsd,
-  formatPeriod,
-  formatParenthesis,
-} from 'src/utils/format/format';
+
 import { useMediaQuery } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
 import { CardData } from './../Type';
-import { InfoText } from 'src/components/InfoText/InfoText';
+import { CardIncomeContent } from './CardIncomeContent';
 
 export const useStyle = createStyles((theme: MantineTheme) => ({
   urlContainer: {
@@ -45,9 +39,6 @@ export type CardIncomeProps = {
 export const CardIncome: FC<CardIncomeProps> = ({ data }) => {
   const isMobile = useMediaQuery('(max-width: 36em)');
   const { t } = useTranslation('site', { keyPrefix: 'card' });
-  const lost = data.income.net.balance.btc < 0;
-
-  const hasData = data.income.available;
 
   return (
     <HoverCard width={280} shadow={'md'}>
@@ -80,82 +71,7 @@ export const CardIncome: FC<CardIncomeProps> = ({ data }) => {
       </Group>
       <Divider my={'sm'} />
 
-      <Group position={'apart'} mt={'0'} mb={'0'}>
-        <InfoText
-          text={t('income-gross')}
-          color={'dimmed'}
-          fz={'sm'}
-          tooltipText={t('income-gross-explained')}
-          width={isMobile ? 300 : 400}
-        ></InfoText>
-        <Text weight={500} fz={'sm'} align={'center'}>
-          {formatBTC(data.income.gross.balance.btc, hasData)}
-        </Text>
-      </Group>
-      <Group position={'apart'} mt={'0'} mb={'0'}>
-        <Text fz={'xs'} color={'dimmed'}>
-          {hasData
-            ? formatParenthesis(
-                t('over-start') + formatPeriod(data.site.uptime.days, t),
-              )
-            : ''}
-        </Text>
-        <Text fz={'xs'} color={'dimmed'}>
-          {formatUsd(
-            data.income.gross.balance.usd,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            hasData,
-          )}
-        </Text>
-      </Group>
-      <Space h={'5px'}></Space>
-      <Group position={'apart'} mt={'0'} mb={'0'}>
-        <InfoText
-          text={t('income-net')}
-          color={'dimmed'}
-          fz={'sm'}
-          tooltipText={t('income-net-explained')}
-          width={isMobile ? 300 : 400}
-        ></InfoText>
-
-        {!lost && (
-          <Text weight={500} fz={'sm'} align={'center'}>
-            {formatBTC(data.income.net.balance.btc, hasData)}
-          </Text>
-        )}
-        {lost && (
-          <InfoText
-            text={formatBTC(data.income.net.balance.btc)}
-            color={'yellow'}
-            fz={'sm'}
-            tooltipText={t('lost-explained')}
-            weight={500}
-            width={isMobile ? 300 : 400}
-          ></InfoText>
-        )}
-      </Group>
-      <Group position={'apart'} mt={'0'} mb={'0'}>
-        <Text fz={'xs'} color={'dimmed'}>
-          {hasData
-            ? formatParenthesis(
-                t('over-start') + formatPeriod(data.site.uptime.days, t),
-              )
-            : ''}
-        </Text>
-        <Text fz={'xs'} color={'dimmed'}>
-          {formatUsd(
-            data.income.net.balance.usd,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            hasData,
-          )}
-        </Text>
-      </Group>
+      <CardIncomeContent data={data} padding={'0px 5px'}></CardIncomeContent>
 
       <HoverCard.Dropdown>
         <Text size={'sm'}>{t('fee-explained')}</Text>

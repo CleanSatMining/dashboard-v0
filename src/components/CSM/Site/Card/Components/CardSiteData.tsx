@@ -1,29 +1,14 @@
 /* eslint @typescript-eslint/no-var-requires: "off" */
-import { FC, useState } from 'react';
-import {
-  Space,
-  Progress,
-  Text,
-  Group,
-  Divider,
-  ActionIcon,
-  Flex,
-  HoverCard,
-} from '@mantine/core';
-import { IconPlus, IconMinus } from '@tabler/icons';
+import { FC } from 'react';
+import { Text, Group, Divider, Space } from '@mantine/core';
+
 import Image from 'next/image';
-import {
-  formatSmallPercent,
-  formatUsd,
-  formatBTC,
-  formatHashrate,
-  formatPeriod,
-  formatParenthesis,
-} from 'src/utils/format/format';
+
 import { useMediaQuery } from '@mantine/hooks';
-import { useTranslation } from 'react-i18next';
+import { CardSiteHashrate } from './CardSiteHashrate';
 import { CardData } from './../Type';
-import { CardSiteAccounting } from './CardSiteAccounting';
+
+import { CardSiteDataContent } from './CardSiteDataContent';
 
 export type CardSiteDataProps = {
   data: CardData;
@@ -31,12 +16,6 @@ export type CardSiteDataProps = {
 
 export const CardSiteData: FC<CardSiteDataProps> = ({ data }) => {
   const isMobile = useMediaQuery('(max-width: 36em)');
-  const { t } = useTranslation('site', { keyPrefix: 'card' });
-
-  const hashrateColor = calculateProgressColor(data);
-  const [displayDetail, setDisplayDetail] = useState<boolean>(false);
-
-  const hasData = data.income.available;
 
   return (
     <>
@@ -52,8 +31,7 @@ export const CardSiteData: FC<CardSiteDataProps> = ({ data }) => {
         >
           {'Le site'}
         </Text>
-        {/* <IconBatteryEco size={32} color={'green'} /> */}
-        {/* <Avatar src={img} size={isMobile ? 'xs' : 'sm'}></Avatar> */}
+
         <Image
           src={require(`../../../../../images/mining-site.png`).default}
           alt={'img'}
@@ -62,151 +40,12 @@ export const CardSiteData: FC<CardSiteDataProps> = ({ data }) => {
       </Group>
 
       <Divider my={'sm'} />
-
-      <Group position={'apart'} mt={isMobile ? 0 : 0} mb={isMobile ? 0 : 0}>
-        <Text fz={isMobile ? 'xs' : 'sm'} color={'dimmed'}>
-          {t('bitcoin-mined')}
-        </Text>
-        <Text weight={500} fz={isMobile ? 'xs' : 'sm'}>
-          {formatBTC(data.site.uptime.mined.btc, hasData)}
-        </Text>
-      </Group>
-      <Group position={'apart'} mt={isMobile ? 0 : 0} mb={isMobile ? 0 : 0}>
-        <Text fz={'xs'} color={'dimmed'}>
-          {hasData
-            ? formatParenthesis(
-                t('over-start') + formatPeriod(data.site.uptime.days, t),
-              )
-            : ''}
-        </Text>
-        <Text fz={'xs'} color={'dimmed'}>
-          {formatUsd(
-            data.site.uptime.mined.usd,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            hasData,
-          )}
-        </Text>
-      </Group>
-
-      <Space h={'xs'} />
-      <Group position={'apart'} mt={isMobile ? 0 : 0} mb={isMobile ? 0 : 0}>
-        <HoverCard width={200} shadow={'md'} disabled={isMobile ? true : false}>
-          <HoverCard.Target>
-            <Flex gap={'xs'} align={'center'}>
-              <Text fz={isMobile ? 'xs' : 'sm'} color={'dimmed'}>
-                {t('site-net-income')}
-              </Text>
-              <ActionIcon
-                size={'xs'}
-                variant={'light'}
-                radius={'sm'}
-                onClick={() => setDisplayDetail(!displayDetail)}
-              >
-                {!displayDetail && <IconPlus size={'0.875rem'} />}
-                {displayDetail && <IconMinus size={'0.875rem'} />}
-              </ActionIcon>
-            </Flex>
-          </HoverCard.Target>
-          <HoverCard.Dropdown>
-            <Text size={'sm'}>{t('income-detail')}</Text>
-          </HoverCard.Dropdown>
-        </HoverCard>
-        <Text weight={500} fz={isMobile ? 'xs' : 'sm'}>
-          {formatBTC(data.site.uptime.earned.btc, hasData)}
-        </Text>
-      </Group>
-      <Group position={'apart'} mt={isMobile ? 0 : 0} mb={isMobile ? 0 : 0}>
-        <Text fz={'xs'} color={'dimmed'}>
-          {hasData
-            ? formatParenthesis(
-                t('over-start') + formatPeriod(data.site.uptime.days, t),
-              )
-            : ''}
-        </Text>
-        <Text fz={'xs'} color={'dimmed'}>
-          {formatUsd(
-            data.site.uptime.earned.usd,
-            undefined,
-            undefined,
-            undefined,
-            undefined,
-            hasData,
-          )}
-        </Text>
-      </Group>
-
-      {displayDetail && <CardSiteAccounting data={data}></CardSiteAccounting>}
-
-      <Group position={'apart'} mt={'xs'} mb={isMobile ? 0 : 'xs'}>
-        <Text fz={isMobile ? 'xs' : 'sm'} color={'dimmed'}>
-          {t('start-date')}
-        </Text>
-        <Text weight={500} fz={isMobile ? 'xs' : 'sm'}>
-          {data.site.miningStart}
-        </Text>
-      </Group>
-      <Space h={'xs'}></Space>
-      <Group position={'apart'} mt={isMobile ? 5 : 5} mb={isMobile ? 3 : 5}>
-        <Text fz={isMobile ? 'xs' : 'sm'} color={'dimmed'}>
-          {t('uptime-hashrate')}
-        </Text>
-        <Text weight={500} fz={isMobile ? 'xs' : 'sm'}>
-          {formatHashrate(data.site.uptime.hashrate, hasData) +
-            t('over') +
-            formatHashrate(data.site.hashrate)}
-        </Text>
-      </Group>
-      <Progress
-        value={data.site.uptime.hashratePercent}
-        color={hashrateColor}
-      />
-      <Group position={'apart'} mt={isMobile ? 0 : 5} mb={isMobile ? 0 : 5}>
-        <Text fz={'xs'} color={'dimmed'}>
-          {hasData
-            ? formatParenthesis(
-                t('over-start') + formatPeriod(data.site.uptime.days, t),
-              )
-            : ''}
-        </Text>
-        <Text weight={500} fz={isMobile ? 'xs' : 'sm'}>
-          {formatSmallPercent(
-            data.site.uptime.hashratePercent / 100,
-            undefined,
-            undefined,
-            undefined,
-            hasData,
-          )}
-        </Text>
-      </Group>
+      <CardSiteDataContent
+        data={data}
+        padding={'0px 5px'}
+      ></CardSiteDataContent>
+      <Space h={'0'}></Space>
+      <CardSiteHashrate data={data} padding={'0px 5px'}></CardSiteHashrate>
     </>
   );
 };
-
-function calculateProgressColor(data: CardData) {
-  let hashrateColor = 'violet';
-  if (data.site.uptime.hashratePercent < 10) {
-    hashrateColor = 'red';
-  } else if (data.site.uptime.hashratePercent < 20) {
-    hashrateColor = 'red';
-  } else if (data.site.uptime.hashratePercent < 30) {
-    hashrateColor = 'orange';
-  } else if (data.site.uptime.hashratePercent < 40) {
-    hashrateColor = 'yellow';
-  } else if (data.site.uptime.hashratePercent < 50) {
-    hashrateColor = 'indigo';
-  } else if (data.site.uptime.hashratePercent < 60) {
-    hashrateColor = 'blue';
-  } else if (data.site.uptime.hashratePercent < 70) {
-    hashrateColor = 'cyan';
-  } else if (data.site.uptime.hashratePercent < 80) {
-    hashrateColor = 'teal'; //yellow
-  } else if (data.site.uptime.hashratePercent < 90) {
-    hashrateColor = 'green'; //orange
-  } else {
-    hashrateColor = 'lime'; //red
-  }
-  return hashrateColor;
-}
