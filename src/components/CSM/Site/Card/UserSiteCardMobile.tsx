@@ -99,7 +99,7 @@ export const UserSiteCardMobile: FC<CardMobileProps> = ({
             <AccordionLabel
               image={'https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=025'}
               value={formatSimpleUsd(data.income.net.balance.usd, hasData)}
-              label={t('my-income')}
+              label={t('my-income-short')}
               description={
                 t('over-start') + formatPeriod(data.site.uptime.onPeriod, t)
               }
