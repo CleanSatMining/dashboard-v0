@@ -58,6 +58,7 @@ export const UserSiteCardMobile: FC<CardMobileProps> = ({
           title={title}
           subTitle={subTitle}
           dataEnable={data.income.available && status !== MiningStatus.inactive}
+          isMobile={true}
         ></CardHeader>
       </Card.Section>
 

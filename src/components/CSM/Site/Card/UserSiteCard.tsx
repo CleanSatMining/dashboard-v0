@@ -8,7 +8,6 @@ import {
   Text,
   createStyles,
 } from '@mantine/core';
-import { useMediaQuery } from '@mantine/hooks';
 
 import { MiningStatus } from '../../../../types/mining/Site';
 import { formatPercent } from 'src/utils/format/format';
@@ -17,7 +16,7 @@ import { CardHeader } from './Components/CardHeader';
 import { CardToken } from './Components/CardToken';
 import { CardIncome } from './Components/CardIncome';
 import { CardSiteData } from './Components/CardSiteData';
-import { CardSiteHashrate } from './Components/CardSiteHashrate';
+
 import { CardData } from './Type';
 
 export const useStyle = createStyles((theme: MantineTheme) => ({
@@ -101,8 +100,6 @@ export const UserSiteCard: FC<CardProps> = ({
   data,
   status,
 }) => {
-  const isMobile = useMediaQuery('(max-width: 36em)');
-
   //console.log('MOUNT UserSiteCard', title, data.apr);
 
   return (
@@ -111,7 +108,7 @@ export const UserSiteCard: FC<CardProps> = ({
       padding={'lg'}
       radius={'md'}
       withBorder={true}
-      sx={{ marginBottom: isMobile ? '10px' : 0 }}
+      sx={{ marginBottom: 0 }}
     >
       <Card.Section>
         <CardHeader
@@ -120,6 +117,7 @@ export const UserSiteCard: FC<CardProps> = ({
           title={title}
           subTitle={subTitle}
           dataEnable={data.income.available && status !== MiningStatus.inactive}
+          isMobile={false}
         ></CardHeader>
       </Card.Section>
 
@@ -130,12 +128,12 @@ export const UserSiteCard: FC<CardProps> = ({
           align={'center'}
           direction={'column'}
           wrap={'wrap'}
-          sx={{ marginBottom: isMobile ? '0px' : '10px' }}
+          sx={{ marginBottom: '10px' }}
         >
-          <Text fz={isMobile ? '20px' : '28px'} weight={1000} color={'brand'}>
+          <Text fz={'28px'} weight={1000} color={'brand'}>
             {formatPercent(data.income.net.apy)}
           </Text>
-          <Text fz={isMobile ? '12px' : '14px'} weight={1000} color={'dimmed'}>
+          <Text fz={'14px'} weight={1000} color={'dimmed'}>
             {'APY'}
           </Text>
         </Flex>

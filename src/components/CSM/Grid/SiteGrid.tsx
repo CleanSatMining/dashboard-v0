@@ -9,6 +9,7 @@ import { ALLOWED_SITES } from '../../../constants';
 import { SiteCard } from '../Site/SiteCard';
 import { FilterStatus, FilterSite, MiningStatus } from 'src/types/mining/Site';
 import { getSite } from 'src/components/CSM/Utils/site';
+import { useMediaQuery } from '@mantine/hooks';
 
 type SiteProps = {
   btcPrice: number;
@@ -25,6 +26,7 @@ const _SiteGrid: FC<SiteProps> = ({
   ownerFilter,
   stateFilter,
 }) => {
+  const isMobile = useMediaQuery('(max-width: 36em)');
   const usersState = useAppSelector(selectUsersState);
   const [hasBalance, setHasBalance] = useState<boolean[]>(
     ALLOWED_SITES.map((siteId) => getShallDisplay(siteId)),
@@ -90,6 +92,7 @@ const _SiteGrid: FC<SiteProps> = ({
               account={address}
               btcPrice={btcPrice}
               period={csmPeriod}
+              isMobile={isMobile}
               //</Grid.Col>shallDisplay={(siteId: number, shallDisplay: boolean) => setShallDisplay(siteId, shallDisplay)
             ></SiteCard>
           </Grid.Col>

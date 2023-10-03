@@ -27,6 +27,7 @@ type SiteProps = {
   btcPrice: number;
   account: string;
   period: number;
+  isMobile: boolean;
   shallDisplay?: (siteId: number, shallDisplay: boolean) => void;
 };
 
@@ -35,9 +36,10 @@ const _SiteCard: FC<SiteProps> = ({
   btcPrice,
   period,
   account,
+  isMobile,
   shallDisplay,
 }) => {
-  const isMobile = useMediaQuery('(max-width: 36em)');
+  //const isMobile = useMediaQuery('(max-width: 36em)');
   const usersState = useAppSelector(selectUsersState);
   const miningState = useAppSelector(selectMiningState);
 
