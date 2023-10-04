@@ -384,11 +384,14 @@ export function calculateCostsAndEBITDAByPeriod(
     EBITDA_MINUS_PROVISION.times(SWISS_TAXE),
     new BigNumber(0),
   );
+
+  const provisionCut = EBITDA_MINUS_PROVISION.gt(0) ? provision : EBITDA;
+
   return {
     feeCsm: feeCsmUsd,
     feeOperator: feeOperatorUsd,
     taxe: taxe,
-    provision: provision,
+    provision: provisionCut,
     EBITDA: EBITDA,
   };
 }

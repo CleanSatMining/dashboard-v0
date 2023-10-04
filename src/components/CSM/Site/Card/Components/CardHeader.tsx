@@ -8,8 +8,9 @@ import {
   BackgroundImage,
   createStyles,
   Group,
+  Image as ImgMantine,
 } from '@mantine/core';
-import Image from 'next/image';
+
 import { MiningStatus } from '../../../../../types/mining/Site';
 
 export const useStyle = createStyles((theme) => ({
@@ -17,16 +18,18 @@ export const useStyle = createStyles((theme) => ({
     textAlign: 'center',
     marginTop: '-50px',
   },
-  flag: {
-    height: '30px',
+  flagContainer: {
     transform: 'rotate(45deg)',
-    marginRight: '-12px',
-    marginTop: '-7px',
+  },
+  flag: {
+    transform: 'perspective(15px) rotate3d(1, 0, 0, 30deg);',
+    marginRight: '-16px',
+    marginTop: '-8px',
   },
   flagMobile: {
-    transform: 'rotate(45deg)',
-    marginRight: '-8px',
-    marginTop: '-4px',
+    transform: 'perspective(15px) rotate3d(1, 0, 0, 30deg);',
+    marginRight: '-15px',
+    marginTop: '-5px',
   },
   background: {
     backgroundColor:
@@ -104,17 +107,19 @@ const MobileHeaderContent: FC<HeaderContentProps> = ({
   return (
     <BackgroundImage src={''} h={70} className={classes.background}>
       <Group position={'right'}>
-        <Image
-          width={30}
-          height={20}
-          alt={'United States'}
-          src={
-            'http://purecatamphetamine.github.io/country-flag-icons/3x2/' +
-            countryCode +
-            '.svg'
-          }
-          className={classes.flagMobile}
-        />
+        <div className={classes.flagContainer}>
+          <ImgMantine
+            width={35}
+            height={18}
+            src={
+              'http://purecatamphetamine.github.io/country-flag-icons/3x2/' +
+              countryCode +
+              '.svg'
+            }
+            fit={'cover'}
+            className={classes.flagMobile}
+          ></ImgMantine>
+        </div>
       </Group>
       <Group position={'apart'} sx={{ padding: '10px' }}>
         <div style={{ marginTop: '-18px' }}>
@@ -161,17 +166,19 @@ const HeaderContent: FC<HeaderContentProps> = ({
   return (
     <BackgroundImage src={''} h={120} className={classes.background}>
       <Group position={'right'}>
-        <Image
-          width={45}
-          height={30}
-          alt={'United States'}
-          src={
-            'http://purecatamphetamine.github.io/country-flag-icons/3x2/' +
-            countryCode +
-            '.svg'
-          }
-          className={classes.flag}
-        />
+        <div className={classes.flagContainer}>
+          <ImgMantine
+            width={40}
+            height={25}
+            src={
+              'http://purecatamphetamine.github.io/country-flag-icons/3x2/' +
+              countryCode +
+              '.svg'
+            }
+            fit={'cover'}
+            className={classes.flag}
+          ></ImgMantine>
+        </div>
       </Group>
       <Flex
         gap={'md'}
