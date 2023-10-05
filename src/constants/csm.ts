@@ -26,7 +26,7 @@ export const SITES: Record<SiteID, Site> = {
       address: '0xf8419b6527A24007c2BD81bD1aA3b5a735C1F4c9',
       supply: 100000,
       price: 14.05,
-      symbol: 'CSM-alpha',
+      symbol: 'CSM-ALPHA',
       gnosisscanUrl:
         'https://gnosisscan.io/address/0xf8419b6527A24007c2BD81bD1aA3b5a735C1F4c9',
     },
@@ -79,7 +79,7 @@ export const SITES: Record<SiteID, Site> = {
       address: '0x364D1aAF7a98e26A1F072e926032f154428481d1',
       supply: 100000,
       price: 12.16,
-      symbol: 'CSM-beta',
+      symbol: 'CSM-BETA',
       gnosisscanUrl:
         'https://gnosisscan.io/address/0x364D1aAF7a98e26A1F072e926032f154428481d1',
     },
@@ -131,7 +131,7 @@ export const SITES: Record<SiteID, Site> = {
       address: '0x203A5080450FFC3e038284082FBF5EBCdc9B053f',
       supply: 100000,
       price: 14.35,
-      symbol: 'CSM-omega',
+      symbol: 'CSM-OMEGA',
       gnosisscanUrl:
         'https://gnosisscan.io/address/0x203A5080450FFC3e038284082FBF5EBCdc9B053f',
     },
@@ -183,7 +183,7 @@ export const SITES: Record<SiteID, Site> = {
       address: '0x71C86CbB71846425De5f3a693e989F4BDd97E98d',
       supply: 100000,
       price: 9.99,
-      symbol: 'CSM-gamma',
+      symbol: 'CSM-GAMMA',
       gnosisscanUrl:
         'https://gnosisscan.io/address/0x71C86CbB71846425De5f3a693e989F4BDd97E98d',
     },
@@ -237,7 +237,7 @@ export const SITES: Record<SiteID, Site> = {
       address: '0x20D2F2d4b839710562D25274A3e98Ea1F0392D24',
       supply: 100000,
       price: 6.7,
-      symbol: 'CSM-delta',
+      symbol: 'CSM-DELTA',
       gnosisscanUrl:
         'https://gnosisscan.io/token/0x20D2F2d4b839710562D25274A3e98Ea1F0392D24',
     },

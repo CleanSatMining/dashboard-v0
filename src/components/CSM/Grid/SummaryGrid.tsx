@@ -80,14 +80,17 @@ const _Summary: FC<AssetProps> = ({ btcPrice, period, account }) => {
       label: token.symbol,
       value: formatUsd(token.usd),
     };
-    const dataSite: Data = { label: site.name, value: t(site.location.name) };
-    const dataYieldNet: Data = {
+    const dataSite: Data = {
       label: site.name,
+      value: t(site.location.name),
+    };
+    const dataYieldNet: Data = {
+      label: token.symbol, //site.name,
       value: formatBTC(yields.net.btc),
     };
 
     const dataYieldGross: Data = {
-      label: site.name,
+      label: token.symbol, // site.name,
       value: formatBTC(yields.gross.btc),
     };
 
