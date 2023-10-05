@@ -35,7 +35,7 @@ export const useStyle = createStyles((theme) => ({
     backgroundColor:
       theme.colorScheme === 'dark'
         ? theme.colors.dark[5]
-        : theme.colors.gray[4],
+        : theme.colors.gray[1],
   },
 }));
 
@@ -164,7 +164,7 @@ const HeaderContent: FC<HeaderContentProps> = ({
   const { badgeColor, badgeState } = calculateSiteState(miningState);
   const { classes } = useStyle();
   return (
-    <BackgroundImage src={''} h={120} className={classes.background}>
+    <BackgroundImage src={''} h={150} className={classes.background}>
       <Group position={'right'}>
         <div className={classes.flagContainer}>
           <ImgMantine
@@ -188,11 +188,9 @@ const HeaderContent: FC<HeaderContentProps> = ({
         h={'100%'}
       >
         <div className={classes.title}>
-          <Title order={2} color={'#fff'}>
-            {title}
-          </Title>
+          <Title order={2}>{title}</Title>
           {subTitle && (
-            <Text weight={450} fz={'md'} color={'#fff'}>
+            <Text weight={450} fz={'md'}>
               {t(subTitle)}
             </Text>
           )}
