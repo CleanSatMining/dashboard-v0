@@ -123,11 +123,9 @@ const MobileHeaderContent: FC<HeaderContentProps> = ({
       </Group>
       <Group position={'apart'} sx={{ padding: '10px' }}>
         <div style={{ marginTop: '-18px' }}>
-          <Title order={3} color={'#fff'}>
-            {title}
-          </Title>
+          <Title order={3}>{title}</Title>
           {subTitle && (
-            <Text weight={450} fz={'xs'} color={'#fff'}>
+            <Text weight={450} fz={'xs'}>
               {t(subTitle)}
             </Text>
           )}
