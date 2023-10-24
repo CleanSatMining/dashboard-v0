@@ -12,7 +12,7 @@ type PriceResponse = {
           high: number;
           low: number;
           close: number;
-        }
+        },
       ];
     };
   };
@@ -24,7 +24,7 @@ interface Quote {
 
 const handler: NextApiHandler = async (
   req: NextApiRequest,
-  res: NextApiResponse
+  res: NextApiResponse,
 ) => {
   let json;
 
@@ -48,9 +48,17 @@ const handler: NextApiHandler = async (
 
     if (result.ok) {
       const response: PriceResponse = await result.json();
-      //console.log('Bitcoin Quote', JSON.stringify(response, null, 4));
+      console.log(
+        'Bitcoin Quote',
+        JSON.stringify(response, null, 4),
+        JSON.stringify(response.data.getChartBySlug.data[0]),
+        response.data.getChartBySlug.data.length,
+      );
       const quote: Quote = {
-        price: response.data.getChartBySlug.data[0].close,
+        price:
+          response.data.getChartBySlug.data[
+            response.data.getChartBySlug.data.length - 1
+          ].close,
       };
       json = quote; // JSON.stringify(quote);
     } else {
@@ -62,6 +70,7 @@ const handler: NextApiHandler = async (
   } catch (err) {
     console.log('Error api BTC price');
   }
+
   res.status(200).json(json);
 };
 export default handler;

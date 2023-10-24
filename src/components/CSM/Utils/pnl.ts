@@ -251,7 +251,7 @@ export function calculateNetYield(
   };
 }
 
-export function calculateYield(
+export function calculateGrossYield(
   siteId: string,
   minedBtc: BigNumber,
   btcPrice: number,
@@ -266,12 +266,13 @@ export function calculateYield(
   const fees = site.fees;
   const minedBtcValue = minedBtc.times(btcPrice);
   const realPeriod = getRealPeriod(site, period);
+  const equipement = new BigNumber(site.mining.intallationCosts.equipement);
 
   const { taxe, EBITDA } = calculateCostsAndEBITDAByPeriod(
     minedBtcValue,
     electricityCost,
     fees,
-    new BigNumber(0),
+    equipement,
     realPeriod,
   );
 

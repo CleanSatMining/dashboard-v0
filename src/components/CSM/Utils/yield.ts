@@ -8,7 +8,7 @@ import { Site, TokenBalance, Yield } from '../../../types/mining/Site';
 import {
   calculateElececticityCostPerPeriod,
   calculateNetYield,
-  calculateYield,
+  calculateGrossYield as calculateGrossYield,
   calculateCostsAndEBITDAByPeriod,
 } from './pnl';
 
@@ -142,7 +142,7 @@ export const getYieldBySite = (
     btc: 0,
     apr: 0,
   };
-  const brutYield: { usd: number; btc: number; apr: number } = {
+  const grossYield: { usd: number; btc: number; apr: number } = {
     usd: 0,
     btc: 0,
     apr: 0,
@@ -177,7 +177,7 @@ export const getYieldBySite = (
     netYield.btc = netBtcIncome.toNumber();
     netYield.apr = netApr.toNumber();
 
-    const { apr, btcIncome, usdIncome } = calculateYield(
+    const { apr, btcIncome, usdIncome } = calculateGrossYield(
       siteId,
       siteBtcIncome,
       btcPrice,
@@ -185,12 +185,12 @@ export const getYieldBySite = (
       period,
     );
 
-    brutYield.usd = usdIncome.toNumber();
-    brutYield.btc = btcIncome.toNumber();
-    brutYield.apr = apr.toNumber();
+    grossYield.usd = usdIncome.toNumber();
+    grossYield.btc = btcIncome.toNumber();
+    grossYield.apr = apr.toNumber();
   }
 
-  return { net: netYield, gross: brutYield };
+  return { net: netYield, gross: grossYield };
 };
 
 /**

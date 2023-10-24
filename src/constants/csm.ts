@@ -85,13 +85,13 @@ export const SITES: Record<SiteID, Site> = {
     },
     status: MiningStatus.active,
     api: {
-      enable: false,
-      username: undefined,
-      url: undefined, //'https://antpool.com/api/paymentHistoryV2.htm',
-      contractor: undefined, // Contractor.ANTPOOL,
+      enable: true,
+      username: 'bbgs-csmb',
+      url: 'https://antpool.com/api/paymentHistoryV2.htm',
+      contractor: Contractor.ANTPOOL,
     },
     mining: {
-      startingDate: '2023-09-01',
+      startingDate: '2023-10-01',
       asics: {
         powerW: 3100,
         units: 375,

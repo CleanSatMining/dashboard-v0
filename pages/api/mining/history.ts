@@ -20,10 +20,10 @@ const handler: NextApiHandler = async (
   const url = site.api.url ?? '';
   const pool = site.api.contractor;
 
-  console.log('siteId', siteId);
-  console.log('first', first);
-  console.log('username', username);
-  console.log('url', url);
+  console.log('API MINING siteId', siteId);
+  console.log('API MINING first', first);
+  console.log('API MINING username', username);
+  console.log('API MINING url', url);
 
   if (username && url && pool) {
     switch (pool) {
@@ -52,6 +52,8 @@ const handler: NextApiHandler = async (
     };
     json = history; //JSON.stringify(history);
   }
+
+  if (siteId === '2') console.log('BETA RESULT', JSON.stringify(json, null, 4));
 
   res.status(200).json(json);
 };

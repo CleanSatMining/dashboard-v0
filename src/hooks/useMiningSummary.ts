@@ -66,6 +66,14 @@ export const useMiningSitesSummary = (
                     if (result.ok) {
                       const miningHistory: APIMiningHistoryResponse =
                         await result.json();
+
+                      // if (siteId === '2' || siteId === '4')
+                      //   console.log(
+                      //     'RESULT API',
+                      //     siteId,
+                      //     JSON.stringify(miningHistory, null, 4),
+                      //   );
+
                       const history = miningHistory.days.filter((d) => {
                         //filter old date
                         const hitoryDay = new Date(d.date).getTime();

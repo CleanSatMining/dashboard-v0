@@ -31,16 +31,112 @@ interface DayData {
   fppsFeeAmount: number;
 }
 
+interface ApiResult {
+  days?: MiningSummaryPerDay[];
+  /* eslint-disable */
+  error?: any;
+  /* eslint-enable */
+}
+
+interface AntpoolApiResult {
+  days?: DayData[];
+  /* eslint-disable */
+  error?: any;
+  /* eslint-enable */
+}
+
 export async function antpoolHistory(
   url: string,
-  username: string,
+  usernames: string,
   first: number,
   siteId: string,
-) {
-  let json;
-  const site = SITES[siteId as SiteID];
+): Promise<ApiResult> {
+  const users = usernames.split(',');
+
+  const returns = [];
+
+  // fetch all data
+  for (const user of users) {
+    const { apiKey, apiSign } = getApiSecrets(usernames, user);
+    console.log('ANTPOOL API usernames', usernames);
+    console.log('ANTPOOL API user', user);
+    console.log('ANTPOOL API apiKey', apiKey);
+    console.log('ANTPOOL API apiSign', apiSign);
+    const ret = await _antPoolHistory(siteId, first, apiKey, apiSign, url);
+    if (ret.days === undefined) return { error: ret.error };
+    const result = new Map(ret.days.map((i) => [i.timestamp, i]));
+    returns.push(result);
+  }
+
+  // consolid data
+  const sumData = new Map<string, DayData>();
+  for (const data of returns) {
+    data.forEach((value: DayData, key: string) => {
+      if (sumData.has(key)) {
+        const oldMiningValue = sumData.get(key);
+        const newMiningValue: DayData = {
+          timestamp: value.timestamp,
+          hashrate:
+            value.hashrate +
+            (oldMiningValue ? ' + ' + oldMiningValue.hashrate : ''),
+          hashrate_unit: new BigNumber(value.hashrate_unit)
+            .plus(oldMiningValue ? oldMiningValue.hashrate_unit : 0)
+            .toNumber(),
+          ppsAmount: new BigNumber(value.ppsAmount)
+            .plus(oldMiningValue ? oldMiningValue.ppsAmount : 0)
+            .toNumber(),
+          pplnsAmount: new BigNumber(value.pplnsAmount)
+            .plus(oldMiningValue ? oldMiningValue.pplnsAmount : 0)
+            .toNumber(),
+          soloAmount: new BigNumber(value.soloAmount)
+            .plus(oldMiningValue ? oldMiningValue.soloAmount : 0)
+            .toNumber(),
+          ppappsAmount: new BigNumber(value.ppappsAmount)
+            .plus(oldMiningValue ? oldMiningValue.ppappsAmount : 0)
+            .toNumber(),
+          ppapplnsAmount: new BigNumber(value.ppapplnsAmount)
+            .plus(oldMiningValue ? oldMiningValue.ppapplnsAmount : 0)
+            .toNumber(),
+          fppsBlockAmount: new BigNumber(value.fppsBlockAmount)
+            .plus(oldMiningValue ? oldMiningValue.fppsBlockAmount : 0)
+            .toNumber(),
+          fppsFeeAmount: new BigNumber(value.fppsFeeAmount)
+            .plus(oldMiningValue ? oldMiningValue.fppsFeeAmount : 0)
+            .toNumber(),
+        };
+        sumData.set(key, newMiningValue);
+      } else {
+        sumData.set(key, value);
+      }
+    });
+  }
+
+  if (siteId === '2')
+    console.log(
+      'ANTPOOL RESULT',
+      JSON.stringify([...sumData.values()], null, 4),
+    );
+
+  const days: MiningSummaryPerDay[] = convertAPIDataToStandard(siteId, [
+    ...sumData.values(),
+  ]);
+
+  return { days };
+}
+
+async function _antPoolHistory(
+  siteId: string,
+  first: number,
+  apiKey: string,
+  apiSign: (string | number)[],
+  url: string,
+): Promise<AntpoolApiResult> {
+  let json: AntpoolApiResult = {
+    days: undefined,
+    error: undefined,
+  };
+
   const totalPage: number = Math.ceil(first / PAGE_SIZE);
-  const { apiKey, apiSign } = getApiSecrets(username);
 
   let periodsData: DayData[] = [];
   let totalPageReturned = totalPage;
@@ -57,7 +153,6 @@ export async function antpoolHistory(
         type: 'recv',
       });
       //console.log('ANTPOOL input', post_data, apiKey);
-
       try {
         const result = await fetch(url, {
           method: 'POST',
@@ -71,7 +166,6 @@ export async function antpoolHistory(
           const response: RevenueHistory = await result.json();
 
           //console.log('ANTPOOL response', JSON.stringify(response, null, 4));
-
           if (response.data.page === page) {
             periodsData = [...periodsData, ...response.data.rows];
           }
@@ -80,7 +174,7 @@ export async function antpoolHistory(
           const erreur = {
             message: await result.json(),
           };
-          json = erreur; // JSON.stringify(erreur);
+          json = { error: erreur }; // JSON.stringify(erreur);
           console.error(
             'ANTPOOL Revenu summary error' + JSON.stringify(erreur),
           );
@@ -91,7 +185,23 @@ export async function antpoolHistory(
     }
   }
   //console.log('ANTPOOL', periodsData);
+  // const result: MiningSummaryPerDay[] = convertAPIDataToStandard(
+  //   siteId,
+  //   periodsData,
+  // );
 
+  json = { days: periodsData };
+  return json;
+}
+
+/**
+ * convertAPIDataToStandard
+ * @param siteId
+ * @param periodsData
+ * @returns
+ */
+function convertAPIDataToStandard(siteId: string, periodsData: DayData[]) {
+  const site = SITES[siteId as SiteID];
   const totalMachines = new BigNumber(site.mining.asics.units);
   const hashrateMax = new BigNumber(site.mining.asics.hashrateHs).times(
     totalMachines,
@@ -115,10 +225,7 @@ export async function antpoolHistory(
       };
     },
   );
-
-  json = { days: result };
-  //console.log('ANTPOOL RESULT', json);
-  return json;
+  return result;
 }
 
 /**
@@ -126,7 +233,7 @@ export async function antpoolHistory(
  * @param username
  * @returns
  */
-function getApiSecrets(username: string) {
+function getApiSecrets(username: string, user?: string) {
   let apiSign = ['', 0];
   let apiKey = '';
   let apiSecret = '';
@@ -143,6 +250,22 @@ function getApiSecrets(username: string) {
       apiKey = process.env.ANTPOOL_O_API_KEY_ACCOUNT ?? '';
       apiSecret = process.env.ANTPOOL_O_API_SIGN_SECRET ?? '';
       apiSign = getSignature(username, apiKey, apiSecret);
+      break;
+    }
+    case SITES[SiteID.beta].api.username: {
+      if (user) {
+        const users = SITES[SiteID.beta].api.username
+          ? SITES[SiteID.beta].api.username.split(',')
+          : [];
+        const index = users.indexOf(user);
+        const apiKeys = process.env.ANTPOOL_B_API_KEY_ACCOUNT ?? '';
+        const apiSecrets = process.env.ANTPOOL_B_API_SIGN_SECRET ?? '';
+
+        apiKey = apiKeys.split(',')[index];
+        apiSecret = apiSecrets.split(',')[index];
+        apiSign = getSignature(user, apiKey, apiSecret);
+      }
+
       break;
     }
     default: {
