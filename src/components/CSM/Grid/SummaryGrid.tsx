@@ -23,6 +23,7 @@ import {
 } from '../../../utils/format/format';
 import { getSite } from '../Utils/site';
 import { SummaryCard } from '../Summary/SummaryCard';
+import { NFTCard } from '../Summary/NFTCard';
 import { Data } from '../Summary/SummaryType';
 import {
   getUserInvestment,
@@ -31,6 +32,14 @@ import {
   getUserYieldBySite,
   getUserTokenBalance,
 } from '../Utils/yield';
+import { useNFTs } from 'src/hooks/useWalletCSMUltraRare';
+import { Carousel } from '@mantine/carousel';
+
+const imageUrls = [
+  'https://ipfs.io/ipfs/QmScdC3VkPjNnkCzjMub2dXfzVxEpLap5GhmjDvRrgofGq?filename=CARTE_%2300_SATOSHI.jpg',
+  'https://ipfs.io/ipfs/QmeRwdxbXb7sm3NabYfUJAhgWCCyGayZxmhAZ9XGLsDYt9?filename=CARTE_%2301_APOLLON.jpg',
+  'https://ipfs.io/ipfs/QmZVFh1eKQQ6VS3Aqgk9Fhuowdw8YrGdMgpvd3vyTpu2oQ?filename=CARTE_%2302_THOT.jpg',
+];
 
 type AssetProps = {
   btcPrice: number;
@@ -46,7 +55,8 @@ const _Summary: FC<AssetProps> = ({ btcPrice, period, account }) => {
   const [userYield, setUserYield] = useState<{ net: Yield; gross: Yield }>(
     getUserYield(miningState, usersState, account, period, btcPrice),
   );
-
+  const NFT = useNFTs('0x765495Be1E0c23447163f6402D17dEbc9eCeF0E2', account);
+  console.log('NFT', JSON.stringify(NFT, null, 4));
   //console.log('REDUX USERS', JSON.stringify(usersState, null, 4));
   //console.log('REDUX SITEs', JSON.stringify(miningState, null, 4));
 
@@ -139,19 +149,6 @@ const _Summary: FC<AssetProps> = ({ btcPrice, period, account }) => {
         data={dataSites}
         Icon={IconBuildingFactory}
       ></SummaryCard>
-      {/* {!isMobile && (
-        <SummariesCard
-          title={t('my-yield')}
-          valueTitle1={t('income-net')}
-          value1={formatBTC(userYield.net.btc)}
-          subValue1={formatUsd(userYield.net.usd)}
-          valueTitle2={t('income-gross')}
-          value2={formatBTC(userYield.gross.btc)}
-          subValue2={formatUsd(userYield.gross.usd)}
-          data={dataIncomeNet}
-          Icon={IconCoinBitcoin}
-        ></SummariesCard>
-      )} */}
       {
         <>
           <SummaryCard
@@ -181,6 +178,18 @@ const _Summary: FC<AssetProps> = ({ btcPrice, period, account }) => {
           data={dataAPR}
         ></SummaryCard>
       )}
+      <NFTCard data={NFT.nftMetadata} title={NFT.collectionName}></NFTCard>
+      {/* <Carousel slideSize={'50%'} height={200} slideGap={'XS'} loop={true}>
+        {imageUrls.map((url, index) => (
+          <Carousel.Slide key={'Carousel ' + index}>
+            <img
+              src={url}
+              alt={`Slide ${index + 1}`}
+              style={{ maxHeight: '100%' }}
+            />
+          </Carousel.Slide>
+        ))}
+      </Carousel> */}
     </SimpleGrid>
   );
 };

@@ -7,7 +7,7 @@ export const getContract = <T extends Contract>(
   addressOrName: string,
   contractInterface: ContractInterface,
   provider: Web3Provider,
-  account?: string
+  account?: string,
 ): T | undefined => {
   if (!isAddress(addressOrName) || addressOrName === AddressZero) {
     return undefined;
@@ -16,6 +16,23 @@ export const getContract = <T extends Contract>(
   return new Contract(
     addressOrName,
     contractInterface,
-    account ? provider.getSigner(account).connectUnchecked() : provider
+    account ? provider.getSigner(account).connectUnchecked() : provider,
   ) as T;
+};
+
+export const getAnyContract = (
+  addressOrName: string,
+  contractInterface: ContractInterface,
+  provider: Web3Provider,
+  account?: string,
+) => {
+  if (!isAddress(addressOrName) || addressOrName === AddressZero) {
+    return undefined;
+  }
+
+  return new Contract(
+    addressOrName,
+    contractInterface,
+    account ? provider.getSigner(account).connectUnchecked() : provider,
+  );
 };
