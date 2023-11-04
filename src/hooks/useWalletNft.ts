@@ -36,12 +36,6 @@ export const useNFTs = (
 
         const b = await contract.balanceOf(account);
 
-        const getNftBalance = async () => {
-          if (contract) {
-            setNftBalance(await contract.balanceOf(account));
-          }
-        };
-
         // Fonction pour récupérer l'image du NFT
         const getNFTMetadata = async () => {
           if (b && b > 0) {
@@ -52,6 +46,7 @@ export const useNFTs = (
               try {
                 const response = await fetch(uri);
                 const data: Metadata = await response.json();
+                data.id = id;
                 meta.push(data);
               } catch (error) {
                 console.error(

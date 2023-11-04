@@ -10,6 +10,11 @@ import { SiteCard } from 'src/components/CSM/Card/SiteCard';
 import { FilterStatus, FilterSite, MiningStatus } from 'src/types/mining/Site';
 import { getSite } from 'src/components/CSM/Utils/site';
 import { useMediaQuery } from '@mantine/hooks';
+import {
+  AddTokenToWallet,
+  AddErc20ToWalletWidget,
+  AddNftToWalletWidget,
+} from '../Wallet/AddTokenToWallet';
 
 type SiteProps = {
   btcPrice: number;
@@ -84,6 +89,20 @@ const _SiteGrid: FC<SiteProps> = ({
   );
   return (
     <Flex gap={0} direction={'column'} align={'center'}>
+      <AddTokenToWallet
+        erc20TokenAddress={'0x20D2F2d4b839710562D25274A3e98Ea1F0392D24'}
+        erc20TokenSymbol={'CSM-DELTA'}
+        nftContractAddress={'0x765495Be1E0c23447163f6402D17dEbc9eCeF0E2'}
+        nftTokenId={'1'}
+      ></AddTokenToWallet>
+      <AddErc20ToWalletWidget
+        erc20TokenAddress={'0x20D2F2d4b839710562D25274A3e98Ea1F0392D24'}
+        erc20TokenSymbol={'CSM-DELTA'}
+      ></AddErc20ToWalletWidget>
+      <AddNftToWalletWidget
+        nftContractAddress={'0x765495Be1E0c23447163f6402D17dEbc9eCeF0E2'}
+        nftTokenId={'1'}
+      ></AddNftToWalletWidget>
       <Grid gutter={0} gutterMd={25} gutterXs={'xs'} style={{ width: '100%' }}>
         {displayedSites.map((i) => (
           <Grid.Col md={6} lg={4} key={`grid-${i}`}>

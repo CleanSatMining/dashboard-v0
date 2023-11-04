@@ -23,6 +23,9 @@ export type CardData = {
     supply: number;
     url: string;
     symbol: string;
+    address: string;
+    decimal: number;
+    image: string;
   };
 
   site: {

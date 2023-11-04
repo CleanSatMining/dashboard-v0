@@ -1,5 +1,12 @@
 import { FC } from 'react';
-import { Flex, Text, Group, createStyles, MantineTheme } from '@mantine/core';
+import {
+  Flex,
+  Text,
+  Group,
+  createStyles,
+  MantineTheme,
+  Tooltip,
+} from '@mantine/core';
 import { IconExternalLink } from '@tabler/icons';
 import {
   formatSmallPercent,
@@ -10,18 +17,18 @@ import { openInNewTab } from 'src/utils/window';
 import { useTranslation } from 'react-i18next';
 import { CardData } from '../Type';
 import { InfoText } from 'src/components/InfoText/InfoText';
+import { AddErc20ToWallet } from 'src/components/CSM/Wallet/AddTokenToWallet';
 
 export const useStyle = createStyles((theme: MantineTheme) => ({
-  urlContainer: {
+  tokenContainer: {
     display: 'flex',
     gap: theme.spacing.sm,
-    borderBottomStyle: 'solid',
-    borderBottomWidth: '2px',
-    borderBottomColor: 'transparent',
     alignItems: 'center',
     justifyContent: 'start',
+  },
+  link: {
     '&:hover': {
-      borderBottomColor: theme.colors.brand,
+      color: theme.colors.brand,
       cursor: 'pointer',
     },
   },
@@ -53,18 +60,27 @@ export const CardTokenContent: FC<CardTokenContentProps> = ({
           {'Quantité'}
         </Text>
 
-        <Flex
-          className={classes.urlContainer}
-          onClick={() => openInNewTab(url)}
-          gap={'5px'}
-        >
+        <Flex className={classes.tokenContainer} gap={'5px'}>
           <Text weight={500} fz={'sm'} align={'center'}>
             {formatToken(balance)}
           </Text>
           <Text weight={500} fz={'sm'} sx={{ padding: '0', margin: '0' }}>
             {symbol}
           </Text>
-          <IconExternalLink size={16} />
+          <Tooltip label={'See on gnosisscan'} position={'right'}>
+            <div>
+              <IconExternalLink
+                size={16}
+                className={classes.link}
+                onClick={() => openInNewTab(url)}
+              />
+            </div>
+          </Tooltip>
+          <AddErc20ToWallet
+            erc20TokenAddress={data.token.address}
+            erc20TokenSymbol={data.token.symbol}
+            erc20TokenDecimal={data.token.decimal}
+          ></AddErc20ToWallet>
         </Flex>
       </Group>
 

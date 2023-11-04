@@ -227,6 +227,9 @@ function buildUserSiteData(
       supply: site.token.supply,
       url: site.token.gnosisscanUrl,
       symbol: site.token.symbol,
+      address: site.token.address,
+      decimal: 9,
+      image: 'https://cleansatmining.com/data/files/logo_csm.png',
     },
     site: {
       miningStart: site.mining.startingDate,

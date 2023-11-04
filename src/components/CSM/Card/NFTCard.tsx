@@ -95,7 +95,7 @@ const _NFTCard: FC<NFTProps> = ({ title, toolTip, Icon = IconCards, data }) => {
                     />
                     <div>
                       <Text ta={'left'} weight={1000}>
-                        {data[0].name}
+                        {'#' + data[0].id + ' ' + data[0].name}
                       </Text>
                       <Text ta={'left'} color={'dimmed'}>
                         {truncateString(data[0].description, 80)}
@@ -115,7 +115,7 @@ const _NFTCard: FC<NFTProps> = ({ title, toolTip, Icon = IconCards, data }) => {
               />
               <div>
                 <Text ta={'left'} weight={1000}>
-                  {data[0].name}
+                  {'#' + data[0].id + ' ' + data[0].name}
                 </Text>
                 <Text ta={'left'} color={'dimmed'}>
                   {truncateString(data[0].description, 112)}
