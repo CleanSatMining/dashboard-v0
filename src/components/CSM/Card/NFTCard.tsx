@@ -4,7 +4,6 @@ import {
   ActionIcon,
   Card,
   Flex,
-  Stack,
   Group,
   MantineTheme,
   Text,
@@ -14,7 +13,7 @@ import {
   Image,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { TablerIcon, IconCards, IconCardboards } from '@tabler/icons';
+import { TablerIcon, IconCards } from '@tabler/icons';
 import { InfoTitle } from 'src/components/InfoText/InfoText';
 import { Carousel } from '@mantine/carousel';
 import { Metadata } from 'src/abis/types/NFT';
@@ -87,7 +86,7 @@ const _NFTCard: FC<NFTProps> = ({ title, toolTip, Icon = IconCards, data }) => {
               loop={true}
             >
               {data.map((nft, index) => (
-                <Carousel.Slide key={'Carousel ' + index} height={200}>
+                <Carousel.Slide key={'Carousel ' + index}>
                   <Flex gap={10} w={250}>
                     <Image
                       width={100}

@@ -22,9 +22,9 @@ import {
   formatUsd,
 } from '../../../utils/format/format';
 import { getSite } from '../Utils/site';
-import { SummaryCard } from '../Summary/SummaryCard';
-import { NFTCard } from '../Summary/NFTCard';
-import { Data } from '../Summary/SummaryType';
+import { SummaryCard } from '../Card/SummaryCard/SummaryCard';
+import { NFTCard } from '../Card/NFTCard';
+import { Data } from '../Card/SummaryCard/SummaryType';
 import {
   getUserInvestment,
   getUserSiteIds,
@@ -32,14 +32,7 @@ import {
   getUserYieldBySite,
   getUserTokenBalance,
 } from '../Utils/yield';
-import { useNFTs } from 'src/hooks/useWalletCSMUltraRare';
-import { Carousel } from '@mantine/carousel';
-
-const imageUrls = [
-  'https://ipfs.io/ipfs/QmScdC3VkPjNnkCzjMub2dXfzVxEpLap5GhmjDvRrgofGq?filename=CARTE_%2300_SATOSHI.jpg',
-  'https://ipfs.io/ipfs/QmeRwdxbXb7sm3NabYfUJAhgWCCyGayZxmhAZ9XGLsDYt9?filename=CARTE_%2301_APOLLON.jpg',
-  'https://ipfs.io/ipfs/QmZVFh1eKQQ6VS3Aqgk9Fhuowdw8YrGdMgpvd3vyTpu2oQ?filename=CARTE_%2302_THOT.jpg',
-];
+import { useNFTs } from 'src/hooks/useWalletNft';
 
 type AssetProps = {
   btcPrice: number;
@@ -57,8 +50,6 @@ const _Summary: FC<AssetProps> = ({ btcPrice, period, account }) => {
   );
   const NFT = useNFTs('0x765495Be1E0c23447163f6402D17dEbc9eCeF0E2', account);
   console.log('NFT', JSON.stringify(NFT, null, 4));
-  //console.log('REDUX USERS', JSON.stringify(usersState, null, 4));
-  //console.log('REDUX SITEs', JSON.stringify(miningState, null, 4));
 
   const siteIds = getUserSiteIds(usersState, account);
   const investment = getUserInvestment(usersState, account);
@@ -178,18 +169,9 @@ const _Summary: FC<AssetProps> = ({ btcPrice, period, account }) => {
           data={dataAPR}
         ></SummaryCard>
       )}
-      <NFTCard data={NFT.nftMetadata} title={NFT.collectionName}></NFTCard>
-      {/* <Carousel slideSize={'50%'} height={200} slideGap={'XS'} loop={true}>
-        {imageUrls.map((url, index) => (
-          <Carousel.Slide key={'Carousel ' + index}>
-            <img
-              src={url}
-              alt={`Slide ${index + 1}`}
-              style={{ maxHeight: '100%' }}
-            />
-          </Carousel.Slide>
-        ))}
-      </Carousel> */}
+      {NFT.balance > 0 && (
+        <NFTCard data={NFT.metadata} title={NFT.collectionName}></NFTCard>
+      )}
     </SimpleGrid>
   );
 };

@@ -6,9 +6,9 @@ import { selectUsersState } from 'src/store/features/userData/userDataSelector';
 
 import { SITES, SiteID } from '../../../constants';
 import { Site, TokenBalance } from '../../../types/mining/Site';
-import { UserSiteCard } from './Card/UserSiteCard';
-import { UserSiteCardMobile } from './Card/UserSiteCardMobile';
-import { CardData, CardCost } from './Card/Type';
+import { UserSiteCard } from './UserCard/UserSiteCard';
+import { UserSiteCardMobile } from './UserCard/UserSiteCardMobile';
+import { CardData, CardCost } from './UserCard/Type';
 import BigNumber from 'bignumber.js';
 import { Yield } from 'src/types/mining/Site';
 
