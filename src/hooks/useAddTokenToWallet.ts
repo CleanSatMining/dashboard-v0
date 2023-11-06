@@ -46,7 +46,7 @@ export const useAddERC20ToWallet = (
     };
 
     fetchNFTs();
-  }, [account]);
+  }, [account, tokenAddress]);
 
   return { loading };
 };

@@ -87,7 +87,9 @@ export const UserSiteCardMobile: FC<CardMobileProps> = ({
         <Accordion.Item value={'site'}>
           <Accordion.Control>
             <AccordionLabelImage
-              image={require(`../../../../images/mining-site.png`).default}
+              image={
+                require(`../../../../assets/icons/mining-site.png`).default
+              }
               value={formatHashrate(data.site.hashrate)}
               label={t('my-site')}
             ></AccordionLabelImage>

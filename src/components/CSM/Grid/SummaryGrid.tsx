@@ -32,7 +32,8 @@ import {
   getUserYieldBySite,
   getUserTokenBalance,
 } from '../Utils/yield';
-import { useNFTs } from 'src/hooks/useWalletNft';
+import { useNFTs as useWalletNFTs } from 'src/hooks/useWalletNft';
+import { ULTRA_RARE } from 'src/constants/csm';
 
 type AssetProps = {
   btcPrice: number;
@@ -48,8 +49,8 @@ const _Summary: FC<AssetProps> = ({ btcPrice, period, account }) => {
   const [userYield, setUserYield] = useState<{ net: Yield; gross: Yield }>(
     getUserYield(miningState, usersState, account, period, btcPrice),
   );
-  const NFT = useNFTs('0x765495Be1E0c23447163f6402D17dEbc9eCeF0E2', account);
-  console.log('NFT', JSON.stringify(NFT, null, 4));
+  const ultraRare = useWalletNFTs(ULTRA_RARE.contract, account);
+  console.log('NFT', JSON.stringify(ultraRare, null, 4));
 
   const siteIds = getUserSiteIds(usersState, account);
   const investment = getUserInvestment(usersState, account);
@@ -169,8 +170,11 @@ const _Summary: FC<AssetProps> = ({ btcPrice, period, account }) => {
           data={dataAPR}
         ></SummaryCard>
       )}
-      {NFT.balance > 0 && (
-        <NFTCard data={NFT.metadata} title={NFT.collectionName}></NFTCard>
+      {ultraRare.balance > 0 && (
+        <NFTCard
+          data={ultraRare.metadata}
+          title={ultraRare.collectionName}
+        ></NFTCard>
       )}
     </SimpleGrid>
   );

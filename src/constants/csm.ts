@@ -1,10 +1,18 @@
 import { Contractor, MiningStatus, Site } from '../types/mining/Site';
+import { UltraRare } from '../types/mining/UltraRare';
 
 export const FEE_RATE_CSM = 0.1;
 export const FEE_RATE_BBGS = 0.05;
 export const PROVISION_RATE = 0.2;
 export const SWISS_TAXE = 0.1357;
 export const ACTIVATE_DISPLAY_APY = false;
+
+export const ULTRA_RARE: UltraRare = {
+  collection: 'CleanSat Mining Ultra-Rare',
+  contract: '0x765495Be1E0c23447163f6402D17dEbc9eCeF0E2',
+  contractLink:
+    'https://gnosisscan.io/address/0x765495be1e0c23447163f6402d17debc9ecef0e2',
+};
 
 export enum SiteID {
   alpha = '1',

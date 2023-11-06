@@ -47,6 +47,7 @@ export const useNFTs = (
                 const response = await fetch(uri);
                 const data: Metadata = await response.json();
                 data.id = id;
+                data.url = uri;
                 meta.push(data);
               } catch (error) {
                 console.error(

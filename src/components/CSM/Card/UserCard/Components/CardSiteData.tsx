@@ -33,7 +33,7 @@ export const CardSiteData: FC<CardSiteDataProps> = ({ data }) => {
         </Text>
 
         <Image
-          src={require(`../../../../../images/mining-site.png`).default}
+          src={require(`../../../../../assets/icons/mining-site.png`).default}
           alt={'img'}
           height={isMobile ? 18 : 24}
         ></Image>

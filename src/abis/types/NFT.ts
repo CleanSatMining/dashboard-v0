@@ -5,6 +5,7 @@ export interface Metadata {
     image: string;
     name: string;
     attributes: Attribute[];
+    url:string;
   }
 
 export interface Attribute {
