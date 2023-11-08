@@ -9,9 +9,9 @@ export const ACTIVATE_DISPLAY_APY = false;
 
 export const ULTRA_RARE: UltraRare = {
   collection: 'CleanSat Mining Ultra-Rare',
-  contract: '0x765495Be1E0c23447163f6402D17dEbc9eCeF0E2',
+  contract: '0x78994c361ef29506bf19a5957582fa10ee561b4b',
   contractLink:
-    'https://gnosisscan.io/address/0x765495be1e0c23447163f6402d17debc9ecef0e2',
+    'https://gnosisscan.io/address/0x78994c361ef29506bf19a5957582fa10ee561b4b',
 };
 
 export enum SiteID {
