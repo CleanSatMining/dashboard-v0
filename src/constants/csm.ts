@@ -49,7 +49,7 @@ export const SITES: Record<SiteID, Site> = {
       startingDate: '2023-09-01',
       asics: {
         powerW: 3100,
-        units: 441,
+        units: 375,
         hashrateHs: 100000000000000,
       },
       electricity: {
@@ -154,7 +154,7 @@ export const SITES: Record<SiteID, Site> = {
       startingDate: '2023-08-18',
       asics: {
         powerW: 3400,
-        units: 352,
+        units: 386,
         hashrateHs: 122000000000000,
       },
       electricity: {
@@ -260,8 +260,8 @@ export const SITES: Record<SiteID, Site> = {
       startingDate: '-',
       asics: {
         powerW: 3300,
-        units: 352,
-        hashrateHs: 122000000000000,
+        units: 300,
+        hashrateHs: 120000000000000,
       },
       electricity: {
         usdPricePerKWH: 0.046,
