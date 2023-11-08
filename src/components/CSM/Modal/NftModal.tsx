@@ -14,20 +14,22 @@ import {
   useMantineTheme,
   Image as MantineImage,
   Space,
+  Paper,
 } from '@mantine/core';
 import { GnosisSvg } from 'src/assets/chains/Gnosis';
 import {
   IconDiscountCheck,
   IconAlignJustified,
   IconListDetails,
+  IconChartRadar,
 } from '@tabler/icons';
 import { openInNewTab } from 'src/utils/window';
 import { useTranslation } from 'react-i18next';
 import { IconLink } from 'src/components/Link/Link';
 import { useViewportSize } from '@mantine/hooks';
 import { useMediaQuery } from '@mantine/hooks';
-import { maskAddress } from 'src/components/CSM/Utils/string';
 import { AddNftToWalletWidget } from '../Wallet/AddTokenToWallet';
+import { Attribute } from 'src/abis/types/NFT';
 
 export const useStyle = createStyles((theme: MantineTheme) => ({
   customArticle: {
@@ -62,6 +64,7 @@ export type NftModalProps = {
   image: string;
   description: string;
   tokenUrl: string;
+  attributes: Attribute[];
 };
 
 export const NftModal: FC<NftModalProps> = ({
@@ -75,6 +78,7 @@ export const NftModal: FC<NftModalProps> = ({
   image,
   description,
   tokenUrl,
+  attributes,
 }) => {
   const { classes } = useStyle();
   const { t } = useTranslation('site', { keyPrefix: 'card' });
@@ -155,7 +159,46 @@ export const NftModal: FC<NftModalProps> = ({
                   {description}
                 </Text>
               </Card>
-              <Space h={'xl'}></Space>
+              <Space h={'xs'}></Space>
+              <Card withBorder={true} shadow={'sm'} radius={'md'}>
+                <Card.Section withBorder={true} inheritPadding={true} py={'xs'}>
+                  <Group>
+                    <IconChartRadar size={rem(20)} />
+                    <Text weight={500}>{'Attributs'}</Text>
+                  </Group>
+                </Card.Section>
+                <Space h={'xs'}></Space>
+
+                {attributes.length > 0 && (
+                  <SimpleGrid cols={isMobile ? 1 : 3}>
+                    {attributes.map((attribute, index) => (
+                      <Paper
+                        p={'xs'}
+                        key={index}
+                        withBorder={
+                          theme.colorScheme === 'light' ? true : false
+                        }
+                        shadow={
+                          theme.colorScheme === 'light' ? 'md' : undefined
+                        }
+                      >
+                        <Text
+                          fz={12}
+                          ta={'center'}
+                          tt={'uppercase'}
+                          color={'dimmed'}
+                        >
+                          {attribute.trait_type}
+                        </Text>
+                        <Text fz={14} ta={'center'} fw={500}>
+                          {attribute.value}
+                        </Text>
+                      </Paper>
+                    ))}
+                  </SimpleGrid>
+                )}
+              </Card>
+              <Space h={'xs'}></Space>
               <Card withBorder={true} shadow={'sm'} radius={'md'}>
                 <Card.Section withBorder={true} inheritPadding={true} py={'xs'}>
                   <Group>

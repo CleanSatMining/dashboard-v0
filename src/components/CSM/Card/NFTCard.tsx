@@ -16,7 +16,7 @@ import { useMediaQuery } from '@mantine/hooks';
 import { TablerIcon, IconCards, IconDiscountCheck } from '@tabler/icons';
 import { InfoTitle } from 'src/components/InfoText/InfoText';
 import { Carousel } from '@mantine/carousel';
-import { Metadata } from 'src/abis/types/NFT';
+import { Metadata, Attribute } from 'src/abis/types/NFT';
 import { truncateString } from 'src/components/CSM/Utils/string';
 import { NftModal } from 'src/components/CSM/Modal/NftModal';
 import { useDisclosure } from '@mantine/hooks';
@@ -55,6 +55,7 @@ const _NFTCard: FC<NFTProps> = ({
   const [nftUrl, setNftUrl] = useState('');
   const [nftName, setNftName] = useState('');
   const [nftImage, setNftImage] = useState('');
+  const [nftAttributes, setNftAttributes] = useState<Attribute[]>([]);
   const [nftDescription, setNftDescription] = useState('');
   const [opened, { open, close }] = useDisclosure(false);
   console.log('NFTCard', JSON.stringify(data, null, 4));
@@ -67,6 +68,7 @@ const _NFTCard: FC<NFTProps> = ({
       setNftDescription(data[index].description);
       setNftName(data[index].name);
       setNftUrl(data[index].url);
+      setNftAttributes(data[index].attributes);
       open();
     };
   }
@@ -81,6 +83,7 @@ const _NFTCard: FC<NFTProps> = ({
         description={nftDescription}
         id={nftId}
         tokenUrl={nftUrl}
+        attributes={nftAttributes}
         open={open}
         close={close}
         opened={opened}
