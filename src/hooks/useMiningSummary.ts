@@ -21,17 +21,26 @@ export type MiningSiteSummary = {
 
 interface UseMiningSitesSummary {
   states: { [siteId: string]: MiningSiteSummary };
+  daysUp: number;
   isLoaded: boolean;
 }
 
-export const useMiningSitesSummary = (
+type UseMiningSitesSummaryProps = (
   siteIds: string[],
   days: number,
-): UseMiningSitesSummary => {
+  lastMonth?: boolean,
+) => UseMiningSitesSummary;
+
+export const useMiningSitesSummary: UseMiningSitesSummaryProps = (
+  siteIds,
+  days,
+  lastMonth = false,
+) => {
   const dispatch = useAppDispatch();
   const [miningStates, setMiningStates] = useState<{
     [siteId: string]: MiningSiteSummary;
   }>({});
+  const [daysUp, setDaysUp] = useState<number>(days);
   const [isLoaded, setIsLoaded] = useState<boolean>(false);
 
   useEffect(() => {
@@ -53,9 +62,10 @@ export const useMiningSitesSummary = (
 
                 if (site.status !== MiningStatus.inactive) {
                   try {
+                    const parameter = lastMonth ? Math.max(60, days) : days;
                     const body: APIMiningHistoryQuery = {
                       siteId: siteId,
-                      first: days,
+                      first: parameter,
                     };
 
                     const result = await fetch(API_MINING_STATE.url, {
@@ -76,11 +86,16 @@ export const useMiningSitesSummary = (
 
                       const history = miningHistory.days.filter((d) => {
                         //filter old date
-                        const hitoryDay = new Date(d.date).getTime();
-                        const nowDay = new Date(d.date).getTime();
-                        const diffDays = nowDay - hitoryDay;
-                        return diffDays <= days;
+                        const historyDay = new Date(d.date).getTime();
+                        const nowDay = new Date().getTime();
+                        const diffDays = nowDay - historyDay;
+                        return (
+                          diffDays >= days ||
+                          (lastMonth && diffDays >= Math.max(60, days))
+                        );
                       });
+                      setDaysUp(history.length);
+
                       miningDaysHistory[siteId] = history;
                       const data: SiteMiningSummary = {
                         id: siteId,
@@ -136,6 +151,7 @@ export const useMiningSitesSummary = (
   /* eslint-enable */
   return {
     states: miningStates,
+    daysUp: daysUp,
     isLoaded: isLoaded,
   };
 };

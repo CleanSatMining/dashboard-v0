@@ -16,11 +16,19 @@ type UserAssetsProps = {
   account: string;
   price: number;
   period: number;
+  startDate: number;
+  endDate: number;
   miningStates: { [siteId: string]: MiningSiteSummary };
   balances: { [tokenAddress: string]: Balance };
 };
 
-const _Dashboard: FC<UserAssetsProps> = ({ account, price, period }) => {
+const _Dashboard: FC<UserAssetsProps> = ({
+  account,
+  price,
+  period,
+  startDate,
+  endDate,
+}) => {
   const userState = useAppSelector(selectUsersState);
   //const dispatch = useAppDispatch();
   const [spinner, setSpinner] = useState(true);
@@ -55,6 +63,8 @@ const _Dashboard: FC<UserAssetsProps> = ({ account, price, period }) => {
             account={account}
             btcPrice={price}
             period={period}
+            startDate={startDate}
+            endDate={endDate}
           ></SummaryGrid>
           <Filters
             ownerFilter={{ value: ownerFilter, setValue: setOwnerFilter }}
@@ -64,6 +74,8 @@ const _Dashboard: FC<UserAssetsProps> = ({ account, price, period }) => {
             account={account}
             btcPrice={price}
             period={period}
+            startDate={startDate}
+            endDate={endDate}
             ownerFilter={ownerFilter as FilterSite}
             stateFilter={stateFilter as FilterStatus}
           ></SiteGrid>

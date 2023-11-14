@@ -39,18 +39,34 @@ type AssetProps = {
   btcPrice: number;
   period: number;
   account: string;
+  startDate: number;
+  endDate: number;
 };
 
-const _Summary: FC<AssetProps> = ({ btcPrice, period, account }) => {
+const _Summary: FC<AssetProps> = ({
+  btcPrice,
+  period,
+  account,
+  startDate,
+  endDate,
+}) => {
   const isMobile = useMediaQuery('(max-width: 36em)');
   const { t } = useTranslation('site', { keyPrefix: 'card' });
   const usersState = useAppSelector(selectUsersState);
   const miningState = useAppSelector(selectMiningState);
   const [userYield, setUserYield] = useState<{ net: Yield; gross: Yield }>(
-    getUserYield(miningState, usersState, account, period, btcPrice),
+    getUserYield(
+      miningState,
+      usersState,
+      account,
+      period,
+      btcPrice,
+      startDate,
+      endDate,
+    ),
   );
   const ultraRare = useWalletNFTs(ULTRA_RARE.contract, account);
-  console.log('NFT', JSON.stringify(ultraRare, null, 4));
+  //console.log('NFT', JSON.stringify(ultraRare, null, 4));
 
   const siteIds = getUserSiteIds(usersState, account);
   const investment = getUserInvestment(usersState, account);
@@ -76,6 +92,8 @@ const _Summary: FC<AssetProps> = ({ btcPrice, period, account }) => {
       account,
       period,
       btcPrice,
+      startDate,
+      endDate,
     );
 
     const dataToken: Data = {
@@ -113,9 +131,17 @@ const _Summary: FC<AssetProps> = ({ btcPrice, period, account }) => {
 
   useEffect(() => {
     setUserYield(
-      getUserYield(miningState, usersState, account, period, btcPrice),
+      getUserYield(
+        miningState,
+        usersState,
+        account,
+        period,
+        btcPrice,
+        startDate,
+        endDate,
+      ),
     );
-  }, [usersState, miningState, account, btcPrice, period]);
+  }, [usersState, miningState, account, btcPrice, period, startDate, endDate]);
 
   return (
     <SimpleGrid

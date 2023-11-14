@@ -11,7 +11,7 @@ import {
 import { MiningState } from 'src/types/mining/Mining';
 import { Site, Fees } from 'src/types/mining/Site';
 
-import { getRealPeriod } from './yield';
+import { getRealPeriod, getMiningDays } from './period';
 
 const YEAR_IN_DAYS = new BigNumber(365);
 
@@ -54,31 +54,44 @@ export function calculateElececticityCostPerPeriod(
   miningState: MiningState,
   siteId: string,
   period: number,
+  startDate: number,
+  endDate: number,
 ): BigNumber {
   const site: Site = SITES[siteId as SiteID];
   let electricityCost: BigNumber = new BigNumber(0);
 
-  if (
-    miningState &&
-    miningState.byId[siteId] &&
-    miningState.byId[siteId].mining &&
-    miningState.byId[siteId].mining.days
-  ) {
-    for (let i = 0; i < period; i++) {
-      if (
-        miningState.byId[siteId].mining.days.length > i &&
-        miningState.byId[siteId].mining.days[i].revenue
-      ) {
-        const electricityCostPerDay = calculateElececticityCostPerDay(
-          site,
-          site.mining.asics.units,
-          miningState.byId[siteId].mining.days[i].uptimePercentage / 100,
-        );
+  const days = getMiningDays(miningState, siteId, period, startDate, endDate);
+  for (const day of days) {
+    const electricityCostPerDay = calculateElececticityCostPerDay(
+      site,
+      site.mining.asics.units,
+      day.uptimePercentage / 100,
+    );
 
-        electricityCost = electricityCost.plus(electricityCostPerDay);
-      }
-    }
+    electricityCost = electricityCost.plus(electricityCostPerDay);
   }
+
+  // if (
+  //   miningState &&
+  //   miningState.byId[siteId] &&
+  //   miningState.byId[siteId].mining &&
+  //   miningState.byId[siteId].mining.days
+  // ) {
+  //   for (let i = 0; i < period; i++) {
+  //     if (
+  //       miningState.byId[siteId].mining.days.length > i &&
+  //       miningState.byId[siteId].mining.days[i].revenue
+  //     ) {
+  //       const electricityCostPerDay = calculateElececticityCostPerDay(
+  //         site,
+  //         site.mining.asics.units,
+  //         miningState.byId[siteId].mining.days[i].uptimePercentage / 100,
+  //       );
+
+  //       electricityCost = electricityCost.plus(electricityCostPerDay);
+  //     }
+  //   }
+  // }
 
   return electricityCost;
 }
@@ -170,20 +183,6 @@ export function calculateNetYield(
     realPeriod,
   );
 
-  // const feeCsmUsd = usdIncome
-  //   .minus(electricityCost)
-  //   .times(fees.operational.csm);
-  // const feeOperatorUsd = usdIncome
-  //   .minus(electricityCost)
-  //   .times(fees.operational.operator);
-  // const EBITDA_I = usdIncome
-  //   .minus(electricityCost)
-  //   .minus(feeCsmUsd)
-  //   .minus(feeOperatorUsd);
-  // const provision_i = equipement
-  //   .times(fees.operational.provision)
-  //   .dividedBy(YEAR_IN_DAYS)
-  //   .times(realPeriod);
   const EBITDA_MINUS_PROVISION = EBITDA.minus(provision); //BigNumber.max(    EBITDA.minus(provision),    new BigNumber(0),  );
   //const taxe_i = EBITDA_MINUS_PROVISION.times(SWISS_TAXE);
   const netUsdIncome = EBITDA_MINUS_PROVISION.minus(taxe);
@@ -198,51 +197,6 @@ export function calculateNetYield(
   const netApr = totalShareValue.gt(0)
     ? netUsdIncomeAYear.dividedBy(totalShareValue)
     : new BigNumber(0);
-
-  /* console.log('PNL', siteId, 'period', period, 'vs', realPeriod);
-  console.log('PNL', siteId, 'btcPrice', formatBTC(btcPrice));
-  console.log('PNL', siteId, 'usdIncome', formatUsd(usdIncome.toNumber()));
-  console.log('PNL', siteId, 'btcIncome', formatBTC(btcIncome.toNumber()));
-  console.log(
-    'PNL',
-    siteId,
-    'electricityCost',
-    formatUsd(electricityCost.toNumber())
-  );
-  console.log('PNL', siteId, 'feeCsmUsd', formatUsd(feeCsmUsd.toNumber()));
-  console.log(
-    'PNL',
-    siteId,
-    'feeOperatorUsd',
-    formatUsd(feeOperatorUsd.toNumber())
-  );
-  console.log('PNL', siteId, 'EBITDA', formatUsd(EBITDA.toNumber()));
-  console.log(
-    'PNL',
-    siteId,
-    'EBITDA_CUT_LOST',
-    formatUsd(EBITDA_CUT_LOST.toNumber())
-  );
-  console.log('PNL', siteId, 'provision', formatUsd(provision.toNumber()));
-  console.log('PNL', siteId, 'taxe', formatUsd(taxe.toNumber()));
-  console.log(
-    'PNL',
-    siteId,
-    'netUsdIncome',
-    formatUsd(netUsdIncome.toNumber())
-  );
-  console.log(
-    'PNL',
-    siteId,
-    'netBtcIncome',
-    formatBTC(netBtcIncome.toNumber())
-  );
-  console.log(
-    'PNL',
-    siteId,
-    'netUsdIncomeAYear',
-    formatUsd(netUsdIncomeAYear.toNumber())
-  ); */
 
   return {
     netUsdIncome,

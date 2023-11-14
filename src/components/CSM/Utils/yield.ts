@@ -1,5 +1,5 @@
 import BigNumber from 'bignumber.js';
-
+import { getMiningDays } from './period';
 import { MiningState, UserState } from 'src/types/mining/Mining';
 
 import { ALLOWED_SITES, SITES, SiteID } from '../../../constants/csm';
@@ -11,6 +11,7 @@ import {
   calculateGrossYield as calculateGrossYield,
   calculateCostsAndEBITDAByPeriod,
 } from './pnl';
+import { getRealPeriod } from './period';
 
 //------------------------------------------------------------------------------------------------------------
 // WITH REDUX
@@ -28,26 +29,36 @@ export function getMinedBtcBySite(
   siteId: string,
   period: number,
   btcPrice: number,
+  startDate: number,
+  endDate: number,
 ): { quantity: BigNumber; value: BigNumber } {
   let sumMinedBtc: BigNumber = new BigNumber(0);
 
-  if (
-    miningState &&
-    miningState.byId[siteId] &&
-    miningState.byId[siteId].mining &&
-    miningState.byId[siteId].mining.days
-  ) {
-    for (let i = 0; i < period; i++) {
-      if (
-        miningState.byId[siteId].mining.days.length > i &&
-        miningState.byId[siteId].mining.days[i].revenue
-      ) {
-        sumMinedBtc = sumMinedBtc.plus(
-          miningState.byId[siteId].mining.days[i].revenue,
-        );
-      }
-    }
+  const days = getMiningDays(miningState, siteId, period, startDate, endDate);
+
+  for (const day of days) {
+    sumMinedBtc = sumMinedBtc.plus(day.revenue);
   }
+
+  // if (
+  //   miningState &&
+  //   miningState.byId[siteId] &&
+  //   miningState.byId[siteId].mining &&
+  //   miningState.byId[siteId].mining.days
+  // ) {
+
+  //   for (let i = 0; i < period; i++) {
+  //     if (
+  //       miningState.byId[siteId].mining.days.length > i &&
+  //       miningState.byId[siteId].mining.days[i].revenue
+  //     ) {
+
+  //       sumMinedBtc = sumMinedBtc.plus(
+  //         miningState.byId[siteId].mining.days[i].revenue,
+  //       );
+  //     }
+  //   }
+  //}
 
   return { quantity: sumMinedBtc, value: sumMinedBtc.times(btcPrice) };
 }
@@ -63,26 +74,33 @@ export function getUptimeTotalMachinesBySite(
   miningState: MiningState,
   siteId: string,
   period: number,
+  startDate: number,
+  endDate: number,
 ): BigNumber {
   let sumMachines: BigNumber = new BigNumber(0);
 
-  if (
-    miningState &&
-    miningState.byId[siteId] &&
-    miningState.byId[siteId].mining &&
-    miningState.byId[siteId].mining.days
-  ) {
-    for (let i = 0; i < period; i++) {
-      if (
-        miningState.byId[siteId].mining.days.length > i &&
-        miningState.byId[siteId].mining.days[i].revenue
-      ) {
-        sumMachines = sumMachines.plus(
-          miningState.byId[siteId].mining.days[i].uptimeTotalMachines,
-        );
-      }
-    }
+  const days = getMiningDays(miningState, siteId, period, startDate, endDate);
+  for (const day of days) {
+    sumMachines = sumMachines.plus(day.uptimeTotalMachines);
   }
+
+  // if (
+  //   miningState &&
+  //   miningState.byId[siteId] &&
+  //   miningState.byId[siteId].mining &&
+  //   miningState.byId[siteId].mining.days
+  // ) {
+  //   for (let i = 0; i < period; i++) {
+  //     if (
+  //       miningState.byId[siteId].mining.days.length > i &&
+  //       miningState.byId[siteId].mining.days[i].revenue
+  //     ) {
+  //       sumMachines = sumMachines.plus(
+  //         miningState.byId[siteId].mining.days[i].uptimeTotalMachines,
+  //       );
+  //     }
+  //   }
+  // }
 
   return sumMachines.dividedBy(period);
 }
@@ -98,26 +116,33 @@ export function getUptimePercentageBySite(
   miningState: MiningState,
   siteId: string,
   period: number,
+  startDate: number,
+  endDate: number,
 ): BigNumber {
   let uptimePercentage: BigNumber = new BigNumber(0);
 
-  if (
-    miningState &&
-    miningState.byId[siteId] &&
-    miningState.byId[siteId].mining &&
-    miningState.byId[siteId].mining.days
-  ) {
-    for (let i = 0; i < period; i++) {
-      if (
-        miningState.byId[siteId].mining.days.length > i &&
-        miningState.byId[siteId].mining.days[i].revenue
-      ) {
-        uptimePercentage = uptimePercentage.plus(
-          miningState.byId[siteId].mining.days[i].uptimePercentage,
-        );
-      }
-    }
+  const days = getMiningDays(miningState, siteId, period, startDate, endDate);
+  for (const day of days) {
+    uptimePercentage = uptimePercentage.plus(day.uptimePercentage);
   }
+
+  // if (
+  //   miningState &&
+  //   miningState.byId[siteId] &&
+  //   miningState.byId[siteId].mining &&
+  //   miningState.byId[siteId].mining.days
+  // ) {
+  //   for (let i = 0; i < period; i++) {
+  //     if (
+  //       miningState.byId[siteId].mining.days.length > i &&
+  //       miningState.byId[siteId].mining.days[i].revenue
+  //     ) {
+  //       uptimePercentage = uptimePercentage.plus(
+  //         miningState.byId[siteId].mining.days[i].uptimePercentage,
+  //       );
+  //     }
+  //   }
+  // }
 
   return uptimePercentage.dividedBy(period);
 }
@@ -136,6 +161,8 @@ export const getYieldBySite = (
   siteId: string,
   period: number,
   btcPrice: number,
+  startDate: number,
+  endDate: number,
 ): { net: Yield; gross: Yield } => {
   const netYield: { usd: number; btc: number; apr: number } = {
     usd: 0,
@@ -158,12 +185,16 @@ export const getYieldBySite = (
       siteId,
       period,
       btcPrice,
+      startDate,
+      endDate,
     );
 
     const electricityCost = calculateElececticityCostPerPeriod(
       miningState,
       siteId,
       period,
+      startDate,
+      endDate,
     );
     const { netUsdIncome, netBtcIncome, netApr } = calculateNetYield(
       siteId,
@@ -211,6 +242,8 @@ export const getUserYieldBySite = (
   userAddress: string,
   period: number,
   btcPrice: number,
+  startDate: number,
+  endDate: number,
 ): { net: Yield; gross: Yield } => {
   const netYield: { usd: number; btc: number; apr: number } = {
     usd: 0,
@@ -238,7 +271,14 @@ export const getUserYieldBySite = (
     const tokenBalance: BigNumber = new BigNumber(
       userState.byAddress[userAddress].bySite[siteId].token.balance,
     );
-    const siteYield = getYieldBySite(miningState, siteId, period, btcPrice);
+    const siteYield = getYieldBySite(
+      miningState,
+      siteId,
+      period,
+      btcPrice,
+      startDate,
+      endDate,
+    );
     const userShare: BigNumber = tokenBalance.dividedBy(tokenSupply);
     netYield.btc = userShare.times(siteYield.net.btc).toNumber();
     netYield.usd = userShare.times(siteYield.net.usd).toNumber();
@@ -348,6 +388,8 @@ export const getUserYield = (
   userAddress: string,
   period: number,
   btcPrice: number,
+  startDate: number,
+  endDate: number,
 ): { net: Yield; gross: Yield } => {
   const netYield: { usd: number; btc: number; apr: number } = {
     usd: 0,
@@ -376,6 +418,8 @@ export const getUserYield = (
         userAddress,
         period,
         btcPrice,
+        startDate,
+        endDate,
       );
       const siteInvestementShare: BigNumber = new BigNumber(
         getUserTokenBalance(userState, userAddress, siteId).usd,
@@ -437,6 +481,8 @@ export const getUptimeBySite = (
   miningState: MiningState,
   siteId: string,
   period: number,
+  startDate: number,
+  endDate: number,
 ): { machines: number; days: number; percent: number; hashrate: number } => {
   if (
     miningState &&
@@ -444,22 +490,32 @@ export const getUptimeBySite = (
     miningState.byId[siteId] &&
     miningState.byId[siteId].mining.days
   ) {
+    // for (const day of days) {
+    //   uptimePercentage = uptimePercentage.plus(day.uptimePercentage);
+    // }
     const site: Site = SITES[siteId as SiteID];
     const realPeriod = getRealPeriod(site, period);
-    const days = miningState.byId[siteId].mining.days;
+    //const days = miningState.byId[siteId].mining.days;
+    const days = getMiningDays(miningState, siteId, period, startDate, endDate);
     let uptimeHashrate: BigNumber = new BigNumber(0);
     let uptimePercentage: BigNumber = new BigNumber(0);
     let uptimeTotalMachines: BigNumber = new BigNumber(0);
-    const activeDays = Math.min(realPeriod, days.length);
-    for (let i = 0; i < activeDays; i++) {
-      const day = days[i];
+    // const activeDays = Math.min(realPeriod, days.length);
+    // for (let i = 0; i < activeDays; i++) {
+    //   const day = days[i];
+    //   uptimeHashrate = uptimeHashrate.plus(day.hashrate);
+    //   uptimePercentage = uptimePercentage.plus(day.uptimePercentage);
+    //   uptimeTotalMachines = uptimeTotalMachines.plus(day.uptimeTotalMachines);
+    // }
+
+    for (const day of days) {
       uptimeHashrate = uptimeHashrate.plus(day.hashrate);
       uptimePercentage = uptimePercentage.plus(day.uptimePercentage);
       uptimeTotalMachines = uptimeTotalMachines.plus(day.uptimeTotalMachines);
     }
 
     return {
-      days: activeDays,
+      days: days.length,
       hashrate: uptimeHashrate.dividedBy(realPeriod).toNumber(),
       machines: uptimeTotalMachines.dividedBy(realPeriod).toNumber(),
       percent: uptimePercentage.dividedBy(realPeriod).toNumber(),
@@ -494,19 +550,6 @@ export function getCSMTokenAddress(siteId: string): string {
   return SITES[siteId as SiteID].token.address;
 }
 /**
- * getRealPeriod
- *
- * @param site
- * @param period
- * @returns
- */
-
-export function getRealPeriod(site: Site, period: number) {
-  const daysSinceStart = getNumberOfDaysSinceStart(site);
-  const realPeriod = Math.min(period, daysSinceStart);
-  return realPeriod;
-}
-/**
  * getNumberOfDaysSinceStart
  * @param site
  * @returns
@@ -533,6 +576,8 @@ export function getSiteCostsByPeriod(
   siteId: string,
   btcPrice: number,
   period: number,
+  startDate: number,
+  endDate: number,
 ): {
   total: number;
   electricity: number;
@@ -548,6 +593,8 @@ export function getSiteCostsByPeriod(
     siteId,
     period,
     btcPrice,
+    startDate,
+    endDate,
   );
   const equipement = new BigNumber(site.mining.intallationCosts.equipement);
   const realPeriod = getRealPeriod(site, period);
@@ -556,6 +603,8 @@ export function getSiteCostsByPeriod(
     miningState,
     siteId,
     period,
+    startDate,
+    endDate,
   );
 
   const { feeCsm, feeOperator, taxe, provision } =

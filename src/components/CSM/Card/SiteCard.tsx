@@ -28,6 +28,8 @@ type SiteProps = {
   account: string;
   period: number;
   isMobile: boolean;
+  startDate: number;
+  endDate: number;
   shallDisplay?: (siteId: number, shallDisplay: boolean) => void;
 };
 
@@ -37,6 +39,8 @@ const _SiteCard: FC<SiteProps> = ({
   period,
   account,
   isMobile,
+  startDate,
+  endDate,
   shallDisplay,
 }) => {
   //const isMobile = useMediaQuery('(max-width: 36em)');
@@ -48,7 +52,14 @@ const _SiteCard: FC<SiteProps> = ({
   const userToken = getUserTokenBalance(usersState, account, siteId);
   const tokenBalance = userToken.balance;
   const userShare = getUserSiteShare(miningState, usersState, siteId, account);
-  const siteMinedBTC = getMinedBtcBySite(miningState, siteId, period, btcPrice);
+  const siteMinedBTC = getMinedBtcBySite(
+    miningState,
+    siteId,
+    period,
+    btcPrice,
+    startDate,
+    endDate,
+  );
   const userYield = getUserYieldBySite(
     miningState,
     usersState,
@@ -56,14 +67,31 @@ const _SiteCard: FC<SiteProps> = ({
     account,
     period,
     btcPrice,
+    startDate,
+    endDate,
   );
-  const siteYield = getYieldBySite(miningState, siteId, period, btcPrice);
-  const siteUptime = getUptimeBySite(miningState, siteId, period);
+  const siteYield = getYieldBySite(
+    miningState,
+    siteId,
+    period,
+    btcPrice,
+    startDate,
+    endDate,
+  );
+  const siteUptime = getUptimeBySite(
+    miningState,
+    siteId,
+    period,
+    startDate,
+    endDate,
+  );
   const siteCosts: CardCost = getSiteCostsByPeriod(
     miningState,
     siteId,
     btcPrice,
     period,
+    startDate,
+    endDate,
   );
 
   if (shallDisplay) {
@@ -94,6 +122,8 @@ const _SiteCard: FC<SiteProps> = ({
       account,
       period,
       btcPrice,
+      startDate,
+      endDate,
     );
 
     const siteMinedBTC = getMinedBtcBySite(
@@ -101,14 +131,31 @@ const _SiteCard: FC<SiteProps> = ({
       siteId,
       period,
       btcPrice,
+      startDate,
+      endDate,
     );
-    const siteUptime = getUptimeBySite(miningState, siteId, period);
-    const siteYield = getYieldBySite(miningState, siteId, period, btcPrice);
+    const siteUptime = getUptimeBySite(
+      miningState,
+      siteId,
+      period,
+      startDate,
+      endDate,
+    );
+    const siteYield = getYieldBySite(
+      miningState,
+      siteId,
+      period,
+      btcPrice,
+      startDate,
+      endDate,
+    );
     const siteCosts: CardCost = getSiteCostsByPeriod(
       miningState,
       siteId,
       btcPrice,
       period,
+      startDate,
+      endDate,
     );
 
     setUserSiteData(

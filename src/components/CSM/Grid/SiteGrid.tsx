@@ -17,6 +17,8 @@ type SiteProps = {
   account: string;
   ownerFilter: FilterSite;
   stateFilter: FilterStatus;
+  startDate: number;
+  endDate: number;
 };
 
 const _SiteGrid: FC<SiteProps> = ({
@@ -25,6 +27,8 @@ const _SiteGrid: FC<SiteProps> = ({
   period,
   ownerFilter,
   stateFilter,
+  startDate,
+  endDate,
 }) => {
   const isMobile = useMediaQuery('(max-width: 36em)');
   const usersState = useAppSelector(selectUsersState);
@@ -93,6 +97,8 @@ const _SiteGrid: FC<SiteProps> = ({
               btcPrice={btcPrice}
               period={csmPeriod}
               isMobile={isMobile}
+              endDate={endDate}
+              startDate={startDate}
               //</Grid.Col>shallDisplay={(siteId: number, shallDisplay: boolean) => setShallDisplay(siteId, shallDisplay)
             ></SiteCard>
           </Grid.Col>

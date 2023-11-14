@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
-import { Flex, SegmentedControl } from '@mantine/core';
+import { Flex, SegmentedControl, Checkbox } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { useWeb3React } from '@web3-react/core';
 
@@ -24,6 +24,11 @@ import { Dashboard } from '../CSM/Dashboard/Dashboard';
 import { AddressInput } from '../CSM/UserInput/UserInput';
 import { getCSMTokenAddress, getCSMTokenAddresses } from '../CSM/Utils/yield';
 import { formatPeriod } from 'src/utils/format/format';
+import {
+  daysInPreviousMonth,
+  getTimestampLastDayOfPreviousMonth,
+  getTimestampFirstDayOfPreviousMonth,
+} from 'src/components/CSM/Utils/period';
 
 interface ApiAdmin {
   admin: boolean;
@@ -35,6 +40,7 @@ interface Display {
 }
 const Display: FC = () => {
   const { t } = useTranslation('site', { keyPrefix: 'card' });
+  const [dateModeChecked, setDateModeChecked] = useState(false);
   const isMobile = useMediaQuery('(max-width: 36em)');
   const dispatch = useAppDispatch();
   const { account: accountAddress } = useWeb3React();
@@ -44,6 +50,7 @@ const Display: FC = () => {
       : '0xC78f0e746A2e6248eE6D57828985D7fD8d6B33B0',
   );
   const [adminData, setAdminData] = useState<boolean>(false);
+  const today = new Date();
   useEffect(() => {
     // console.log('WARNING DISPLAY CHANGE ACCOUNT', accountAddress);
     if (accountAddress) {
@@ -150,13 +157,28 @@ const Display: FC = () => {
           value={period}
           onChange={setPeriod}
         />
+        {adminData && (
+          <Checkbox
+            label={'Last month'}
+            checked={dateModeChecked}
+            onChange={(event) =>
+              setDateModeChecked(event.currentTarget.checked)
+            }
+          />
+        )}
       </Flex>
       <Dashboard
         account={account}
         miningStates={globalState}
-        period={Number(period)}
+        period={dateModeChecked ? daysInPreviousMonth(today) : Number(period)}
         price={price}
         balances={balances}
+        startDate={
+          dateModeChecked ? getTimestampFirstDayOfPreviousMonth(today) : 0
+        }
+        endDate={
+          dateModeChecked ? getTimestampLastDayOfPreviousMonth(today) : 0
+        }
       ></Dashboard>
     </>
   );
