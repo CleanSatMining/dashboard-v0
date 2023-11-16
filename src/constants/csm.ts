@@ -56,7 +56,7 @@ export const SITES: Record<SiteID, Site> = {
         usdPricePerKWH: 0.0375,
       },
       intallationCosts: {
-        equipement: 747020,
+        equipement: 1238414,
       },
     },
     fees: {
@@ -109,7 +109,7 @@ export const SITES: Record<SiteID, Site> = {
         usdPricePerKWH: 0.0575,
       },
       intallationCosts: {
-        equipement: 1606587,
+        equipement: 1070445,
       },
     },
     fees: {
@@ -161,7 +161,7 @@ export const SITES: Record<SiteID, Site> = {
         usdPricePerKWH: 0.059,
       },
       intallationCosts: {
-        equipement: 1021739,
+        equipement: 1258844,
       },
     },
     fees: {
