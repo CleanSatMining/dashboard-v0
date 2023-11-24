@@ -1,15 +1,22 @@
 import React, { FC } from 'react';
+import { useTranslation } from 'react-i18next';
+
 import {
-  Paper,
+  ActionIcon,
+  CopyButton,
+  Group,
   Image,
+  Paper,
   Text,
   Tooltip,
-  CopyButton,
-  ActionIcon,
-  Group,
   useMantineTheme,
 } from '@mantine/core';
-import { IconCopy, IconCheck } from '@tabler/icons';
+import { AvailableConnectors } from '@realtoken/realt-commons';
+import { IconCheck, IconCopy } from '@tabler/icons';
+
+import { useAtomValue } from 'jotai';
+
+import { providerAtom } from 'src/states';
 import { maskAddress } from 'src/components/CSM/Utils/string';
 import { openInNewTab } from 'src/utils/window';
 
@@ -27,10 +34,11 @@ export const AddErc20ToWalletWidget: FC<Erc20Props> = ({
   erc20TokenDecimal = 18,
 }) => {
   const theme = useMantineTheme();
-
+  const { t } = useTranslation('wallet', { keyPrefix: 'metamask' });
   // Condition pour choisir la couleur d'arrière-plan en fonction du thème
   const backgroundColor =
     theme.colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[0];
+  const connector = useAtomValue(providerAtom);
 
   return (
     <div>
@@ -43,17 +51,20 @@ export const AddErc20ToWalletWidget: FC<Erc20Props> = ({
         }}
       >
         <Group spacing={5}>
-          <Tooltip label={'See on gnosisscan'} position={'right'}>
+          <Tooltip label={t('seeOnGnosisscan')} position={'right'}>
             <ActionIcon size={16} variant={'transparent'}>
               <Image src={erc20TokenImage} alt={'nft'} height={16}></Image>
             </ActionIcon>
           </Tooltip>
-          <Tooltip label={'See on gnosisscan'} position={'right'}>
+          <Tooltip label={t('seeOnGnosisscan')} position={'right'}>
             <Text fz={'xs'}>{erc20TokenAddress}</Text>
           </Tooltip>
           <CopyButton value={erc20TokenAddress} timeout={2000}>
             {({ copied, copy }) => (
-              <Tooltip label={copied ? 'Copied' : 'Copy'} position={'right'}>
+              <Tooltip
+                label={copied ? t('copied') : t('copy')}
+                position={'right'}
+              >
                 <ActionIcon onClick={copy} size={16} variant={'transparent'}>
                   {copied ? (
                     <IconCheck color={'teal'} size={'1rem'} />
@@ -64,8 +75,8 @@ export const AddErc20ToWalletWidget: FC<Erc20Props> = ({
               </Tooltip>
             )}
           </CopyButton>
-          {isMetaMask() && (
-            <Tooltip label={'Add Token to MetaMask'} position={'right'}>
+          {isMetaMask(connector) && (
+            <Tooltip label={t('addTokenToMetaMask')} position={'right'}>
               <ActionIcon
                 size={16}
                 onClick={() =>
@@ -100,10 +111,12 @@ export const AddErc20ToWallet: FC<Erc20Props> = ({
   erc20TokenImage = 'https://cleansatmining.com/data/files/logo_csm.png',
   erc20TokenDecimal = 9,
 }) => {
+  const { t } = useTranslation('wallet', { keyPrefix: 'metamask' });
+  const connector = useAtomValue(providerAtom);
   return (
     <>
-      {isMetaMask() && (
-        <Tooltip label={'Add Token to MetaMask'} position={'right'}>
+      {isMetaMask(connector) && (
+        <Tooltip label={t('addTokenToMetaMask')} position={'right'}>
           <ActionIcon
             size={16}
             onClick={() =>
@@ -183,6 +196,8 @@ export const AddNftToWalletWidget: FC<NftProps> = ({
   size = 'xs',
   color,
 }) => {
+  const { t } = useTranslation('wallet', { keyPrefix: 'metamask' });
+  const connector = useAtomValue(providerAtom);
   return (
     <div
       style={{
@@ -192,7 +207,7 @@ export const AddNftToWalletWidget: FC<NftProps> = ({
     >
       <Group spacing={5} sx={{ margin: 0, padding: 0 }}>
         <Tooltip
-          label={fullAddress ? 'See on gnosisscan' : nftContractAddress}
+          label={fullAddress ? t('seeOnGnosisscan') : nftContractAddress}
           position={'right'}
         >
           <Text
@@ -207,7 +222,10 @@ export const AddNftToWalletWidget: FC<NftProps> = ({
         </Tooltip>
         <CopyButton value={nftContractAddress} timeout={2000}>
           {({ copied, copy }) => (
-            <Tooltip label={copied ? 'Copied' : 'Copy'} position={'right'}>
+            <Tooltip
+              label={copied ? t('copied') : t('copy')}
+              position={'right'}
+            >
               <ActionIcon onClick={copy} size={16} variant={'transparent'}>
                 {copied ? (
                   <IconCheck color={'teal'} size={'1rem'} />
@@ -218,8 +236,8 @@ export const AddNftToWalletWidget: FC<NftProps> = ({
             </Tooltip>
           )}
         </CopyButton>
-        {isMetaMask() && (
-          <Tooltip label={'Add NFT to MetaMask'} position={'right'}>
+        {isMetaMask(connector) && (
+          <Tooltip label={t('addNFTToMetaMask')} position={'right'}>
             <ActionIcon
               size={16}
               onClick={() => addNftToMetaMask(nftContractAddress, nftTokenId)}
@@ -244,10 +262,12 @@ export const AddNftToWallet: FC<NftProps> = ({
   nftContractAddress,
   nftTokenId,
 }) => {
+  const { t } = useTranslation('wallet', { keyPrefix: 'metamask' });
+  const connector = useAtomValue(providerAtom);
   return (
     <>
-      {isMetaMask() && (
-        <Tooltip label={'Add NFT to MetaMask'} position={'right'}>
+      {isMetaMask(connector) && (
+        <Tooltip label={t('addNFTToMetaMask')} position={'right'}>
           <ActionIcon
             size={16}
             onClick={() => addNftToMetaMask(nftContractAddress, nftTokenId)}
@@ -266,8 +286,23 @@ export const AddNftToWallet: FC<NftProps> = ({
     </>
   );
 };
+export function isMetaMask(connector?: string) {
+  if (connector) {
+    return (
+      AvailableConnectors.metamask.toString().toLowerCase() ===
+      connector.toLowerCase()
+    );
+  } else {
+    const { ethereum } = window;
+    if (ethereum) {
+      return ethereum.isMetaMask ?? false;
+    }
+  }
 
-async function addErc20TokenToMetaMask(
+  return false;
+}
+
+export async function addErc20TokenToMetaMask(
   erc20TokenAddress: string,
   erc20TokenSymbol: string,
   erc20TokenDecimal: number,
@@ -335,10 +370,17 @@ async function addNftToMetaMask(
   }
 }
 
-export function isMetaMask() {
-  const { ethereum } = window;
-  if (ethereum) {
-    return ethereum.isMetaMask ?? false;
-  }
-  return false;
+export function handleAddErc20ToWallet(
+  erc20TokenAddress: string,
+  erc20TokenSymbol: string,
+  erc20TokenDecimal: number,
+  erc20TokenImage: string,
+): React.MouseEventHandler<HTMLButtonElement> | undefined {
+  return () =>
+    addErc20TokenToMetaMask(
+      erc20TokenAddress,
+      erc20TokenSymbol,
+      erc20TokenDecimal,
+      erc20TokenImage,
+    );
 }
