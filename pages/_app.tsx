@@ -20,6 +20,7 @@ import {
   metaMask,
   metaMaskHooks,
   parseAllowedChain,
+  getReadOnlyConnector,
 } from '@realtoken/realt-commons';
 
 import { Provider as JotaiProvider } from 'jotai';
@@ -57,11 +58,14 @@ const [walletConnectV2, walletConnectV2Hooks] = getWalletConnectV2<CustomChain>(
   showAllNetworks,
 );
 
-const libraryConnectors = getConnectors(
-  [metaMask, metaMaskHooks],
-  [gnosisSafe, gnosisHooks],
-  [walletConnectV2, walletConnectV2Hooks],
-);
+const [readOnly, readOnlyHooks] = getReadOnlyConnector(customChains);
+
+const libraryConnectors = getConnectors({
+  metamask: [metaMask, metaMaskHooks],
+  gnosisSafe: [gnosisSafe, gnosisHooks],
+  walletConnectV2: [walletConnectV2, walletConnectV2Hooks],
+  readOnly: [readOnly, readOnlyHooks],
+});
 
 type AppProps = NextAppProps & { colorScheme: ColorScheme; locale: string };
 
