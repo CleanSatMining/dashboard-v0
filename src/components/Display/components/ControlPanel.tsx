@@ -12,27 +12,18 @@ import { DAYS_PERIODS, filterMobile } from '../../../constants';
 import { formatPeriod } from 'src/utils/format/format';
 import { useTranslation } from 'react-i18next';
 import {
-  IconSettings,
   IconSearch,
-  IconPhoto,
-  IconMessageCircle,
   IconCalendar,
   IconCalendarDue,
   IconCalendarEvent,
-  IconCalendarMinus,
-  IconCalendarOff,
   IconCalendarPlus,
-  IconCalendarStats,
   IconCalendarTime,
   IconClock,
-  IconClock2,
-  IconClockHour12,
   IconChevronDown,
   IconChevronUp,
-  TablerIcon,
 } from '@tabler/icons';
 import { DateInput, DateValue } from '@mantine/dates';
-import { PredefinedPeriods, INPUT_MODE } from './Types';
+import { PredefinedPeriods } from './Types';
 import {
   getTimestampFirstDayOfCurrentMonth,
   getTimestampStartOfNDaysAgo,
@@ -214,170 +205,180 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
       direction={'row'}
       wrap={'wrap'}
     >
-      <Menu
-        shadow={'md'}
-        width={200}
-        opened={menuOpened}
-        closeOnClickOutside={true}
-      >
-        <Menu.Target>
-          <Button
-            h={30}
-            radius={'lg'}
-            onClick={() => {
-              setMenuOpened(!menuOpened);
-            }}
-            leftIcon={IconMenu}
-            rightIcon={
-              menuOpened ? (
-                <IconChevronUp size={20}></IconChevronUp>
-              ) : (
-                <IconChevronDown size={20}></IconChevronDown>
-              )
-            }
+      {dateModeChecked && (
+        <>
+          <Menu
+            shadow={'md'}
+            width={200}
+            opened={menuOpened}
+            closeOnClickOutside={true}
           >
-            {menuLabel}
-          </Button>
-        </Menu.Target>
+            <Menu.Target>
+              <Button
+                h={30}
+                radius={'lg'}
+                onClick={() => {
+                  setMenuOpened(!menuOpened);
+                }}
+                leftIcon={IconMenu}
+                rightIcon={
+                  menuOpened ? (
+                    <IconChevronUp size={20}></IconChevronUp>
+                  ) : (
+                    <IconChevronDown size={20}></IconChevronDown>
+                  )
+                }
+              >
+                {menuLabel}
+              </Button>
+            </Menu.Target>
 
-        <Menu.Dropdown>
-          <Menu.Label>{t('predefinedPeriods')}</Menu.Label>
-          <Menu.Item
-            icon={<IconClock size={14} />}
-            onClick={() =>
-              handlePredefinedPeriodClick(PredefinedPeriods.Last24Hours)
-            }
-          >
-            {t(PredefinedPeriods.Last24Hours)}
-          </Menu.Item>
-          <Menu.Item
-            icon={<IconCalendarTime size={14} />}
-            onClick={() =>
-              handlePredefinedPeriodClick(PredefinedPeriods.Last7Days)
-            }
-          >
-            {t(PredefinedPeriods.Last7Days)}
-          </Menu.Item>
-          <Menu.Item
-            icon={<IconCalendarTime size={14} />}
-            onClick={() =>
-              handlePredefinedPeriodClick(PredefinedPeriods.Last30Days)
-            }
-          >
-            {t(PredefinedPeriods.Last30Days)}
-          </Menu.Item>
-          <Menu.Item
-            icon={<IconCalendarDue size={14} />}
-            onClick={() =>
-              handlePredefinedPeriodClick(PredefinedPeriods.CurrentMonth)
-            }
-          >
-            {t(PredefinedPeriods.CurrentMonth)}
-          </Menu.Item>
-          <Menu.Item
-            icon={<IconCalendarEvent size={14} />}
-            onClick={() =>
-              handlePredefinedPeriodClick(PredefinedPeriods.LastMonth)
-            }
-          >
-            {t(PredefinedPeriods.LastMonth)}
-          </Menu.Item>
-          <Menu.Item
-            icon={<IconCalendarPlus size={14} />}
-            onClick={() =>
-              handlePredefinedPeriodClick(PredefinedPeriods.Last3Months)
-            }
-          >
-            {t(PredefinedPeriods.Last3Months)}
-          </Menu.Item>
-          <Menu.Divider />
+            <Menu.Dropdown>
+              <Menu.Label>{t('predefinedPeriods')}</Menu.Label>
+              <Menu.Item
+                icon={<IconClock size={14} />}
+                onClick={() =>
+                  handlePredefinedPeriodClick(PredefinedPeriods.Last24Hours)
+                }
+              >
+                {t(PredefinedPeriods.Last24Hours)}
+              </Menu.Item>
+              <Menu.Item
+                icon={<IconCalendarTime size={14} />}
+                onClick={() =>
+                  handlePredefinedPeriodClick(PredefinedPeriods.Last7Days)
+                }
+              >
+                {t(PredefinedPeriods.Last7Days)}
+              </Menu.Item>
+              <Menu.Item
+                icon={<IconCalendarTime size={14} />}
+                onClick={() =>
+                  handlePredefinedPeriodClick(PredefinedPeriods.Last30Days)
+                }
+              >
+                {t(PredefinedPeriods.Last30Days)}
+              </Menu.Item>
+              <Menu.Item
+                icon={<IconCalendarDue size={14} />}
+                onClick={() =>
+                  handlePredefinedPeriodClick(PredefinedPeriods.CurrentMonth)
+                }
+              >
+                {t(PredefinedPeriods.CurrentMonth)}
+              </Menu.Item>
+              <Menu.Item
+                icon={<IconCalendarEvent size={14} />}
+                onClick={() =>
+                  handlePredefinedPeriodClick(PredefinedPeriods.LastMonth)
+                }
+              >
+                {t(PredefinedPeriods.LastMonth)}
+              </Menu.Item>
+              <Menu.Item
+                icon={<IconCalendarPlus size={14} />}
+                onClick={() =>
+                  handlePredefinedPeriodClick(PredefinedPeriods.Last3Months)
+                }
+              >
+                {t(PredefinedPeriods.Last3Months)}
+              </Menu.Item>
+              <Menu.Divider />
 
-          <Menu.Label>{t('byDate')}</Menu.Label>
-          <Menu.Item
-            icon={
-              <Text fz={'xs'} w={'15px'}>
-                {'De'}
-              </Text>
-            }
-            sx={{ padding: '3px' }}
-          >
-            <DateInput
-              value={startDateInput}
-              onChange={(d: DateValue) => {
-                setStartDateError(false);
-                setStartDateInput(d);
-              }}
-              minDate={new Date(FIRST_OF_MAY)}
-              maxDate={endDateInput ?? getDateYesterday()}
-              valueFormat={'DD/MM/YYYY'}
-              size={'xs'}
-              placeholder={t('startDate')}
-              maw={400}
-              mx={'auto'}
-              clearable={true}
-              error={startDateError ? t('errorStartDate') : null} //'Please select a start date'
-            />
-          </Menu.Item>
-          <Menu.Item
-            icon={
-              <Text fz={'xs'} w={'15px'}>
-                {'à'}
-              </Text>
-            }
-            sx={{ padding: '3px' }}
-          >
-            <DateInput
-              value={endDateInput}
-              onChange={setEndDateInput}
-              minDate={startDateInput ?? new Date(FIRST_OF_MAY)}
-              maxDate={new Date()}
-              valueFormat={'DD/MM/YYYY'}
-              size={'xs'}
-              placeholder={t('endDate')}
-              maw={400}
-              mx={'auto'}
-              clearable={true}
-            />
-          </Menu.Item>
-          <Menu.Item icon={<IconSearch size={14} />} sx={{ padding: '3px' }}>
-            <Button
-              h={'lg'}
-              variant={'outline'}
-              onClick={() => handleDateRangeItemClick()}
-            >
-              {t('update')}
-            </Button>
-          </Menu.Item>
-          <Menu.Divider />
-          <Menu.Label>{t('byDuration')}</Menu.Label>
-          <Menu.Item sx={{ padding: '3px' }}>
-            <NumberInput
-              size={'xs'}
-              defaultValue={7}
-              placeholder={'Nombre de jours'}
-              max={185}
-              step={1}
-              min={1}
-              precision={0}
-              value={numberInput}
-              onChange={setNumberInput}
-            />
-          </Menu.Item>
-          <Menu.Item icon={<IconSearch size={14} />} sx={{ padding: '3px' }}>
-            <Button
-              h={'lg'}
-              variant={'outline'}
-              onClick={() => handleNumberOfDaysClick()}
-            >
-              {t('update')}
-            </Button>
-          </Menu.Item>
-        </Menu.Dropdown>
-      </Menu>
-      <TimeRange
-        startTimestamp={startTimestamp}
-        endTimestamp={endTimestamp}
-      ></TimeRange>
+              <Menu.Label>{t('byDate')}</Menu.Label>
+              <Menu.Item
+                icon={
+                  <Text fz={'xs'} w={'15px'}>
+                    {'De'}
+                  </Text>
+                }
+                sx={{ padding: '3px' }}
+              >
+                <DateInput
+                  value={startDateInput}
+                  onChange={(d: DateValue) => {
+                    setStartDateError(false);
+                    setStartDateInput(d);
+                  }}
+                  minDate={new Date(FIRST_OF_MAY)}
+                  maxDate={endDateInput ?? getDateYesterday()}
+                  valueFormat={'DD/MM/YYYY'}
+                  size={'xs'}
+                  placeholder={t('startDate')}
+                  maw={400}
+                  mx={'auto'}
+                  clearable={true}
+                  error={startDateError ? t('errorStartDate') : null} //'Please select a start date'
+                />
+              </Menu.Item>
+              <Menu.Item
+                icon={
+                  <Text fz={'xs'} w={'15px'}>
+                    {'à'}
+                  </Text>
+                }
+                sx={{ padding: '3px' }}
+              >
+                <DateInput
+                  value={endDateInput}
+                  onChange={setEndDateInput}
+                  minDate={startDateInput ?? new Date(FIRST_OF_MAY)}
+                  maxDate={new Date()}
+                  valueFormat={'DD/MM/YYYY'}
+                  size={'xs'}
+                  placeholder={t('endDate')}
+                  maw={400}
+                  mx={'auto'}
+                  clearable={true}
+                />
+              </Menu.Item>
+              <Menu.Item
+                icon={<IconSearch size={14} />}
+                sx={{ padding: '3px' }}
+              >
+                <Button
+                  h={'lg'}
+                  variant={'outline'}
+                  onClick={() => handleDateRangeItemClick()}
+                >
+                  {t('update')}
+                </Button>
+              </Menu.Item>
+              <Menu.Divider />
+              <Menu.Label>{t('byDuration')}</Menu.Label>
+              <Menu.Item sx={{ padding: '3px' }}>
+                <NumberInput
+                  size={'xs'}
+                  defaultValue={7}
+                  placeholder={'Nombre de jours'}
+                  max={185}
+                  step={1}
+                  min={1}
+                  precision={0}
+                  value={numberInput}
+                  onChange={setNumberInput}
+                />
+              </Menu.Item>
+              <Menu.Item
+                icon={<IconSearch size={14} />}
+                sx={{ padding: '3px' }}
+              >
+                <Button
+                  h={'lg'}
+                  variant={'outline'}
+                  onClick={() => handleNumberOfDaysClick()}
+                >
+                  {t('update')}
+                </Button>
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+          <TimeRange
+            startTimestamp={startTimestamp}
+            endTimestamp={endTimestamp}
+          ></TimeRange>
+        </>
+      )}
       {!dateModeChecked && (
         <SegmentedControl
           data={dataSegmentedControl}

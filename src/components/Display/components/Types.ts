@@ -6,9 +6,3 @@ export enum PredefinedPeriods {
   LastMonth = 'lastMonth',
   Last3Months = 'last3Months',
 }
-
-export enum INPUT_MODE {
-  PREDEFINED,
-  BYDATE,
-  BYDURATION,
-}
