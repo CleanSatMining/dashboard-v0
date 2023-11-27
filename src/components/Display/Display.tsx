@@ -29,6 +29,8 @@ import {
   getTimestampLastDayOfPreviousMonth,
   getTimestampFirstDayOfPreviousMonth,
 } from 'src/components/CSM/Utils/period';
+import ControlPanel from './components/ControlPanel';
+import { PredefinedPeriods } from './components/Types';
 
 interface ApiAdmin {
   admin: boolean;
@@ -40,7 +42,7 @@ interface Display {
 }
 const Display: FC = () => {
   const { t } = useTranslation('site', { keyPrefix: 'card' });
-  const [dateModeChecked, setDateModeChecked] = useState(false);
+  const [dateModeChecked, setDateModeChecked] = useState(true);
   const isMobile = useMediaQuery('(max-width: 36em)');
   const dispatch = useAppDispatch();
   const { account: accountAddress } = useWeb3React();
@@ -51,6 +53,28 @@ const Display: FC = () => {
   );
   const [adminData, setAdminData] = useState<boolean>(false);
   const today = new Date();
+  const [period, setPeriod] = useState(
+    DAYS_PERIODS.filter(filterMobile(isMobile))[0].toString(),
+  );
+  const { price } = useBitcoinOracle();
+  const { states: globalState } = useMiningSitesSummary(
+    ALLOWED_SITES,
+    Math.max(...DAYS_PERIODS),
+  );
+  const { tokenAddress: tokenAddresses }: { tokenAddress: string[] } =
+    getCSMTokenAddresses();
+  const {
+    balances,
+    isLoaded,
+    account: balanceAccount,
+  } = useWalletERC20Balances(
+    tokenAddresses,
+    account,
+    //(loadingComplete: boolean) => setSpinner(!loadingComplete),
+  );
+  const [startTimestamp, setStartTimestamp] = useState<number>(0);
+  const [endTimestamp, setEndTimestamp] = useState<number>(0);
+
   useEffect(() => {
     // console.log('WARNING DISPLAY CHANGE ACCOUNT', accountAddress);
     if (accountAddress) {
@@ -80,30 +104,6 @@ const Display: FC = () => {
     fetchAdminData();
   }, [accountAddress]);
 
-  const [period, setPeriod] = useState(
-    DAYS_PERIODS.filter(filterMobile(isMobile))[0].toString(),
-  );
-
-  const { price } = useBitcoinOracle();
-  const { states: globalState } = useMiningSitesSummary(
-    ALLOWED_SITES,
-    Math.max(...DAYS_PERIODS),
-  );
-
-  const { tokenAddress: tokenAddresses }: { tokenAddress: string[] } =
-    getCSMTokenAddresses();
-  const {
-    balances,
-    isLoaded,
-    account: balanceAccount,
-  } = useWalletERC20Balances(
-    tokenAddresses,
-    account,
-    //(loadingComplete: boolean) => setSpinner(!loadingComplete),
-  );
-
-  dispatchMiningSummary();
-
   useEffect(() => {
     dispatchMiningSummary();
 
@@ -127,8 +127,6 @@ const Display: FC = () => {
   const dataSegmentedControl: { label: string; value: string }[] =
     fillSegmentedControl();
 
-  // console.log('WARNING RENDER DISPLAY', account);
-
   return (
     <>
       {adminData && (
@@ -142,7 +140,20 @@ const Display: FC = () => {
           }}
         ></AddressInput>
       )}
-      <Flex
+      <ControlPanel
+        defaultValue={PredefinedPeriods.Last7Days}
+        isMobile={isMobile}
+        period={period}
+        setPeriod={setPeriod}
+        adminData={adminData}
+        dateModeChecked={dateModeChecked}
+        setDateModeChecked={setDateModeChecked}
+        startTimestamp={startTimestamp}
+        setStartTimestamp={setStartTimestamp}
+        endTimestamp={endTimestamp}
+        setEndTimestamp={setEndTimestamp}
+      />
+      {/* <Flex
         mih={isMobile ? 50 : 70}
         gap={'xl'}
         justify={'center'}
@@ -166,19 +177,15 @@ const Display: FC = () => {
             }
           />
         )}
-      </Flex>
+      </Flex> */}
       <Dashboard
         account={account}
         miningStates={globalState}
-        period={dateModeChecked ? daysInPreviousMonth(today) : Number(period)}
+        period={Number(period)}
         price={price}
         balances={balances}
-        startDate={
-          dateModeChecked ? getTimestampFirstDayOfPreviousMonth(today) : 0
-        }
-        endDate={
-          dateModeChecked ? getTimestampLastDayOfPreviousMonth(today) : 0
-        }
+        startDate={dateModeChecked ? startTimestamp : 0} //getTimestampFirstDayOfPreviousMonth(today) : 0
+        endDate={dateModeChecked ? endTimestamp : 0} //getTimestampLastDayOfPreviousMonth(today) : 0
       ></Dashboard>
     </>
   );

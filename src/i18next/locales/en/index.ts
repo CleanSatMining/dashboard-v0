@@ -20,8 +20,10 @@ export { default as components } from './components.json';
 export { default as admin } from './admin.json';
 export { default as faq } from './faq.json';
 export { default as header } from './header.json';
+import { default as timeframe } from './timeframe.json';
 
 const lng = {
+  timeframe,
   site,
   header,
   links,

@@ -25,6 +25,7 @@
     "@mantine/carousel": "^6.0.20",
     "@mantine/next": "^6.0.20",
     "@mantine/notifications": "^6.0.20",
+    "@mantine/dates": "^6.0.20",
     "@realtoken/realt-commons": "^1.2.8",
     "@reduxjs/toolkit": "^1.9.1",
     "@tabler/icons": "^1.74.0",

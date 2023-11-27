@@ -1,0 +1,31 @@
+{
+  "time": {
+    "day": "jour",
+    "heure": "heure",
+    "from": "Du",
+    "to": "au",
+    "lessOneMinute": "Moins d''une minute"
+  },
+  "menu": {
+    "month": "mois",
+    "months" : "mois",
+    "days": "jours",
+    "day": "jour",
+    "heure": "heure",
+    "last24Hours": "Dernières 24h",
+    "last7Days" : "7 derniers jours",
+    "last30Days" : "30 derniers jours",
+    "currentMonth" : "Le mois en cours",
+    "lastMonth" : "Le mois dernier",
+    "last3Months" : "Les 3 derniers mois",
+    "byDate": "Par date",
+    "byDuration":"Par durée (en jour)",
+    "update": "Consulter",
+    "predefinedPeriods":"Périodes prédéfinies",
+    "startDate": "Date de début",
+    "endDate": "Date de fin",
+    "errorStartDate": "Selectionner une date de début",
+    "customDate": "Dates personnalisées",
+    "customDuration": "Durée personnalisée"
+  }
+}
