@@ -23,7 +23,7 @@ export function getMiningDays(
     miningState.byId[siteId].mining.days
   ) {
     const site: Site = SITES[siteId as SiteID];
-    const realPeriod = getRealPeriod(site, period);
+    const realPeriod = getPeriodFromStart(site, period);
     // Cas où startDate est 0, retourne les premiers jours de la période spécifiée
     if (startDate === 0) {
       return miningState.byId[siteId].mining.days.slice(
@@ -61,7 +61,7 @@ export function getMiningDays(
  * @param period
  * @returns
  */
-export function getRealPeriod(site: Site, period: number) {
+export function getPeriodFromStart(site: Site, period: number) {
   const daysSinceStart = getNumberOfDaysSinceStart(site);
   const realPeriod = Math.min(period, daysSinceStart);
   return realPeriod;

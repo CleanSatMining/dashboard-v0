@@ -11,7 +11,7 @@ import {
 import { MiningState } from 'src/types/mining/Mining';
 import { Site, Fees } from 'src/types/mining/Site';
 
-import { getRealPeriod, getMiningDays } from './period';
+import { getPeriodFromStart, getMiningDays } from './period';
 
 const YEAR_IN_DAYS = new BigNumber(365);
 
@@ -173,7 +173,7 @@ export function calculateNetYield(
   const fees = site.fees;
   const usdIncome = btcIncome.times(btcPrice);
   const equipement = new BigNumber(site.mining.intallationCosts.equipement);
-  const realPeriod = getRealPeriod(site, period);
+  const realPeriod = getPeriodFromStart(site, period);
 
   const { taxe, EBITDA, provision } = calculateCostsAndEBITDAByPeriod(
     usdIncome,
@@ -219,7 +219,7 @@ export function calculateGrossYield(
   const site: Site = SITES[siteId as SiteID];
   const fees = site.fees;
   const minedBtcValue = minedBtc.times(btcPrice);
-  const realPeriod = getRealPeriod(site, period);
+  const realPeriod = getPeriodFromStart(site, period);
   const equipement = new BigNumber(site.mining.intallationCosts.equipement);
 
   const { taxe, EBITDA } = calculateCostsAndEBITDAByPeriod(

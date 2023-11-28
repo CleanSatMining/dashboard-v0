@@ -11,7 +11,7 @@ import {
   calculateGrossYield as calculateGrossYield,
   calculateCostsAndEBITDAByPeriod,
 } from './pnl';
-import { getRealPeriod } from './period';
+import { getPeriodFromStart } from './period';
 
 //------------------------------------------------------------------------------------------------------------
 // WITH REDUX
@@ -509,7 +509,7 @@ export const getUptimeBySite = (
     //   uptimePercentage = uptimePercentage.plus(day.uptimePercentage);
     // }
     const site: Site = SITES[siteId as SiteID];
-    const realPeriod = getRealPeriod(site, period);
+    const realPeriod = getPeriodFromStart(site, period);
     //const days = miningState.byId[siteId].mining.days;
     const days = getMiningDays(miningState, siteId, period, startDate, endDate);
     let uptimeHashrate: BigNumber = new BigNumber(0);
@@ -612,7 +612,7 @@ export function getSiteCostsByPeriod(
     endDate,
   );
   const equipement = new BigNumber(site.mining.intallationCosts.equipement);
-  const realPeriod = getRealPeriod(site, period);
+  const realPeriod = getPeriodFromStart(site, period);
 
   const electricityCost = calculateElececticityCostPerPeriod(
     miningState,

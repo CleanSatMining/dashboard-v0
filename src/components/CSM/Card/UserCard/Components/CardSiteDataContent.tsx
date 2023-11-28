@@ -43,7 +43,7 @@ export const CardSiteDataContent: FC<CardSiteDataContentProps> = ({
         <Text fz={'xs'} color={'dimmed'}>
           {hasData
             ? formatParenthesis(
-                t('over-start') + formatPeriod(data.site.uptime.days, t),
+                t('over-start') + formatPeriod(data.site.uptime.onPeriod, t),
               )
             : ''}
         </Text>
@@ -83,7 +83,7 @@ export const CardSiteDataContent: FC<CardSiteDataContentProps> = ({
         <Text fz={'xs'} color={'dimmed'}>
           {hasData
             ? formatParenthesis(
-                t('over-start') + formatPeriod(data.site.uptime.days, t),
+                t('over-start') + formatPeriod(data.site.uptime.onPeriod, t),
               )
             : ''}
         </Text>

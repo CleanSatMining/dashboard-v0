@@ -104,7 +104,7 @@ export function calculateDaysBetweenDates(
   const timeDifference = Math.abs(timestamp2 - timestamp1);
 
   // Calculate the number of days
-  const daysDifference = Math.floor(timeDifference / millisecondsPerDay);
+  const daysDifference = Math.round(timeDifference / millisecondsPerDay);
 
   return daysDifference;
 }
