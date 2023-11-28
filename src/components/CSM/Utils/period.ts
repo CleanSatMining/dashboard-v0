@@ -37,16 +37,16 @@ export function getMiningDays(
         new Date(miningDay.date).getTime() <= endDate
       );
     });
-    if (siteId === '2')
-      console.log(
-        'DAYS FILTERED',
-        startDate,
-        endDate,
-        miningState.byId[siteId].mining.days.map((a) =>
-          new Date(a.date).getTime(),
-        ),
-        JSON.stringify(aa),
-      );
+    // if (siteId === '2')
+    //   console.log(
+    //     'DAYS FILTERED',
+    //     startDate,
+    //     endDate,
+    //     miningState.byId[siteId].mining.days.map((a) =>
+    //       new Date(a.date).getTime(),
+    //     ),
+    //     JSON.stringify(aa),
+    //   );
 
     // Cas où startDate n'est pas 0, filtre les jours dans la plage spécifiée
     return aa;

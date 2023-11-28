@@ -99,7 +99,6 @@ const _SiteGrid: FC<SiteProps> = ({
               isMobile={isMobile}
               endDate={endDate}
               startDate={startDate}
-              //</Grid.Col>shallDisplay={(siteId: number, shallDisplay: boolean) => setShallDisplay(siteId, shallDisplay)
             ></SiteCard>
           </Grid.Col>
         ))}

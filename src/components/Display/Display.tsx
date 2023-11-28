@@ -142,31 +142,7 @@ const Display: FC = () => {
         endTimestamp={endTimestamp}
         setEndTimestamp={setEndTimestamp}
       />
-      {/* <Flex
-        mih={isMobile ? 50 : 70}
-        gap={'xl'}
-        justify={'center'}
-        align={'center'}
-        direction={'row'}
-        wrap={'wrap'}
-      >
-        <SegmentedControl
-          data={dataSegmentedControl}
-          w={500}
-          radius={50}
-          value={period}
-          onChange={setPeriod}
-        />
-        {adminData && (
-          <Checkbox
-            label={'Last month'}
-            checked={dateModeChecked}
-            onChange={(event) =>
-              setDateModeChecked(event.currentTarget.checked)
-            }
-          />
-        )}
-      </Flex> */}
+
       <Dashboard
         account={account}
         miningStates={globalState}

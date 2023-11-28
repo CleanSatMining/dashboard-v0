@@ -1,7 +1,7 @@
 /* eslint @typescript-eslint/no-var-requires: "off" */
 import { FC } from 'react';
 
-import { Card, Avatar, Text, Accordion, Group } from '@mantine/core';
+import { Card, Avatar, Text, Accordion, Group, Progress } from '@mantine/core';
 
 import { MiningStatus } from '../../../../types/mining/Site';
 import {
@@ -15,7 +15,10 @@ import { CardHeader } from './Components/CardHeader';
 import { CardTokenContent } from './Components/CardTokenContent';
 import { CardIncomeContent } from './Components/CardIncomeContent';
 import { CardSiteDataContent } from './Components/CardSiteDataContent';
-import { CardSiteHashrate } from './Components/CardSiteHashrate';
+import {
+  CardSiteHashrate,
+  calculateProgressColor,
+} from './Components/CardSiteHashrate';
 import { CardData } from './Type';
 import { useTranslation } from 'react-i18next';
 import Image from 'next/image';
@@ -67,7 +70,6 @@ export const UserSiteCardMobile: FC<CardMobileProps> = ({
 
       <Accordion
         styles={{
-          //control: { padding: 0 },
           label: { paddingTop: '3px', paddingBottom: '3px' },
         }}
       >
@@ -90,8 +92,9 @@ export const UserSiteCardMobile: FC<CardMobileProps> = ({
               image={
                 require(`../../../../assets/icons/mining-site.png`).default
               }
-              value={formatHashrate(data.site.hashrate)}
+              value={formatHashrate(data.site.uptime.hashrate)}
               label={t('my-site')}
+              valuePercent={data.site.uptime.hashratePercent}
             ></AccordionLabelImage>
           </Accordion.Control>
           <Accordion.Panel>
@@ -124,6 +127,7 @@ interface AccordionLabelProps {
   label: string;
   image: string;
   value: string;
+  valuePercent?: number;
   description?: string;
 }
 
@@ -151,16 +155,30 @@ function AccordionLabel({
   );
 }
 
-function AccordionLabelImage({ label, image, value }: AccordionLabelProps) {
+function AccordionLabelImage({
+  label,
+  image,
+  value,
+  valuePercent = -1,
+}: AccordionLabelProps) {
   return (
     <Group position={'apart'} mih={40}>
       <Image src={image} alt={'img'} height={24}></Image>
       <Text weight={500} color={'dimmed'}>
         {label}
       </Text>
-      <Text size={'sm'} weight={400}>
-        {value}
-      </Text>
+      <div>
+        <Text size={'sm'} weight={400}>
+          {value}
+        </Text>
+        {valuePercent >= 0 && (
+          <Progress
+            size={'xs'}
+            value={valuePercent}
+            color={calculateProgressColor(valuePercent)}
+          ></Progress>
+        )}
+      </div>
     </Group>
   );
 }

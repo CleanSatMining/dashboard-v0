@@ -24,7 +24,9 @@ export const CardSiteHashrate: FC<CardSiteHashrateProps> = ({
   const isMobile = useMediaQuery('(max-width: 36em)');
   const { t } = useTranslation('site', { keyPrefix: 'card' });
 
-  const hashrateColor = calculateProgressColor(data);
+  const hashrateColor = calculateProgressColor(
+    data.site.uptime.hashratePercent,
+  );
 
   const hasData = data.income.available;
 
@@ -66,25 +68,25 @@ export const CardSiteHashrate: FC<CardSiteHashrateProps> = ({
   );
 };
 
-function calculateProgressColor(data: CardData) {
+export function calculateProgressColor(hashratePercent: number) {
   let hashrateColor = 'violet';
-  if (data.site.uptime.hashratePercent < 10) {
+  if (hashratePercent < 10) {
     hashrateColor = 'red';
-  } else if (data.site.uptime.hashratePercent < 20) {
+  } else if (hashratePercent < 20) {
     hashrateColor = 'red';
-  } else if (data.site.uptime.hashratePercent < 30) {
+  } else if (hashratePercent < 30) {
     hashrateColor = 'orange';
-  } else if (data.site.uptime.hashratePercent < 40) {
+  } else if (hashratePercent < 40) {
     hashrateColor = 'yellow';
-  } else if (data.site.uptime.hashratePercent < 50) {
+  } else if (hashratePercent < 50) {
     hashrateColor = 'indigo';
-  } else if (data.site.uptime.hashratePercent < 60) {
+  } else if (hashratePercent < 60) {
     hashrateColor = 'blue';
-  } else if (data.site.uptime.hashratePercent < 70) {
+  } else if (hashratePercent < 70) {
     hashrateColor = 'cyan';
-  } else if (data.site.uptime.hashratePercent < 80) {
+  } else if (hashratePercent < 80) {
     hashrateColor = 'teal'; //yellow
-  } else if (data.site.uptime.hashratePercent < 90) {
+  } else if (hashratePercent < 90) {
     hashrateColor = 'green'; //orange
   } else {
     hashrateColor = 'lime'; //red
