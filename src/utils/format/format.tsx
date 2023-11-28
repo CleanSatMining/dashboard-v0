@@ -233,20 +233,26 @@ export function formatPeriod(
 ): string {
   let label = '';
   if (inDay) {
-    label = d > 1 ? d + t('days') : d + t('day');
+    label = d > 1 ? d + ' ' + t('days') : d + ' ' + t('day');
   } else if (d >= 360 && d <= 366) {
     label = 1 + t('year');
   } else if (Math.round(d / 30) === d / 30) {
     label =
-      Math.round(d / 30) + (Math.round(d / 30) > 1 ? t('months') : t('month'));
+      Math.round(d / 30) +
+      ' ' +
+      (Math.round(d / 30) > 1 ? t('months') : t('month'));
   } else if (Math.round(d / 31) === d / 31) {
     label =
-      Math.round(d / 31) + (Math.round(d / 31) > 1 ? t('months') : t('month'));
+      Math.round(d / 31) +
+      ' ' +
+      (Math.round(d / 31) > 1 ? t('months') : t('month'));
   } else if (Math.ceil(d / 30) >= d / 30 && Math.ceil(d / 31) <= d / 31) {
     label =
-      Math.ceil(d / 31) + (Math.ceil(d / 31) > 1 ? t('months') : t('month'));
+      Math.ceil(d / 31) +
+      ' ' +
+      (Math.ceil(d / 31) > 1 ? t('months') : t('month'));
   } else {
-    label = d > 1 ? d + t('days') : d + t('day');
+    label = d > 1 ? d + ' ' + t('days') : d + ' ' + t('day');
   }
 
   return label;
@@ -254,4 +260,97 @@ export function formatPeriod(
 
 export function formatParenthesis(text: string): string {
   return '(' + text + ')';
+}
+
+export function formatTimestamp(timestamp: number): string {
+  // Convertir le timestamp en millisecondes en multipliant par 1000
+  const date = new Date(timestamp);
+
+  // Utiliser les méthodes de l'objet Date pour extraire les composants de la date
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const seconds = date.getSeconds().toString().padStart(2, '0');
+
+  // Retourner la date formatée
+  return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+}
+export function formatTimestampDay(timestamp: number): string {
+  // Convertir le timestamp en millisecondes en multipliant par 1000
+  const date = new Date(timestamp);
+
+  // Utiliser les méthodes de l'objet Date pour extraire les composants de la date
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+
+  // Retourner la date formatée
+  return `${day}/${month}/${year}`;
+}
+export function formatTimestampHour(timestamp: number): string {
+  // Convertir le timestamp en millisecondes en multipliant par 1000
+  const date = new Date(timestamp);
+
+  // Utiliser les méthodes de l'objet Date pour extraire les composants de la date
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const seconds = date.getSeconds().toString().padStart(2, '0');
+
+  // Retourner la date formatée
+  return `${hours}:${minutes}:${seconds}`;
+}
+
+export function formatDuration(
+  durationInMiliSeconds: number,
+  t: TFunction,
+): string {
+  const durationInSeconds = Math.ceil(durationInMiliSeconds / 1000);
+  console.log('formatDuration', durationInSeconds);
+  const days = Math.floor(durationInSeconds / 86400); // 1 jour = 86400 secondes
+  const hours = Math.floor((durationInSeconds % 86400) / 3600); // 1 heure = 3600 secondes
+  const minutes = Math.floor((durationInSeconds % 3600) / 60); // 1 minute = 60 secondes
+
+  const daysText =
+    days > 0 ? `${days} ${t('day')}${days !== 1 ? 's ' : ' '}` : ' ';
+  const hoursText = hours > 0 ? `${hours}h` : '';
+  const minutesText = minutes > 0 ? `${minutes}m` : '';
+
+  const formattedDuration = [daysText, hoursText, minutesText]
+    .filter(Boolean)
+    .join(' ');
+
+  return formattedDuration || t('lessOneMinute');
+}
+
+export function formatDurationByDay(
+  durationInMiliSeconds: number,
+  t: TFunction,
+  round = true,
+): string {
+  const durationInSeconds = Math.ceil(durationInMiliSeconds / 1000);
+  console.log('formatDuration', durationInSeconds);
+  let days = Math.floor(durationInSeconds / 86400); // 1 jour = 86400 secondes
+  let hours = Math.floor((durationInSeconds % 86400) / 3600); // 1 heure = 3600 secondes
+  let minutes = Math.floor((durationInSeconds % 3600) / 60); // 1 minute = 60 secondes
+
+  if (days >= 1 && round) {
+    hours = 0;
+    minutes = 0;
+    if (hours >= 12) {
+      days = days + 1;
+    }
+  }
+
+  const daysText =
+    days > 0 ? `${days} ${t('day')}${days !== 1 ? 's ' : ' '}` : ' ';
+  const hoursText = hours > 0 ? `${hours}h` : '';
+  const minutesText = minutes > 0 ? `${minutes}m` : '';
+
+  const formattedDuration = [daysText, hoursText, minutesText]
+    .filter(Boolean)
+    .join(' ');
+
+  return formattedDuration || t('lessOneMinute');
 }

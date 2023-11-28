@@ -204,6 +204,21 @@ export const getYieldBySite = (
       period,
     );
 
+    console.log('calculateNetYield', siteId, 'period', period);
+    console.log(
+      'calculateNetYield',
+      siteId,
+      'netUsdIncome',
+      netUsdIncome.toNumber(),
+    );
+    console.log(
+      'calculateNetYield',
+      siteId,
+      'netBtcIncome',
+      netBtcIncome.toNumber(),
+    );
+    console.log('calculateNetYield', siteId, 'netApr', netApr.toNumber());
+
     netYield.usd = netUsdIncome.toNumber();
     netYield.btc = netBtcIncome.toNumber();
     netYield.apr = netApr.toNumber();

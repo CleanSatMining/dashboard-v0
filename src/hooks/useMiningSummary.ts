@@ -77,12 +77,12 @@ export const useMiningSitesSummary: UseMiningSitesSummaryProps = (
                       const miningHistory: APIMiningHistoryResponse =
                         await result.json();
 
-                      // if (siteId === '2' || siteId === '4')
-                      //   console.log(
-                      //     'RESULT API',
-                      //     siteId,
-                      //     JSON.stringify(miningHistory, null, 4),
-                      //   );
+                      if (siteId === '2' || siteId === '4')
+                        console.log(
+                          'RESULT API',
+                          siteId,
+                          JSON.stringify(miningHistory, null, 4),
+                        );
 
                       const history = miningHistory.days.filter((d) => {
                         //filter old date

@@ -9,8 +9,10 @@ import { default as modals } from './modals.json';
 import { default as notifications } from './notifications.json';
 import { default as site } from './site.json';
 import { default as table } from './table.json';
+import { default as timeframe } from './timeframe.json';
 
 const lng = {
+  timeframe,
   site,
   header,
   links,

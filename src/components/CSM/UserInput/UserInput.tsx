@@ -9,6 +9,7 @@ import {
   SelectItemProps,
   Text,
   createStyles,
+  Space,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
 import { IconAt } from '@tabler/icons';
@@ -86,6 +87,7 @@ export const AddressInput: FC<AddressProps> = ({
           )}
         </Flex>
       )}
+      <Space h={10}></Space>
     </Container>
   );
 };
