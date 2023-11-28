@@ -200,8 +200,8 @@ export const TimeSelectMenu: React.FC<TimeSelectMenuProps> = ({
         </Menu.Label>
         <Menu.Item
           icon={
-            <Text fz={'xs'} w={'15px'}>
-              {'De'}
+            <Text fz={'xs'} w={'16px'}>
+              {t('from')}
             </Text>
           }
           sx={{ padding: '3px' }}
@@ -225,8 +225,8 @@ export const TimeSelectMenu: React.FC<TimeSelectMenuProps> = ({
         </Menu.Item>
         <Menu.Item
           icon={
-            <Text fz={'xs'} w={'15px'}>
-              {'à'}
+            <Text fz={'xs'} w={'16px'}>
+              {t('to')}
             </Text>
           }
           sx={{ padding: '3px' }}
@@ -244,7 +244,23 @@ export const TimeSelectMenu: React.FC<TimeSelectMenuProps> = ({
             clearable={true}
           />
         </Menu.Item>
-        <Menu.Item icon={<IconSearch size={14} />} sx={{ padding: '3px' }}>
+        <Menu.Item
+          icon={<IconSearch size={14} />}
+          sx={{
+            margin: '5px 0 10px 0',
+            padding: '3px',
+            backgroundColor:
+              theme.colorScheme === 'dark'
+                ? theme.colors.dark[5]
+                : theme.colors.gray[0],
+            borderColor:
+              theme.colorScheme === 'dark'
+                ? theme.colors.dark[4]
+                : theme.colors.gray[4],
+            borderStyle: 'solid',
+            borderWidth: '1px',
+          }}
+        >
           <Text h={'lg'} onClick={() => handleDateRangeItemClick()}>
             {t('update')}
           </Text>
@@ -276,7 +292,23 @@ export const TimeSelectMenu: React.FC<TimeSelectMenuProps> = ({
             onChange={setNumberInput}
           />
         </Menu.Item>
-        <Menu.Item icon={<IconSearch size={14} />} sx={{ padding: '3px' }}>
+        <Menu.Item
+          icon={<IconSearch size={14} />}
+          sx={{
+            margin: '5px 0 3px 0',
+            padding: '3px',
+            backgroundColor:
+              theme.colorScheme === 'dark'
+                ? theme.colors.dark[5]
+                : theme.colors.gray[0],
+            borderColor:
+              theme.colorScheme === 'dark'
+                ? theme.colors.dark[4]
+                : theme.colors.gray[4],
+            borderStyle: 'solid',
+            borderWidth: '1px',
+          }}
+        >
           <Text h={'lg'} onClick={() => handleNumberOfDaysClick()}>
             {t('update')}
           </Text>

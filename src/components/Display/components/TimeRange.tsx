@@ -23,7 +23,7 @@ export const TimeRange: FC<TimeRangeProps> = ({
         //p={2}
         withBorder={theme.colorScheme === 'dark' ? true : false}
         sx={{
-          padding: '0px 5px 1px 5px',
+          padding: '3px 10px 3px 10px',
           backgroundColor:
             theme.colorScheme === 'dark' ? theme.colors.dark[6] : undefined,
         }}
@@ -37,7 +37,7 @@ export const TimeRange: FC<TimeRangeProps> = ({
         //p={2}
         withBorder={theme.colorScheme === 'dark' ? true : false}
         sx={{
-          padding: '0px 5px 1px 5px',
+          padding: '3px 10px 3px 10px',
           backgroundColor:
             theme.colorScheme === 'dark' ? theme.colors.dark[6] : undefined,
         }}
