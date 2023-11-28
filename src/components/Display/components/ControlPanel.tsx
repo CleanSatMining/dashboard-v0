@@ -73,7 +73,6 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
     fillSegmentedControl();
 
   const handlePredefinedPeriodClick = (value: PredefinedPeriods) => {
-    console.log('handlePredefinedPeriodClick', value);
     // You can perform additional actions based on the selected predefined period if needed
     // Use a switch statement to handle specific actions based on the selected predefined period
     const today = getTimestampStartOfNDaysAgo(0);

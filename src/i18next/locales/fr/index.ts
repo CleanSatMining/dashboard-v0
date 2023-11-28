@@ -10,8 +10,10 @@ import { default as notifications } from './notifications.json';
 import { default as site } from './site.json';
 import { default as table } from './table.json';
 import { default as timeframe } from './timeframe.json';
+import { default as wallet } from './wallet.json';
 
 const lng = {
+  wallet,
   timeframe,
   site,
   header,

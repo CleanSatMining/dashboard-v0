@@ -55,8 +55,6 @@ function formatTimestampRange(
   endTimestamp: number,
   t: TFunction,
 ): string {
-  //return formatTimestamp(startTimestamp) + ' à ' + endTimestamp;
-  console.log('formatTimestampRange', startTimestamp, endTimestamp);
   return (
     t('from') +
     ' ' +

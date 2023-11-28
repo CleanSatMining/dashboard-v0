@@ -307,7 +307,7 @@ export function formatDuration(
   t: TFunction,
 ): string {
   const durationInSeconds = Math.ceil(durationInMiliSeconds / 1000);
-  console.log('formatDuration', durationInSeconds);
+
   const days = Math.floor(durationInSeconds / 86400); // 1 jour = 86400 secondes
   const hours = Math.floor((durationInSeconds % 86400) / 3600); // 1 heure = 3600 secondes
   const minutes = Math.floor((durationInSeconds % 3600) / 60); // 1 minute = 60 secondes
@@ -330,7 +330,7 @@ export function formatDurationByDay(
   round = true,
 ): string {
   const durationInSeconds = Math.ceil(durationInMiliSeconds / 1000);
-  console.log('formatDuration', durationInSeconds);
+
   let days = Math.floor(durationInSeconds / 86400); // 1 jour = 86400 secondes
   let hours = Math.floor((durationInSeconds % 86400) / 3600); // 1 heure = 3600 secondes
   let minutes = Math.floor((durationInSeconds % 3600) / 60); // 1 minute = 60 secondes
