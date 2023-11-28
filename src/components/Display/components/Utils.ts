@@ -1,5 +1,7 @@
 import BigNumber from 'bignumber.js';
 
+export const FIRST_OF_MAY = 1682892000000;
+
 export function getTimestampFirstDayOfCurrentMonth(): number {
   const today = new Date();
   const firstDayOfCurrentMonth = new Date(

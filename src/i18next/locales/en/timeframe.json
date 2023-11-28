@@ -7,19 +7,25 @@
     "lessOneMinute": "Less than a minute"
   },
   "menu": {
+    "month": "month",
+    "months": "months",
+    "days": "days",
     "day": "day",
     "hour": "hour",
-    "last24Hours": "Last 24 hours",
-    "last7Days": "Last 7 days",
-    "last30Days": "Last 30 days",
-    "currentMonth": "Current month",
-    "lastMonth": "Last month",
-    "last3Months": "Last 3 months",
+    "last24Hours": "Last 24 Hours",
+    "last7Days": "Last 7 Days",
+    "last30Days": "Last 30 Days",
+    "currentMonth": "Current Month",
+    "lastMonth": "Last Month",
+    "last3Months": "Last 3 Months",
     "byDate": "By date",
     "byDuration": "By duration (in days)",
     "update": "Update",
-    "predefinedPeriods":"Predefined Periods",
-    "startDate": "Start date",
-    "endDate": "End date"
+    "predefinedPeriods": "Predefined Periods",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "errorStartDate": "Select a start date",
+    "customDate": "Custom Dates",
+    "customDuration": "Custom Duration"
   }
 }

@@ -1,28 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import {
-  Flex,
-  SegmentedControl,
-  Checkbox,
-  Menu,
-  Button,
-  Text,
-  NumberInput,
-} from '@mantine/core';
+import { SegmentedControl, Checkbox, Group } from '@mantine/core';
 import { DAYS_PERIODS, filterMobile } from '../../../constants';
 import { formatPeriod } from 'src/utils/format/format';
 import { useTranslation } from 'react-i18next';
 import {
-  IconSearch,
   IconCalendar,
   IconCalendarDue,
   IconCalendarEvent,
   IconCalendarPlus,
   IconCalendarTime,
   IconClock,
-  IconChevronDown,
-  IconChevronUp,
 } from '@tabler/icons';
-import { DateInput, DateValue } from '@mantine/dates';
 import { PredefinedPeriods } from './Types';
 import {
   getTimestampFirstDayOfCurrentMonth,
@@ -30,13 +18,15 @@ import {
   getTimestampFirstDayOfNMonthsAgo,
   calculateDaysBetweenDateAndToday,
   calculateDaysBetweenDates,
-  getDateYesterday,
   getTimestampLastDayOfNMonthAgo,
   getTimestampEndOfTheDay,
 } from './Utils';
 
-import { TimeRange } from './TimeRange';
+import { TimeSelectDrawer } from './TimeSelectDrawer';
+import { TimeSelectMenu } from './TimeSelectMenu';
 
+import { TimeRange } from './TimeRange';
+import { useDisclosure } from '@mantine/hooks';
 interface ControlPanelProps {
   isMobile: boolean;
   period: string;
@@ -51,7 +41,6 @@ interface ControlPanelProps {
   defaultValue: PredefinedPeriods;
 }
 
-const FIRST_OF_MAY = 1682892000000;
 const ControlPanel: React.FC<ControlPanelProps> = ({
   isMobile,
   period,
@@ -66,7 +55,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   defaultValue,
 }) => {
   const { t } = useTranslation('timeframe', { keyPrefix: 'menu' });
-  const [menuOpened, setMenuOpened] = useState(false);
+  //const [menuOpened, setMenuOpened] = useState(false);
   const [menuLabel, setMenuLabel] = useState<string>(t(defaultValue));
   const [numberInput, setNumberInput] = useState<number | ''>(1);
   const [startDateInput, setStartDateInput] = useState<Date | null>(null);
@@ -75,6 +64,11 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   const [IconMenu, setIconMenu] = useState<React.ReactNode>(
     <IconCalendar size={20}></IconCalendar>,
   );
+  const [drawerOpened, { open: openDrawer, close: closeDrawer }] =
+    useDisclosure(false);
+  const [menuOpened, { open: openMenu, close: closeMenu }] =
+    useDisclosure(false);
+
   const dataSegmentedControl: { label: string; value: string }[] =
     fillSegmentedControl();
 
@@ -148,8 +142,9 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
         // Handle default case
         break;
     }
-    setMenuOpened(false);
+    closeMenu();
     setMenuLabel(t(value));
+    closeDrawer();
   };
 
   const handleDateRangeItemClick = () => {
@@ -170,12 +165,13 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
 
       setMenuLabel(t('customDate'));
       setStartDateError(false);
-      setMenuOpened(false);
+      closeMenu();
       setStartTimestamp(startDate);
       setEndTimestamp(endDate);
       setPeriod(duration.toString());
       setIconMenu(<IconCalendar size={20}></IconCalendar>);
     }
+    closeDrawer();
   };
 
   const handleNumberOfDaysClick = () => {
@@ -188,8 +184,9 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
     setStartTimestamp(daysAgo);
     setEndTimestamp(today);
     setMenuLabel(t('customDuration'));
-    setMenuOpened(false);
+    closeMenu();
     setIconMenu(<IconCalendarTime size={20}></IconCalendarTime>);
+    closeDrawer();
   };
 
   useEffect(() => {
@@ -197,182 +194,55 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   }, []);
 
   return (
-    <Flex
+    <Group
       mih={isMobile ? 50 : 70}
-      gap={'xs'}
-      justify={'left'}
+      spacing={'xs'}
+      position={'left'}
       align={'center'}
-      direction={'row'}
-      wrap={'wrap'}
+      m={isMobile ? 10 : undefined}
     >
       {dateModeChecked && (
         <>
-          <Menu
-            shadow={'md'}
-            width={200}
-            opened={menuOpened}
-            closeOnClickOutside={true}
-          >
-            <Menu.Target>
-              <Button
-                h={30}
-                radius={'lg'}
-                onClick={() => {
-                  setMenuOpened(!menuOpened);
-                }}
-                leftIcon={IconMenu}
-                rightIcon={
-                  menuOpened ? (
-                    <IconChevronUp size={20}></IconChevronUp>
-                  ) : (
-                    <IconChevronDown size={20}></IconChevronDown>
-                  )
-                }
-              >
-                {menuLabel}
-              </Button>
-            </Menu.Target>
-
-            <Menu.Dropdown>
-              <Menu.Label>{t('predefinedPeriods')}</Menu.Label>
-              <Menu.Item
-                icon={<IconClock size={14} />}
-                onClick={() =>
-                  handlePredefinedPeriodClick(PredefinedPeriods.Last24Hours)
-                }
-              >
-                {t(PredefinedPeriods.Last24Hours)}
-              </Menu.Item>
-              <Menu.Item
-                icon={<IconCalendarTime size={14} />}
-                onClick={() =>
-                  handlePredefinedPeriodClick(PredefinedPeriods.Last7Days)
-                }
-              >
-                {t(PredefinedPeriods.Last7Days)}
-              </Menu.Item>
-              <Menu.Item
-                icon={<IconCalendarTime size={14} />}
-                onClick={() =>
-                  handlePredefinedPeriodClick(PredefinedPeriods.Last30Days)
-                }
-              >
-                {t(PredefinedPeriods.Last30Days)}
-              </Menu.Item>
-              <Menu.Item
-                icon={<IconCalendarDue size={14} />}
-                onClick={() =>
-                  handlePredefinedPeriodClick(PredefinedPeriods.CurrentMonth)
-                }
-              >
-                {t(PredefinedPeriods.CurrentMonth)}
-              </Menu.Item>
-              <Menu.Item
-                icon={<IconCalendarEvent size={14} />}
-                onClick={() =>
-                  handlePredefinedPeriodClick(PredefinedPeriods.LastMonth)
-                }
-              >
-                {t(PredefinedPeriods.LastMonth)}
-              </Menu.Item>
-              <Menu.Item
-                icon={<IconCalendarPlus size={14} />}
-                onClick={() =>
-                  handlePredefinedPeriodClick(PredefinedPeriods.Last3Months)
-                }
-              >
-                {t(PredefinedPeriods.Last3Months)}
-              </Menu.Item>
-              <Menu.Divider />
-
-              <Menu.Label>{t('byDate')}</Menu.Label>
-              <Menu.Item
-                icon={
-                  <Text fz={'xs'} w={'15px'}>
-                    {'De'}
-                  </Text>
-                }
-                sx={{ padding: '3px' }}
-              >
-                <DateInput
-                  value={startDateInput}
-                  onChange={(d: DateValue) => {
-                    setStartDateError(false);
-                    setStartDateInput(d);
-                  }}
-                  minDate={new Date(FIRST_OF_MAY)}
-                  maxDate={endDateInput ?? getDateYesterday()}
-                  valueFormat={'DD/MM/YYYY'}
-                  size={'xs'}
-                  placeholder={t('startDate')}
-                  maw={400}
-                  mx={'auto'}
-                  clearable={true}
-                  error={startDateError ? t('errorStartDate') : null} //'Please select a start date'
-                />
-              </Menu.Item>
-              <Menu.Item
-                icon={
-                  <Text fz={'xs'} w={'15px'}>
-                    {'à'}
-                  </Text>
-                }
-                sx={{ padding: '3px' }}
-              >
-                <DateInput
-                  value={endDateInput}
-                  onChange={setEndDateInput}
-                  minDate={startDateInput ?? new Date(FIRST_OF_MAY)}
-                  maxDate={new Date()}
-                  valueFormat={'DD/MM/YYYY'}
-                  size={'xs'}
-                  placeholder={t('endDate')}
-                  maw={400}
-                  mx={'auto'}
-                  clearable={true}
-                />
-              </Menu.Item>
-              <Menu.Item
-                icon={<IconSearch size={14} />}
-                sx={{ padding: '3px' }}
-              >
-                <Button
-                  h={'lg'}
-                  variant={'outline'}
-                  onClick={() => handleDateRangeItemClick()}
-                >
-                  {t('update')}
-                </Button>
-              </Menu.Item>
-              <Menu.Divider />
-              <Menu.Label>{t('byDuration')}</Menu.Label>
-              <Menu.Item sx={{ padding: '3px' }}>
-                <NumberInput
-                  size={'xs'}
-                  defaultValue={7}
-                  placeholder={'Nombre de jours'}
-                  max={185}
-                  step={1}
-                  min={1}
-                  precision={0}
-                  value={numberInput}
-                  onChange={setNumberInput}
-                />
-              </Menu.Item>
-              <Menu.Item
-                icon={<IconSearch size={14} />}
-                sx={{ padding: '3px' }}
-              >
-                <Button
-                  h={'lg'}
-                  variant={'outline'}
-                  onClick={() => handleNumberOfDaysClick()}
-                >
-                  {t('update')}
-                </Button>
-              </Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
+          {isMobile && (
+            <TimeSelectDrawer
+              IconMenu={IconMenu}
+              closeDrawer={closeDrawer}
+              openDrawer={openDrawer}
+              drawerOpened={drawerOpened}
+              menuLabel={menuLabel}
+              numberInput={numberInput}
+              setNumberInput={setNumberInput}
+              startDateInput={startDateInput}
+              startDateError={startDateError}
+              setStartDateInput={setStartDateInput}
+              setStartDateError={setStartDateError}
+              endDateInput={endDateInput}
+              setEndDateInput={setEndDateInput}
+              handleDateRangeItemClick={handleDateRangeItemClick}
+              handleNumberOfDaysClick={handleNumberOfDaysClick}
+              handlePredefinedPeriodClick={handlePredefinedPeriodClick}
+            ></TimeSelectDrawer>
+          )}
+          {!isMobile && (
+            <TimeSelectMenu
+              IconMenu={IconMenu}
+              closeMenu={closeMenu}
+              openMenu={openMenu}
+              menuOpened={menuOpened}
+              menuLabel={menuLabel}
+              numberInput={numberInput}
+              setNumberInput={setNumberInput}
+              startDateInput={startDateInput}
+              startDateError={startDateError}
+              setStartDateInput={setStartDateInput}
+              setStartDateError={setStartDateError}
+              endDateInput={endDateInput}
+              setEndDateInput={setEndDateInput}
+              handleDateRangeItemClick={handleDateRangeItemClick}
+              handleNumberOfDaysClick={handleNumberOfDaysClick}
+              handlePredefinedPeriodClick={handlePredefinedPeriodClick}
+            ></TimeSelectMenu>
+          )}
           <TimeRange
             startTimestamp={startTimestamp}
             endTimestamp={endTimestamp}
@@ -395,8 +265,9 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
           onChange={(event) => setDateModeChecked(event.currentTarget.checked)}
         />
       )}
-    </Flex>
+    </Group>
   );
+
   /**
    * fillSegmentedControl
    * @returns
