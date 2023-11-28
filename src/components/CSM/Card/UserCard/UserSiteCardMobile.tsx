@@ -92,9 +92,11 @@ export const UserSiteCardMobile: FC<CardMobileProps> = ({
               image={
                 require(`../../../../assets/icons/mining-site.png`).default
               }
-              value={formatHashrate(data.site.uptime.hashrate)}
+              value={formatHashrate(
+                hasData ? data.site.uptime.hashrate : data.site.hashrate,
+              )}
               label={t('my-site')}
-              valuePercent={data.site.uptime.hashratePercent}
+              valuePercent={hasData ? data.site.uptime.hashratePercent : -1}
             ></AccordionLabelImage>
           </Accordion.Control>
           <Accordion.Panel>
