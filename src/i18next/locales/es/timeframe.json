@@ -20,6 +20,7 @@
     "currentMonth": "Mes actual",
     "lastMonth": "Mes pasado",
     "last3Months": "Últimos 3 meses",
+    "fromStart" : "Todo",
     "byDate": "Por fecha",
     "byDuration": "Por duración (en días)",
     "update": "Ver fechas",

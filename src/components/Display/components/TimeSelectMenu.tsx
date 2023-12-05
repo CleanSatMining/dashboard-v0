@@ -14,6 +14,7 @@ import {
   IconCalendarEvent,
   IconCalendarPlus,
   IconCalendarTime,
+  IconCalendar,
   IconClock,
   IconChevronDown,
   IconSearch,
@@ -91,6 +92,7 @@ export const TimeSelectMenu: React.FC<TimeSelectMenuProps> = ({
 
       <Menu.Dropdown>
         <Menu.Label>{t('predefinedPeriods')}</Menu.Label>
+
         <Menu.Item
           icon={<IconClock size={14} />}
           onClick={() =>
@@ -180,6 +182,21 @@ export const TimeSelectMenu: React.FC<TimeSelectMenuProps> = ({
           }
         >
           {t(PredefinedPeriods.Last3Months)}
+        </Menu.Item>
+        <Menu.Item
+          icon={<IconCalendar size={14} />}
+          onClick={() =>
+            handlePredefinedPeriodClick(PredefinedPeriods.FromStart)
+          }
+          color={
+            menuLabel === t(PredefinedPeriods.FromStart)
+              ? theme.colorScheme === 'light'
+                ? 'lime'
+                : 'brand'
+              : undefined
+          }
+        >
+          {t(PredefinedPeriods.FromStart)}
         </Menu.Item>
         <Menu.Divider />
 
