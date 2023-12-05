@@ -20,6 +20,7 @@ import {
   calculateDaysBetweenDates,
   getTimestampLastDayOfNMonthAgo,
   getTimestampEndOfTheDay,
+  START_DATE,
 } from './Utils';
 
 import { TimeSelectDrawer } from './TimeSelectDrawer';
@@ -135,6 +136,15 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
         setStartTimestamp(firstDayOfLast3Month);
         setEndTimestamp(lastDayOfLast1Month);
         setIconMenu(<IconCalendarPlus size={20}></IconCalendarPlus>);
+        break;
+      case PredefinedPeriods.FromStart:
+        // Handle Last 3 Months
+        const startDate = START_DATE;
+        const duration = calculateDaysBetweenDates(today, startDate);
+        setStartTimestamp(startDate);
+        setEndTimestamp(today);
+        setPeriod(duration.toString());
+        setIconMenu(<IconCalendar size={20}></IconCalendar>);
         break;
       // Add cases for other predefined periods as needed
       default:

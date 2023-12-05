@@ -5,4 +5,5 @@ export enum PredefinedPeriods {
   CurrentMonth = 'currentMonth',
   LastMonth = 'lastMonth',
   Last3Months = 'last3Months',
+  FromStart = 'fromStart',
 }

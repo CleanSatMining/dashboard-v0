@@ -34,7 +34,7 @@ type AddressProps = {
   updateAccount: (p: string) => void;
 };
 
-export const AddressInput: FC<AddressProps> = ({
+export const AccountSelect: FC<AddressProps> = ({
   initialValue: address = '0xC78f0e746A2e6248eE6D57828985D7fD8d6B33B0',
   setAccount,
   updateAccount,

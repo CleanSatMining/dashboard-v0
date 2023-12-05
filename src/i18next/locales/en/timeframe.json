@@ -20,6 +20,7 @@
     "currentMonth": "Current Month",
     "lastMonth": "Last Month",
     "last3Months": "Last 3 Months",
+    "fromStart" : "All",
     "byDate": "By Date",
     "byDuration": "By Duration (in days)",
     "update": "View Dates",

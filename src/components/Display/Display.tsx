@@ -19,7 +19,7 @@ import { useBitcoinOracle } from '../../hooks/useBitcoinOracle';
 import { useMiningSitesSummary } from '../../hooks/useMiningSummary';
 import { useWalletERC20Balances } from '../../hooks/useWalletERC20Balance';
 import { Dashboard } from '../CSM/Dashboard/Dashboard';
-import { AddressInput } from '../CSM/UserInput/UserInput';
+import { AccountSelect } from '../CSM/AccountSelect/AccountSelect';
 import { getCSMTokenAddress, getCSMTokenAddresses } from '../CSM/Utils/yield';
 
 import ControlPanel from './components/ControlPanel';
@@ -119,7 +119,7 @@ const Display: FC = () => {
   return (
     <>
       {adminData && (
-        <AddressInput
+        <AccountSelect
           initialValue={account}
           setAccount={setAccount}
           updateAccount={(newAccount: string) => {
@@ -127,7 +127,7 @@ const Display: FC = () => {
               console.log('WARNING account changed', account, newAccount);
             }
           }}
-        ></AddressInput>
+        ></AccountSelect>
       )}
       <ControlPanel
         defaultValue={PredefinedPeriods.Last7Days}
