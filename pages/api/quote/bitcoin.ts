@@ -48,12 +48,7 @@ const handler: NextApiHandler = async (
 
     if (result.ok) {
       const response: PriceResponse = await result.json();
-      console.log(
-        'Bitcoin Quote',
-        JSON.stringify(response, null, 4),
-        JSON.stringify(response.data.getChartBySlug.data[0]),
-        response.data.getChartBySlug.data.length,
-      );
+
       const quote: Quote = {
         price:
           response.data.getChartBySlug.data[

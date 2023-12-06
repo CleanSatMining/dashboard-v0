@@ -6,5 +6,6 @@ export type APIMiningHistoryQuery = {
 }
 
 export type APIMiningHistoryResponse = {
-    days:MiningSummaryPerDay[]
+    days:MiningSummaryPerDay[];
+    error?: any;
 }

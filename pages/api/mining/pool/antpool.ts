@@ -3,7 +3,7 @@ import * as crypto from 'crypto';
 
 import { SITES, SiteID } from 'src/constants/csm';
 import { MiningSummaryPerDay } from 'src/types/mining/Mining';
-
+import { APIMiningHistoryResponse } from 'src/types/mining/MiningAPI';
 const PAGE_SIZE = 50; //page size max
 
 interface RevenueHistory {
@@ -31,13 +31,6 @@ interface DayData {
   fppsFeeAmount: number;
 }
 
-interface ApiResult {
-  days?: MiningSummaryPerDay[];
-  /* eslint-disable */
-  error?: any;
-  /* eslint-enable */
-}
-
 interface AntpoolApiResult {
   days?: DayData[];
   /* eslint-disable */
@@ -50,7 +43,7 @@ export async function antpoolHistory(
   usernames: string,
   first: number,
   siteId: string,
-): Promise<ApiResult> {
+): Promise<APIMiningHistoryResponse> {
   const users = usernames.split(',');
 
   const returns = [];
@@ -63,7 +56,7 @@ export async function antpoolHistory(
     console.log('ANTPOOL API apiKey', apiKey);
     console.log('ANTPOOL API apiSign', apiSign);
     const ret = await _antPoolHistory(siteId, first, apiKey, apiSign, url);
-    if (ret.days === undefined) return { error: ret.error };
+    if (ret.days === undefined) return { days: [], error: ret.error };
     const result = new Map(ret.days.map((i) => [i.timestamp, i]));
     returns.push(result);
   }
@@ -110,12 +103,6 @@ export async function antpoolHistory(
       }
     });
   }
-
-  if (siteId === '2')
-    console.log(
-      'ANTPOOL RESULT',
-      JSON.stringify([...sumData.values()], null, 4),
-    );
 
   const days: MiningSummaryPerDay[] = convertAPIDataToStandard(siteId, [
     ...sumData.values(),
@@ -174,7 +161,7 @@ async function _antPoolHistory(
           const erreur = {
             message: await result.json(),
           };
-          json = { error: erreur }; // JSON.stringify(erreur);
+          json = { days: [], error: erreur }; // JSON.stringify(erreur);
           console.error(
             'ANTPOOL Revenu summary error' + JSON.stringify(erreur),
           );
@@ -190,7 +177,7 @@ async function _antPoolHistory(
   //   periodsData,
   // );
 
-  json = { days: periodsData };
+  json = { days: periodsData.slice(0, first) };
   return json;
 }
 

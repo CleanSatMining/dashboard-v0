@@ -12,8 +12,22 @@ const handler: NextApiHandler = async (
   res: NextApiResponse,
 ) => {
   let json;
-  const requestBody: APIMiningHistoryQuery = JSON.parse(req.body);
+
+  if (!req.body) {
+    return res.status(400).json('body expected');
+  }
+
+  let requestBody: APIMiningHistoryQuery = req.body;
+  if (typeof req.body === 'string') {
+    requestBody = JSON.parse(req.body);
+  }
+
   const { first, siteId } = requestBody;
+  if (!first || !siteId) {
+    return res
+      .status(400)
+      .json('body not valid ' + JSON.stringify(requestBody));
+  }
 
   const site = SITES[siteId as SiteID];
   const username = site.api.username ?? '';
@@ -53,7 +67,7 @@ const handler: NextApiHandler = async (
     json = history; //JSON.stringify(history);
   }
 
-  if (siteId === '2') console.log('BETA RESULT', JSON.stringify(json, null, 4));
+  //if (siteId === '2') console.log('BETA RESULT', JSON.stringify(json, null, 4));
 
   res.status(200).json(json);
 };

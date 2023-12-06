@@ -72,7 +72,8 @@ export async function luxorHistory(
       json = history; // JSON.stringify(history, null);
     } else {
       const erreur = {
-        message: await result.json(),
+        days: [],
+        error: await result.json(),
       };
       json = erreur; // JSON.stringify(erreur);
       console.error('LUXOR Revenu summary error' + JSON.stringify(erreur));
