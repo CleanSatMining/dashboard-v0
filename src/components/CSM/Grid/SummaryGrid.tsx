@@ -1,4 +1,4 @@
-import { FC, memo, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { SimpleGrid } from '@mantine/core';
@@ -206,4 +206,4 @@ const _Summary: FC<AssetProps> = ({
   );
 };
 
-export const SummaryGrid = memo(_Summary);
+export const SummaryGrid = _Summary;

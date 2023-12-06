@@ -46,6 +46,7 @@ export function getTimestampLastDayOfNMonthAgo(N: number): number {
 
   // Set the hours, minutes, seconds, and milliseconds to 23:59:59:999
   lastDayOfMonth.setHours(23, 59, 59, 999);
+  lastDayOfMonth.setHours(lastDayOfMonth.getHours() - 24);
 
   // Return the timestamp of the last day of the previous month at 23:59
   return lastDayOfMonth.getTime();

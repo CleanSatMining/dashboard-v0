@@ -1,4 +1,4 @@
-import { FC, memo } from 'react';
+import { FC } from 'react';
 
 import {
   Space,
@@ -117,4 +117,4 @@ const _SummariesCard: FC<SummariesProps> = ({
   );
 };
 
-export const SummariesCard = memo(_SummariesCard);
+export const SummariesCard = _SummariesCard;

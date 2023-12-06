@@ -1,4 +1,4 @@
-import { FC, memo } from 'react';
+import { FC } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ActionIcon,
@@ -144,4 +144,4 @@ const _SummaryCard: FC<SummaryProps> = ({
   );
 };
 
-export const SummaryCard = memo(_SummaryCard);
+export const SummaryCard = _SummaryCard;

@@ -61,6 +61,7 @@ export function calculateElececticityCostPerPeriod(
   let electricityCost: BigNumber = new BigNumber(0);
 
   const days = getMiningDays(miningState, siteId, period, startDate, endDate);
+
   for (const day of days) {
     const electricityCostPerDay = calculateElececticityCostPerDay(
       site,
@@ -70,6 +71,7 @@ export function calculateElececticityCostPerPeriod(
 
     electricityCost = electricityCost.plus(electricityCostPerDay);
   }
+  //console.log('electricityCost', days.length, electricityCost.toNumber());
 
   // if (
   //   miningState &&

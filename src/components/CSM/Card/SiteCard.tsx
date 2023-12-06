@@ -1,4 +1,4 @@
-import { FC, memo, useEffect, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import { useAppSelector } from 'src/hooks/react-hooks';
 import { selectMiningState } from 'src/store/features/miningData/miningDataSelector';
@@ -175,8 +175,19 @@ const _SiteCard: FC<SiteProps> = ({
     if (shallDisplay) {
       shallDisplay(Number(siteId), tokenBalance > 0);
     }
+
     /* eslint-disable */
-  }, [account, btcPrice, miningState, period, shallDisplay, site, siteId]);
+  }, [
+    account,
+    btcPrice,
+    miningState,
+    period,
+    shallDisplay,
+    site,
+    siteId,
+    startDate,
+    endDate,
+  ]);
   /* eslint-enable */
 
   return (
@@ -204,7 +215,7 @@ const _SiteCard: FC<SiteProps> = ({
   );
 };
 
-export const SiteCard = memo(_SiteCard);
+export const SiteCard = _SiteCard;
 
 /**
  * buildUserSiteData

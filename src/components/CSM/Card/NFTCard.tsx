@@ -58,7 +58,7 @@ const _NFTCard: FC<NFTProps> = ({
   const [nftAttributes, setNftAttributes] = useState<Attribute[]>([]);
   const [nftDescription, setNftDescription] = useState('');
   const [opened, { open, close }] = useDisclosure(false);
-  console.log('NFTCard', JSON.stringify(data, null, 4));
+  //console.log('NFTCard', JSON.stringify(data, null, 4));
 
   const { t } = useTranslation('site', { keyPrefix: 'card' });
   function handleOpenModal(index: number) {

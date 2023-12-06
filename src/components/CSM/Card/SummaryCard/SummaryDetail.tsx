@@ -1,4 +1,4 @@
-import { FC, memo } from 'react';
+import { FC } from 'react';
 
 import { Accordion, Group, Text } from '@mantine/core';
 
@@ -68,4 +68,4 @@ const _SummaryDetailCard: FC<SummaryDetailProps> = ({ data }) => {
   );
 };
 
-export const SummaryDetailCard = memo(_SummaryDetailCard);
+export const SummaryDetailCard = _SummaryDetailCard;

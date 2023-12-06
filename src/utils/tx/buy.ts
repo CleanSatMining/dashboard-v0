@@ -43,8 +43,8 @@ export const buy = async (
       Number(offer.buyerTokenDecimals),
     );
 
-    console.log('amountInWei: ', amountInWei.toString());
-    console.log('priceInWei: ', priceInWei.toString());
+    //console.log('amountInWei: ', amountInWei.toString());
+    //console.log('priceInWei: ', priceInWei.toString());
 
     const buyerToken = getContract<CoinBridgeToken>(
       offer.buyerTokenAddress,
@@ -65,7 +65,7 @@ export const buy = async (
     );
     const transactionDeadline = Math.floor(Date.now() / 1000) + 3600; // permit valable during 1h
 
-    console.log('buyerTokenAmount: ', buyerTokenAmount.toString());
+    //console.log('buyerTokenAmount: ', buyerTokenAmount.toString());
 
     const buyerTokenType = await realTokenYamUpgradeable.getTokenType(
       offer.buyerTokenAddress,

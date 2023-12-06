@@ -1,4 +1,4 @@
-import { FC } from 'react';
+import { FC, useEffect, useState } from 'react';
 import {
   Text,
   Group,
@@ -36,11 +36,19 @@ export type CardSiteAccountingProps = {
 };
 
 export const CardSiteAccounting: FC<CardSiteAccountingProps> = ({ data }) => {
+  //console.log('CardSiteAccounting RENDER', data.site.uptime.costs.total);
   const { classes } = useStyle();
   const isMobile = useMediaQuery('(max-width: 36em)');
   const { t } = useTranslation('site', { keyPrefix: 'card' });
   const site = getSite(data.id);
+  const [income, setIncome] = useState<number>(data.site.uptime.mined.usd);
+  const [expense, setExpense] = useState<number>(data.site.uptime.costs.total);
   const hasData = data.income.available;
+
+  useEffect(() => {
+    setIncome(data.site.uptime.mined.usd);
+    setExpense(data.site.uptime.costs.total);
+  }, [data]);
 
   return (
     <div className={classes.accordionContainer}>
@@ -52,7 +60,7 @@ export const CardSiteAccounting: FC<CardSiteAccountingProps> = ({ data }) => {
                 isMobile: isMobile,
                 label: t('incomes'),
                 value: formatUsd(
-                  data.site.uptime.mined.usd,
+                  income,
                   undefined,
                   undefined,
                   undefined,
@@ -74,7 +82,7 @@ export const CardSiteAccounting: FC<CardSiteAccountingProps> = ({ data }) => {
               </Text>
               <Text weight={500} fz={isMobile ? 'xs' : 'sm'} align={'center'}>
                 {formatUsd(
-                  data.site.uptime.mined.usd,
+                  income,
                   undefined,
                   undefined,
                   undefined,
@@ -92,7 +100,7 @@ export const CardSiteAccounting: FC<CardSiteAccountingProps> = ({ data }) => {
                 isMobile: isMobile,
                 label: t('costs'),
                 value: formatUsd(
-                  data.site.uptime.costs.total,
+                  expense,
                   undefined,
                   undefined,
                   undefined,

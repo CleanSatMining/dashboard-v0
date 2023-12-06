@@ -202,7 +202,7 @@ export function fetchPrices(chainId: number, provider: Web3Provider) {
       dispatch({ type: pricesChangedDispatchType, payload: prices });
       dispatch({ type: pricesIsLoadingChangedDispatchType, payload: false });
     } catch (err) {
-      console.log();
+      console.log(err);
     }
   };
 }

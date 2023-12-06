@@ -39,6 +39,8 @@ const _Dashboard: FC<UserAssetsProps> = ({
     FilterStatus.all.toString(),
   );
 
+  //console.log('Dashboard period', period);
+
   useEffect(() => {
     setSpinner(
       userState.byAddress[account] === undefined ||
