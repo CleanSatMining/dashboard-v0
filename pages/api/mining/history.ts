@@ -1,4 +1,5 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
+import { APIMiningHistoryResponse } from 'src/types/mining/MiningAPI';
 
 import { SITES, SiteID } from 'src/constants/csm';
 import { APIMiningHistoryQuery } from 'src/types/mining/MiningAPI';
@@ -6,12 +7,18 @@ import { Contractor } from 'src/types/mining/Site';
 
 import { antpoolHistory } from './pool/antpool';
 import { luxorHistory } from './pool/luxor';
+import { LRUCache } from 'lru-cache';
+
+// cache 60 min
+/* eslint-disable */
+const cache = new LRUCache<string, any>({ max: 500, ttl: 1000 * 60 * 60 });
+/* eslint-enable */
 
 const handler: NextApiHandler = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ) => {
-  let json;
+  let json: APIMiningHistoryResponse | undefined;
 
   if (!req.body) {
     return res.status(400).json('body expected');
@@ -27,6 +34,15 @@ const handler: NextApiHandler = async (
     return res
       .status(400)
       .json('body not valid ' + JSON.stringify(requestBody));
+  }
+
+  // Generate a cache key based on the address, page, and pageSize
+  const cacheKey = `${siteId}-${first}`;
+
+  // Check if the response is cached
+  const cachedData = cache.get(cacheKey);
+  if (cachedData) {
+    return res.status(200).json(cachedData);
   }
 
   const site = SITES[siteId as SiteID];
@@ -68,6 +84,11 @@ const handler: NextApiHandler = async (
   }
 
   //if (siteId === '2') console.log('BETA RESULT', JSON.stringify(json, null, 4));
+
+  // Cache the response for future use
+  if (json && json.error === undefined) {
+    cache.set(cacheKey, json);
+  }
 
   res.status(200).json(json);
 };
