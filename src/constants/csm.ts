@@ -190,7 +190,7 @@ export const SITES: Record<SiteID, Site> = {
     token: {
       address: '0x71C86CbB71846425De5f3a693e989F4BDd97E98d',
       supply: 100000,
-      price: 9.99,
+      price: 10.86,
       symbol: 'CSM-GAMMA',
       gnosisscanUrl:
         'https://gnosisscan.io/address/0x71C86CbB71846425De5f3a693e989F4BDd97E98d',
