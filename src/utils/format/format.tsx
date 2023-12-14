@@ -221,7 +221,7 @@ export const formatUsdCentsPerKWh = (
   oraclePrice = 1,
 ) => {
   const usd = formatUsd(tvl, digit, symbol, currency, oraclePrice);
-  const suffix = ' cts/kWh';
+  const suffix = ' / kWh';
 
   return usd + suffix;
 };
