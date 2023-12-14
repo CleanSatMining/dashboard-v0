@@ -243,7 +243,7 @@ export const SITES: Record<SiteID, Site> = {
       'https://cleansatmining.com/data/files/mount-hood-reflected-in-mirror-lake-oregon.jpg',
     token: {
       address: '0x20D2F2d4b839710562D25274A3e98Ea1F0392D24',
-      supply: 100000,
+      supply: 219566,
       price: 7.44,
       symbol: 'CSM-DELTA',
       gnosisscanUrl:
