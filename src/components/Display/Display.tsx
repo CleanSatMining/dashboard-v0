@@ -12,7 +12,7 @@ import {
   SiteMiningSummary,
   UserSummary,
 } from 'src/types/mining/Mining';
-
+import { useAtom } from 'jotai';
 import { ALLOWED_SITES, DAYS_PERIODS, filterMobile } from '../../constants';
 import { API_ADMIN } from '../../constants/apis';
 import { useBitcoinOracle } from '../../hooks/useBitcoinOracle';
@@ -24,6 +24,7 @@ import { getCSMTokenAddress, getCSMTokenAddresses } from '../CSM/Utils/yield';
 
 import ControlPanel from './components/ControlPanel';
 import { PredefinedPeriods } from './components/Types';
+import { btcPriceAtom } from 'src/states';
 
 interface ApiAdmin {
   admin: boolean;
@@ -49,6 +50,7 @@ const Display: FC = () => {
     DAYS_PERIODS.filter(filterMobile(isMobile))[0].toString(),
   );
   const { price } = useBitcoinOracle();
+  const [btcPrice, setBtcPrice] = useAtom(btcPriceAtom);
   const { states: globalState } = useMiningSitesSummary(
     ALLOWED_SITES,
     Math.max(...DAYS_PERIODS),
@@ -114,6 +116,10 @@ const Display: FC = () => {
     }
   }, [globalState, dispatch]);
 
+  useEffect(() => {
+    setBtcPrice(price);
+  }, [price, setBtcPrice]);
+
   dispatchUserSummary();
 
   return (
@@ -147,7 +153,7 @@ const Display: FC = () => {
         account={account}
         miningStates={globalState}
         period={Number(period)}
-        price={price}
+        price={btcPrice ?? 0}
         balances={balances}
         startDate={dateModeChecked ? startTimestamp : 0} //getTimestampFirstDayOfPreviousMonth(today) : 0
         endDate={dateModeChecked ? endTimestamp : 0} //getTimestampLastDayOfPreviousMonth(today) : 0

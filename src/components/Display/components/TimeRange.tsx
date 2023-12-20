@@ -17,7 +17,7 @@ export const TimeRange: FC<TimeRangeProps> = ({
   const { t } = useTranslation('timeframe', { keyPrefix: 'time' });
 
   return (
-    <Group position={'left'} align={'baseline'}>
+    <Group position={'left'} align={'baseline'} spacing={10}>
       <Paper
         shadow={'xs'}
         //p={2}

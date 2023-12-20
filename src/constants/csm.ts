@@ -74,6 +74,9 @@ export const SITES: Record<SiteID, Site> = {
         provision: 0.2,
       },
     },
+    vault: {
+      btcAddress: 'bc1q2n4v9l8gxlzp7f4c8f4q79vryugjj4hu2ela8r',
+    },
   },
   [SiteID.beta]: {
     name: 'CSM Beta',
@@ -127,6 +130,9 @@ export const SITES: Record<SiteID, Site> = {
         provision: 0.2,
       },
     },
+    vault: {
+      btcAddress: 'bc1qkt5k46h8769h5t33phq6cuhtdhlfk66np2yklf',
+    },
   },
   [SiteID.omega]: {
     name: 'CSM Omega',
@@ -179,6 +185,9 @@ export const SITES: Record<SiteID, Site> = {
         provision: 0.2,
       },
     },
+    vault: {
+      btcAddress: 'bc1qkupuv2s5gtmardsdj57vkf2pekff7rq7es77jg',
+    },
   },
   [SiteID.gamma]: {
     name: 'CSM Gamma',
@@ -230,6 +239,9 @@ export const SITES: Record<SiteID, Site> = {
         taxe: 0.1357,
         provision: 0.2,
       },
+    },
+    vault: {
+      btcAddress: '',
     },
   },
 
@@ -284,6 +296,9 @@ export const SITES: Record<SiteID, Site> = {
         taxe: 0.1357,
         provision: 0.2,
       },
+    },
+    vault: {
+      btcAddress: '',
     },
   },
 };

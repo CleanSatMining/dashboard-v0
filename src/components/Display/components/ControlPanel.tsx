@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { SegmentedControl, Checkbox, Group } from '@mantine/core';
+import { SegmentedControl, Checkbox, Group, Space } from '@mantine/core';
 import { DAYS_PERIODS, filterMobile } from '../../../constants';
 import { formatPeriod } from 'src/utils/format/format';
 import { useTranslation } from 'react-i18next';
@@ -28,6 +28,7 @@ import { TimeSelectMenu } from './TimeSelectMenu';
 
 import { TimeRange } from './TimeRange';
 import { useDisclosure } from '@mantine/hooks';
+import { BtcPrice } from './BtcPrice';
 interface ControlPanelProps {
   isMobile: boolean;
   period: string;
@@ -203,78 +204,86 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   }, []);
 
   return (
-    <Group
-      mih={isMobile ? 50 : 70}
-      spacing={'xs'}
-      position={'left'}
-      align={'center'}
-      m={isMobile ? 10 : undefined}
-    >
-      {dateModeChecked && (
-        <>
-          {isMobile && (
-            <TimeSelectDrawer
-              IconMenu={IconMenu}
-              closeDrawer={closeDrawer}
-              openDrawer={openDrawer}
-              drawerOpened={drawerOpened}
-              menuLabel={menuLabel}
-              numberInput={numberInput}
-              setNumberInput={setNumberInput}
-              startDateInput={startDateInput}
-              startDateError={startDateError}
-              setStartDateInput={setStartDateInput}
-              setStartDateError={setStartDateError}
-              endDateInput={endDateInput}
-              setEndDateInput={setEndDateInput}
-              handleDateRangeItemClick={handleDateRangeItemClick}
-              handleNumberOfDaysClick={handleNumberOfDaysClick}
-              handlePredefinedPeriodClick={handlePredefinedPeriodClick}
-            ></TimeSelectDrawer>
+    <>
+      <Group position={'apart'}>
+        <Group
+          mih={isMobile ? 50 : 70}
+          spacing={'xs'}
+          position={'left'}
+          align={'center'}
+          m={isMobile ? 10 : undefined}
+        >
+          {dateModeChecked && (
+            <>
+              {isMobile && (
+                <TimeSelectDrawer
+                  IconMenu={IconMenu}
+                  closeDrawer={closeDrawer}
+                  openDrawer={openDrawer}
+                  drawerOpened={drawerOpened}
+                  menuLabel={menuLabel}
+                  numberInput={numberInput}
+                  setNumberInput={setNumberInput}
+                  startDateInput={startDateInput}
+                  startDateError={startDateError}
+                  setStartDateInput={setStartDateInput}
+                  setStartDateError={setStartDateError}
+                  endDateInput={endDateInput}
+                  setEndDateInput={setEndDateInput}
+                  handleDateRangeItemClick={handleDateRangeItemClick}
+                  handleNumberOfDaysClick={handleNumberOfDaysClick}
+                  handlePredefinedPeriodClick={handlePredefinedPeriodClick}
+                ></TimeSelectDrawer>
+              )}
+              {!isMobile && (
+                <TimeSelectMenu
+                  IconMenu={IconMenu}
+                  closeMenu={closeMenu}
+                  openMenu={openMenu}
+                  menuOpened={menuOpened}
+                  menuLabel={menuLabel}
+                  numberInput={numberInput}
+                  setNumberInput={setNumberInput}
+                  startDateInput={startDateInput}
+                  startDateError={startDateError}
+                  setStartDateInput={setStartDateInput}
+                  setStartDateError={setStartDateError}
+                  endDateInput={endDateInput}
+                  setEndDateInput={setEndDateInput}
+                  handleDateRangeItemClick={handleDateRangeItemClick}
+                  handleNumberOfDaysClick={handleNumberOfDaysClick}
+                  handlePredefinedPeriodClick={handlePredefinedPeriodClick}
+                ></TimeSelectMenu>
+              )}
+              <TimeRange
+                startTimestamp={startTimestamp}
+                endTimestamp={endTimestamp}
+              ></TimeRange>
+            </>
           )}
-          {!isMobile && (
-            <TimeSelectMenu
-              IconMenu={IconMenu}
-              closeMenu={closeMenu}
-              openMenu={openMenu}
-              menuOpened={menuOpened}
-              menuLabel={menuLabel}
-              numberInput={numberInput}
-              setNumberInput={setNumberInput}
-              startDateInput={startDateInput}
-              startDateError={startDateError}
-              setStartDateInput={setStartDateInput}
-              setStartDateError={setStartDateError}
-              endDateInput={endDateInput}
-              setEndDateInput={setEndDateInput}
-              handleDateRangeItemClick={handleDateRangeItemClick}
-              handleNumberOfDaysClick={handleNumberOfDaysClick}
-              handlePredefinedPeriodClick={handlePredefinedPeriodClick}
-            ></TimeSelectMenu>
+          {!dateModeChecked && (
+            <SegmentedControl
+              data={dataSegmentedControl}
+              w={500}
+              radius={50}
+              value={period}
+              onChange={setPeriod}
+            />
           )}
-          <TimeRange
-            startTimestamp={startTimestamp}
-            endTimestamp={endTimestamp}
-          ></TimeRange>
-        </>
-      )}
-      {!dateModeChecked && (
-        <SegmentedControl
-          data={dataSegmentedControl}
-          w={500}
-          radius={50}
-          value={period}
-          onChange={setPeriod}
-        />
-      )}
-      {adminData && (
-        <Checkbox
-          label={'Mode date'}
-          checked={dateModeChecked}
-          onChange={(event) => setDateModeChecked(event.currentTarget.checked)}
-        />
-      )}
-    </Group>
+          {adminData && (
+            <Checkbox
+              label={'Mode date'}
+              checked={dateModeChecked}
+              onChange={(event) =>
+                setDateModeChecked(event.currentTarget.checked)
+              }
+            />
+          )}
+        </Group>
+        <BtcPrice marginLeft={isMobile ? '0px' : '20px'}></BtcPrice>
+      </Group>
+      <Space h={2}></Space>
+    </>
   );
 
   /**

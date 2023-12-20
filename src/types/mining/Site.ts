@@ -10,6 +10,9 @@ export type Site = {
     api: Api;
     mining: Mining;
     fees: Fees;
+    vault: {
+      btcAddress: string;
+    }
   };
 
   export type Token = {

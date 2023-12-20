@@ -16,6 +16,7 @@
     "my-income": "Mes revenus estimés",
     "my-income-short": "Mes revenus est.",
     "my-site": "Le site",
+    "treasury": "Trésorerie",
     "bitcoin-mined": "Production totale",
     "my-sites": "Mes sites",
     "my-apy": "APY",
@@ -52,10 +53,9 @@
     "detail": "Détail",
     "token-value": "Valeur",
     "token-value-explained": "La valeur affichée ici se base sur le prix de vente initial des tokens lors des levées de fonds CleanSat Mining. Cependant, la valeur des CSM tokens peut librement fluctuer sur le marché secondaire en fonction de l’offre et de la demande.",
-    "lost-explained":"Sur cette periode le nombre de bitcoin miné ne suffit pas à amortir les machines.",
+    "lost-explained": "Sur cette periode le nombre de bitcoin miné ne suffit pas à amortir les machines.",
     "provision-explained": "Chaque année, 20% de la valeur de l'équipement de minage du site (soit $ ici) est provisionné dans la trésorerie de l'entreprise.",
     "operator-explained": "Les coûts de l'opérateur sont inclus dans le coût de l'électricité.",
     "income-explained": "Les revenus présentés ici ne sont que des estimations. Les dividendes à verser aux actionnaires des sociétés CleanSat Mining seront calculés précisément de manière trimestrielle lors d'un bilan comptable intermédiaire."
   }
-
 }
