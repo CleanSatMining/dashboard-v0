@@ -3,7 +3,7 @@ import { FC, useEffect, useState } from 'react';
 import { useAppSelector } from 'src/hooks/react-hooks';
 import { selectMiningState } from 'src/store/features/miningData/miningDataSelector';
 import { selectUsersState } from 'src/store/features/userData/userDataSelector';
-
+import { PropertiesERC20 } from 'src/types/PropertiesToken';
 import { SITES, SiteID } from '../../../constants';
 import { Site, TokenBalance } from '../../../types/mining/Site';
 import { UserSiteCard } from './UserCard/UserSiteCard';
@@ -11,6 +11,7 @@ import { UserSiteCardMobile } from './UserCard/UserSiteCardMobile';
 import { CardData, CardCost } from './UserCard/Type';
 import BigNumber from 'bignumber.js';
 import { Yield } from 'src/types/mining/Site';
+import { useCsmTokens } from 'src/hooks/useCsmTokens';
 
 import {
   getMinedBtcBySite,
@@ -46,12 +47,19 @@ const _SiteCard: FC<SiteProps> = ({
   //const isMobile = useMediaQuery('(max-width: 36em)');
   const usersState = useAppSelector(selectUsersState);
   const miningState = useAppSelector(selectMiningState);
+  const { getPropertyToken } = useCsmTokens();
 
   const site: Site = SITES[siteId as SiteID];
 
   const userToken = getUserTokenBalance(usersState, account, siteId);
   const tokenBalance = userToken.balance;
-  const userShare = getUserSiteShare(miningState, usersState, siteId, account);
+  const userShare = getUserSiteShare(
+    miningState,
+    usersState,
+    siteId,
+    account,
+    getPropertyToken(site.token.address),
+  );
   const siteMinedBTC = getMinedBtcBySite(
     miningState,
     siteId,
@@ -110,6 +118,7 @@ const _SiteCard: FC<SiteProps> = ({
     siteUptime,
     siteCosts,
     period,
+    getPropertyToken,
   );
 
   const [userSiteData, setUserSiteData] = useState<CardData>(data);
@@ -170,6 +179,7 @@ const _SiteCard: FC<SiteProps> = ({
         siteUptime,
         siteCosts,
         period,
+        getPropertyToken,
       ),
     );
     if (shallDisplay) {
@@ -249,10 +259,15 @@ function buildUserSiteData(
   },
   costs: CardCost,
   period: number,
+  getPropertyToken: (address: string) => PropertiesERC20 | undefined,
 ): CardData {
   const siteHashrate = new BigNumber(site.mining.asics.hashrateHs)
     .times(site.mining.asics.units)
     .toNumber();
+  const tokenProperties = getPropertyToken(site.token.address);
+  const tokenSupply = tokenProperties
+    ? tokenProperties.supply
+    : site.token.supply;
   return {
     id: siteId,
     label: site.name,
@@ -282,7 +297,7 @@ function buildUserSiteData(
       balance: userToken.balance,
       value: userToken.usd,
       percent: userShare.toNumber(),
-      supply: site.token.supply,
+      supply: tokenSupply,
       url: site.token.gnosisscanUrl,
       symbol: site.token.symbol,
       address: site.token.address,

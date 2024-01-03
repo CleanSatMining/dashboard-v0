@@ -4,7 +4,7 @@ import { createAction, createReducer } from '@reduxjs/toolkit';
 
 import { getRightAllowBuyTokens } from 'src/hooks/useAllowedTokens';
 import { AppDispatch, RootState } from 'src/store/store';
-import { PropertiesToken } from 'src/types';
+import { PropertiesToken, PropertiesERC20 } from 'src/types';
 import { AllowedToken } from 'src/types/allowedTokens';
 import { OFFER_LOADING, Offer } from 'src/types/offer/Offer';
 import { Price } from 'src/types/price';
@@ -12,6 +12,7 @@ import { fetchOffersTheGraph } from 'src/utils/offers/fetchOffers';
 import { getRealTokenClient } from 'src/utils/offers/getClientURL';
 import { getPrice } from 'src/utils/price';
 import { Price as P } from 'src/utils/price';
+import { getERC20Properties } from 'src/utils/properties';
 
 interface InterfaceInitialStateType {
   offers: {
@@ -22,6 +23,10 @@ interface InterfaceInitialStateType {
   properties: {
     isloading: boolean;
     properties: PropertiesToken[];
+  };
+  csmTokens: {
+    isloading: boolean;
+    properties: PropertiesERC20[];
   };
   wlProperties: {
     isloading: boolean;
@@ -43,6 +48,10 @@ const interfaceInitialState: InterfaceInitialStateType = {
     properties: [],
     isloading: true,
   },
+  csmTokens: {
+    properties: [],
+    isloading: true,
+  },
   wlProperties: {
     isloading: true,
     wlPropertiesId: [],
@@ -57,6 +66,10 @@ const interfaceInitialState: InterfaceInitialStateType = {
 export const offersChangedDispatchType = 'interface/offersChanged';
 export const offersIsLoadingDispatchType = 'interface/offersIsLoading';
 export const offersResetDispatchType = 'interface/offersReset';
+export const propertiesErc20ChangedDispatchType =
+  'interface/propertiesErc20Changed';
+export const propertiesErc20IsLoadingDispatchType =
+  'interface/propertiesErc20IsLoading';
 export const propertiesChangedDispatchType = 'interface/propertiesChanged';
 export const propertiesIsLoadingDispatchType = 'interface/propertiesIsLoading';
 export const chainPropertiesChangedDispatchType =
@@ -75,6 +88,12 @@ export const offersIsloading = createAction<boolean>(
   offersIsLoadingDispatchType,
 );
 export const offersReset = createAction<undefined>(offersResetDispatchType);
+export const propertiesErc20Changed = createAction<PropertiesERC20[]>(
+  propertiesErc20ChangedDispatchType,
+);
+export const propertiesErc20IsLoading = createAction<boolean>(
+  propertiesErc20IsLoadingDispatchType,
+);
 export const propertiesChanged = createAction<PropertiesToken[]>(
   propertiesChangedDispatchType,
 );
@@ -128,6 +147,17 @@ export function fetchOffers(
     dispatch({ type: offersIsLoadingDispatchType, payload: false });
   };
 }
+export function fetchErc20Properties() {
+  return async function fetchOffersThunk(dispatch: AppDispatch) {
+    dispatch({ type: propertiesErc20IsLoadingDispatchType, payload: true });
+
+    const properties = await getERC20Properties();
+
+    dispatch({ type: propertiesErc20ChangedDispatchType, payload: properties });
+    dispatch({ type: propertiesErc20IsLoadingDispatchType, payload: false });
+  };
+}
+
 /* eslint-disable */
 export function fetchProperties(chainId: number) {
   return async function fetchPropertiesThunk(dispatch: AppDispatch) {
@@ -216,6 +246,12 @@ export const interfaceReducers = createReducer(
       })
       .addCase(offersIsloading, (state, action) => {
         state.offers.isLoading = action.payload;
+      })
+      .addCase(propertiesErc20Changed, (state, action) => {
+        state.csmTokens.properties = action.payload;
+      })
+      .addCase(propertiesErc20IsLoading, (state, action) => {
+        state.csmTokens.isloading = action.payload;
       })
       .addCase(propertiesChanged, (state, action) => {
         state.properties.properties = action.payload;

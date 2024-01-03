@@ -19,7 +19,7 @@ import { Price } from 'src/types/price';
 export const getBigDataGraphRealtoken = async (
   chainId: number,
   client: ApolloClient<NormalizedCacheObject>,
-  realtokenAccount: string[]
+  realtokenAccount: string[],
 ) => {
   const { address: realTokenYamUpgradeable } =
     CHAINS[chainId as ChainsID].contracts.realTokenYamUpgradeable;
@@ -55,7 +55,7 @@ export const getBigDataGraphRealtoken = async (
     const allowance: { id: string; allowance: string } | undefined =
       accountBalance.allowances?.find(
         (allowance: { id: string; allowance: string }) =>
-          accountBalance.id + '-' + realTokenYamUpgradeable === allowance.id
+          accountBalance.id + '-' + realTokenYamUpgradeable === allowance.id,
       );
     /*  console.log(
       'DEBUG data.accountBalances.map allowance',
@@ -77,7 +77,7 @@ export const fetchOffersTheGraph = (
   account: string,
   chainId: number,
   propertiesToken: PropertiesToken[],
-  prices: Price
+  prices: Price,
 ): Promise<Offer[]> => {
   return new Promise<Offer[]>(async (resolve, reject) => {
     try {
@@ -104,7 +104,7 @@ export const fetchOffersTheGraph = (
               where: { offers_: { removedAtBlock: null } }
             ) {
               address
-              offers(first: 1000){
+              offers(first: 1000) {
                 id
                 offerToken {
                   address
@@ -118,12 +118,12 @@ export const fetchOffersTheGraph = (
       //console.log('Debug Query usersDataYAM', usersDataYAM);
 
       //TODO: tmp supprimer la partie false quant déploiement ok sur Eth et Gnosis, remettre en const a la place de let try = new graph, catch = old graph
-      
+
       // Pagination
-      const offers: OfferGraphQl[]  = [];
+      const offers: OfferGraphQl[] = [];
       let skip = 0;
       let stop = false;
-      while(!stop){
+      while (!stop) {
         const { data } = await clientYAM.query({
           query: gql`
             query getOffers {
@@ -134,26 +134,28 @@ export const fetchOffersTheGraph = (
           `,
         });
 
-        if(data.offers && data.offers.length > 0){
-          skip+=1000;
+        if (data.offers && data.offers.length > 0) {
+          skip += 1000;
 
-          console.log(data.offers)
+          console.log(data.offers);
 
           offers.push(...data.offers);
 
           // Avoid one request more
-          if(data.offers.length < 1000) stop = true;
-        }else{
+          if (data.offers.length < 1000) stop = true;
+        } else {
           stop = true;
         }
       }
 
       console.log('Query dataYAM', offers.length);
 
-      const accountRealtoken: string[] = usersDataYAM.accounts.map((account: { address: string; offers: [] }) =>
-          account.offers.map((offer: { id: string; offerToken: { address: string } }) =>
-              account.address + '-' + offer.offerToken.address
-          )
+      const accountRealtoken: string[] = usersDataYAM.accounts.map(
+        (account: { address: string; offers: [] }) =>
+          account.offers.map(
+            (offer: { id: string; offerToken: { address: string } }) =>
+              account.address + '-' + offer.offerToken.address,
+          ),
       );
       const accountBalanceId: string[] = accountRealtoken.flat();
       //console.log('Debug liste accountBalanceId', accountBalanceId);
@@ -172,7 +174,8 @@ export const fetchOffersTheGraph = (
         ); */
         if (batch.length <= 0) break;
 
-        const realtokenData: [DataRealtokenType] = await getBigDataGraphRealtoken(chainId, clientRealtoken, batch);
+        const realtokenData: [DataRealtokenType] =
+          await getBigDataGraphRealtoken(chainId, clientRealtoken, batch);
 
         //console.log('DEBUG for realtokenData', i, batchSize, realtokenData);
         dataRealtoken.push(...realtokenData);
@@ -180,37 +183,41 @@ export const fetchOffersTheGraph = (
 
       //console.log('Debug Query dataRealtoken', dataRealtoken);
 
-      const promises = offers.map( (offer: OfferGraphQl) => new Promise<Offer>(async (resolve,reject) => {
-        try{
-          const accountUserRealtoken: DataRealtokenType = dataRealtoken.find(
-            (accountBalance: DataRealtokenType): boolean =>
-              accountBalance.id ===
-              offer.seller.address + '-' + offer.offerToken.address
-          )!;
+      const promises = offers.map(
+        (offer: OfferGraphQl) =>
+          new Promise<Offer>(async (resolve, reject) => {
+            try {
+              const accountUserRealtoken: DataRealtokenType =
+                dataRealtoken.find(
+                  (accountBalance: DataRealtokenType): boolean =>
+                    accountBalance.id ===
+                    offer.seller.address + '-' + offer.offerToken.address,
+                )!;
 
-          const offerData: Offer = await parseOffer(
-            provider,
-            account,
-            offer,
-            accountUserRealtoken,
-            propertiesToken,
-            prices
-          );
+              const offerData: Offer = await parseOffer(
+                provider,
+                account,
+                offer,
+                accountUserRealtoken,
+                propertiesToken,
+                prices,
+              );
 
-          offerData.hasPropertyToken =
-            BigNumber(offerData.buyerTokenType).eq(1) ||
-            BigNumber(offerData.offerTokenType).eq(1);
+              offerData.hasPropertyToken =
+                BigNumber(offerData.buyerTokenType).eq(1) ||
+                BigNumber(offerData.offerTokenType).eq(1);
 
-          resolve(offerData)
-        }catch(err){
-          console.log("Error when parsingOffer: ", err);
-          reject(err);
-        }
-    }));
+              resolve(offerData);
+            } catch (err) {
+              console.log('Error when parsingOffer: ', err);
+              reject(err);
+            }
+          }),
+      );
 
-    const parsedOffers = await Promise.all(promises);
+      const parsedOffers = await Promise.all(promises);
 
-      offersData.push(...parsedOffers)
+      offersData.push(...parsedOffers);
       console.log('Offers formated', offersData.length);
 
       resolve(offersData);

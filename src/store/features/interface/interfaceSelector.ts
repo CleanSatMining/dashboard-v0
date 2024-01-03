@@ -6,6 +6,10 @@ import { Price } from 'src/types/price';
 
 export const selectOffersIsLoading = (state: RootState) =>
   state.interface.offers.isLoading;
+export const selectCsmTokens = (state: RootState) =>
+  state.interface.csmTokens.properties;
+export const selectCsmTokensIsLoading = (state: RootState) =>
+  state.interface.csmTokens.isloading;
 export const selectProperties = (state: RootState) =>
   state.interface.properties.properties;
 export const selectPropertiesIsLoading = (state: RootState) =>
@@ -18,11 +22,8 @@ export const selectAddressOffers = (state: RootState) => {
   const address = selectAddress(state);
   const offers = selectOffers(state);
 
-  if (!address || !offers)
-    return OFFER_LOADING;
-    return offers.filter(
-      (offer: Offer) => offer.sellerAddress == address
-    );
+  if (!address || !offers) return OFFER_LOADING;
+  return offers.filter((offer: Offer) => offer.sellerAddress == address);
 };
 
 export const selectPublicOffers = (state: RootState) => {
@@ -33,7 +34,7 @@ export const selectPublicOffers = (state: RootState) => {
     (offer: Offer) =>
       !offer.buyerAddress &&
       BigNumber(offer.amount).isPositive() &&
-      !BigNumber(offer.amount).isZero()
+      !BigNumber(offer.amount).isZero(),
   );
 };
 
@@ -43,15 +44,13 @@ export const selectPrivateOffers = (state: RootState) => {
   const offersIsLoading = selectOffersIsLoading(state);
 
   if (!address || !offers || offersIsLoading) return OFFER_LOADING;
-  return offers.filter(
-    (offer: Offer) => offer.buyerAddress == address
-  );
+  return offers.filter((offer: Offer) => offer.buyerAddress == address);
 };
 
 export const selectPricesIsLoading = (state: RootState): boolean => {
   return state.interface.prices.isLoading;
-}
+};
 
 export const selectPrices = (state: RootState): Price => {
   return state.interface.prices.prices;
-}
+};

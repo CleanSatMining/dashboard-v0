@@ -52,6 +52,7 @@ export const CardTokenContent: FC<CardTokenContentProps> = ({
   const percent: number = data.token.percent;
   const symbol: string = data.token.symbol;
   const supply: number = data.token.supply;
+  const approx: string = balance === 0 ? '' : '~';
 
   return (
     <div style={{ padding }}>
@@ -104,7 +105,8 @@ export const CardTokenContent: FC<CardTokenContentProps> = ({
           {formatToken(balance) +
             '/' +
             formatToken(supply) +
-            ' (~' +
+            ' (' +
+            approx +
             formatSmallPercent(percent) +
             ')'}
         </Text>

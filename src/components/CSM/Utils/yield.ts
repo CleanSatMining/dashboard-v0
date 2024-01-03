@@ -3,7 +3,7 @@ import { getMiningDays } from './period';
 import { MiningState, UserState } from 'src/types/mining/Mining';
 
 import { ALLOWED_SITES, SITES, SiteID } from '../../../constants/csm';
-
+import { PropertiesERC20 } from 'src/types/PropertiesToken';
 import { Site, TokenBalance, Yield } from '../../../types/mining/Site';
 import {
   calculateElececticityCostPerPeriod,
@@ -473,6 +473,7 @@ export const getUserSiteShare = (
   userState: UserState,
   siteId: string,
   userAddress: string,
+  tokenProperties: PropertiesERC20 | undefined,
 ): BigNumber => {
   if (miningState && userState && userState.byAddress[userAddress]) {
     const tokenSupply = SITES[siteId as SiteID].token.supply;
