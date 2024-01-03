@@ -33,8 +33,6 @@ export type PropertiesToken = {
     tokenIdRules: number
     netRentYearPerToken: number
     annualYield?: number
-    supply: number;
-    decimals?:number;
 }
 
 export type PropertiesERC20 = {
