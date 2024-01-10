@@ -5,5 +5,5 @@
   "feesBlocks24H": "Tarifas de transacción (24h)",
   "blockRewards": "Recompensas de bloque (24h)",
   "networkHashrate7D": "Hashrate de la red (7d)",
-  "halvingCountdown": "Cuenta regresiva de la reducción a la mitad (Días)"
+  "halvingCountdown": "Cuenta regresiva de la reducción a la mitad"
 }

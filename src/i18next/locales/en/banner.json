@@ -5,5 +5,5 @@
   "feesBlocks24H": "Transaction Fees (24h)",
   "blockRewards": "Block Rewards (24h)",
   "networkHashrate7D": "Network Hashrate (7d)",
-  "halvingCountdown": "Halving Countdown (Days)"
+  "halvingCountdown": "Halving Countdown"
 }

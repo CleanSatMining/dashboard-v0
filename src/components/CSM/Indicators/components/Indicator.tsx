@@ -1,6 +1,5 @@
 import React, { FC } from 'react';
-import { useAtomValue } from 'jotai';
-import { btcPriceAtom } from 'src/states';
+
 import {
   Group,
   Paper,
@@ -9,7 +8,6 @@ import {
   Avatar,
   Flex,
 } from '@mantine/core';
-import { formatUsd } from 'src/utils/format/format';
 
 interface IndicatorProps {
   value: string;
