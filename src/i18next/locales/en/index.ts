@@ -22,8 +22,10 @@ export { default as faq } from './faq.json';
 export { default as header } from './header.json';
 import { default as timeframe } from './timeframe.json';
 import { default as wallet } from './wallet.json';
+import { default as banner } from './banner.json';
 
 const lng = {
+  banner,
   wallet,
   timeframe,
   site,

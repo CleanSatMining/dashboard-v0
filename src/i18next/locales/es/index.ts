@@ -11,8 +11,10 @@ import { default as site } from './site.json';
 import { default as table } from './table.json';
 import { default as timeframe } from './timeframe.json';
 import { default as wallet } from './wallet.json';
+import { default as banner } from './banner.json';
 
 const lng = {
+  banner,
   wallet,
   timeframe,
   site,

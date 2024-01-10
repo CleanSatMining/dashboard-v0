@@ -28,7 +28,8 @@ import { TimeSelectMenu } from './TimeSelectMenu';
 
 import { TimeRange } from './TimeRange';
 import { useDisclosure } from '@mantine/hooks';
-import { BtcPrice } from './BtcPrice';
+import { BtcPrice } from '../../CSM/Indicators/components/BtcPrice';
+import { Networkoverview } from '../../CSM/Indicators/components/NetworkOverview';
 interface ControlPanelProps {
   isMobile: boolean;
   period: string;
@@ -270,7 +271,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
               onChange={setPeriod}
             />
           )}
-          {adminData && (
+          {false && (
             <Checkbox
               label={'Mode date'}
               checked={dateModeChecked}
@@ -280,7 +281,10 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
             />
           )}
         </Group>
-        <BtcPrice marginLeft={isMobile ? '0px' : '20px'}></BtcPrice>
+        <Group>
+          {/* <Networkoverview></Networkoverview> */}
+          <BtcPrice marginLeft={isMobile ? '0px' : '20px'}></BtcPrice>
+        </Group>
       </Group>
       <Space h={2}></Space>
     </>

@@ -8,6 +8,11 @@ export const API_BITCOIN_ORACLE = {
   method: 'POST',
 };
 
+export const API_NETWORK_OVERVIEW = {
+  url: '/api/hashrate/overview',
+  method: 'POST',
+};
+
 export const API_ADMIN = {
   url: (address: string) => '/api/admin/' + address,
   method: 'POST',

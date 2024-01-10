@@ -13,7 +13,7 @@ import {
   Image,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { TablerIcon, IconCards, IconDiscountCheck } from '@tabler/icons';
+import { TablerIcon, IconDiscountCheck } from '@tabler/icons';
 import { InfoTitle } from 'src/components/InfoText/InfoText';
 import { Carousel } from '@mantine/carousel';
 import { Metadata, Attribute } from 'src/abis/types/NFT';

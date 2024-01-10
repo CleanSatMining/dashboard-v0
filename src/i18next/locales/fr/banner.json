@@ -1,0 +1,9 @@
+{
+  "btcPrice": "Prix du BTC",
+  "marketCap": "Capitalisation boursière",
+  "hashPrice": "Prix du hash (USD/PH/Day)",
+  "feesBlocks24H": "Frais de transaction (24h)",
+  "blockRewards": "Récompenses de bloc (24h)",
+  "networkHashrate7D": "Hashrate du réseau (7j)",
+  "halvingCountdown": "Compte à rebours du halving (Jours)"
+}

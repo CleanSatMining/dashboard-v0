@@ -8,11 +8,11 @@ import { Account as AccountGraphQL } from '../../../.graphclient/index';
 const getTheGraphURL = (chainId: number): string => {
   switch (chainId) {
     case 1:
-      return 'https://api.thegraph.com/subgraphs/name/realtoken-thegraph/realtoken-eth';
+      return '';
     case 5:
-      return 'https://api.thegraph.com/subgraphs/name/realtoken-thegraph/realtoken-goerli';
+      return '';
     case 100:
-      return 'https://api.thegraph.com/subgraphs/name/realtoken-thegraph/realtoken-xdai';
+      return 'ttps://api.thegraph.com/subgraphs/name/clean-sat-mining-thegraph/csm-tokens';
     default:
       return '';
   }
@@ -21,7 +21,7 @@ const getTheGraphURL = (chainId: number): string => {
 export const fetchWallet = (
   address: string,
   offerTokenAddress: string,
-  chainId: number
+  chainId: number,
 ) => {
   return new Promise<Account>(async (resolve, reject) => {
     try {

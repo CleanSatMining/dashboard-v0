@@ -476,7 +476,9 @@ export const getUserSiteShare = (
   tokenProperties: PropertiesERC20 | undefined,
 ): BigNumber => {
   if (miningState && userState && userState.byAddress[userAddress]) {
-    const tokenSupply = SITES[siteId as SiteID].token.supply;
+    const tokenSupply = tokenProperties
+      ? tokenProperties.supply
+      : SITES[siteId as SiteID].token.supply;
     return new BigNumber(
       getUserTokenBalance(userState, userAddress, siteId).balance,
     ).dividedBy(tokenSupply);

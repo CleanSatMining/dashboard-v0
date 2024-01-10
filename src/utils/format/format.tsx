@@ -213,6 +213,12 @@ export function formatHashrate(num: number, hasData = true) {
   return formatFullBigNumber(value, 0, 0) + ' TH/s';
 }
 
+export function formatCustumHashrate(num: number, shift: number, unit: string) {
+  const numBig = new BigNumber(num);
+  const value = numBig.dividedBy(new BigNumber(10).exponentiatedBy(shift));
+  return formatFullBigNumber(value, 0, 0) + ' ' + unit;
+}
+
 export const formatUsdCentsPerKWh = (
   tvl: number,
   digit = 4,

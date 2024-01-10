@@ -2587,21 +2587,21 @@ export type ResolverFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo
+  info: GraphQLResolveInfo,
 ) => Promise<TResult> | TResult;
 
 export type SubscriptionSubscribeFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo
+  info: GraphQLResolveInfo,
 ) => AsyncIterable<TResult> | Promise<AsyncIterable<TResult>>;
 
 export type SubscriptionResolveFn<TResult, TParent, TContext, TArgs> = (
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo
+  info: GraphQLResolveInfo,
 ) => TResult | Promise<TResult>;
 
 export interface SubscriptionSubscriberObject<
@@ -2609,7 +2609,7 @@ export interface SubscriptionSubscriberObject<
   TKey extends string,
   TParent,
   TContext,
-  TArgs
+  TArgs,
 > {
   subscribe: SubscriptionSubscribeFn<
     { [key in TKey]: TResult },
@@ -2635,7 +2635,7 @@ export type SubscriptionObject<
   TKey extends string,
   TParent,
   TContext,
-  TArgs
+  TArgs,
 > =
   | SubscriptionSubscriberObject<TResult, TKey, TParent, TContext, TArgs>
   | SubscriptionResolverObject<TResult, TParent, TContext, TArgs>;
@@ -2645,7 +2645,7 @@ export type SubscriptionResolver<
   TKey extends string,
   TParent = {},
   TContext = {},
-  TArgs = {}
+  TArgs = {},
 > =
   | ((
       ...args: any[]
@@ -2655,13 +2655,13 @@ export type SubscriptionResolver<
 export type TypeResolveFn<TTypes, TParent = {}, TContext = {}> = (
   parent: TParent,
   context: TContext,
-  info: GraphQLResolveInfo
+  info: GraphQLResolveInfo,
 ) => Maybe<TTypes> | Promise<Maybe<TTypes>>;
 
 export type IsTypeOfResolverFn<T = {}, TContext = {}> = (
   obj: T,
   context: TContext,
-  info: GraphQLResolveInfo
+  info: GraphQLResolveInfo,
 ) => boolean | Promise<boolean>;
 
 export type NextResolverFn<T> = () => Promise<T>;
@@ -2670,13 +2670,13 @@ export type DirectiveResolverFn<
   TResult = {},
   TParent = {},
   TContext = {},
-  TArgs = {}
+  TArgs = {},
 > = (
   next: NextResolverFn<TResult>,
   parent: TParent,
   args: TArgs,
   context: TContext,
-  info: GraphQLResolveInfo
+  info: GraphQLResolveInfo,
 ) => TResult | Promise<TResult>;
 
 /** Mapping between all available schema types and the resolvers types */
@@ -2794,7 +2794,7 @@ export type entityDirectiveResolver<
   Result,
   Parent,
   ContextType = MeshContext,
-  Args = entityDirectiveArgs
+  Args = entityDirectiveArgs,
 > = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type subgraphIdDirectiveArgs = {
@@ -2805,7 +2805,7 @@ export type subgraphIdDirectiveResolver<
   Result,
   Parent,
   ContextType = MeshContext,
-  Args = subgraphIdDirectiveArgs
+  Args = subgraphIdDirectiveArgs,
 > = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type derivedFromDirectiveArgs = {
@@ -2816,12 +2816,13 @@ export type derivedFromDirectiveResolver<
   Result,
   Parent,
   ContextType = MeshContext,
-  Args = derivedFromDirectiveArgs
+  Args = derivedFromDirectiveArgs,
 > = DirectiveResolverFn<Result, Parent, ContextType, Args>;
 
 export type QueryResolvers<
   ContextType = MeshContext,
-  ParentType extends ResolversParentTypes['Query'] = ResolversParentTypes['Query']
+  ParentType extends
+    ResolversParentTypes['Query'] = ResolversParentTypes['Query'],
 > = ResolversObject<{
   account?: Resolver<
     Maybe<ResolversTypes['Account']>,
@@ -2992,7 +2993,8 @@ export type QueryResolvers<
 
 export type SubscriptionResolvers<
   ContextType = MeshContext,
-  ParentType extends ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription']
+  ParentType extends
+    ResolversParentTypes['Subscription'] = ResolversParentTypes['Subscription'],
 > = ResolversObject<{
   account?: SubscriptionResolver<
     Maybe<ResolversTypes['Account']>,
@@ -3217,7 +3219,8 @@ export type SubscriptionResolvers<
 
 export type AccountResolvers<
   ContextType = MeshContext,
-  ParentType extends ResolversParentTypes['Account'] = ResolversParentTypes['Account']
+  ParentType extends
+    ResolversParentTypes['Account'] = ResolversParentTypes['Account'],
 > = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   address?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
@@ -3274,7 +3277,8 @@ export interface BytesScalarConfig
 
 export type OfferResolvers<
   ContextType = MeshContext,
-  ParentType extends ResolversParentTypes['Offer'] = ResolversParentTypes['Offer']
+  ParentType extends
+    ResolversParentTypes['Offer'] = ResolversParentTypes['Offer'],
 > = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   seller?: Resolver<ResolversTypes['Account'], ParentType, ContextType>;
@@ -3321,7 +3325,8 @@ export type OfferResolvers<
 
 export type OfferPriceResolvers<
   ContextType = MeshContext,
-  ParentType extends ResolversParentTypes['OfferPrice'] = ResolversParentTypes['OfferPrice']
+  ParentType extends
+    ResolversParentTypes['OfferPrice'] = ResolversParentTypes['OfferPrice'],
 > = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   offer?: Resolver<ResolversTypes['Offer'], ParentType, ContextType>;
@@ -3338,7 +3343,8 @@ export type OfferPriceResolvers<
 
 export type PurchaseResolvers<
   ContextType = MeshContext,
-  ParentType extends ResolversParentTypes['Purchase'] = ResolversParentTypes['Purchase']
+  ParentType extends
+    ResolversParentTypes['Purchase'] = ResolversParentTypes['Purchase'],
 > = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   offer?: Resolver<ResolversTypes['Offer'], ParentType, ContextType>;
@@ -3356,7 +3362,8 @@ export type PurchaseResolvers<
 
 export type TokenResolvers<
   ContextType = MeshContext,
-  ParentType extends ResolversParentTypes['Token'] = ResolversParentTypes['Token']
+  ParentType extends
+    ResolversParentTypes['Token'] = ResolversParentTypes['Token'],
 > = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   address?: Resolver<ResolversTypes['Bytes'], ParentType, ContextType>;
@@ -3440,7 +3447,8 @@ export type TokenResolvers<
 
 export type _Block_Resolvers<
   ContextType = MeshContext,
-  ParentType extends ResolversParentTypes['_Block_'] = ResolversParentTypes['_Block_']
+  ParentType extends
+    ResolversParentTypes['_Block_'] = ResolversParentTypes['_Block_'],
 > = ResolversObject<{
   hash?: Resolver<Maybe<ResolversTypes['Bytes']>, ParentType, ContextType>;
   number?: Resolver<ResolversTypes['Int'], ParentType, ContextType>;
@@ -3450,7 +3458,8 @@ export type _Block_Resolvers<
 
 export type _Meta_Resolvers<
   ContextType = MeshContext,
-  ParentType extends ResolversParentTypes['_Meta_'] = ResolversParentTypes['_Meta_']
+  ParentType extends
+    ResolversParentTypes['_Meta_'] = ResolversParentTypes['_Meta_'],
 > = ResolversObject<{
   block?: Resolver<ResolversTypes['_Block_'], ParentType, ContextType>;
   deployment?: Resolver<ResolversTypes['String'], ParentType, ContextType>;
@@ -3464,7 +3473,8 @@ export type _Meta_Resolvers<
 
 export type AccountBalanceResolvers<
   ContextType = MeshContext,
-  ParentType extends ResolversParentTypes['AccountBalance'] = ResolversParentTypes['AccountBalance']
+  ParentType extends
+    ResolversParentTypes['AccountBalance'] = ResolversParentTypes['AccountBalance'],
 > = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   account?: Resolver<ResolversTypes['Account'], ParentType, ContextType>;
@@ -3488,7 +3498,8 @@ export type AccountBalanceResolvers<
 
 export type AccountBalanceSnapshotResolvers<
   ContextType = MeshContext,
-  ParentType extends ResolversParentTypes['AccountBalanceSnapshot'] = ResolversParentTypes['AccountBalanceSnapshot']
+  ParentType extends
+    ResolversParentTypes['AccountBalanceSnapshot'] = ResolversParentTypes['AccountBalanceSnapshot'],
 > = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   account?: Resolver<ResolversTypes['Account'], ParentType, ContextType>;
@@ -3507,7 +3518,8 @@ export type AccountBalanceSnapshotResolvers<
 
 export type AllowanceResolvers<
   ContextType = MeshContext,
-  ParentType extends ResolversParentTypes['Allowance'] = ResolversParentTypes['Allowance']
+  ParentType extends
+    ResolversParentTypes['Allowance'] = ResolversParentTypes['Allowance'],
 > = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   spender?: Resolver<ResolversTypes['Account'], ParentType, ContextType>;
@@ -3520,7 +3532,8 @@ export type AllowanceResolvers<
 
 export type BurnEventResolvers<
   ContextType = MeshContext,
-  ParentType extends ResolversParentTypes['BurnEvent'] = ResolversParentTypes['BurnEvent']
+  ParentType extends
+    ResolversParentTypes['BurnEvent'] = ResolversParentTypes['BurnEvent'],
 > = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   token?: Resolver<ResolversTypes['Token'], ParentType, ContextType>;
@@ -3539,7 +3552,8 @@ export type BurnEventResolvers<
 
 export type MintEventResolvers<
   ContextType = MeshContext,
-  ParentType extends ResolversParentTypes['MintEvent'] = ResolversParentTypes['MintEvent']
+  ParentType extends
+    ResolversParentTypes['MintEvent'] = ResolversParentTypes['MintEvent'],
 > = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   token?: Resolver<ResolversTypes['Token'], ParentType, ContextType>;
@@ -3558,7 +3572,8 @@ export type MintEventResolvers<
 
 export type TokenEventResolvers<
   ContextType = MeshContext,
-  ParentType extends ResolversParentTypes['TokenEvent'] = ResolversParentTypes['TokenEvent']
+  ParentType extends
+    ResolversParentTypes['TokenEvent'] = ResolversParentTypes['TokenEvent'],
 > = ResolversObject<{
   __resolveType: TypeResolveFn<
     'BurnEvent' | 'MintEvent' | 'TransferEvent',
@@ -3580,7 +3595,8 @@ export type TokenEventResolvers<
 
 export type TransactionResolvers<
   ContextType = MeshContext,
-  ParentType extends ResolversParentTypes['Transaction'] = ResolversParentTypes['Transaction']
+  ParentType extends
+    ResolversParentTypes['Transaction'] = ResolversParentTypes['Transaction'],
 > = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   transferEvents?: Resolver<
@@ -3607,7 +3623,8 @@ export type TransactionResolvers<
 
 export type TransferEventResolvers<
   ContextType = MeshContext,
-  ParentType extends ResolversParentTypes['TransferEvent'] = ResolversParentTypes['TransferEvent']
+  ParentType extends
+    ResolversParentTypes['TransferEvent'] = ResolversParentTypes['TransferEvent'],
 > = ResolversObject<{
   id?: Resolver<ResolversTypes['ID'], ParentType, ContextType>;
   token?: Resolver<ResolversTypes['Token'], ParentType, ContextType>;
@@ -3661,7 +3678,7 @@ export type MeshContext = YamGnosisTypes.Context &
 
 const baseDir = pathModule.join(
   pathModule.dirname(fileURLToPath(import.meta.url)),
-  '..'
+  '..',
 );
 
 const importFn: ImportFn = <T>(moduleId: string) => {
@@ -3685,7 +3702,7 @@ const importFn: ImportFn = <T>(moduleId: string) => {
 
     default:
       return Promise.reject(
-        new Error(`Cannot find module '${relativeModuleId}'.`)
+        new Error(`Cannot find module '${relativeModuleId}'.`),
       );
   }
 };
@@ -3700,7 +3717,7 @@ const rootStore = new MeshStore(
   {
     readonly: true,
     validate: false,
-  }
+  },
 );
 
 export const rawServeConfig: YamlConfig.Config['serve'] = undefined as any;
@@ -3727,7 +3744,7 @@ export async function getMeshOptions(): Promise<GetMeshOptions> {
     name: 'yam-gnosis',
     config: {
       endpoint:
-        'https://api.thegraph.com/subgraphs/name/realtoken-thegraph/yam-realt-subgraph-gnosis',
+        'https://api.thegraph.com/subgraphs/name/clean-sat-mining-thegraph/yam-csm',
     },
     baseDir,
     cache,
@@ -3739,8 +3756,7 @@ export async function getMeshOptions(): Promise<GetMeshOptions> {
   const yamEthHandler = new GraphqlHandler({
     name: 'yam-eth',
     config: {
-      endpoint:
-        'https://api.thegraph.com/subgraphs/name/realtoken-thegraph/yam-realt-subgraph',
+      endpoint: '',
     },
     baseDir,
     cache,
@@ -3752,8 +3768,7 @@ export async function getMeshOptions(): Promise<GetMeshOptions> {
   const walletGoerliHandler = new GraphqlHandler({
     name: 'wallet-goerli',
     config: {
-      endpoint:
-        'https://api.thegraph.com/subgraphs/name/realtoken-thegraph/realtoken-goerli',
+      endpoint: '',
     },
     baseDir,
     cache,
@@ -3841,13 +3856,13 @@ export const execute: ExecuteMeshFn = (...args) =>
 export const subscribe: SubscribeMeshFn = (...args) =>
   getBuiltGraphClient().then(({ subscribe }) => subscribe(...args));
 export function getBuiltGraphSDK<TGlobalContext = any, TOperationContext = any>(
-  globalContext?: TGlobalContext
+  globalContext?: TGlobalContext,
 ) {
   const sdkRequester$ = getBuiltGraphClient().then(({ sdkRequesterFactory }) =>
-    sdkRequesterFactory(globalContext)
+    sdkRequesterFactory(globalContext),
   );
   return getSdk<TOperationContext, TGlobalContext>((...args) =>
-    sdkRequester$.then((sdkRequester) => sdkRequester(...args))
+    sdkRequester$.then((sdkRequester) => sdkRequester(...args)),
   );
 }
 export type getOffersQueryVariables = Exact<{ [key: string]: never }>;
@@ -3898,18 +3913,18 @@ export const getOffersDocument = gql`
 export type Requester<C = {}, E = unknown> = <R, V>(
   doc: DocumentNode,
   vars?: V,
-  options?: C
+  options?: C,
 ) => Promise<R> | AsyncIterable<R>;
 export function getSdk<C, E>(requester: Requester<C, E>) {
   return {
     getOffers(
       variables?: getOffersQueryVariables,
-      options?: C
+      options?: C,
     ): Promise<getOffersQuery> {
       return requester<getOffersQuery, getOffersQueryVariables>(
         getOffersDocument,
         variables,
-        options
+        options,
       ) as Promise<getOffersQuery>;
     },
   };
