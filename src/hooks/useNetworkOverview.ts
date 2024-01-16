@@ -51,10 +51,7 @@ export const useNetworkOverview = (): Network => {
 
               if (result.ok) {
                 const overview: ApiNetworkOverview = await result.json();
-                console.log(
-                  'getNetworkOverview',
-                  JSON.stringify(overview, null, 4),
-                );
+
                 resolve(overview.data.bitcoinOverviews.nodes[0]);
               } else {
                 reject('Failed to fetch bitcoin oracle');

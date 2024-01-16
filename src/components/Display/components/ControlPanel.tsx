@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { SegmentedControl, Checkbox, Group, Space } from '@mantine/core';
+import { SegmentedControl, Checkbox, Group, Space, Flex } from '@mantine/core';
+import { useMediaQuery } from '@mantine/hooks';
 import { DAYS_PERIODS, filterMobile } from '../../../constants';
 import { formatPeriod } from 'src/utils/format/format';
 import { useTranslation } from 'react-i18next';
@@ -30,6 +31,8 @@ import { TimeRange } from './TimeRange';
 import { useDisclosure } from '@mantine/hooks';
 import { BtcPrice } from '../../CSM/Indicators/components/BtcPrice';
 import { Networkoverview } from '../../CSM/Indicators/components/NetworkOverview';
+import { NetworkUpdateTime } from '../../CSM/Indicators/components/NetworkUpdateTime';
+
 interface ControlPanelProps {
   isMobile: boolean;
   period: string;
@@ -58,6 +61,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   defaultValue,
 }) => {
   const { t } = useTranslation('timeframe', { keyPrefix: 'menu' });
+  const isSmall = useMediaQuery('(max-width: 850px)');
   //const [menuOpened, setMenuOpened] = useState(false);
   const [menuLabel, setMenuLabel] = useState<string>(t(defaultValue));
   const [numberInput, setNumberInput] = useState<number | ''>(1);
@@ -205,7 +209,8 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   }, []);
 
   return (
-    <>
+    <Flex direction={'column'}>
+      {isSmall && <NetworkUpdateTime withLabel={true}></NetworkUpdateTime>}
       <Group position={'apart'}>
         <Group
           mih={isMobile ? 50 : 70}
@@ -281,13 +286,12 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
             />
           )}
         </Group>
-        <Group>
-          {/* <Networkoverview></Networkoverview> */}
-          <BtcPrice marginLeft={isMobile ? '0px' : '20px'}></BtcPrice>
-        </Group>
+
+        {!isSmall && <NetworkUpdateTime withLabel={true}></NetworkUpdateTime>}
+        {/* <Networkoverview></Networkoverview> */}
+        {/* <BtcPrice marginLeft={isMobile ? '0px' : '20px'}></BtcPrice> */}
       </Group>
-      <Space h={2}></Space>
-    </>
+    </Flex>
   );
 
   /**

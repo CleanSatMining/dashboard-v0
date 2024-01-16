@@ -20,7 +20,7 @@ export const BtcPrice: FC<BtcPriceProps> = ({
   const btcPrice = useAtomValue(btcPriceAtom);
   return (
     <>
-      {btcPrice !== null && (
+      {btcPrice !== null && btcPrice > 0 && (
         <Indicator
           value={formatUsd(btcPrice)}
           imageUrl={'https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=025'}

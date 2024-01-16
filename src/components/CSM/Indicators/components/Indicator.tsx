@@ -11,7 +11,7 @@ import {
 
 interface IndicatorProps {
   value: string;
-  imageUrl: string;
+  imageUrl?: string;
   label?: string;
   marginLeft?: string;
   withBorder?: boolean;
@@ -47,12 +47,14 @@ export const Indicator: FC<IndicatorProps> = ({
               </Text>
             )}
             <Group position={'left'} spacing={5}>
-              <Avatar
-                src={imageUrl}
-                size={16}
-                sx={{ margin: '0px' }}
-                radius={0}
-              ></Avatar>
+              {imageUrl && (
+                <Avatar
+                  src={imageUrl}
+                  size={16}
+                  sx={{ margin: '0px' }}
+                  radius={0}
+                ></Avatar>
+              )}
               <Text fw={'bold'} size={16}>
                 {value}
               </Text>

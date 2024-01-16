@@ -23,7 +23,7 @@ export const useCsmTokens = (): usePropertiesTokenReturn => {
         address.toLowerCase(),
     );
   };
-  console.log('csm tokens', propertiesToken);
+
   return {
     propertiesToken,
     propertiesIsloading,
