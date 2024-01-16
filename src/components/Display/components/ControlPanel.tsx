@@ -210,7 +210,17 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
 
   return (
     <Flex direction={'column'}>
-      {isSmall && <NetworkUpdateTime withLabel={true}></NetworkUpdateTime>}
+      {isSmall && (
+        <div
+          style={{
+            marginLeft: isMobile ? '10px' : 0,
+            marginRight: isMobile ? '10px' : 0,
+            marginTop: isMobile ? '10px' : 0,
+          }}
+        >
+          <NetworkUpdateTime withLabel={true}></NetworkUpdateTime>
+        </div>
+      )}
       <Group position={'apart'}>
         <Group
           mih={isMobile ? 50 : 70}
@@ -242,24 +252,30 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
                 ></TimeSelectDrawer>
               )}
               {!isMobile && (
-                <TimeSelectMenu
-                  IconMenu={IconMenu}
-                  closeMenu={closeMenu}
-                  openMenu={openMenu}
-                  menuOpened={menuOpened}
-                  menuLabel={menuLabel}
-                  numberInput={numberInput}
-                  setNumberInput={setNumberInput}
-                  startDateInput={startDateInput}
-                  startDateError={startDateError}
-                  setStartDateInput={setStartDateInput}
-                  setStartDateError={setStartDateError}
-                  endDateInput={endDateInput}
-                  setEndDateInput={setEndDateInput}
-                  handleDateRangeItemClick={handleDateRangeItemClick}
-                  handleNumberOfDaysClick={handleNumberOfDaysClick}
-                  handlePredefinedPeriodClick={handlePredefinedPeriodClick}
-                ></TimeSelectMenu>
+                <div
+                  style={{
+                    marginTop: isMobile ? 0 : '5px',
+                  }}
+                >
+                  <TimeSelectMenu
+                    IconMenu={IconMenu}
+                    closeMenu={closeMenu}
+                    openMenu={openMenu}
+                    menuOpened={menuOpened}
+                    menuLabel={menuLabel}
+                    numberInput={numberInput}
+                    setNumberInput={setNumberInput}
+                    startDateInput={startDateInput}
+                    startDateError={startDateError}
+                    setStartDateInput={setStartDateInput}
+                    setStartDateError={setStartDateError}
+                    endDateInput={endDateInput}
+                    setEndDateInput={setEndDateInput}
+                    handleDateRangeItemClick={handleDateRangeItemClick}
+                    handleNumberOfDaysClick={handleNumberOfDaysClick}
+                    handlePredefinedPeriodClick={handlePredefinedPeriodClick}
+                  ></TimeSelectMenu>
+                </div>
               )}
               <TimeRange
                 startTimestamp={startTimestamp}
@@ -291,6 +307,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
         {/* <Networkoverview></Networkoverview> */}
         {/* <BtcPrice marginLeft={isMobile ? '0px' : '20px'}></BtcPrice> */}
       </Group>
+      {!isMobile && isSmall && <Space h={5}></Space>}
     </Flex>
   );
 
