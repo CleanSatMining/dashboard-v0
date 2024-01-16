@@ -21,6 +21,7 @@ const HomePage: NextPage = () => {
         sx={{
           marginLeft: '-25px',
           marginRight: '-25px',
+          overflowX: 'hidden',
         }}
         withBorder={true}
       >
@@ -32,11 +33,12 @@ const HomePage: NextPage = () => {
       </Card>
 
       <Flex
-        my={isMobile ? 0 : 'lg'}
+        my={0}
         direction={'column'}
         sx={{
           marginLeft: isMobile ? '-20px' : undefined,
           marginRight: isMobile ? '-20px' : undefined,
+          overflowX: 'hidden',
         }}
       >
         {isLoaded && <Display />}
