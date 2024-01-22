@@ -1,5 +1,5 @@
 import { BigNumber } from 'bignumber.js';
-import { TFunction } from 'react-i18next';
+import { TFunction } from 'i18next';
 
 export const formatUsd = (
   tvl: number,
