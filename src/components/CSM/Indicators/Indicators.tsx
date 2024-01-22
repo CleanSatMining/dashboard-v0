@@ -13,12 +13,21 @@ export const Indicators: FC<IndicatorsProps> = ({
   withLabel = false,
 }) => {
   return (
-    <Group>
-      <BtcPrice withBorder={withBorder} withLabel={withLabel}></BtcPrice>
-      <Networkoverview
-        withBorder={withBorder}
-        withLabel={withLabel}
-      ></Networkoverview>
-    </Group>
+    <>
+      <a
+        href={'https://data.hashrateindex.com/network-data/btc'}
+        target={'_blank'}
+        rel={'noopener noreferrer'}
+        style={{ textDecoration: 'none' }}
+      >
+        <Group sx={{ cursor: 'pointer' }}>
+          <BtcPrice withBorder={withBorder} withLabel={withLabel}></BtcPrice>
+          <Networkoverview
+            withBorder={withBorder}
+            withLabel={withLabel}
+          ></Networkoverview>
+        </Group>
+      </a>
+    </>
   );
 };
