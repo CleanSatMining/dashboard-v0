@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { FC, useEffect, useState } from 'react';
 import { useQuery } from 'react-query';
 
