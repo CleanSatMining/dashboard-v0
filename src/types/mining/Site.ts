@@ -12,6 +12,7 @@ export type Site = {
     fees: Fees;
     vault: {
       btcAddress: string;
+      xpub: string;
     }
   };
 

@@ -76,6 +76,7 @@ export const SITES: Record<SiteID, Site> = {
     },
     vault: {
       btcAddress: 'bc1q2n4v9l8gxlzp7f4c8f4q79vryugjj4hu2ela8r',
+      xpub: 'xpub6Bk1T4YnHrQ1oT4VcnsqJqvdeMuovopD7HVbbrVGe4iQXqv2sQfFLuJ68GeSqdvVVw2PWbUuyrEwpwdfpaFFqM2ZxGmnU6udhdQa3FzXQRj',
     },
   },
   [SiteID.beta]: {
@@ -132,6 +133,7 @@ export const SITES: Record<SiteID, Site> = {
     },
     vault: {
       btcAddress: 'bc1qkt5k46h8769h5t33phq6cuhtdhlfk66np2yklf',
+      xpub: 'xpub6Bk1T4YnHrQ1q1nS37AhNWXGJwaeP97wuGFHyu95Z8qCsquuFRLeBd2bM2srKXdkYjQPPUfGGBvacn9Q4i2GdrdNn4PS1VoXgvqrd3nfrRp',
     },
   },
   [SiteID.omega]: {
@@ -187,6 +189,7 @@ export const SITES: Record<SiteID, Site> = {
     },
     vault: {
       btcAddress: 'bc1qkupuv2s5gtmardsdj57vkf2pekff7rq7es77jg',
+      xpub: 'xpub6Bk1T4YnHrQ1v1s81DSBDpGPtuiJUvGC1smn6d9CesuNSgmXNryYXmJiZsCNUw9mGo9cRDiBr1t3nDBwkxjaeL1wZUL6bcJuNebdipKGNkM',
     },
   },
   [SiteID.gamma]: {
@@ -242,6 +245,7 @@ export const SITES: Record<SiteID, Site> = {
     },
     vault: {
       btcAddress: '',
+      xpub: 'xpub6Bk1T4YnHrQ1eBy5tYoz1HAhkwjGh2Avg43odqjQPVL7KA29eSHr46zg61WiYbk5f5FkR4z6fWfrp9XxieecHMbPZKDg5wFxTqnQGDdv8fz',
     },
   },
 
@@ -299,6 +303,7 @@ export const SITES: Record<SiteID, Site> = {
     },
     vault: {
       btcAddress: '',
+      xpub: '',
     },
   },
 };
