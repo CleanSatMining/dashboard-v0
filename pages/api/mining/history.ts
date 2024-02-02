@@ -29,11 +29,17 @@ const handler: NextApiHandler = async (
     requestBody = JSON.parse(req.body);
   }
 
-  const { first, siteId } = requestBody;
+  let { first } = requestBody;
+  const { siteId } = requestBody;
   if (!first || !siteId) {
     return res
       .status(400)
       .json('body not valid ' + JSON.stringify(requestBody));
+  }
+  if (typeof first === 'string') {
+    first = parseInt(first);
+  } else if (!Number.isInteger(first)) {
+    first = 500;
   }
 
   // Generate a cache key based on the address, page, and pageSize
