@@ -18,7 +18,17 @@ export const API_ADMIN = {
   method: 'POST',
 };
 
-export const API_MINING_STATE = {
-  url: '/api/mining/history',
+export const API_MINING_HISTORY = {
+  url: (id: string) => '/api/sites/' + id + '/mining/history',
+  method: 'POST',
+};
+
+export const API_MINING_EXPENSES = {
+  url: (id: string) => '/api/sites/' + id + '/expenses',
+  method: 'POST',
+};
+
+export const API_TREASURY = {
+  url: (id: string) => '/api/sites/' + id + '/treasury',
   method: 'POST',
 };

@@ -17,8 +17,8 @@ export const ULTRA_RARE: UltraRare = {
 export enum SiteID {
   alpha = '1',
   beta = '2',
-  gamma = '3',
-  omega = '4',
+  omega = '3',
+  gamma = '4',
   delta = '5',
 }
 

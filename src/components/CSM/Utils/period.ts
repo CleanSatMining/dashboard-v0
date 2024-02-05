@@ -1,12 +1,12 @@
 import { MiningSummaryPerDay } from 'src/types/mining/Mining';
-import { MiningState } from 'src/types/mining/Mining';
+import { MiningHistory } from 'src/types/mining/Mining';
 import { getNumberOfDaysSinceStart } from './yield';
 import { Site } from 'src/types/mining/Site';
 import { SITES, SiteID } from '../../../constants/csm';
 
 // Définition de la fonction
 export function getMiningDays(
-  miningState: MiningState,
+  miningState: MiningHistory,
   siteId: string,
   period: number,
   startDate: number,

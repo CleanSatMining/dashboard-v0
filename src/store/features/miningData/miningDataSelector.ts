@@ -1,5 +1,8 @@
 import { RootState } from 'src/store/store';
-import { MiningState } from 'src/types/mining/Mining';
+import { MiningHistory, MiningExpenses } from 'src/types/mining/Mining';
 
-export const selectMiningState = (state: RootState): MiningState =>
-  state.sites.miningState;
+export const selectMiningHistory = (state: RootState): MiningHistory =>
+  state.sites.miningHistory;
+
+export const selectMiningExpenses = (state: RootState): MiningExpenses =>
+  state.sites.miningExpenses;

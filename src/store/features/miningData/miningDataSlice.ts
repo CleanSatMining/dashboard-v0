@@ -1,12 +1,20 @@
 import { createAction, createReducer } from '@reduxjs/toolkit';
-import { MiningState, SiteMiningSummary } from 'src/types/mining/Mining';
+import {
+  MiningHistory,
+  SiteMiningHistory,
+  MiningExpenses,
+} from 'src/types/mining/Mining';
 
 interface sitesInitialStateType {
-  miningState: MiningState;
+  miningHistory: MiningHistory;
+  miningExpenses: MiningExpenses;
 }
 
 const sitesInitialState: sitesInitialStateType = {
-  miningState: {
+  miningHistory: {
+    byId: {},
+  },
+  miningExpenses: {
     byId: {},
   },
 };
@@ -15,26 +23,40 @@ const sitesInitialState: sitesInitialStateType = {
 export const siteAddedDispatchType = 'site/added';
 export const siteRemovedDispatchType = 'site/removed';
 export const siteResetDispatchType = 'site/reset';
+export const expensesAddedDispatchType = 'expenses/added';
+export const expensesResetDispatchType = 'expenses/reset';
 
 // ACTIONS
-export const siteAdded = createAction<SiteMiningSummary>(siteAddedDispatchType);
+export const siteAdded = createAction<SiteMiningHistory>(siteAddedDispatchType);
 export const siteRemoved = createAction<string>(siteRemovedDispatchType);
 export const siteReset = createAction<void>(siteResetDispatchType);
+export const expensesAdded = createAction<MiningExpenses>(
+  expensesAddedDispatchType,
+);
+export const expensesReset = createAction<void>(expensesResetDispatchType);
 
 export const sitesReducers = createReducer(sitesInitialState, (builder) => {
   builder
     .addCase(siteAdded, (state, action) => {
-      state.miningState.byId[action.payload.id] = action.payload;
+      state.miningHistory.byId[action.payload.id] = action.payload;
     })
     .addCase(siteRemoved, (state, action) => {
-      const empty: SiteMiningSummary = {
+      const empty: SiteMiningHistory = {
         id: '',
         mining: { days: [] },
         token: { byUser: {} },
       };
-      state.miningState.byId[action.payload] = empty;
+      state.miningHistory.byId[action.payload] = empty;
     })
     .addCase(siteReset, (state) => {
-      state.miningState = sitesInitialState.miningState;
+      state.miningHistory = sitesInitialState.miningHistory;
+    })
+    .addCase(expensesAdded, (state, action) => {
+      state.miningExpenses = action.payload;
+    })
+    .addCase(expensesReset, (state) => {
+      state.miningExpenses = {
+        byId: {},
+      };
     });
 });

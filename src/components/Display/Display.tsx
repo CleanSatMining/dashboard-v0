@@ -9,7 +9,7 @@ import { userAddedDispatchType } from 'src/store/features/userData/userDataSlice
 import { Displays } from 'src/types/Displays';
 import {
   MiningSummaryPerDay,
-  SiteMiningSummary,
+  SiteMiningHistory,
   UserSummary,
 } from 'src/types/mining/Mining';
 import { useAtom } from 'jotai';
@@ -25,6 +25,9 @@ import { getCSMTokenAddress, getCSMTokenAddresses } from '../CSM/Utils/yield';
 import ControlPanel from './components/ControlPanel';
 import { PredefinedPeriods } from './components/Types';
 import { btcPriceAtom } from 'src/states';
+import { MiningExpenses } from 'src/types/mining/Mining';
+import { expensesAddedDispatchType } from 'src/store/features/miningData/miningDataSlice';
+import { API_MINING_EXPENSES } from 'src/constants/apis';
 
 interface ApiAdmin {
   admin: boolean;
@@ -105,7 +108,7 @@ const Display: FC = () => {
       for (const siteId of ALLOWED_SITES) {
         if (globalState[siteId] && globalState[siteId].days) {
           const days: MiningSummaryPerDay[] = globalState[siteId].days;
-          const data: SiteMiningSummary = {
+          const data: SiteMiningHistory = {
             id: siteId,
             mining: { days },
             token: { byUser: {} },
@@ -119,6 +122,34 @@ const Display: FC = () => {
   useEffect(() => {
     setBtcPrice(price);
   }, [price, setBtcPrice]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const miningExpenses: MiningExpenses = {
+        byId: {},
+      };
+      for (const siteId of ALLOWED_SITES) {
+        //const expenses = await getExpenses(siteId);
+        //miningExpenses.byId[siteId] = expenses;
+        try {
+          const result = await fetch(API_MINING_EXPENSES.url(siteId), {
+            method: API_MINING_EXPENSES.method,
+          });
+          if (result.ok) {
+            const data = await result.json();
+            miningExpenses.byId[siteId] = data;
+          }
+        } catch (e) {
+          console.error('Failed to fetch expenses from API: ', e);
+        }
+      }
+
+      dispatch({ type: expensesAddedDispatchType, payload: miningExpenses });
+      return miningExpenses;
+    };
+
+    fetchData();
+  }, []);
 
   dispatchUserSummary();
 
@@ -186,4 +217,5 @@ const Display: FC = () => {
     }
   }
 };
+
 export default Display;

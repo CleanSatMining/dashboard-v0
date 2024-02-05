@@ -1,7 +1,10 @@
 import { FC, useEffect, useState } from 'react';
 
 import { useAppSelector } from 'src/hooks/react-hooks';
-import { selectMiningState } from 'src/store/features/miningData/miningDataSelector';
+import {
+  selectMiningHistory,
+  selectMiningExpenses,
+} from 'src/store/features/miningData/miningDataSelector';
 import { selectUsersState } from 'src/store/features/userData/userDataSelector';
 import { PropertiesERC20 } from 'src/types/PropertiesToken';
 import { SITES, SiteID } from '../../../constants';
@@ -20,7 +23,7 @@ import {
   getUserTokenBalance,
   getUserYieldBySite,
   getYieldBySite,
-  getSiteCostsByPeriod,
+  getSiteExpensesByPeriod,
 } from '../Utils/yield';
 
 type SiteProps = {
@@ -46,7 +49,8 @@ const _SiteCard: FC<SiteProps> = ({
 }) => {
   //const isMobile = useMediaQuery('(max-width: 36em)');
   const usersState = useAppSelector(selectUsersState);
-  const miningState = useAppSelector(selectMiningState);
+  const miningState = useAppSelector(selectMiningHistory);
+  const expensesState = useAppSelector(selectMiningExpenses);
   const { getPropertyToken } = useCsmTokens();
 
   const site: Site = SITES[siteId as SiteID];
@@ -77,6 +81,7 @@ const _SiteCard: FC<SiteProps> = ({
     btcPrice,
     startDate,
     endDate,
+    expensesState.byId[siteId] ?? [],
   );
   const siteYield = getYieldBySite(
     miningState,
@@ -85,6 +90,7 @@ const _SiteCard: FC<SiteProps> = ({
     btcPrice,
     startDate,
     endDate,
+    expensesState.byId[siteId] ?? [],
   );
   const siteUptime = getUptimeBySite(
     miningState,
@@ -93,13 +99,14 @@ const _SiteCard: FC<SiteProps> = ({
     startDate,
     endDate,
   );
-  const siteCosts: CardCost = getSiteCostsByPeriod(
+  const siteCosts: CardCost = getSiteExpensesByPeriod(
     miningState,
     siteId,
     btcPrice,
     period,
     startDate,
     endDate,
+    expensesState.byId[siteId] ?? [],
   );
 
   if (shallDisplay) {
@@ -133,6 +140,7 @@ const _SiteCard: FC<SiteProps> = ({
       btcPrice,
       startDate,
       endDate,
+      [],
     );
 
     const siteMinedBTC = getMinedBtcBySite(
@@ -157,14 +165,16 @@ const _SiteCard: FC<SiteProps> = ({
       btcPrice,
       startDate,
       endDate,
+      expensesState.byId[siteId] ?? [],
     );
-    const siteCosts: CardCost = getSiteCostsByPeriod(
+    const siteCosts: CardCost = getSiteExpensesByPeriod(
       miningState,
       siteId,
       btcPrice,
       period,
       startDate,
       endDate,
+      expensesState.byId[siteId] ?? [],
     );
 
     setUserSiteData(

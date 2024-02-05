@@ -34,15 +34,15 @@ export type TokenSummary = {
      }
 }
 
-export type SiteMiningSummary = {
+export type SiteMiningHistory = {
     id: string;
     mining: MiningSummary;
     token: TokenSummary;
 }
 
-export type MiningState = {
+export type MiningHistory = {
     byId: {
-        [id: string] : SiteMiningSummary;
+        [id: string] : SiteMiningHistory;
      };
 }
 
@@ -50,4 +50,20 @@ export type UserState = {
     byAddress: {
         [address: string] : UserSummary;
      }
+}
+
+
+export type Expense = {
+    dateTime: number;
+    siteId: string;
+    csm: number;
+    operator: number;
+    electricity: number;
+}
+
+
+export type MiningExpenses = {
+    byId: {
+        [id: string] : Expense[];
+     };
 }

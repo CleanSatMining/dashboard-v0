@@ -11,7 +11,10 @@ import {
 } from '@tabler/icons';
 
 import { useAppSelector } from 'src/hooks/react-hooks';
-import { selectMiningState } from 'src/store/features/miningData/miningDataSelector';
+import {
+  selectMiningHistory,
+  selectMiningExpenses,
+} from 'src/store/features/miningData/miningDataSelector';
 import { selectUsersState } from 'src/store/features/userData/userDataSelector';
 import { Yield } from 'src/types/mining/Site';
 import { ACTIVATE_DISPLAY_APY } from 'src/constants/csm';
@@ -53,7 +56,8 @@ const _Summary: FC<AssetProps> = ({
   const isMobile = useMediaQuery('(max-width: 36em)');
   const { t } = useTranslation('site', { keyPrefix: 'card' });
   const usersState = useAppSelector(selectUsersState);
-  const miningState = useAppSelector(selectMiningState);
+  const miningState = useAppSelector(selectMiningHistory);
+  const expensesState = useAppSelector(selectMiningExpenses);
   const [userYield, setUserYield] = useState<{ net: Yield; gross: Yield }>(
     getUserYield(
       miningState,
@@ -63,6 +67,7 @@ const _Summary: FC<AssetProps> = ({
       btcPrice,
       startDate,
       endDate,
+      expensesState,
     ),
   );
   const ultraRare = useWalletNFTs(ULTRA_RARE.contract, account);
@@ -94,6 +99,7 @@ const _Summary: FC<AssetProps> = ({
       btcPrice,
       startDate,
       endDate,
+      expensesState.byId[siteId] ?? [],
     );
 
     const dataToken: Data = {
@@ -139,9 +145,19 @@ const _Summary: FC<AssetProps> = ({
         btcPrice,
         startDate,
         endDate,
+        expensesState,
       ),
     );
-  }, [usersState, miningState, account, btcPrice, period, startDate, endDate]);
+  }, [
+    usersState,
+    miningState,
+    account,
+    btcPrice,
+    period,
+    startDate,
+    endDate,
+    expensesState,
+  ]);
 
   return (
     <SimpleGrid

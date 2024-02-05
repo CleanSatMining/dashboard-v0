@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import BigNumber from 'bignumber.js';
-import {
-  formatSimpleUsd,
-  formatBTC,
-  formatPeriod,
-  formatParenthesis,
-} from 'src/utils/format/format';
-import { Stack, Text, Group, ActionIcon, Flex, HoverCard } from '@mantine/core';
+import { formatSimpleUsd, formatBTC } from 'src/utils/format/format';
+import { Stack, Text } from '@mantine/core';
 import { BitcoinBalanceResponse } from './Types';
+import { API_TREASURY } from 'src/constants/apis';
+
 export type BitcoinBalanceCheckerProps = {
   siteId: string;
   btcPrice: number;
@@ -25,7 +22,7 @@ const BitcoinBalanceChecker: React.FC<BitcoinBalanceCheckerProps> = ({
   useEffect(() => {
     const checkBalance = async () => {
       try {
-        const response = await fetch(`/api/treasury/sites/${siteId}`);
+        const response = await fetch(API_TREASURY.url(siteId));
 
         if (!response.ok) {
           throw new Error(`Erreur de réseau: ${response.status}`);

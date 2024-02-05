@@ -3,9 +3,9 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch } from 'src/hooks/react-hooks';
 import { siteAddedDispatchType } from 'src/store/features/miningData/miningDataSlice';
 
-import { API_MINING_STATE } from '../constants/apis';
+import { API_MINING_HISTORY } from '../constants/apis';
 import { SITES, SiteID } from '../constants/csm';
-import { MiningSummaryPerDay, SiteMiningSummary } from '../types/mining/Mining';
+import { MiningSummaryPerDay, SiteMiningHistory } from '../types/mining/Mining';
 import {
   APIMiningHistoryQuery,
   APIMiningHistoryResponse,
@@ -68,8 +68,8 @@ export const useMiningSitesSummary: UseMiningSitesSummaryProps = (
                       first: parameter,
                     };
 
-                    const result = await fetch(API_MINING_STATE.url, {
-                      method: API_MINING_STATE.method,
+                    const result = await fetch(API_MINING_HISTORY.url(siteId), {
+                      method: API_MINING_HISTORY.method,
                       body: JSON.stringify(body),
                     });
 
@@ -97,7 +97,7 @@ export const useMiningSitesSummary: UseMiningSitesSummaryProps = (
                       setDaysUp(history.length);
 
                       miningDaysHistory[siteId] = history;
-                      const data: SiteMiningSummary = {
+                      const data: SiteMiningHistory = {
                         id: siteId,
                         mining: { days: history },
                         token: { byUser: {} },
@@ -109,10 +109,13 @@ export const useMiningSitesSummary: UseMiningSitesSummaryProps = (
                       //   JSON.stringify(miningHistory.days, null, 4)
                       // );
                     } else {
-                      reject('Failed to fetch mining state from API');
+                      reject('Failed to fetch mining history from API');
                     }
                   } catch (err) {
-                    console.log('Failed to fetch mining state from API: ', err);
+                    console.log(
+                      'Failed to fetch mining history from API: ',
+                      err,
+                    );
                     reject(err);
                   }
                   //}
