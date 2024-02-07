@@ -1,3 +1,16 @@
+export type CleanSatMiningSite = {
+  id: string;
+  name:string;
+  shortName:string;
+  operator:Operator | undefined;
+}
+
+export type Operator = {
+  name: string;
+  logo: string;
+  website: string;
+}
+
 export type Site = {
     name: string;
     location: {

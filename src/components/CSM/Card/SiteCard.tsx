@@ -15,6 +15,7 @@ import { CardData, CardCost } from './UserCard/Type';
 import BigNumber from 'bignumber.js';
 import { Yield } from 'src/types/mining/Site';
 import { useCsmTokens } from 'src/hooks/useCsmTokens';
+import { Operator } from 'src/types/mining/Site';
 
 import {
   getMinedBtcBySite,
@@ -48,6 +49,7 @@ const _SiteCard: FC<SiteProps> = ({
   shallDisplay,
 }) => {
   //const isMobile = useMediaQuery('(max-width: 36em)');
+
   const usersState = useAppSelector(selectUsersState);
   const miningState = useAppSelector(selectMiningHistory);
   const expensesState = useAppSelector(selectMiningExpenses);
@@ -126,6 +128,7 @@ const _SiteCard: FC<SiteProps> = ({
     siteCosts,
     period,
     getPropertyToken,
+    undefined,
   );
 
   const [userSiteData, setUserSiteData] = useState<CardData>(data);
@@ -190,6 +193,7 @@ const _SiteCard: FC<SiteProps> = ({
         siteCosts,
         period,
         getPropertyToken,
+        undefined,
       ),
     );
     if (shallDisplay) {
@@ -270,6 +274,7 @@ function buildUserSiteData(
   costs: CardCost,
   period: number,
   getPropertyToken: (address: string) => PropertiesERC20 | undefined,
+  operator: Operator | undefined,
 ): CardData {
   const siteHashrate = new BigNumber(site.mining.asics.hashrateHs)
     .times(site.mining.asics.units)
@@ -315,6 +320,7 @@ function buildUserSiteData(
       image: 'https://cleansatmining.com/data/files/logo_csm.png',
     },
     site: {
+      operator: operator,
       miningStart: site.mining.startingDate,
       machines: site.mining.asics.units,
       hashrate: siteHashrate,

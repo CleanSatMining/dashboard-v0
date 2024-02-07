@@ -1,4 +1,5 @@
 import { Income } from '../../../../types/mining/Site';
+import { Operator } from 'src/types/mining/Site';
 
 export type CardData = {
   id: string;
@@ -29,6 +30,7 @@ export type CardData = {
   };
 
   site: {
+    operator: Operator | undefined;
     miningStart: string;
     machines: number;
     hashrate: number;

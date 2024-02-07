@@ -1,23 +1,10 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { LRUCache } from 'lru-cache';
-import { initializeApp } from 'firebase/app';
 import 'firebase/firestore';
-import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
+import { collection, getDocs } from 'firebase/firestore/lite';
 import { Expense } from 'src/types/mining/Mining';
 
-// Your web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: process.env.FIREBASE_API_KEY ?? '',
-  authDomain: process.env.FIREBASE_API_DOMAIN ?? '',
-  projectId: process.env.FIREBASE_API_PROJECT_ID ?? '',
-  storageBucket: process.env.FIREBASE_STORAGE_BUCKET ?? '',
-  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID ?? '',
-  appId: process.env.FIREBASE_APP_ID ?? '',
-};
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
+import { db } from './../database';
 
 const CACHE_DURATION_SECONDS = 8 * 60 * 60; // 8 heures
 /* eslint-disable */

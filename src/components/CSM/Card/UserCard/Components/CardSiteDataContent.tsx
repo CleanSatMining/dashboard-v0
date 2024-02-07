@@ -1,5 +1,5 @@
 /* eslint @typescript-eslint/no-var-requires: "off" */
-import { FC, useState } from 'react';
+import { FC, useState, useEffect } from 'react';
 import {
   Space,
   Text,
@@ -8,9 +8,10 @@ import {
   ActionIcon,
   Flex,
   HoverCard,
+  Tooltip,
 } from '@mantine/core';
 import { IconPlus, IconMinus } from '@tabler/icons';
-
+import Image from 'next/image';
 import {
   formatSimpleUsd,
   formatBTC,
@@ -23,9 +24,10 @@ import { CardData } from '../Type';
 import { CardSiteAccounting } from './CardSiteAccounting';
 import BitcoinBalanceChecker from 'src/components/BitcoinBalance/BitcoinBalance';
 ('src/components/BitcoinBalance/BitcoinBalance');
-import { SITES, SiteID } from 'src/constants/csm';
 import { useAtomValue } from 'jotai';
 import { btcPriceAtom } from 'src/states';
+import { API_SITE } from 'src/constants/apis';
+import { CleanSatMiningSite } from 'src/types/mining/Site';
 
 export type CardSiteDataContentProps = {
   data: CardData;
@@ -41,6 +43,39 @@ export const CardSiteDataContent: FC<CardSiteDataContentProps> = ({
   const [displayDetail, setDisplayDetail] = useState<boolean>(false);
   const btcPrice = useAtomValue(btcPriceAtom);
   const hasData = data.income.available;
+  const [siteData, setSiteData] = useState<CleanSatMiningSite | undefined>(
+    undefined,
+  );
+
+  console.log(
+    'CardSiteDataContent',
+    JSON.stringify(data.site.operator, null, 2),
+  );
+
+  useEffect(() => {
+    const fetchSiteData = async () => {
+      try {
+        const response = await fetch(API_SITE.url(data.id), {
+          method: API_SITE.method,
+        });
+
+        if (!response.ok) {
+          throw new Error('Erreur lors de la récupération des données du site');
+        }
+
+        const d: CleanSatMiningSite = await response.json();
+
+        console.log('SITE DATA', JSON.stringify(d, null, 2));
+        setSiteData(d);
+        return data;
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    console.log('SITE DATA');
+
+    fetchSiteData();
+  }, []);
 
   return (
     <div style={{ padding }}>
@@ -128,6 +163,47 @@ export const CardSiteDataContent: FC<CardSiteDataContentProps> = ({
           {data.site.miningStart}
         </Text>
       </Group>
+      {siteData && (
+        <Group position={'apart'} mt={'xs'} mb={isMobile ? 0 : 'xs'}>
+          <Text fz={isMobile ? 'xs' : 'sm'} color={'dimmed'}>
+            {t('operator')}
+          </Text>
+          <Group
+            position={'right'}
+            style={{
+              width: isMobile ? '100px' : '120px',
+              height: isMobile ? '40px' : '50px',
+              overflow: 'hidden',
+            }}
+          >
+            <a
+              href={siteData.operator?.website}
+              target={'_blank'}
+              rel={'noopener noreferrer'}
+              style={{
+                width: isMobile ? '100px' : '120px',
+                height: isMobile ? '40px' : '50px',
+                overflow: 'hidden',
+              }}
+            >
+              <Tooltip label={siteData.operator?.name}>
+                <Image
+                  src={siteData.operator?.logo ?? ''}
+                  alt={`Site ${data.id}`}
+                  width={isMobile ? 100 : 120}
+                  height={isMobile ? 40 : 50}
+                  style={{
+                    float: 'right',
+                    objectFit: 'contain',
+                    width: '100%',
+                    height: '100%',
+                  }}
+                />
+              </Tooltip>
+            </a>
+          </Group>
+        </Group>
+      )}
     </div>
   );
 };

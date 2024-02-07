@@ -32,3 +32,8 @@ export const API_TREASURY = {
   url: (id: string) => '/api/sites/' + id + '/treasury',
   method: 'POST',
 };
+
+export const API_SITE = {
+  url: (id: string) => '/api/sites/' + id,
+  method: 'POST',
+};
