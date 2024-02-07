@@ -171,8 +171,8 @@ export const CardSiteDataContent: FC<CardSiteDataContentProps> = ({
           <Group
             position={'right'}
             style={{
-              width: isMobile ? '100px' : '120px',
-              height: isMobile ? '40px' : '50px',
+              width: isMobile ? '40px' : '60px',
+              height: isMobile ? '40px' : '60px',
               overflow: 'hidden',
             }}
           >
@@ -181,8 +181,8 @@ export const CardSiteDataContent: FC<CardSiteDataContentProps> = ({
               target={'_blank'}
               rel={'noopener noreferrer'}
               style={{
-                width: isMobile ? '100px' : '120px',
-                height: isMobile ? '40px' : '50px',
+                width: isMobile ? '40px' : '60px',
+                height: isMobile ? '40px' : '60px',
                 overflow: 'hidden',
               }}
             >
@@ -190,8 +190,8 @@ export const CardSiteDataContent: FC<CardSiteDataContentProps> = ({
                 <Image
                   src={siteData.operator?.logo ?? ''}
                   alt={`Site ${data.id}`}
-                  width={isMobile ? 100 : 120}
-                  height={isMobile ? 40 : 50}
+                  width={isMobile ? 40 : 60}
+                  height={isMobile ? 40 : 60}
                   style={{
                     float: 'right',
                     objectFit: 'contain',
