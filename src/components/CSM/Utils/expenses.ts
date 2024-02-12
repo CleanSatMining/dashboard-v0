@@ -127,7 +127,7 @@ function calculateExpensesInRange(
     electricity: electricityExpenses,
     billingEndDateTime: end,
     billingStartDateTime: start,
-    period: calculateDaysBetweenDates(start, end) + 1,
+    period: calculateDaysBetweenDates(start, end),
   };
 }
 
@@ -196,6 +196,8 @@ export function calculateDaysBetweenDates(
   timestamp1: number,
   timestamp2: number,
 ): number {
+  if (timestamp1 === 0 || timestamp2 === 0) return 0;
+
   // Calcul du nombre de millisecondes dans une journée
   const millisecondsPerDay = 24 * 60 * 60 * 1000;
 
@@ -204,7 +206,7 @@ export function calculateDaysBetweenDates(
     (timestamp2 - timestamp1) / millisecondsPerDay,
   );
 
-  return Math.floor(daysDifference);
+  return Math.floor(daysDifference) + 1;
 }
 
 function getFirstDayOfMonth(date: Date): Date {
