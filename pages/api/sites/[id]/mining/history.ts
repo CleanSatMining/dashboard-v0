@@ -18,7 +18,6 @@ const handler: NextApiHandler = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ) => {
-  let json: APIMiningHistoryResponse | undefined;
   const { id } = req.query;
   const siteId = id as SiteID;
   let first: number = 500;
@@ -47,6 +46,35 @@ const handler: NextApiHandler = async (
   if (cachedData) {
     return res.status(200).json(cachedData);
   }
+
+  const json: APIMiningHistoryResponse | undefined = await getMiningHistory(
+    siteId,
+    first,
+  );
+
+  //if (siteId === '2') console.log('BETA RESULT', JSON.stringify(json, null, 4));
+
+  // Cache the response for future use
+  if (json && json.error === undefined) {
+    cache.set(cacheKey, json);
+  }
+
+  res.status(200).json(json);
+};
+export default handler;
+
+/**
+ *
+ * @param siteId
+ * @param first
+ * @param json
+ * @returns
+ */
+export async function getMiningHistory(
+  siteId: SiteID,
+  first: number,
+): Promise<APIMiningHistoryResponse | undefined> {
+  let json: APIMiningHistoryResponse | undefined = undefined;
 
   const site = SITES[siteId as SiteID];
   const username = site.api.username ?? '';
@@ -83,16 +111,7 @@ const handler: NextApiHandler = async (
     const history = {
       days: [],
     };
-    json = history; //JSON.stringify(history);
+    json = history;
   }
-
-  //if (siteId === '2') console.log('BETA RESULT', JSON.stringify(json, null, 4));
-
-  // Cache the response for future use
-  if (json && json.error === undefined) {
-    cache.set(cacheKey, json);
-  }
-
-  res.status(200).json(json);
-};
-export default handler;
+  return json;
+}

@@ -67,3 +67,25 @@ export type MiningExpenses = {
         [id: string] : Expense[];
      };
 }
+
+export function filterOldDates(days: number): (value: MiningSummaryPerDay, index: number, array: MiningSummaryPerDay[]) => unknown {
+    return (d) => {
+      //filter old date
+      return filterDates(d, days);
+    };
+  }
+
+function filterDates(d: MiningSummaryPerDay, days: number) {
+    const historyDay = new Date(d.date).getTime();
+    const nowDay = new Date().getTime();
+    const diffDays = nowDay - historyDay;
+    return diffDays >= days;
+  }
+
+export function mapHistoryMiningToSiteHistoryMining(siteId: string, history: MiningSummaryPerDay[]): SiteMiningHistory {
+    return {
+      id: siteId,
+      mining: { days: history },
+      token: { byUser: {} },
+    };
+  }

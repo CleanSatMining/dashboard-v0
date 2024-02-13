@@ -64,6 +64,7 @@ export function calculateElectricityCostPerPeriod(
   let electricityCost: BigNumber = new BigNumber(0);
 
   const days = getMiningDays(miningState, siteId, period, startDate, endDate);
+  console.log(JSON.stringify(days));
   const { electricity, billingStartDateTime, billingEndDateTime } =
     calculateExpenses(expenses, startDate, endDate);
 

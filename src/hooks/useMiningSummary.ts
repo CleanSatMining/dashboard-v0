@@ -3,10 +3,14 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch } from 'src/hooks/react-hooks';
 import { siteAddedDispatchType } from 'src/store/features/miningData/miningDataSlice';
 
-import { useAppSelector } from 'src/hooks/react-hooks';
 import { API_MINING_HISTORY } from '../constants/apis';
 import { SITES, SiteID } from '../constants/csm';
-import { MiningSummaryPerDay, SiteMiningHistory } from '../types/mining/Mining';
+import {
+  MiningSummaryPerDay,
+  SiteMiningHistory,
+  filterOldDates,
+  mapHistoryMiningToSiteHistoryMining,
+} from '../types/mining/Mining';
 import {
   APIMiningHistoryQuery,
   APIMiningHistoryResponse,
@@ -93,37 +97,6 @@ export const useMiningSitesSummary: UseMiningSitesSummaryProps = (
 
                   apiCalls.push(apiCall());
 
-                  /* try {
-                    const parameter = lastMonth ? Math.max(60, days) : days;
-                    const body: APIMiningHistoryQuery = {
-                      siteId: siteId,
-                      first: parameter,
-                    };
-
-                    const result = await fetch(API_MINING_HISTORY.url(siteId), {
-                      method: API_MINING_HISTORY.method,
-                      body: JSON.stringify(body),
-                    });
-
-                    if (result.ok) {
-                      await dispatchResult(result, siteId);
-                      // console.log(
-                      //   'FETCH HISTORY',
-                      //   siteId,
-                      //   JSON.stringify(miningHistory.days, null, 4)
-                      // );
-                    } else {
-                      reject('Failed to fetch mining history from API');
-                    }
-                  } catch (err) {
-                    console.log(
-                      'Failed to fetch mining history from API: ',
-                      err,
-                    );
-                    reject(err);
-                  }
-                   */
-
                   miningStates[siteId] = {
                     siteId: siteId,
                     days: miningDaysHistory[siteId],
@@ -160,24 +133,13 @@ export const useMiningSitesSummary: UseMiningSitesSummaryProps = (
               //     siteId,
               //     JSON.stringify(miningHistory, null, 4),
               //   );
-              const history = miningHistory.days.filter((d) => {
-                //filter old date
-                const historyDay = new Date(d.date).getTime();
-                const nowDay = new Date().getTime();
-                const diffDays = nowDay - historyDay;
-                return (
-                  diffDays >= days ||
-                  (lastMonth && diffDays >= Math.max(60, days))
-                );
-              });
-              setDaysUp(history.length);
+              const history = miningHistory.days.filter(filterOldDates(days));
+
+              const data: SiteMiningHistory =
+                mapHistoryMiningToSiteHistoryMining(siteId, history);
 
               miningDaysHistory[siteId] = history;
-              const data: SiteMiningHistory = {
-                id: siteId,
-                mining: { days: history },
-                token: { byUser: {} },
-              };
+              setDaysUp(history.length);
               dispatch({ type: siteAddedDispatchType, payload: data });
             }
           },
