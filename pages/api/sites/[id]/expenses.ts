@@ -68,7 +68,7 @@ async function getExpenses(siteId: string): Promise<Expense[]> {
     return e;
   });
 
-  console.log('Firebase expenses site', siteId, JSON.stringify(ret, null, 4));
+  //console.log('Firebase expenses site', siteId, JSON.stringify(ret, null, 4));
 
   return ret;
 }

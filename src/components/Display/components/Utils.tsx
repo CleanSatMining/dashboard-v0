@@ -1,4 +1,3 @@
-import React from 'react';
 import BigNumber from 'bignumber.js';
 import {
   IconCalendar,
@@ -42,11 +41,14 @@ export function getTimestampLastDayOfNMonthAgo(N: number): number {
   lastDayOfMonth.setMonth(lastDayOfMonth.getMonth() - N);
 
   // Set the day of the copied date to the last day of the month
-  lastDayOfMonth.setDate(daysInNMonthAgo(lastDayOfMonth.getTime(), N));
+  lastDayOfMonth.setDate(daysInNMonthAgo(new Date().getTime(), N));
+  //console.log('daysInNMonthAgo', daysInNMonthAgo(new Date().getTime(), N));
 
   // Set the hours, minutes, seconds, and milliseconds to 23:59:59:999
   lastDayOfMonth.setHours(23, 59, 59, 999);
-  lastDayOfMonth.setHours(lastDayOfMonth.getHours() - 24);
+  //console.log('daysInNMonthAgo', formatTimestamp(lastDayOfMonth.getTime()));
+  //lastDayOfMonth.setHours(lastDayOfMonth.getHours() - 24);
+  //console.log('daysInNMonthAgo', formatTimestamp(lastDayOfMonth.getTime()));
 
   // Return the timestamp of the last day of the previous month at 23:59
   return lastDayOfMonth.getTime();

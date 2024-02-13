@@ -32,6 +32,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { BtcPrice } from '../../CSM/Indicators/components/BtcPrice';
 import { Networkoverview } from '../../CSM/Indicators/components/NetworkOverview';
 import { NetworkUpdateTime } from '../../CSM/Indicators/components/NetworkUpdateTime';
+import { getMidnightTimestamp, getLastMinuteTimestamp } from 'src/utils/date';
 
 interface ControlPanelProps {
   isMobile: boolean;
@@ -82,7 +83,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   const handlePredefinedPeriodClick = (value: PredefinedPeriods) => {
     // You can perform additional actions based on the selected predefined period if needed
     // Use a switch statement to handle specific actions based on the selected predefined period
-    const today = getTimestampStartOfNDaysAgo(0);
+    const today = getMidnightTimestamp(getTimestampStartOfNDaysAgo(0));
     switch (value) {
       case PredefinedPeriods.Last24Hours:
         // Handle Last 24 Hours
@@ -113,7 +114,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
         const firstDayOfTheMonth = getTimestampFirstDayOfCurrentMonth();
         const days = calculateDaysBetweenDateAndToday(firstDayOfTheMonth);
         setPeriod(days.toString());
-        setStartTimestamp(firstDayOfTheMonth);
+        setStartTimestamp(getMidnightTimestamp(firstDayOfTheMonth));
         setEndTimestamp(today);
         setIconMenu(<IconCalendarDue size={20}></IconCalendarDue>);
         break;
@@ -126,8 +127,8 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
           firstDayOfLastMonth,
         );
         setPeriod(daysInLastMonth.toString());
-        setStartTimestamp(firstDayOfLastMonth);
-        setEndTimestamp(lastDayOfLastMonth);
+        setStartTimestamp(getMidnightTimestamp(firstDayOfLastMonth));
+        setEndTimestamp(getLastMinuteTimestamp(lastDayOfLastMonth));
         setIconMenu(<IconCalendarEvent size={20}></IconCalendarEvent>);
         break;
       case PredefinedPeriods.Last3Months:
@@ -139,8 +140,8 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
           lastDayOfLast1Month,
         );
         setPeriod(daysInLast3Month.toString());
-        setStartTimestamp(firstDayOfLast3Month);
-        setEndTimestamp(lastDayOfLast1Month);
+        setStartTimestamp(getMidnightTimestamp(firstDayOfLast3Month));
+        setEndTimestamp(getLastMinuteTimestamp(lastDayOfLast1Month));
         setIconMenu(<IconCalendarPlus size={20}></IconCalendarPlus>);
         break;
       case PredefinedPeriods.FromStart:
