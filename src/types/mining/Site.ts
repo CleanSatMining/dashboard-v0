@@ -3,6 +3,7 @@ export type CleanSatMiningSite = {
   name:string;
   shortName:string;
   operator:Operator | undefined;
+  data: Site;
 }
 
 export type Operator = {

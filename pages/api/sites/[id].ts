@@ -9,6 +9,7 @@ import {
 } from 'firebase/firestore/lite';
 import { db } from './database';
 import { CleanSatMiningSite, Operator } from 'src/types/mining/Site';
+import { SITES, SiteID } from 'src/constants/csm';
 
 const CACHE_DURATION_SECONDS = 8 * 60 * 60; // 8 heures
 /* eslint-disable */
@@ -90,5 +91,6 @@ async function getSite(
     name: site.name,
     shortName: site.shortName,
     operator: operatorData,
+    data: SITES[siteId as SiteID],
   };
 }
