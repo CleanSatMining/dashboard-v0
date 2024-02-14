@@ -20,7 +20,10 @@ import {
   MiningHistory,
   filterOldDates,
 } from 'src/types/mining/Mining';
-import { getMinedBtcBySite } from 'src/components/CSM/Utils/yield';
+import {
+  getMinedBtcBySite,
+  getUptimeBySite,
+} from 'src/components/CSM/Utils/yield';
 import { SITES, SiteID } from 'src/constants/csm';
 import BigNumber from 'bignumber.js';
 
@@ -115,6 +118,14 @@ const handler: NextApiHandler = async (
     btcPrice,
   );
 
+  const uptime = getUptimeBySite(
+    miningHistory,
+    siteId,
+    period,
+    startTimestamp,
+    endTimestamp,
+  );
+
   const returnValue = {
     feeCsm: result.feeCsm,
     taxe: result.taxe,
@@ -127,6 +138,7 @@ const handler: NextApiHandler = async (
     period: period,
     startTimestamp: startTimestamp,
     endTimestamp: endTimestamp,
+    uptime: uptime,
   };
 
   res.status(200).json(returnValue);
