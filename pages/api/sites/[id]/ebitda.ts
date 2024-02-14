@@ -42,6 +42,7 @@ const handler: NextApiHandler = async (
   let startTimestamp = getFirstDayOfPreviousMonth();
   let endTimestamp = getLastDayOfPreviousMonth();
   let btcPrice = 50000;
+  let basePricePerKWH: number | undefined = undefined;
 
   if (req.body) {
     let requestBody: APIEbitdaQuery = req.body;
@@ -54,6 +55,9 @@ const handler: NextApiHandler = async (
     startTimestamp = getMidnightTimestamp(Number(requestBody.startTimestamp));
     endTimestamp = getLastMinuteTimestamp(Number(requestBody.endTimestamp));
     btcPrice = Number(requestBody.btcPrice);
+    basePricePerKWH = requestBody.basePricePerKWH
+      ? Number(requestBody.basePricePerKWH)
+      : undefined;
   }
 
   const period = calculateDaysBetweenDates(startTimestamp, endTimestamp);
@@ -96,6 +100,7 @@ const handler: NextApiHandler = async (
     endTimestamp,
     [],
     btcPrice,
+    basePricePerKWH,
   );
   const minedBtc = getMinedBtcBySite(
     miningHistory,

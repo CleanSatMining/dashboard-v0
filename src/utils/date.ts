@@ -17,9 +17,9 @@ export function calculateDaysBetweenDates(
 
 export function getMidnightTimestamp(inputTimestamp: number): number {
   const date = new Date(Number(inputTimestamp));
-  console.log('getMidnightTimestamp #', inputTimestamp, date.getTime());
+
   date.setHours(0, 0, 0, 0); // Définir l'heure à 00:00:00.000
-  console.log('getMidnightTimestamp', inputTimestamp, date.getTime());
+
   // Retourner le nouveau timestamp à minuit
   return date.getTime();
 }

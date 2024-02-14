@@ -16,4 +16,5 @@ export type APIEbitdaQuery = {
     startTimestamp: number;
     endTimestamp: number;
     btcPrice: number;
+    basePricePerKWH?: number;
 }

@@ -17,17 +17,24 @@ import { calculateExpenses } from './expenses';
 const YEAR_IN_DAYS = new BigNumber(365);
 
 /**
- * calculateElececticityCostPerDay
+ *
  * @param site
  * @param totalMachines
  * @param uptimePercentage
+ * @param usdPricePerKWH_in
  * @returns
  */
 export function calculateElececticityCostPerDay(
   site: Site,
   totalMachines: number,
   uptimePercentage: number,
+  usdPricePerKWH_in?: number,
 ): BigNumber {
+  const usdPricePerKWH =
+    usdPricePerKWH_in !== undefined
+      ? usdPricePerKWH_in
+      : site.mining.electricity.usdPricePerKWH;
+
   const consumption_kwh_per_day_per_machine = new BigNumber(
     site.mining.asics.powerW,
   )
@@ -35,7 +42,7 @@ export function calculateElececticityCostPerDay(
     .dividedBy(1000);
   const electricityCostPerDay =
     site.mining.asics.units > 0
-      ? new BigNumber(site.mining.electricity.usdPricePerKWH)
+      ? new BigNumber(usdPricePerKWH)
           .times(consumption_kwh_per_day_per_machine)
           .times(uptimePercentage)
           .times(totalMachines)
@@ -59,6 +66,7 @@ export function calculateElectricityCostPerPeriod(
   endDate: number,
   expenses: Expense[],
   btcPrice: number,
+  basePricePerKWH?: number,
 ): BigNumber {
   const site: Site = SITES[siteId as SiteID];
   let electricityCost: BigNumber = new BigNumber(0);
@@ -76,6 +84,7 @@ export function calculateElectricityCostPerPeriod(
         site,
         site.mining.asics.units,
         day.uptimePercentage / 100,
+        basePricePerKWH,
       );
 
       electricityCost = electricityCost.plus(electricityCostPerDay);
