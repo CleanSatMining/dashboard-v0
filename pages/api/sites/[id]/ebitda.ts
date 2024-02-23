@@ -44,10 +44,11 @@ const handler: NextApiHandler = async (
   let btcPrice = 50000;
   let basePricePerKWH: number | undefined = undefined;
 
+  //console.log('req.body:', req.body);
   if (req.body) {
     let requestBody: APIEbitdaQuery = req.body;
     if (typeof req.body === 'string') {
-      console.log('req.body', req.body);
+      //console.log('req.body', req.body);
       requestBody = JSON.parse(req.body);
     } else {
       console.log('req.body', JSON.stringify(req.body));
@@ -55,9 +56,10 @@ const handler: NextApiHandler = async (
     startTimestamp = getMidnightTimestamp(Number(requestBody.startTimestamp));
     endTimestamp = getLastMinuteTimestamp(Number(requestBody.endTimestamp));
     btcPrice = Number(requestBody.btcPrice);
-    basePricePerKWH = requestBody.basePricePerKWH
-      ? Number(requestBody.basePricePerKWH)
-      : undefined;
+    basePricePerKWH =
+      requestBody.basePricePerKWH !== undefined
+        ? Number(requestBody.basePricePerKWH)
+        : undefined;
   }
 
   const period = calculateDaysBetweenDates(startTimestamp, endTimestamp);
