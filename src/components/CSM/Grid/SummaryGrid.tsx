@@ -34,6 +34,7 @@ import {
   getUserYield,
   getUserYieldBySite,
   getUserTokenBalance,
+  getUserTokenBalanceToCome,
 } from '../Utils/yield';
 import { useNFTs as useWalletNFTs } from 'src/hooks/useWalletNft';
 import { ULTRA_RARE } from 'src/constants/csm';
@@ -74,7 +75,7 @@ const _Summary: FC<AssetProps> = ({
   //console.log('NFT', JSON.stringify(ultraRare, null, 4));
 
   const siteIds = getUserSiteIds(usersState, account);
-  const investment = getUserInvestment(usersState, account);
+  const investment = getUserInvestment(usersState, account, true);
   const numberOfSite = siteIds.length;
 
   const dataTokens: Data[] = [];
@@ -89,6 +90,7 @@ const _Summary: FC<AssetProps> = ({
 
   for (const siteId of siteIds) {
     const token = getUserTokenBalance(usersState, account, siteId);
+    const tokenToCome = getUserTokenBalanceToCome(usersState, account, siteId);
     const site = getSite(siteId);
     const yields = getUserYieldBySite(
       miningState,
@@ -106,6 +108,7 @@ const _Summary: FC<AssetProps> = ({
       label: token.symbol,
       value: formatUsd(token.usd),
     };
+
     const dataSite: Data = {
       label: site.name,
       value: t(site.location.name),
@@ -124,6 +127,14 @@ const _Summary: FC<AssetProps> = ({
     dataSites.push(dataSite);
     dataIncomeNet.push(dataYieldNet);
     dataIncomeGross.push(dataYieldGross);
+
+    if (tokenToCome.balance > 0) {
+      const dataTokenToCome: Data = {
+        label: token.symbol + ' (' + t('toCome') + ')',
+        value: formatUsd(tokenToCome.usd),
+      };
+      dataTokens.push(dataTokenToCome);
+    }
   }
 
   // console.log(

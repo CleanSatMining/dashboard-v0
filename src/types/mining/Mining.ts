@@ -17,6 +17,10 @@ export type MiningSummary = {
 interface Balance {
     token: {
         balance: number;
+        toCome?: {
+            amount: number;
+            usd: number;
+        }
     };
 }
 

@@ -285,7 +285,9 @@ export const getUserSiteIds = (
     (siteId) =>
       userState.byAddress[userAddress] &&
       userState.byAddress[userAddress].bySite[siteId] &&
-      userState.byAddress[userAddress].bySite[siteId].token.balance > 0,
+      (userState.byAddress[userAddress].bySite[siteId].token.balance > 0 ||
+        (userState.byAddress[userAddress].bySite[siteId].token.toCome?.amount ??
+          0) > 0),
   );
 };
 
@@ -302,21 +304,63 @@ export const getUserTokenBalance = (
   userState: UserState,
   userAddress: string,
   siteId: string,
+  toCome?: boolean,
 ): TokenBalance => {
   const site = SITES[siteId as SiteID];
+
   if (
     userState.byAddress[userAddress] &&
     userState.byAddress[userAddress].bySite[siteId] &&
-    userState.byAddress[userAddress].bySite[siteId].token.balance > 0
+    (userState.byAddress[userAddress].bySite[siteId].token.balance > 0 ||
+      toCome)
   ) {
     const tokenPrice: BigNumber = new BigNumber(site.token.price);
     const tokenBalance: number =
       userState.byAddress[userAddress].bySite[siteId].token.balance;
+    const tokenToCome: number =
+      userState.byAddress[userAddress].bySite[siteId].token.toCome?.amount ?? 0;
+    const tokenToComeUsd: number =
+      userState.byAddress[userAddress].bySite[siteId].token.toCome?.usd ?? 0;
+
     return {
       address: site.token.address,
       symbol: site.token.symbol,
-      balance: tokenBalance,
-      usd: tokenPrice.times(tokenBalance).toNumber(),
+      balance: tokenBalance + (toCome ? tokenToCome : 0),
+      usd:
+        tokenPrice.times(tokenBalance).toNumber() +
+        (toCome ? tokenToComeUsd : 0),
+    };
+  }
+
+  return {
+    address: site.token.address,
+    symbol: site.token.symbol,
+    balance: 0,
+    usd: 0,
+  };
+};
+
+export const getUserTokenBalanceToCome = (
+  userState: UserState,
+  userAddress: string,
+  siteId: string,
+): TokenBalance => {
+  const site = SITES[siteId as SiteID];
+
+  if (
+    userState.byAddress[userAddress] &&
+    userState.byAddress[userAddress].bySite[siteId]
+  ) {
+    const tokenToCome: number =
+      userState.byAddress[userAddress].bySite[siteId].token.toCome?.amount ?? 0;
+    const tokenToComeUsd: number =
+      userState.byAddress[userAddress].bySite[siteId].token.toCome?.usd ?? 0;
+
+    return {
+      address: site.token.address,
+      symbol: site.token.symbol,
+      balance: tokenToCome,
+      usd: tokenToComeUsd,
     };
   }
 
@@ -338,11 +382,12 @@ export const getUserTokenBalance = (
 export const getUserInvestment = (
   userState: UserState,
   userAddress: string,
+  toCome?: boolean,
 ): BigNumber => {
   if (userState.byAddress[userAddress]) {
     const userInvestment: BigNumber = getUserSiteIds(userState, userAddress)
       .map((siteId) => {
-        return getUserTokenBalance(userState, userAddress, siteId).usd;
+        return getUserTokenBalance(userState, userAddress, siteId, toCome).usd;
       })
       .reduce((acc, val) => acc.plus(val), new BigNumber(0));
     return userInvestment;

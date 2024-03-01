@@ -4,7 +4,7 @@ import 'firebase/firestore';
 import { collection, getDocs } from 'firebase/firestore/lite';
 import { Expense } from 'src/types/mining/Mining';
 
-import { db } from './../database';
+import { db } from 'src/database/firebase';
 
 const CACHE_DURATION_SECONDS = 8 * 60 * 60; // 8 heures
 /* eslint-disable */

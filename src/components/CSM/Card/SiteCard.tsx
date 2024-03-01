@@ -22,6 +22,7 @@ import {
   getUptimeBySite,
   getUserSiteShare,
   getUserTokenBalance,
+  getUserTokenBalanceToCome,
   getUserYieldBySite,
   getYieldBySite,
   getSiteExpensesByPeriod,
@@ -59,6 +60,11 @@ const _SiteCard: FC<SiteProps> = ({
 
   const userToken = getUserTokenBalance(usersState, account, siteId);
   const tokenBalance = userToken.balance;
+  const userTokenToCome = getUserTokenBalanceToCome(
+    usersState,
+    account,
+    siteId,
+  );
   const userShare = getUserSiteShare(
     miningState,
     usersState,
@@ -124,6 +130,7 @@ const _SiteCard: FC<SiteProps> = ({
     userYield,
     siteYield,
     userToken,
+    userTokenToCome,
     siteUptime,
     siteCosts,
     period,
@@ -179,6 +186,11 @@ const _SiteCard: FC<SiteProps> = ({
       endDate,
       expensesState.byId[siteId] ?? [],
     );
+    const userTokenToCome = getUserTokenBalanceToCome(
+      usersState,
+      account,
+      siteId,
+    );
 
     setUserSiteData(
       buildUserSiteData(
@@ -189,6 +201,7 @@ const _SiteCard: FC<SiteProps> = ({
         userYield,
         siteYield,
         userToken,
+        userTokenToCome,
         siteUptime,
         siteCosts,
         period,
@@ -265,6 +278,7 @@ function buildUserSiteData(
   userYield: { net: Yield; gross: Yield },
   siteYield: { net: Yield; gross: Yield },
   userToken: TokenBalance,
+  userTokenToCome: TokenBalance,
   siteUptime: {
     machines: number;
     days: number;
@@ -318,6 +332,8 @@ function buildUserSiteData(
       address: site.token.address,
       decimal: 9,
       image: 'https://cleansatmining.com/data/files/logo_csm.png',
+      toCome: userTokenToCome.balance,
+      valueToCome: userTokenToCome.usd,
     },
     site: {
       operator: operator,

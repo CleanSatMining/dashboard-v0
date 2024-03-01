@@ -27,6 +27,8 @@ export type CardData = {
     address: string;
     decimal: number;
     image: string;
+    toCome: number;
+    valueToCome: number;
   };
 
   site: {

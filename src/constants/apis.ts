@@ -37,3 +37,9 @@ export const API_SITE = {
   url: (id: string) => '/api/sites/' + id,
   method: 'POST',
 };
+
+export const API_USERS_PAYMENTS = {
+  url: (address: string, siteId: string) =>
+    '/api/users/' + address + '/sites/' + siteId + '/payments',
+  method: 'POST',
+};

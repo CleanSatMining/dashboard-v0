@@ -7,7 +7,7 @@ import {
   getDoc,
   DocumentReference,
 } from 'firebase/firestore/lite';
-import { db } from './database';
+import { db } from 'src/database/firebase';
 import { CleanSatMiningSite, Operator } from 'src/types/mining/Site';
 import { SITES, SiteID } from 'src/constants/csm';
 

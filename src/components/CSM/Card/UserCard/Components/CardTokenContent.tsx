@@ -6,6 +6,7 @@ import {
   createStyles,
   MantineTheme,
   Tooltip,
+  Space,
 } from '@mantine/core';
 import { IconExternalLink } from '@tabler/icons';
 import {
@@ -18,6 +19,7 @@ import { useTranslation } from 'react-i18next';
 import { CardData } from '../Type';
 import { InfoText } from 'src/components/InfoText/InfoText';
 import { AddErc20ToWallet } from 'src/components/CSM/Wallet/AddTokenToWallet';
+import { useMediaQuery } from '@mantine/hooks';
 
 export const useStyle = createStyles((theme: MantineTheme) => ({
   tokenContainer: {
@@ -45,7 +47,7 @@ export const CardTokenContent: FC<CardTokenContentProps> = ({
 }) => {
   const { classes } = useStyle();
   const { t } = useTranslation('site', { keyPrefix: 'card' });
-
+  const isMobile = useMediaQuery('(max-width: 36em)');
   const url: string = data.token.url;
   const balance: number = data.token.balance;
   const value: number = data.token.value;
@@ -111,6 +113,25 @@ export const CardTokenContent: FC<CardTokenContentProps> = ({
             ')'}
         </Text>
       </Group>
+      {data.token.toCome > 0 && (
+        <>
+          <Space h={10}></Space>
+          <Group position={'apart'} mt={0} mb={0}>
+            <Text fz={isMobile ? 'xs' : 'sm'} color={'dimmed'}>
+              {'Quantité ' + t('toCome')}
+            </Text>
+            <Text weight={500} fz={isMobile ? 'xs' : 'sm'}>
+              {'~ ' + formatToken(data.token.toCome) + ' ' + symbol}
+            </Text>
+          </Group>
+          <Group position={'apart'} mt={0} mb={0}>
+            <Text fz={'xs'} color={'dimmed'}></Text>
+            <Text fz={'xs'} color={'dimmed'}>
+              {formatUsd(data.token.valueToCome)}
+            </Text>
+          </Group>
+        </>
+      )}
     </div>
   );
 };
