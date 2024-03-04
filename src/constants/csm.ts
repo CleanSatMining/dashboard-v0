@@ -265,7 +265,7 @@ export const SITES: Record<SiteID, Site> = {
       gnosisscanUrl:
         'https://gnosisscan.io/token/0x20D2F2d4b839710562D25274A3e98Ea1F0392D24',
     },
-    status: MiningStatus.inactive,
+    status: MiningStatus.active,
     api: {
       enable: false,
       username: undefined,
