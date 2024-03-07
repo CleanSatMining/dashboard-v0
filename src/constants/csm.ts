@@ -48,9 +48,9 @@ export const SITES: Record<SiteID, Site> = {
     mining: {
       startingDate: '2023-09-01',
       asics: {
-        powerW: 3100,
-        units: 375,
-        hashrateHs: 100000000000000,
+        powerW: 3167.72487,
+        units: 567,
+        hashrateHs: 106772487000000,
       },
       electricity: {
         usdPricePerKWH: 0.0375,
