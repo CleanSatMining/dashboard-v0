@@ -1,4 +1,4 @@
-
+import { getTimestampAtMidnightUTC } from "src/components/Display/components/Utils";
 export type MiningSummaryPerDay = {
     date: string;
     efficiency: number;
@@ -80,7 +80,7 @@ export function filterOldDates(days: number): (value: MiningSummaryPerDay, index
   }
 
 function filterDates(d: MiningSummaryPerDay, days: number) {
-    const historyDay = new Date(d.date).getTime();
+    const historyDay = getTimestampAtMidnightUTC(new Date(d.date).getTime());
     const nowDay = new Date().getTime();
     const diffDays = nowDay - historyDay;
     return diffDays >= days;

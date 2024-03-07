@@ -47,17 +47,35 @@ export const SITES: Record<SiteID, Site> = {
     },
     mining: {
       startingDate: '2023-09-01',
-      asics: {
-        powerW: 3167.72487,
-        units: 567,
-        hashrateHs: 106772487000000,
-      },
+      asics: [
+        {
+          date: '2023-09-01',
+          powerW: 3100,
+          units: 375,
+          hashrateHs: 100000000000000,
+          name: 'Whatsminer M30S++',
+        },
+        {
+          date: '2024-03-04',
+          powerW: 3300,
+          units: 192,
+          hashrateHs: 120000000000000,
+          name: 'Whatsminer M50',
+        },
+      ],
       electricity: {
         usdPricePerKWH: 0.0375,
       },
-      intallationCosts: {
-        equipement: 1238414,
-      },
+      intallationCosts: [
+        {
+          date: '2023-09-01',
+          equipement: 1238414,
+        },
+        {
+          date: '2024-03-04',
+          equipement: 586080,
+        },
+      ],
     },
     fees: {
       crowdfunding: {
@@ -104,17 +122,24 @@ export const SITES: Record<SiteID, Site> = {
     },
     mining: {
       startingDate: '2023-10-01',
-      asics: {
-        powerW: 3100,
-        units: 375,
-        hashrateHs: 100000000000000,
-      },
+      asics: [
+        {
+          date: '2023-10-01',
+          powerW: 3100,
+          units: 375,
+          hashrateHs: 100000000000000,
+          name: 'Whatsminer M30S++',
+        },
+      ],
       electricity: {
         usdPricePerKWH: 0.0575,
       },
-      intallationCosts: {
-        equipement: 1070445,
-      },
+      intallationCosts: [
+        {
+          date: '2023-10-01',
+          equipement: 1070445,
+        },
+      ],
     },
     fees: {
       crowdfunding: {
@@ -160,17 +185,24 @@ export const SITES: Record<SiteID, Site> = {
     },
     mining: {
       startingDate: '2023-08-18',
-      asics: {
-        powerW: 3400,
-        units: 386,
-        hashrateHs: 122000000000000,
-      },
+      asics: [
+        {
+          date: '2023-08-18',
+          powerW: 3400,
+          units: 386,
+          hashrateHs: 122000000000000,
+          name: 'Whatsminer M50',
+        },
+      ],
       electricity: {
         usdPricePerKWH: 0.059,
       },
-      intallationCosts: {
-        equipement: 1258844,
-      },
+      intallationCosts: [
+        {
+          date: '2023-08-18',
+          equipement: 1258844,
+        },
+      ],
     },
     fees: {
       crowdfunding: {
@@ -216,17 +248,24 @@ export const SITES: Record<SiteID, Site> = {
     },
     mining: {
       startingDate: '2023-06-20',
-      asics: {
-        powerW: 3010,
-        units: 189,
-        hashrateHs: 141000000000000,
-      },
+      asics: [
+        {
+          date: '2023-06-20',
+          powerW: 3010,
+          units: 189,
+          hashrateHs: 141000000000000,
+          name: 'Antminer S19 XP',
+        },
+      ],
       electricity: {
         usdPricePerKWH: 0.063,
       },
-      intallationCosts: {
-        equipement: 726565,
-      },
+      intallationCosts: [
+        {
+          date: '2023-06-20',
+          equipement: 726565,
+        },
+      ],
     },
     fees: {
       crowdfunding: {
@@ -273,18 +312,25 @@ export const SITES: Record<SiteID, Site> = {
       contractor: undefined,
     },
     mining: {
-      startingDate: '-',
-      asics: {
-        powerW: 3300,
-        units: 300,
-        hashrateHs: 120000000000000,
-      },
+      startingDate: '2024-02-29',
+      asics: [
+        {
+          date: '2024-02-29',
+          powerW: 3300,
+          units: 300,
+          hashrateHs: 120000000000000,
+          name: 'S19k pro',
+        },
+      ],
       electricity: {
         usdPricePerKWH: 0.046,
       },
-      intallationCosts: {
-        equipement: 650000,
-      },
+      intallationCosts: [
+        {
+          date: '2024-02-29',
+          equipement: 650000,
+        },
+      ],
     },
     fees: {
       crowdfunding: {

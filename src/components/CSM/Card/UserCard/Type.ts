@@ -33,16 +33,20 @@ export type CardData = {
 
   site: {
     operator: Operator | undefined;
-    miningStart: string;
-    machines: number;
-    hashrate: number;
+    miningStart: string[];
+    machines: number[];
+    hashrate: number[];
     uptime: {
+      startTimestamp: number;
+      endTimestamp: number;
       onPeriod: number;
       days: number;
       machines: number;
-      hashratePercent: number;
       mined: Income;
       hashrate: number;
+      hashratePercent: number;
+      hashrates: number[];
+      hashratePercents: number[];
       earned: Income;
       costs: CardCost;
     };

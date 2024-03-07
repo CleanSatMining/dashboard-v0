@@ -1,5 +1,4 @@
 import { FC } from 'react';
-
 import { GnosisLogo, Chain as RealtChains } from '@realtoken/realt-commons';
 
 import { realTokenYamUpgradeableABI } from 'src/abis';

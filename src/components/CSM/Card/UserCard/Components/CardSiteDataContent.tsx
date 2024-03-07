@@ -47,10 +47,10 @@ export const CardSiteDataContent: FC<CardSiteDataContentProps> = ({
     undefined,
   );
 
-  console.log(
-    'CardSiteDataContent',
-    JSON.stringify(data.site.operator, null, 2),
-  );
+  // console.log(
+  //   'CardSiteDataContent',
+  //   JSON.stringify(data.site.operator, null, 2),
+  // );
 
   useEffect(() => {
     const fetchSiteData = async () => {
@@ -65,14 +65,14 @@ export const CardSiteDataContent: FC<CardSiteDataContentProps> = ({
 
         const d: CleanSatMiningSite = await response.json();
 
-        console.log('SITE DATA', JSON.stringify(d, null, 2));
+        //console.log('SITE DATA', JSON.stringify(d, null, 2));
         setSiteData(d);
         return data;
       } catch (error) {
         console.error(error);
       }
     };
-    console.log('SITE DATA');
+    //console.log('SITE DATA');
 
     fetchSiteData();
   }, []);
