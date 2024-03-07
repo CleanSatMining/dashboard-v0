@@ -1,6 +1,7 @@
 import {
   calculateExpenses,
   getLastDayOfMonth,
+  calculateDaysBetweenDates,
 } from 'src/components/CSM/Utils/expenses';
 import BigNumber from 'bignumber.js';
 
@@ -203,5 +204,16 @@ describe('getLastDayOfMonth', () => {
     const lastDay = getLastDayOfMonth(date);
 
     expect(lastDay.getDate()).toEqual(29); // Février 2024 a 29 jours
+  });
+});
+
+describe('calculateDaysBetweenDates', () => {
+  test('calcul du nombre de jours entre deux dates', () => {
+    const timestamp1 = new Date('2024-02-01').getTime();
+    const timestamp2 = new Date('2024-02-15').getTime();
+
+    const result = calculateDaysBetweenDates(timestamp1, timestamp2);
+
+    expect(result).toEqual(14);
   });
 });

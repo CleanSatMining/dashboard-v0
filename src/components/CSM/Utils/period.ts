@@ -1,31 +1,8 @@
 import { MiningSummaryPerDay } from 'src/types/mining/Mining';
 import { MiningHistory } from 'src/types/mining/Mining';
+import { getNumberOfDaysSinceStart } from './yield';
 import { Site } from 'src/types/mining/Site';
-import { SITES, SiteID } from 'src/constants/csm';
-import BigNumber from 'bignumber.js';
-
-interface Period {
-  period: number;
-  startDate: number;
-  endDate: number;
-  equipementCost: number;
-}
-
-export function getNumberOfDaysSinceStart(site: Site) {
-  if (
-    site.mining.startingDate !== undefined &&
-    site.mining.startingDate !== '-'
-  ) {
-    const today = new Date();
-    const startDate = new Date(site.mining.startingDate);
-    const diffTime = new BigNumber(today.getTime() - startDate.getTime());
-    const daysSinceStart = Math.ceil(
-      diffTime.dividedBy(1000 * 3600 * 24).toNumber(),
-    );
-    return daysSinceStart ?? 0;
-  }
-  return 0;
-}
+import { SITES, SiteID } from '../../../constants/csm';
 
 // Définition de la fonction
 export function getMiningDays(
@@ -94,29 +71,29 @@ export function daysInPreviousMonth(date: Date): number {
   // Create a copy of the date to avoid modifying it directly
   const dateCopy = new Date(date);
 
-  // Decrement the month of the copied date using UTC
-  dateCopy.setUTCMonth(dateCopy.getUTCMonth() - 1);
+  // Decrement the month of the copied date
+  dateCopy.setMonth(dateCopy.getMonth() - 1);
 
-  // Return the number of days in the previous month using UTC
-  return new Date(
-    Date.UTC(dateCopy.getUTCFullYear(), dateCopy.getUTCMonth() + 1, 0),
-  ).getUTCDate();
+  // Return the number of days in the previous month
+  return new Date(dateCopy.getFullYear(), dateCopy.getMonth() + 1, 0).getDate();
 }
 
 export function getTimestampFirstDayOfPreviousMonth(date: Date): number {
   // Create a copy of the date to avoid modifying it directly
   const dateCopy = new Date(date);
 
-  // Decrement the month of the copied date using UTC
-  dateCopy.setUTCMonth(dateCopy.getUTCMonth() - 1);
+  // Decrement the month of the copied date
+  dateCopy.setMonth(dateCopy.getMonth() - 1);
 
-  // Set the day of the copied date to the first day of the month using UTC
-  dateCopy.setUTCDate(1);
+  // Set the day of the copied date to the first day of the month
+  dateCopy.setDate(1);
 
-  // Set the UTC hours, minutes, seconds, and milliseconds to 0
-  dateCopy.setUTCHours(0, 0, 0, 0);
+  // Set the hours, minutes, seconds, and milliseconds to 0
+  dateCopy.setHours(0, 0, 0, 0);
 
-  // Return the timestamp of the first day of the previous month at 0:00 UTC
+  //console.log(`Le premier jour du mois : ${dateCopy}`);
+
+  // Return the timestamp of the first day of the previous month at 0:00
   return dateCopy.getTime();
 }
 
@@ -124,207 +101,16 @@ export function getTimestampLastDayOfPreviousMonth(date: Date): number {
   // Create a copy of the date to avoid modifying it directly
   const dateCopy = new Date(date);
 
-  // Decrement the month of the copied date using UTC
-  dateCopy.setUTCMonth(dateCopy.getUTCMonth() - 1);
+  // Decrement the month of the copied date
+  dateCopy.setMonth(dateCopy.getMonth() - 1);
 
-  // Set the day of the copied date to the last day of the month using UTC
-  dateCopy.setUTCDate(daysInPreviousMonth(date));
+  // Set the day of the copied date to the last day of the month
+  dateCopy.setDate(daysInPreviousMonth(date));
 
-  // Set the UTC hours, minutes, seconds, and milliseconds to 23:59:59:999
-  dateCopy.setUTCHours(23, 59, 59, 999);
+  // Set the hours, minutes, seconds, and milliseconds to 23:59:59:999
+  dateCopy.setHours(23, 59, 59, 999);
+  //console.log(`Le dernier jour du mois : ${dateCopy}`);
 
   // Return the timestamp of the last day of the previous month at 23:59
   return dateCopy.getTime();
-}
-
-export function calculateDaysBetweenDates(
-  timestamp1: number,
-  timestamp2: number,
-): number {
-  if (timestamp1 === 0 || timestamp2 === 0) return 0;
-
-  // Calcul du nombre de millisecondes dans une journée
-  const millisecondsPerDay = 24 * 60 * 60 * 1000;
-
-  // Calcul du nombre de jours entre les deux dates
-  const daysDifference = Math.abs(
-    (timestamp2 - timestamp1) / millisecondsPerDay,
-  );
-
-  return Math.floor(daysDifference) + 1;
-}
-
-export function getYesterdayTimestamp(timestamp: number): number {
-  // Create a copy of the input date to avoid modifying it directly
-  const yesterday = new Date(timestamp);
-
-  // Subtract one day from the current date
-  yesterday.setDate(yesterday.getDate() - 1);
-
-  // Set the UTC time to 23:59:59:999
-  yesterday.setUTCHours(23, 59, 59, 999);
-
-  // Return the timestamp for the modified date
-  return yesterday.getTime();
-}
-
-function add5YearsToTimestamp(inputTimestamp: number): number {
-  // Convertir le timestamp en objet Date
-  const currentDate = new Date(inputTimestamp);
-
-  // Ajouter 5 ans à la date actuelle en utilisant l'UTC
-  currentDate.setUTCFullYear(currentDate.getUTCFullYear() + 5);
-
-  // Renvoyer le nouveau timestamp
-  return currentDate.getTime();
-}
-
-/**
- * getNumberOfMachines
- *
- * @param siteId
- * @param date
- * @returns
- */
-export function getNumberOfMachines(site: Site, date: Date): number {
-  //const site: Site = SITES[siteId as SiteID];
-
-  let totalMachines = 0;
-
-  for (const asics of site.mining.asics) {
-    if (new Date(asics.date).getTime() <= date.getTime()) {
-      totalMachines = totalMachines + asics.units;
-    }
-  }
-
-  return totalMachines;
-}
-
-/**
- * getNumberOfMachines
- *
- * @param siteId
- * @param date
- * @returns
- */
-export function getPower(site: Site, date: Date): number {
-  //const site: Site = SITES[siteId as SiteID];
-
-  let power = new BigNumber(0);
-
-  for (const asics of site.mining.asics) {
-    if (new Date(asics.date).getTime() <= date.getTime()) {
-      power = power.plus(new BigNumber(asics.powerW).times(asics.units));
-    }
-  }
-
-  return power.toNumber();
-}
-
-export function getHashrate(site: Site, date: Date): number {
-  let hashrate = new BigNumber(0);
-
-  for (const asics of site.mining.asics) {
-    if (new Date(asics.date).getTime() <= date.getTime()) {
-      hashrate = hashrate.plus(
-        new BigNumber(asics.hashrateHs).times(asics.units),
-      );
-    }
-  }
-
-  return hashrate.toNumber();
-}
-
-export function getEquipementPeriods(
-  site: Site,
-  startDate: number,
-  endDate: number,
-): Period[] {
-  const periods: Period[] = [];
-
-  const timestamps = site.mining.intallationCosts.map((installation) =>
-    new Date(installation.date).getTime(),
-  );
-
-  const equipementTimestamps: { timestamp: number; cost: number }[] =
-    timestamps.map((timestamp, i) => {
-      return {
-        timestamp: timestamp,
-        cost: site.mining.intallationCosts[i].equipement,
-      };
-    });
-
-  const equipementTimestamps5Years: { timestamp: number; cost: number }[] =
-    timestamps.map((timestamp, i) => {
-      return {
-        timestamp: add5YearsToTimestamp(timestamp),
-        cost: -site.mining.intallationCosts[i].equipement,
-      };
-    });
-
-  const equipementPeriods = equipementTimestamps
-    .concat(equipementTimestamps5Years)
-    .filter((equipement) => equipement.timestamp <= endDate)
-    .sort((a, b) => a.timestamp - b.timestamp);
-
-  let equipementCost = 0;
-
-  for (let i = 0; i < equipementPeriods.length; i++) {
-    equipementCost = equipementCost + equipementPeriods[i].cost;
-    const endPeriod =
-      i + 1 < equipementPeriods.length
-        ? getYesterdayTimestamp(equipementPeriods[i + 1].timestamp)
-        : endDate;
-    const startPeriod =
-      equipementPeriods[i].timestamp > startDate
-        ? equipementPeriods[i].timestamp
-        : startDate;
-
-    periods.push({
-      period: calculateDaysBetweenDates(startPeriod, endPeriod),
-      startDate: startPeriod,
-      endDate: endPeriod,
-      equipementCost: equipementCost,
-    });
-  }
-
-  //periods.filter((period) => period.startDate >= startDate);
-
-  return removeDuplicatesByStartDate(periods);
-}
-
-export function getEquipementCost(
-  site: Site,
-  startDate: number,
-  endDate: number,
-): BigNumber {
-  const period = calculateDaysBetweenDates(startDate, endDate);
-  const equipementPeriods = getEquipementPeriods(site, startDate, endDate);
-  let equipement = new BigNumber(0);
-  for (const equipementPeriod of equipementPeriods) {
-    equipement = equipement.plus(
-      new BigNumber(equipementPeriod.equipementCost).times(
-        equipementPeriod.period,
-      ),
-    );
-  }
-  return equipement.dividedBy(period);
-}
-
-function removeDuplicatesByStartDate(periods: Period[]): Period[] {
-  // Trier la liste par "period" de manière décroissante
-  const sortedPeriods = periods.sort((a, b) => b.period - a.period);
-
-  const uniqueStartDates: Set<number> = new Set();
-  const result: Period[] = [];
-
-  for (const period of sortedPeriods) {
-    if (!uniqueStartDates.has(period.startDate)) {
-      // Si la startDate n'a pas encore été vue, ajoutez-la à la liste unique
-      uniqueStartDates.add(period.startDate);
-      result.push(period);
-    }
-  }
-
-  return result;
 }
