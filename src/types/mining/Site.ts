@@ -74,14 +74,19 @@ export type Site = {
     electricity:{
       usdPricePerKWH: number;
     }
-    asics:{
-      powerW: number;
-      units: number;
-      hashrateHs: number;
-    },
+    asics:Asics[],
     intallationCosts:{
+      date : string;
       equipement: number;
-    },
+    }[],
+  }
+
+  export type Asics = {
+    date : string;
+    powerW: number;
+    units: number;
+    hashrateHs: number;
+    name: string;
   }
 
   export type Yield ={

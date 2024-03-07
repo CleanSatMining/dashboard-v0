@@ -15,7 +15,11 @@ import {
   calculateGrossYield,
   calculateCostsAndEBITDAByPeriod,
 } from './pnl';
-import { getPeriodFromStart } from './period';
+import {
+  getPeriodFromStart,
+  getEquipementPeriods,
+  getEquipementCost,
+} from './period';
 
 //------------------------------------------------------------------------------------------------------------
 // WITH REDUX
@@ -573,22 +577,6 @@ export function getCSMTokenAddress(siteId: string): string {
  * @returns
  */
 
-export function getNumberOfDaysSinceStart(site: Site) {
-  if (
-    site.mining.startingDate !== undefined &&
-    site.mining.startingDate !== '-'
-  ) {
-    const today = new Date();
-    const startDate = new Date(site.mining.startingDate);
-    const diffTime = new BigNumber(today.getTime() - startDate.getTime());
-    const daysSinceStart = Math.ceil(
-      diffTime.dividedBy(1000 * 3600 * 24).toNumber(),
-    );
-    return daysSinceStart ?? 0;
-  }
-  return 0;
-}
-
 export function getSiteExpensesByPeriod(
   miningState: MiningHistory,
   siteId: string,
@@ -607,21 +595,23 @@ export function getSiteExpensesByPeriod(
 } {
   const site: Site = SITES[siteId as SiteID];
   const feeParameters = site.fees;
+
+  //const equipement = new BigNumber(site.mining.intallationCosts.equipement);
+  const equipement = getEquipementCost(site, startDate, endDate);
+  const realPeriod = getPeriodFromStart(site, period);
   const { value: usdIncome } = getMinedBtcBySite(
     miningState,
     siteId,
-    period,
+    realPeriod,
     btcPrice,
     startDate,
     endDate,
   );
-  const equipement = new BigNumber(site.mining.intallationCosts.equipement);
-  const realPeriod = getPeriodFromStart(site, period);
 
   const estimatedElectricityCost = calculateElectricityCostPerPeriod(
     miningState,
     siteId,
-    period,
+    realPeriod,
     startDate,
     endDate,
     expenses,
@@ -640,6 +630,60 @@ export function getSiteExpensesByPeriod(
       expenses,
       btcPrice,
     );
+
+  /* const equipementPeriods = getEquipementPeriods(site, startDate, endDate);
+
+  let estimatedElectricityCost = new BigNumber(0);
+  let feeCsm = new BigNumber(0);
+  let feeOperator = new BigNumber(0);
+  let taxe = new BigNumber(0);
+  let provision = new BigNumber(0);
+
+  for (const equipementPeriod of equipementPeriods) {
+    const { value: usdIncome } = getMinedBtcBySite(
+      miningState,
+      siteId,
+      equipementPeriod.period,
+      btcPrice,
+      equipementPeriod.startDate,
+      equipementPeriod.endDate,
+    );
+
+    const estimatedElectricityCostPeriod = calculateElectricityCostPerPeriod(
+      miningState,
+      siteId,
+      equipementPeriod.period,
+      equipementPeriod.startDate,
+      equipementPeriod.endDate,
+      expenses,
+      btcPrice,
+    );
+
+    const {
+      feeCsm: feeCsmPeriod,
+      feeOperator: feeOperatorPeriod,
+      taxe: taxePeriod,
+      provision: provisionPeriod,
+    } = calculateCostsAndEBITDAByPeriod(
+      usdIncome,
+      estimatedElectricityCostPeriod,
+      feeParameters,
+      new BigNumber(equipementPeriod.equipementCost),
+      equipementPeriod.period,
+      equipementPeriod.startDate,
+      equipementPeriod.endDate,
+      expenses,
+      btcPrice,
+    );
+
+    estimatedElectricityCost = estimatedElectricityCost.plus(
+      estimatedElectricityCostPeriod,
+    );
+    feeCsm = feeCsm.plus(feeCsmPeriod);
+    feeOperator = feeOperator.plus(feeOperatorPeriod);
+    taxe = taxe.plus(taxePeriod);
+    provision = provision.plus(provisionPeriod);
+  } */
 
   return {
     total: estimatedElectricityCost

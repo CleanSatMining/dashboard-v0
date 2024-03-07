@@ -12,48 +12,6 @@ import { PredefinedPeriods } from './Types';
 export const FIRST_OF_MAY = 1682892000000;
 export const START_DATE = 1687212000000;
 
-export function getTimestampFirstDayOfCurrentMonth(): number {
-  const today = new Date();
-  const firstDayOfCurrentMonth = new Date(
-    today.getFullYear(),
-    today.getMonth(),
-    1,
-  );
-
-  // Return the timestamp
-  return firstDayOfCurrentMonth.getTime();
-}
-
-export function getTimestampFirstDayOfNMonthsAgo(N: number): number {
-  const today = new Date();
-  const targetDate = new Date(today.getFullYear(), today.getMonth() - N, 1);
-
-  // Set time to midnight
-  targetDate.setHours(0, 0, 0, 0);
-
-  // Return the timestamp
-  return targetDate.getTime();
-}
-
-export function getTimestampLastDayOfNMonthAgo(N: number): number {
-  const lastDayOfMonth = new Date();
-  // Decrement the month of the copied date
-  lastDayOfMonth.setMonth(lastDayOfMonth.getMonth() - N);
-
-  // Set the day of the copied date to the last day of the month
-  lastDayOfMonth.setDate(daysInNMonthAgo(new Date().getTime(), N));
-  //console.log('daysInNMonthAgo', daysInNMonthAgo(new Date().getTime(), N));
-
-  // Set the hours, minutes, seconds, and milliseconds to 23:59:59:999
-  lastDayOfMonth.setHours(23, 59, 59, 999);
-  //console.log('daysInNMonthAgo', formatTimestamp(lastDayOfMonth.getTime()));
-  //lastDayOfMonth.setHours(lastDayOfMonth.getHours() - 24);
-  //console.log('daysInNMonthAgo', formatTimestamp(lastDayOfMonth.getTime()));
-
-  // Return the timestamp of the last day of the previous month at 23:59
-  return lastDayOfMonth.getTime();
-}
-
 export function daysInNMonthAgo(date: number, N: number): number {
   // Create a copy of the date to avoid modifying it directly
   const dateCopy = new Date(date);
@@ -65,33 +23,11 @@ export function daysInNMonthAgo(date: number, N: number): number {
   return new Date(dateCopy.getFullYear(), dateCopy.getMonth() + 1, 0).getDate();
 }
 
-export function getTimestampStartOfNDaysAgo(N: number): number {
-  const today = new Date();
-  const targetDate = new Date(today);
-  targetDate.setDate(today.getDate() - N);
-
-  // Set time to midnight
-  targetDate.setHours(0, 0, 0, 0);
-
-  // Return the timestamp
-  return targetDate.getTime();
-}
-
 export function getDateYesterday(): Date {
   const yesterday: Date = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
   yesterday.setHours(0, 0, 0, 0);
   return yesterday;
-}
-
-export function getTimestampEndOfTheDay(timestamp: number): number {
-  const targetDate = new Date(timestamp);
-
-  // Set time to midnight
-  targetDate.setHours(23, 59, 59, 999);
-
-  // Return the timestamp
-  return targetDate.getTime();
 }
 
 export function calculateDaysBetweenDateAndToday(timestamp: number): number {
@@ -154,4 +90,67 @@ export function getCalendarIcon(period: PredefinedPeriods): TablerIcon {
   }
 
   return Icon;
+}
+
+export function getTimestampEndOfTheDay(timestamp: number): number {
+  const targetDate = new Date(timestamp);
+
+  // Set time to midnight using UTC
+  targetDate.setUTCHours(23, 59, 59, 999);
+
+  // Return the timestamp
+  return targetDate.getTime();
+}
+
+export function getTimestampStartOfNDaysAgo(N: number): number {
+  const today = new Date();
+  const targetDate = new Date(today);
+  targetDate.setUTCDate(today.getUTCDate() - N);
+
+  // Set time to midnight
+  targetDate.setUTCHours(0, 0, 0, 0);
+
+  // Return the timestamp
+  return targetDate.getTime();
+}
+
+export function getTimestampLastDayOfNMonthAgo(N: number): number {
+  const lastDayOfMonth = new Date();
+
+  // Decrement the month of the copied date using UTC
+  lastDayOfMonth.setUTCMonth(lastDayOfMonth.getUTCMonth() - N);
+
+  // Set the day of the copied date to the last day of the month using UTC
+  lastDayOfMonth.setUTCDate(daysInNMonthAgo(new Date().getTime(), N));
+  lastDayOfMonth.setUTCHours(23, 59, 59, 999);
+
+  // Return the timestamp of the last day of the previous month at 23:59
+  return lastDayOfMonth.getTime();
+}
+
+export function getTimestampFirstDayOfNMonthsAgo(N: number): number {
+  const today = new Date();
+  const targetDate = new Date(
+    today.getUTCFullYear(),
+    today.getUTCMonth() - N,
+    1,
+  );
+
+  // Set time to midnight
+  targetDate.setUTCHours(0, 0, 0, 0);
+
+  // Return the timestamp
+  return targetDate.getTime();
+}
+
+export function getTimestampFirstDayOfCurrentMonth(): number {
+  const today = new Date();
+  const firstDayOfCurrentMonth = new Date(
+    today.getUTCFullYear(),
+    today.getUTCMonth(),
+    1,
+  );
+
+  // Return the timestamp
+  return firstDayOfCurrentMonth.getTime();
 }
