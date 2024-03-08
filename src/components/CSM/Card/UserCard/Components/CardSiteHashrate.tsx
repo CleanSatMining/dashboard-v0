@@ -29,23 +29,7 @@ export const CardSiteHashrate: FC<CardSiteHashrateProps> = ({
   );
 
   const hasData = data.income.available;
-  const hashrateMax = Math.max(...data.site.hashrate);
-  //const hasrhate = data.site.uptime.hashrate;
-  const progressSections = data.site.uptime.hashratePercents.map(
-    (percent, index) => ({
-      value: (percent * data.site.hashrate[index]) / hashrateMax,
-      color: index === 0 ? 'cyan' : 'yellow',
-    }),
-  );
 
-  // if (data.id === '1') {
-  //   console.log(
-  //     'progress section',
-  //     data.site.uptime.hashratePercents,
-  //     progressSections,
-  //     data.site.hashrate,
-  //   );
-  // }
   return (
     <div style={{ padding }}>
       <Group position={'apart'} mt={5} mb={isMobile ? 3 : 5}>
@@ -55,25 +39,13 @@ export const CardSiteHashrate: FC<CardSiteHashrateProps> = ({
         <Text weight={500} fz={isMobile ? 'xs' : 'sm'}>
           {formatHashrate(data.site.uptime.hashrate, hasData) +
             t('over') +
-            formatHashrate(Math.max(...data.site.hashrate))}
+            formatHashrate(data.site.hashrate)}
         </Text>
       </Group>
       <Progress
         value={data.site.uptime.hashratePercent}
         color={hashrateColor}
       />
-      {/* <Progress
-        size='xl'
-        sections={[
-          { value: 40, color: 'teal' },
-          {
-            value: 0.5,
-            color: '#ffffff',
-            tooltip: 'levée du 04/01/2024',
-          },
-          { value: 15, color: 'green' },
-        ]}
-      /> */}
       <Group position={'apart'} mt={isMobile ? 0 : 5} mb={isMobile ? 0 : 5}>
         <Text fz={'xs'} color={'dimmed'}>
           {hasData

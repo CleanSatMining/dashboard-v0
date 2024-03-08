@@ -1,6 +1,5 @@
 import { Expense } from 'src/types/mining/Mining';
 import BigNumber from 'bignumber.js';
-import { calculateDaysBetweenDates } from './period';
 
 export function calculateExpenses(
   expenses: Expense[],
@@ -186,27 +185,41 @@ export function getFirstDayWithoutExpense(expenses: Expense[]): Date | null {
   return getFirstDayOfNextMonth(mostRecentDate);
 }
 
-export function getFirstDayOfNextMonth(date: Date): Date {
+function getFirstDayOfNextMonth(date: Date): Date {
   const nextMonth = new Date(date);
-  nextMonth.setUTCMonth(date.getUTCMonth() + 1);
-  nextMonth.setUTCDate(1);
+  nextMonth.setMonth(date.getMonth() + 1);
+  nextMonth.setDate(1);
   return nextMonth;
 }
 
-export function getFirstDayOfMonth(date: Date): Date {
-  const firstDay = new Date(
-    Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), 1),
+export function calculateDaysBetweenDates(
+  timestamp1: number,
+  timestamp2: number,
+): number {
+  if (timestamp1 === 0 || timestamp2 === 0) return 0;
+
+  // Calcul du nombre de millisecondes dans une journée
+  const millisecondsPerDay = 24 * 60 * 60 * 1000;
+
+  // Calcul du nombre de jours entre les deux dates
+  const daysDifference = Math.abs(
+    (timestamp2 - timestamp1) / millisecondsPerDay,
   );
+
+  return Math.floor(daysDifference) + 1;
+}
+
+function getFirstDayOfMonth(date: Date): Date {
+  const firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
   return firstDay;
 }
 
 export function getLastDayOfMonth(date: Date): Date {
-  const year = date.getUTCFullYear();
-  const month = date.getUTCMonth(); // Les mois sont indexés à partir de zéro
+  const year = date.getFullYear();
+  const month = date.getMonth(); // Les mois sont indexés à partir de zéro
 
   // Utilisation du dernier jour du mois pour obtenir le timestamp à 23h59
-  const lastDayOfMonth = new Date(
-    Date.UTC(year, month + 1, 0, 23, 59, 59, 999),
-  ); // Le jour 0 du mois suivant donne le dernier jour du mois actuel
+  const lastDayOfMonth = new Date(year, month + 1, 0, 23, 59, 59, 999); // Le jour 0 du mois suivant donne le dernier jour du mois actuel
+  //const lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
   return lastDayOfMonth;
 }

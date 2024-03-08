@@ -15,8 +15,7 @@ import {
   calculateGrossYield,
   calculateCostsAndEBITDAByPeriod,
 } from './pnl';
-import { getPeriodFromStart, getHashrate, getEquipementCost } from './period';
-import { getTimestampAtMidnightUTC } from 'src/components/Display/components/Utils';
+import { getPeriodFromStart } from './period';
 
 //------------------------------------------------------------------------------------------------------------
 // WITH REDUX
@@ -513,15 +512,7 @@ export const getUptimeBySite = (
   period: number,
   startDate: number,
   endDate: number,
-): {
-  machines: number;
-  days: number;
-  percent: number;
-  hashrate: number;
-  hashratePercent: number;
-  hashrates: number[];
-  hashratePercents: number[];
-} => {
+): { machines: number; days: number; percent: number; hashrate: number } => {
   if (
     miningState &&
     miningState.byId &&
@@ -530,100 +521,29 @@ export const getUptimeBySite = (
   ) {
     const site: Site = SITES[siteId as SiteID];
     const realPeriod = getPeriodFromStart(site, period);
-    const startTimestampUTC = getTimestampAtMidnightUTC(startDate);
-    const endTimestampUTC = getTimestampAtMidnightUTC(endDate);
-    const days = getMiningDays(
-      miningState,
-      siteId,
-      period,
-      startTimestampUTC,
-      endTimestampUTC,
-    );
-    const hashrates: BigNumber[] = site.mining.asics.map(
-      () => new BigNumber(0),
-    );
-    const hashratePercents: BigNumber[] = site.mining.asics.map(
-      () => new BigNumber(0),
-    );
-    const periods: number[] = site.mining.asics.map(() => 0);
-
+    const days = getMiningDays(miningState, siteId, period, startDate, endDate);
     let uptimeHashrate: BigNumber = new BigNumber(0);
-    let uptimeHashratePercent: BigNumber = new BigNumber(0);
     let uptimePercentage: BigNumber = new BigNumber(0);
     let uptimeTotalMachines: BigNumber = new BigNumber(0);
 
     for (const day of days) {
       uptimeHashrate = uptimeHashrate.plus(day.hashrate);
-      uptimeHashratePercent = uptimeHashratePercent.plus(
-        new BigNumber(day.hashrate)
-          .dividedBy(getHashrate(site, new Date(day.date)))
-          .times(100),
-      );
       uptimePercentage = uptimePercentage.plus(day.uptimePercentage);
       uptimeTotalMachines = uptimeTotalMachines.plus(day.uptimeTotalMachines);
-
-      const dayTimestamp = getTimestampAtMidnightUTC(
-        new Date(day.date).getTime(),
-      );
-      for (let i = 0; i < site.mining.asics.length; i++) {
-        const asicTimestamp = new Date(site.mining.asics[i].date).getTime();
-        const nextAsicTimestamp =
-          i + 1 < site.mining.asics.length
-            ? getTimestampAtMidnightUTC(
-                new Date(site.mining.asics[i + 1].date).getTime(),
-              )
-            : 4102444800000;
-        if (dayTimestamp >= asicTimestamp && dayTimestamp < nextAsicTimestamp) {
-          periods[i]++;
-          hashrates[i] = hashrates[i].plus(day.hashrate);
-          hashratePercents[i] = hashratePercents[i].plus(
-            new BigNumber(day.hashrate)
-              .dividedBy(getHashrate(site, new Date(day.date)))
-              .times(100),
-          );
-        }
-      }
     }
-
-    // if (siteId === '1') {
-    //   console.log(
-    //     'hashrates days',
-    //     realPeriod,
-    //     period,
-    //     days.length,
-    //     JSON.stringify(days, null, 4),
-    //     'hashrate ' + uptimeHashrate.dividedBy(realPeriod).toNumber(),
-    //     'hashratePercent ' +
-    //       uptimeHashratePercent.dividedBy(realPeriod).toNumber(),
-    //     'machines ' + uptimeTotalMachines.dividedBy(realPeriod).toNumber(),
-    //     'percent ' + uptimePercentage.dividedBy(realPeriod).toNumber(),
-    //     JSON.stringify(hashrates, null, 4),
-    //     JSON.stringify(hashratePercents, null, 4),
-    //   );
-    // }
 
     return {
       days: days.length,
       hashrate: uptimeHashrate.dividedBy(realPeriod).toNumber(),
-      hashratePercent: uptimeHashratePercent.dividedBy(realPeriod).toNumber(),
       machines: uptimeTotalMachines.dividedBy(realPeriod).toNumber(),
       percent: uptimePercentage.dividedBy(realPeriod).toNumber(),
-      hashrates: hashrates.map((hashrate, i) =>
-        hashrate.dividedBy(periods[i]).toNumber(),
-      ),
-      hashratePercents: hashratePercents.map((hashrate, i) =>
-        hashrate.dividedBy(periods[i]).toNumber(),
-      ),
     };
   }
   return {
     days: 0,
     hashrate: 0,
-    hashratePercent: 0,
     machines: 0,
     percent: 0,
-    hashrates: [],
-    hashratePercents: [],
   };
 };
 
@@ -653,6 +573,22 @@ export function getCSMTokenAddress(siteId: string): string {
  * @returns
  */
 
+export function getNumberOfDaysSinceStart(site: Site) {
+  if (
+    site.mining.startingDate !== undefined &&
+    site.mining.startingDate !== '-'
+  ) {
+    const today = new Date();
+    const startDate = new Date(site.mining.startingDate);
+    const diffTime = new BigNumber(today.getTime() - startDate.getTime());
+    const daysSinceStart = Math.ceil(
+      diffTime.dividedBy(1000 * 3600 * 24).toNumber(),
+    );
+    return daysSinceStart ?? 0;
+  }
+  return 0;
+}
+
 export function getSiteExpensesByPeriod(
   miningState: MiningHistory,
   siteId: string,
@@ -671,23 +607,21 @@ export function getSiteExpensesByPeriod(
 } {
   const site: Site = SITES[siteId as SiteID];
   const feeParameters = site.fees;
-
-  //const equipement = new BigNumber(site.mining.intallationCosts.equipement);
-  const equipement = getEquipementCost(site, startDate, endDate);
-  const realPeriod = getPeriodFromStart(site, period);
   const { value: usdIncome } = getMinedBtcBySite(
     miningState,
     siteId,
-    realPeriod,
+    period,
     btcPrice,
     startDate,
     endDate,
   );
+  const equipement = new BigNumber(site.mining.intallationCosts.equipement);
+  const realPeriod = getPeriodFromStart(site, period);
 
   const estimatedElectricityCost = calculateElectricityCostPerPeriod(
     miningState,
     siteId,
-    realPeriod,
+    period,
     startDate,
     endDate,
     expenses,
@@ -706,60 +640,6 @@ export function getSiteExpensesByPeriod(
       expenses,
       btcPrice,
     );
-
-  /* const equipementPeriods = getEquipementPeriods(site, startDate, endDate);
-
-  let estimatedElectricityCost = new BigNumber(0);
-  let feeCsm = new BigNumber(0);
-  let feeOperator = new BigNumber(0);
-  let taxe = new BigNumber(0);
-  let provision = new BigNumber(0);
-
-  for (const equipementPeriod of equipementPeriods) {
-    const { value: usdIncome } = getMinedBtcBySite(
-      miningState,
-      siteId,
-      equipementPeriod.period,
-      btcPrice,
-      equipementPeriod.startDate,
-      equipementPeriod.endDate,
-    );
-
-    const estimatedElectricityCostPeriod = calculateElectricityCostPerPeriod(
-      miningState,
-      siteId,
-      equipementPeriod.period,
-      equipementPeriod.startDate,
-      equipementPeriod.endDate,
-      expenses,
-      btcPrice,
-    );
-
-    const {
-      feeCsm: feeCsmPeriod,
-      feeOperator: feeOperatorPeriod,
-      taxe: taxePeriod,
-      provision: provisionPeriod,
-    } = calculateCostsAndEBITDAByPeriod(
-      usdIncome,
-      estimatedElectricityCostPeriod,
-      feeParameters,
-      new BigNumber(equipementPeriod.equipementCost),
-      equipementPeriod.period,
-      equipementPeriod.startDate,
-      equipementPeriod.endDate,
-      expenses,
-      btcPrice,
-    );
-
-    estimatedElectricityCost = estimatedElectricityCost.plus(
-      estimatedElectricityCostPeriod,
-    );
-    feeCsm = feeCsm.plus(feeCsmPeriod);
-    feeOperator = feeOperator.plus(feeOperatorPeriod);
-    taxe = taxe.plus(taxePeriod);
-    provision = provision.plus(provisionPeriod);
-  } */
 
   return {
     total: estimatedElectricityCost

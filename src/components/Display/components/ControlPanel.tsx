@@ -21,9 +21,6 @@ import {
   calculateDaysBetweenDates,
   getTimestampLastDayOfNMonthAgo,
   getTimestampEndOfTheDay,
-  getTimestampAtMidnightUTC,
-  getLastMinuteTimestampUTC,
-  getTimestampUTC,
   START_DATE,
 } from './Utils';
 
@@ -32,7 +29,10 @@ import { TimeSelectMenu } from './TimeSelectMenu';
 
 import { TimeRange } from './TimeRange';
 import { useDisclosure } from '@mantine/hooks';
+import { BtcPrice } from '../../CSM/Indicators/components/BtcPrice';
+import { Networkoverview } from '../../CSM/Indicators/components/NetworkOverview';
 import { NetworkUpdateTime } from '../../CSM/Indicators/components/NetworkUpdateTime';
+import { getMidnightTimestamp, getLastMinuteTimestamp } from 'src/utils/date';
 
 interface ControlPanelProps {
   isMobile: boolean;
@@ -52,6 +52,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   isMobile,
   period,
   setPeriod,
+  adminData,
   dateModeChecked,
   setDateModeChecked,
   startTimestamp,
@@ -82,7 +83,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   const handlePredefinedPeriodClick = (value: PredefinedPeriods) => {
     // You can perform additional actions based on the selected predefined period if needed
     // Use a switch statement to handle specific actions based on the selected predefined period
-    const today = getTimestampAtMidnightUTC(getTimestampStartOfNDaysAgo(0));
+    const today = getMidnightTimestamp(getTimestampStartOfNDaysAgo(0));
     switch (value) {
       case PredefinedPeriods.Last24Hours:
         // Handle Last 24 Hours
@@ -112,9 +113,8 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
         // Handle Current Month
         const firstDayOfTheMonth = getTimestampFirstDayOfCurrentMonth();
         const days = calculateDaysBetweenDateAndToday(firstDayOfTheMonth);
-
         setPeriod(days.toString());
-        setStartTimestamp(firstDayOfTheMonth);
+        setStartTimestamp(getMidnightTimestamp(firstDayOfTheMonth));
         setEndTimestamp(today);
         setIconMenu(<IconCalendarDue size={20}></IconCalendarDue>);
         break;
@@ -127,9 +127,8 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
           firstDayOfLastMonth,
         );
         setPeriod(daysInLastMonth.toString());
-
-        setStartTimestamp(getTimestampAtMidnightUTC(firstDayOfLastMonth));
-        setEndTimestamp(getLastMinuteTimestampUTC(lastDayOfLastMonth));
+        setStartTimestamp(getMidnightTimestamp(firstDayOfLastMonth));
+        setEndTimestamp(getLastMinuteTimestamp(lastDayOfLastMonth));
         setIconMenu(<IconCalendarEvent size={20}></IconCalendarEvent>);
         break;
       case PredefinedPeriods.Last3Months:
@@ -141,8 +140,8 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
           lastDayOfLast1Month,
         );
         setPeriod(daysInLast3Month.toString());
-        setStartTimestamp(getTimestampAtMidnightUTC(firstDayOfLast3Month));
-        setEndTimestamp(getLastMinuteTimestampUTC(lastDayOfLast1Month));
+        setStartTimestamp(getMidnightTimestamp(firstDayOfLast3Month));
+        setEndTimestamp(getLastMinuteTimestamp(lastDayOfLast1Month));
         setIconMenu(<IconCalendarPlus size={20}></IconCalendarPlus>);
         break;
       case PredefinedPeriods.FromStart:
@@ -173,22 +172,12 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
     } else {
       const today = getTimestampStartOfNDaysAgo(0);
       const isEndDateToday =
-        endDateInput === null || getTimestampUTC(endDateInput) > today;
+        endDateInput === null || endDateInput.getTime() > today;
       const endDate = isEndDateToday
         ? today
-        : getTimestampEndOfTheDay(getTimestampUTC(endDateInput));
-      const startDate = getTimestampAtMidnightUTC(
-        getTimestampUTC(startDateInput),
-      );
+        : getTimestampEndOfTheDay(endDateInput.getTime());
+      const startDate = startDateInput.getTime();
       const duration = calculateDaysBetweenDates(endDate, startDate);
-
-      // console.log(
-      //   'handleDateRangeItemClick',
-      //   startDateInput.getTime(),
-      //   startDate,
-      //   endDateInput?.getTime(),
-      //   endDate,
-      // );
 
       setMenuLabel(t('customDate'));
       setStartDateError(false);

@@ -16,11 +16,6 @@ import BigNumber from 'bignumber.js';
 import { Yield } from 'src/types/mining/Site';
 import { useCsmTokens } from 'src/hooks/useCsmTokens';
 import { Operator } from 'src/types/mining/Site';
-import {
-  getHashrate,
-  getNumberOfMachines,
-} from 'src/components/CSM/Utils/period';
-import { getTimestampUTC } from 'src/components/Display/components/Utils';
 
 import {
   getMinedBtcBySite,
@@ -130,8 +125,6 @@ const _SiteCard: FC<SiteProps> = ({
   const data: CardData = buildUserSiteData(
     siteId,
     site,
-    startDate,
-    endDate,
     siteMinedBTC,
     userShare,
     userYield,
@@ -203,8 +196,6 @@ const _SiteCard: FC<SiteProps> = ({
       buildUserSiteData(
         siteId,
         site,
-        startDate,
-        endDate,
         siteMinedBTC,
         userShare,
         userYield,
@@ -279,8 +270,6 @@ export const SiteCard = _SiteCard;
 function buildUserSiteData(
   siteId: string,
   site: Site,
-  startTimestamp: number,
-  endTimestamp: number,
   siteMinedBTC: {
     quantity: BigNumber;
     value: BigNumber;
@@ -295,39 +284,15 @@ function buildUserSiteData(
     days: number;
     percent: number;
     hashrate: number;
-    hashratePercent: number;
-    hashrates: number[];
-    hashratePercents: number[];
   },
   costs: CardCost,
   period: number,
   getPropertyToken: (address: string) => PropertiesERC20 | undefined,
   operator: Operator | undefined,
 ): CardData {
-  const siteHashrates = site.mining.asics
-    .filter((a) => {
-      // console.log(
-      //   'siteHashrates a.date',
-      //   getTimestampUTC(new Date(a.date)),
-      //   startTimestamp,
-      //   endTimestamp,
-      // );
-      return (
-        getTimestampUTC(new Date(a.date)) <= startTimestamp ||
-        getTimestampUTC(new Date(a.date)) <= endTimestamp
-      );
-    })
-    .map((asics) => {
-      return getHashrate(site, new Date(asics.date));
-    });
-  //console.log('siteHashrates', JSON.stringify(siteHashrates, null, 4));
-  const siteMachines = site.mining.asics
-    .filter(
-      (a) =>
-        getTimestampUTC(new Date(a.date)) <= startTimestamp ||
-        getTimestampUTC(new Date(a.date)) <= endTimestamp,
-    )
-    .map((asics) => getNumberOfMachines(site, new Date(asics.date)));
+  const siteHashrate = new BigNumber(site.mining.asics.hashrateHs)
+    .times(site.mining.asics.units)
+    .toNumber();
   const tokenProperties = getPropertyToken(site.token.address);
   const tokenSupply = tokenProperties
     ? tokenProperties.supply
@@ -372,16 +337,15 @@ function buildUserSiteData(
     },
     site: {
       operator: operator,
-      miningStart: site.mining.asics.map((asics) => asics.date),
-      machines: siteMachines,
-      hashrate: siteHashrates,
+      miningStart: site.mining.startingDate,
+      machines: site.mining.asics.units,
+      hashrate: siteHashrate,
       uptime: {
-        startTimestamp: startTimestamp,
-        endTimestamp: endTimestamp,
         hashrate: siteUptime.hashrate,
-        hashratePercent: siteUptime.hashratePercent,
-        hashrates: siteUptime.hashrates,
-        hashratePercents: siteUptime.hashratePercents,
+        hashratePercent: new BigNumber(siteUptime.hashrate)
+          .dividedBy(siteHashrate)
+          .times(100)
+          .toNumber(),
         onPeriod: period,
         days: siteUptime.days,
         machines: siteUptime.machines,

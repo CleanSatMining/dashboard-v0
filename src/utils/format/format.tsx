@@ -269,45 +269,43 @@ export function formatParenthesis(text: string): string {
 }
 
 export function formatTimestamp(timestamp: number): string {
-  // Créer une copie de la date pour éviter de la modifier directement
-  const dateCopy = new Date(timestamp);
+  // Convertir le timestamp en millisecondes en multipliant par 1000
+  const date = new Date(timestamp);
 
-  // Utiliser les méthodes de l'objet Date en UTC pour extraire les composants de la date
-  const year = dateCopy.getUTCFullYear();
-  const month = (dateCopy.getUTCMonth() + 1).toString().padStart(2, '0');
-  const day = dateCopy.getUTCDate().toString().padStart(2, '0');
-  const hours = dateCopy.getUTCHours().toString().padStart(2, '0');
-  const minutes = dateCopy.getUTCMinutes().toString().padStart(2, '0');
-  const seconds = dateCopy.getUTCSeconds().toString().padStart(2, '0');
+  // Utiliser les méthodes de l'objet Date pour extraire les composants de la date
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const seconds = date.getSeconds().toString().padStart(2, '0');
 
-  // Retourner la date formatée en UTC
-  return `${day}/${month}/${year} ${hours}:${minutes}:${seconds} UTC`;
+  // Retourner la date formatée
+  return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
 }
-
 export function formatTimestampDay(timestamp: number): string {
-  // Créer une copie de la date pour éviter de la modifier directement
-  const dateCopy = new Date(timestamp);
+  // Convertir le timestamp en millisecondes en multipliant par 1000
+  const date = new Date(timestamp);
 
-  // Utiliser les méthodes de l'objet Date en UTC pour extraire les composants de la date
-  const year = dateCopy.getUTCFullYear();
-  const month = (dateCopy.getUTCMonth() + 1).toString().padStart(2, '0');
-  const day = dateCopy.getUTCDate().toString().padStart(2, '0');
+  // Utiliser les méthodes de l'objet Date pour extraire les composants de la date
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const day = date.getDate().toString().padStart(2, '0');
 
-  // Retourner la date formatée en UTC
+  // Retourner la date formatée
   return `${day}/${month}/${year}`;
 }
-
 export function formatTimestampHour(timestamp: number): string {
-  // Créer une copie de la date pour éviter de la modifier directement
-  const dateCopy = new Date(timestamp);
+  // Convertir le timestamp en millisecondes en multipliant par 1000
+  const date = new Date(timestamp);
 
-  // Utiliser les méthodes de l'objet Date en UTC pour extraire les composants de l'heure
-  const hours = dateCopy.getUTCHours().toString().padStart(2, '0');
-  const minutes = dateCopy.getUTCMinutes().toString().padStart(2, '0');
-  const seconds = dateCopy.getUTCSeconds().toString().padStart(2, '0');
+  // Utiliser les méthodes de l'objet Date pour extraire les composants de la date
+  const hours = date.getHours().toString().padStart(2, '0');
+  const minutes = date.getMinutes().toString().padStart(2, '0');
+  const seconds = date.getSeconds().toString().padStart(2, '0');
 
-  // Retourner l'heure formatée en UTC
-  return `${hours}:${minutes}:${seconds} UTC`;
+  // Retourner la date formatée
+  return `${hours}:${minutes}:${seconds}`;
 }
 
 export function formatDuration(
