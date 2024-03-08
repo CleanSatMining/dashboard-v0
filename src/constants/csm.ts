@@ -277,7 +277,7 @@ export const SITES: Record<SiteID, Site> = {
       asics: {
         powerW: 3300,
         units: 827,
-        hashrateHs: 120000000000000,
+        hashrateHs: 117000000000000,
       },
       electricity: {
         usdPricePerKWH: 0.046,
