@@ -150,7 +150,7 @@ const _SiteCard: FC<SiteProps> = ({
       btcPrice,
       startDate,
       endDate,
-      [],
+      expensesState.byId[siteId] ?? [],
     );
 
     const siteMinedBTC = getMinedBtcBySite(
