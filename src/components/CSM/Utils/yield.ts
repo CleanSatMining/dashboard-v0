@@ -238,6 +238,7 @@ export const getUserYieldBySite = (
     miningState.byId[siteId] &&
     miningState.byId[siteId].mining &&
     miningState.byId[siteId].mining.days &&
+    //miningState.byId[siteId].mining.days.length > 0 &&
     userState &&
     userState.byAddress[userAddress] &&
     userState.byAddress[userAddress].bySite[siteId] &&

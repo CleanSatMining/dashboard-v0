@@ -170,44 +170,52 @@ export function calculateNetYield(
   netBtcIncome: BigNumber;
   netApr: BigNumber;
 } {
-  const site: Site = SITES[siteId as SiteID];
-  const fees = site.fees;
-  const usdIncome = btcIncome.times(btcPrice);
-  const equipement = new BigNumber(site.mining.intallationCosts.equipement);
-  const realPeriod = getPeriodFromStart(site, period);
+  if (btcIncome.gt(0)) {
+    const site: Site = SITES[siteId as SiteID];
+    const fees = site.fees;
+    const usdIncome = btcIncome.times(btcPrice);
+    const equipement = new BigNumber(site.mining.intallationCosts.equipement);
+    const realPeriod = getPeriodFromStart(site, period);
 
-  const { taxe, EBITDA, provision } = calculateCostsAndEBITDAByPeriod(
-    usdIncome,
-    electricityCost,
-    fees,
-    equipement,
-    realPeriod,
-    startDate,
-    endDate,
-    expenses,
-    btcPrice,
-  );
+    const { taxe, EBITDA, provision } = calculateCostsAndEBITDAByPeriod(
+      usdIncome,
+      electricityCost,
+      fees,
+      equipement,
+      realPeriod,
+      startDate,
+      endDate,
+      expenses,
+      btcPrice,
+    );
 
-  const EBITDA_MINUS_PROVISION = EBITDA.minus(provision); //BigNumber.max(    EBITDA.minus(provision),    new BigNumber(0),  );
+    const EBITDA_MINUS_PROVISION = EBITDA.minus(provision); //BigNumber.max(    EBITDA.minus(provision),    new BigNumber(0),  );
 
-  const netUsdIncome = EBITDA_MINUS_PROVISION.minus(taxe);
-  const netBtcIncome = netUsdIncome.dividedBy(btcPrice);
-  const netUsdIncomeAYear =
-    realPeriod > 0
-      ? netUsdIncome.times(YEAR_IN_DAYS.dividedBy(realPeriod))
+    const netUsdIncome = EBITDA_MINUS_PROVISION.minus(taxe);
+    const netBtcIncome = netUsdIncome.dividedBy(btcPrice);
+    const netUsdIncomeAYear =
+      realPeriod > 0
+        ? netUsdIncome.times(YEAR_IN_DAYS.dividedBy(realPeriod))
+        : new BigNumber(0);
+    const totalShareValue = new BigNumber(site.token.supply).times(
+      site.token.price,
+    );
+    const netApr = totalShareValue.gt(0)
+      ? netUsdIncomeAYear.dividedBy(totalShareValue)
       : new BigNumber(0);
-  const totalShareValue = new BigNumber(site.token.supply).times(
-    site.token.price,
-  );
-  const netApr = totalShareValue.gt(0)
-    ? netUsdIncomeAYear.dividedBy(totalShareValue)
-    : new BigNumber(0);
 
-  return {
-    netUsdIncome,
-    netBtcIncome,
-    netApr,
-  };
+    return {
+      netUsdIncome,
+      netBtcIncome,
+      netApr,
+    };
+  } else {
+    return {
+      netUsdIncome: new BigNumber(0),
+      netBtcIncome: new BigNumber(0),
+      netApr: new BigNumber(0),
+    };
+  }
 }
 
 export function calculateGrossYield(
@@ -224,43 +232,51 @@ export function calculateGrossYield(
   btcIncome: BigNumber;
   apr: BigNumber;
 } {
-  const site: Site = SITES[siteId as SiteID];
-  const fees = site.fees;
-  const minedBtcValue = minedBtc.times(btcPrice);
-  const realPeriod = getPeriodFromStart(site, period);
-  const equipement = new BigNumber(site.mining.intallationCosts.equipement);
+  if (minedBtc.gt(0)) {
+    const site: Site = SITES[siteId as SiteID];
+    const fees = site.fees;
+    const minedBtcValue = minedBtc.times(btcPrice);
+    const realPeriod = getPeriodFromStart(site, period);
+    const equipement = new BigNumber(site.mining.intallationCosts.equipement);
 
-  const { taxe, EBITDA } = calculateCostsAndEBITDAByPeriod(
-    minedBtcValue,
-    electricityCost,
-    fees,
-    equipement,
-    realPeriod,
-    startDate,
-    endDate,
-    expenses,
-    btcPrice,
-  );
+    const { taxe, EBITDA } = calculateCostsAndEBITDAByPeriod(
+      minedBtcValue,
+      electricityCost,
+      fees,
+      equipement,
+      realPeriod,
+      startDate,
+      endDate,
+      expenses,
+      btcPrice,
+    );
 
-  // const taxe = EBITDA.times(SWISS_TAXE);
-  const usdIncome = EBITDA.minus(taxe);
-  const btcIncome = usdIncome.dividedBy(btcPrice);
-  const netUsdIncomeAYear =
-    realPeriod > 0
-      ? usdIncome.times(YEAR_IN_DAYS.dividedBy(realPeriod))
+    // const taxe = EBITDA.times(SWISS_TAXE);
+    const usdIncome = EBITDA.minus(taxe);
+    const btcIncome = usdIncome.dividedBy(btcPrice);
+    const netUsdIncomeAYear =
+      realPeriod > 0
+        ? usdIncome.times(YEAR_IN_DAYS.dividedBy(realPeriod))
+        : new BigNumber(0);
+    const totalShareValue = new BigNumber(site.token.supply).times(
+      site.token.price,
+    );
+    const apr = totalShareValue.gt(0)
+      ? netUsdIncomeAYear.dividedBy(totalShareValue)
       : new BigNumber(0);
-  const totalShareValue = new BigNumber(site.token.supply).times(
-    site.token.price,
-  );
-  const apr = totalShareValue.gt(0)
-    ? netUsdIncomeAYear.dividedBy(totalShareValue)
-    : new BigNumber(0);
 
-  return {
-    usdIncome,
-    btcIncome,
-    apr,
-  };
+    return {
+      usdIncome,
+      btcIncome,
+      apr,
+    };
+  } else {
+    return {
+      usdIncome: new BigNumber(0),
+      btcIncome: new BigNumber(0),
+      apr: new BigNumber(0),
+    };
+  }
 }
 
 export function calculateCostsAndEBITDAByPeriod(
