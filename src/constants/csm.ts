@@ -310,8 +310,8 @@ export const SITES: Record<SiteID, Site> = {
 
 export const ALLOWED_SITES = Array.from(Object.keys(SITES));
 
-export const DAYS_PERIODS: number[] = [1, 7, 30, 90, 180];
-export const DAYS_PERIODS_MOBILE_FILTER = [1, 7, 30, 90];
+export const DAYS_PERIODS: number[] = [1, 7, 30, 90, 180, 365];
+export const DAYS_PERIODS_MOBILE_FILTER = [1, 7, 30, 90, 365];
 
 export function filterMobile(
   isMobile: boolean,
