@@ -437,14 +437,19 @@ export const getUserYield = (
 
     const totalInvested: BigNumber = getUserInvestment(userState, userAddress);
     for (const siteId of getUserSiteIds(userState, userAddress)) {
+      const { realPeriod, realStartTimestamp } = getPeriodFromStart(
+        SITES[siteId as SiteID],
+        startDate,
+        endDate,
+      );
       const siteYield = getUserYieldBySite(
         miningState,
         userState,
         siteId,
         userAddress,
-        period,
+        realPeriod,
         btcPrice,
-        startDate,
+        realStartTimestamp,
         endDate,
         expenses.byId[siteId] ?? [],
       );
@@ -521,8 +526,18 @@ export const getUptimeBySite = (
     miningState.byId[siteId].mining.days
   ) {
     const site: Site = SITES[siteId as SiteID];
-    const realPeriod = getPeriodFromStart(site, period);
-    const days = getMiningDays(miningState, siteId, period, startDate, endDate);
+    const { realPeriod, realStartTimestamp } = getPeriodFromStart(
+      site,
+      startDate,
+      endDate,
+    );
+    const days = getMiningDays(
+      miningState,
+      siteId,
+      period,
+      realStartTimestamp,
+      endDate,
+    );
     let uptimeHashrate: BigNumber = new BigNumber(0);
     let uptimePercentage: BigNumber = new BigNumber(0);
     let uptimeTotalMachines: BigNumber = new BigNumber(0);
@@ -607,23 +622,27 @@ export function getSiteExpensesByPeriod(
   provision: number;
 } {
   const site: Site = SITES[siteId as SiteID];
+  const { realPeriod, realStartTimestamp } = getPeriodFromStart(
+    site,
+    startDate,
+    endDate,
+  );
   const feeParameters = site.fees;
   const { value: usdIncome } = getMinedBtcBySite(
     miningState,
     siteId,
-    period,
+    realPeriod,
     btcPrice,
-    startDate,
+    realStartTimestamp,
     endDate,
   );
   const equipement = new BigNumber(site.mining.intallationCosts.equipement);
-  const realPeriod = getPeriodFromStart(site, period);
 
   const estimatedElectricityCost = calculateElectricityCostPerPeriod(
     miningState,
     siteId,
-    period,
-    startDate,
+    realPeriod,
+    realStartTimestamp,
     endDate,
     expenses,
     btcPrice,
@@ -636,7 +655,7 @@ export function getSiteExpensesByPeriod(
       feeParameters,
       equipement,
       realPeriod,
-      startDate,
+      realStartTimestamp,
       endDate,
       expenses,
       btcPrice,

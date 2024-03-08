@@ -3,6 +3,7 @@ import { MiningHistory } from 'src/types/mining/Mining';
 import { getNumberOfDaysSinceStart } from './yield';
 import { Site } from 'src/types/mining/Site';
 import { SITES, SiteID } from '../../../constants/csm';
+import { calculateDaysBetweenDates, getTimestampUTC } from 'src/utils/date';
 
 // Définition de la fonction
 export function getMiningDays(
@@ -23,17 +24,17 @@ export function getMiningDays(
     miningState.byId[siteId].mining.days
   ) {
     const site: Site = SITES[siteId as SiteID];
-    const realPeriod = getPeriodFromStart(site, period);
+    const { realStartTimestamp } = getPeriodFromStart(site, startDate, endDate);
     // Cas où startDate est 0, retourne les premiers jours de la période spécifiée
     if (startDate === 0) {
       return miningState.byId[siteId].mining.days.slice(
         0,
-        Math.min(realPeriod, miningState.byId[siteId].mining.days.length),
+        Math.min(period, miningState.byId[siteId].mining.days.length),
       );
     }
     const aa = miningState.byId[siteId].mining.days.filter((miningDay) => {
       return (
-        new Date(miningDay.date).getTime() >= startDate &&
+        new Date(miningDay.date).getTime() >= realStartTimestamp &&
         new Date(miningDay.date).getTime() <= endDate
       );
     });
@@ -61,10 +62,21 @@ export function getMiningDays(
  * @param period
  * @returns
  */
-export function getPeriodFromStart(site: Site, period: number) {
-  const daysSinceStart = getNumberOfDaysSinceStart(site);
-  const realPeriod = Math.min(period, daysSinceStart);
-  return realPeriod;
+export function getPeriodFromStart(
+  site: Site,
+  startTimestamp: number,
+  endTimestamp: number,
+): { realPeriod: number; realStartTimestamp: number } {
+  const siteStartTimestamp = new Date(site.mining.startingDate).getTime();
+  const realStartTimestamp = Math.max(startTimestamp, siteStartTimestamp);
+  const realPeriod = calculateDaysBetweenDates(
+    realStartTimestamp,
+    endTimestamp,
+  );
+  return {
+    realPeriod,
+    realStartTimestamp,
+  };
 }
 
 export function daysInPreviousMonth(date: Date): number {

@@ -16,6 +16,7 @@ import BigNumber from 'bignumber.js';
 import { Yield } from 'src/types/mining/Site';
 import { useCsmTokens } from 'src/hooks/useCsmTokens';
 import { Operator } from 'src/types/mining/Site';
+import { getPeriodFromStart } from '../Utils/period';
 
 import {
   getMinedBtcBySite,
@@ -57,7 +58,11 @@ const _SiteCard: FC<SiteProps> = ({
   const { getPropertyToken } = useCsmTokens();
 
   const site: Site = SITES[siteId as SiteID];
-
+  const { realPeriod, realStartTimestamp } = getPeriodFromStart(
+    site,
+    startDate,
+    endDate,
+  );
   const userToken = getUserTokenBalance(usersState, account, siteId);
   const tokenBalance = userToken.balance;
   const userTokenToCome = getUserTokenBalanceToCome(
@@ -75,9 +80,9 @@ const _SiteCard: FC<SiteProps> = ({
   const siteMinedBTC = getMinedBtcBySite(
     miningState,
     siteId,
-    period,
+    realPeriod,
     btcPrice,
-    startDate,
+    realStartTimestamp,
     endDate,
   );
   const userYield = getUserYieldBySite(
@@ -85,34 +90,34 @@ const _SiteCard: FC<SiteProps> = ({
     usersState,
     siteId,
     account,
-    period,
+    realPeriod,
     btcPrice,
-    startDate,
+    realStartTimestamp,
     endDate,
     expensesState.byId[siteId] ?? [],
   );
   const siteYield = getYieldBySite(
     miningState,
     siteId,
-    period,
+    realPeriod,
     btcPrice,
-    startDate,
+    realStartTimestamp,
     endDate,
     expensesState.byId[siteId] ?? [],
   );
   const siteUptime = getUptimeBySite(
     miningState,
     siteId,
-    period,
-    startDate,
+    realPeriod,
+    realStartTimestamp,
     endDate,
   );
   const siteCosts: CardCost = getSiteExpensesByPeriod(
     miningState,
     siteId,
     btcPrice,
-    period,
-    startDate,
+    realPeriod,
+    realStartTimestamp,
     endDate,
     expensesState.byId[siteId] ?? [],
   );
@@ -133,7 +138,7 @@ const _SiteCard: FC<SiteProps> = ({
     userTokenToCome,
     siteUptime,
     siteCosts,
-    period,
+    realPeriod,
     getPropertyToken,
     undefined,
   );
@@ -141,14 +146,19 @@ const _SiteCard: FC<SiteProps> = ({
   const [userSiteData, setUserSiteData] = useState<CardData>(data);
 
   useEffect(() => {
+    const { realPeriod, realStartTimestamp } = getPeriodFromStart(
+      site,
+      startDate,
+      endDate,
+    );
     const userYield = getUserYieldBySite(
       miningState,
       usersState,
       siteId,
       account,
-      period,
+      realPeriod,
       btcPrice,
-      startDate,
+      realStartTimestamp,
       endDate,
       expensesState.byId[siteId] ?? [],
     );
@@ -156,24 +166,24 @@ const _SiteCard: FC<SiteProps> = ({
     const siteMinedBTC = getMinedBtcBySite(
       miningState,
       siteId,
-      period,
+      realPeriod,
       btcPrice,
-      startDate,
+      realStartTimestamp,
       endDate,
     );
     const siteUptime = getUptimeBySite(
       miningState,
       siteId,
-      period,
-      startDate,
+      realPeriod,
+      realStartTimestamp,
       endDate,
     );
     const siteYield = getYieldBySite(
       miningState,
       siteId,
-      period,
+      realPeriod,
       btcPrice,
-      startDate,
+      realStartTimestamp,
       endDate,
       expensesState.byId[siteId] ?? [],
     );
@@ -181,8 +191,8 @@ const _SiteCard: FC<SiteProps> = ({
       miningState,
       siteId,
       btcPrice,
-      period,
-      startDate,
+      realPeriod,
+      realStartTimestamp,
       endDate,
       expensesState.byId[siteId] ?? [],
     );
@@ -204,7 +214,7 @@ const _SiteCard: FC<SiteProps> = ({
         userTokenToCome,
         siteUptime,
         siteCosts,
-        period,
+        realPeriod,
         getPropertyToken,
         undefined,
       ),

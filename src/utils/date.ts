@@ -4,15 +4,25 @@ export function calculateDaysBetweenDates(
 ): number {
   if (timestamp1 === 0 || timestamp2 === 0) return 0;
 
-  // Calcul du nombre de millisecondes dans une journée
   const millisecondsPerDay = 24 * 60 * 60 * 1000;
 
-  // Calcul du nombre de jours entre les deux dates
-  const daysDifference = Math.abs(
-    (timestamp2 - timestamp1) / millisecondsPerDay,
-  );
+  // Calculate the time difference in milliseconds
+  const timeDifference = Math.abs(timestamp2 - timestamp1);
 
-  return Math.floor(daysDifference) + 1;
+  // Calculate the number of days
+  const daysDifference = Math.round(timeDifference / millisecondsPerDay);
+
+  return daysDifference;
+}
+/**
+ * getTimestampUTC
+ * @param date
+ * @returns
+ */
+export function getTimestampUTC(date: Date): number {
+  const timezoneOffset = date.getTimezoneOffset();
+
+  return date.getTime() + timezoneOffset * 60 * 1000;
 }
 
 export function getMidnightTimestamp(inputTimestamp: number): number {

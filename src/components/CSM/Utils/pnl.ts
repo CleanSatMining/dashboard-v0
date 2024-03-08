@@ -175,7 +175,11 @@ export function calculateNetYield(
     const fees = site.fees;
     const usdIncome = btcIncome.times(btcPrice);
     const equipement = new BigNumber(site.mining.intallationCosts.equipement);
-    const realPeriod = getPeriodFromStart(site, period);
+    const { realPeriod, realStartTimestamp } = getPeriodFromStart(
+      site,
+      startDate,
+      endDate,
+    );
 
     const { taxe, EBITDA, provision } = calculateCostsAndEBITDAByPeriod(
       usdIncome,
@@ -183,7 +187,7 @@ export function calculateNetYield(
       fees,
       equipement,
       realPeriod,
-      startDate,
+      realStartTimestamp,
       endDate,
       expenses,
       btcPrice,
@@ -236,7 +240,11 @@ export function calculateGrossYield(
     const site: Site = SITES[siteId as SiteID];
     const fees = site.fees;
     const minedBtcValue = minedBtc.times(btcPrice);
-    const realPeriod = getPeriodFromStart(site, period);
+    const { realPeriod, realStartTimestamp } = getPeriodFromStart(
+      site,
+      startDate,
+      endDate,
+    );
     const equipement = new BigNumber(site.mining.intallationCosts.equipement);
 
     const { taxe, EBITDA } = calculateCostsAndEBITDAByPeriod(
@@ -245,7 +253,7 @@ export function calculateGrossYield(
       fees,
       equipement,
       realPeriod,
-      startDate,
+      realStartTimestamp,
       endDate,
       expenses,
       btcPrice,

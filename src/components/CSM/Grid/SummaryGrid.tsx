@@ -38,6 +38,7 @@ import {
 } from '../Utils/yield';
 import { useNFTs as useWalletNFTs } from 'src/hooks/useWalletNft';
 import { ULTRA_RARE } from 'src/constants/csm';
+import { getPeriodFromStart } from 'src/components/CSM/Utils/period';
 
 type AssetProps = {
   btcPrice: number;
@@ -92,14 +93,19 @@ const _Summary: FC<AssetProps> = ({
     const token = getUserTokenBalance(usersState, account, siteId);
     const tokenToCome = getUserTokenBalanceToCome(usersState, account, siteId);
     const site = getSite(siteId);
+    const { realPeriod, realStartTimestamp } = getPeriodFromStart(
+      site,
+      startDate,
+      endDate,
+    );
     const yields = getUserYieldBySite(
       miningState,
       usersState,
       siteId,
       account,
-      period,
+      realPeriod,
       btcPrice,
-      startDate,
+      realStartTimestamp,
       endDate,
       expensesState.byId[siteId] ?? [],
     );
@@ -136,15 +142,6 @@ const _Summary: FC<AssetProps> = ({
       dataTokens.push(dataTokenToCome);
     }
   }
-
-  // console.log(
-  //   'REDUX',
-  //   numberOfSite,
-  //   investment.toNumber(),
-  //   userYield.usd,
-  //   userYield.btc,
-  //   userYield.apr
-  // );
 
   useEffect(() => {
     setUserYield(
