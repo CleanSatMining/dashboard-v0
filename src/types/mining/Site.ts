@@ -62,6 +62,7 @@ export type Site = {
   export enum Contractor {
     LUXOR = 'LUXOR',
     ANTPOOL = 'ANTPOOL',
+    FOUNDRY = 'FOUNDRY',
   }
 
   export type Income = {

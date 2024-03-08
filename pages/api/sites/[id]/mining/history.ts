@@ -7,6 +7,7 @@ import { Contractor } from 'src/types/mining/Site';
 
 import { antpoolHistory } from './pool/antpool';
 import { luxorHistory } from './pool/luxor';
+import { foundryHistory } from './pool/foundry';
 import { LRUCache } from 'lru-cache';
 
 // cache 60 min
@@ -85,6 +86,7 @@ export async function getMiningHistory(
   console.log('API MINING first', first);
   console.log('API MINING username', username);
   console.log('API MINING url', url);
+  console.log('API MINING pool', pool);
 
   if (username && url && pool) {
     switch (pool) {
@@ -94,6 +96,10 @@ export async function getMiningHistory(
       }
       case Contractor.ANTPOOL: {
         json = await antpoolHistory(url, username, first, siteId);
+        break;
+      }
+      case Contractor.FOUNDRY: {
+        json = await foundryHistory(url, username, first, siteId);
         break;
       }
       default: {

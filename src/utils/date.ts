@@ -62,3 +62,20 @@ export function getLastDayOfPreviousMonth(): number {
   // Retourner le nouveau timestamp pour le dernier jour du mois précédent
   return date.getTime();
 }
+
+/**
+ * getTimestampNDaysAgo
+ * @param N
+ * @returns
+ */
+export function getTimestampNDaysAgo(N: number): number {
+  const today = new Date();
+  const targetDate = new Date(today);
+  targetDate.setDate(today.getDate() - N);
+
+  // Réinitialiser l'heure à 00:00:00.000
+  targetDate.setUTCHours(0, 0, 0, 0);
+
+  // Retourner le timestamp
+  return targetDate.getTime();
+}

@@ -267,16 +267,16 @@ export const SITES: Record<SiteID, Site> = {
     },
     status: MiningStatus.active,
     api: {
-      enable: false,
-      username: undefined,
-      url: undefined,
-      contractor: undefined,
+      enable: true,
+      username: 'Datafactoryoregon',
+      url: 'http://api.foundryusapool.com/earnings/',
+      contractor: Contractor.FOUNDRY,
     },
     mining: {
-      startingDate: '-',
+      startingDate: '2024-02-29',
       asics: {
         powerW: 3300,
-        units: 300,
+        units: 827,
         hashrateHs: 120000000000000,
       },
       electricity: {
