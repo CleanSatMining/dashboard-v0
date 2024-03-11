@@ -21,7 +21,8 @@ import {
 } from '@tabler/icons';
 import { DateInput, DateValue } from '@mantine/dates';
 import { PredefinedPeriods } from './Types';
-import { getDateYesterday, FIRST_OF_MAY } from './Utils';
+import { FIRST_OF_MAY } from './Utils';
+import { getDateYesterday } from 'src/utils/date';
 
 interface TimeSelectMenuProps {
   menuOpened: boolean;

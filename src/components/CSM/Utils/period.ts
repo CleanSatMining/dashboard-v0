@@ -1,9 +1,9 @@
 import { MiningSummaryPerDay } from 'src/types/mining/Mining';
 import { MiningHistory } from 'src/types/mining/Mining';
-import { getNumberOfDaysSinceStart } from './yield';
+
 import { Site } from 'src/types/mining/Site';
 import { SITES, SiteID } from '../../../constants/csm';
-import { calculateDaysBetweenDates, getTimestampUTC } from 'src/utils/date';
+import { calculateDaysBetweenDates } from 'src/utils/date';
 
 // Définition de la fonction
 export function getMiningDays(
@@ -77,52 +77,4 @@ export function getPeriodFromStart(
     realPeriod,
     realStartTimestamp,
   };
-}
-
-export function daysInPreviousMonth(date: Date): number {
-  // Create a copy of the date to avoid modifying it directly
-  const dateCopy = new Date(date);
-
-  // Decrement the month of the copied date
-  dateCopy.setMonth(dateCopy.getMonth() - 1);
-
-  // Return the number of days in the previous month
-  return new Date(dateCopy.getFullYear(), dateCopy.getMonth() + 1, 0).getDate();
-}
-
-export function getTimestampFirstDayOfPreviousMonth(date: Date): number {
-  // Create a copy of the date to avoid modifying it directly
-  const dateCopy = new Date(date);
-
-  // Decrement the month of the copied date
-  dateCopy.setMonth(dateCopy.getMonth() - 1);
-
-  // Set the day of the copied date to the first day of the month
-  dateCopy.setDate(1);
-
-  // Set the hours, minutes, seconds, and milliseconds to 0
-  dateCopy.setHours(0, 0, 0, 0);
-
-  //console.log(`Le premier jour du mois : ${dateCopy}`);
-
-  // Return the timestamp of the first day of the previous month at 0:00
-  return dateCopy.getTime();
-}
-
-export function getTimestampLastDayOfPreviousMonth(date: Date): number {
-  // Create a copy of the date to avoid modifying it directly
-  const dateCopy = new Date(date);
-
-  // Decrement the month of the copied date
-  dateCopy.setMonth(dateCopy.getMonth() - 1);
-
-  // Set the day of the copied date to the last day of the month
-  dateCopy.setDate(daysInPreviousMonth(date));
-
-  // Set the hours, minutes, seconds, and milliseconds to 23:59:59:999
-  dateCopy.setHours(23, 59, 59, 999);
-  //console.log(`Le dernier jour du mois : ${dateCopy}`);
-
-  // Return the timestamp of the last day of the previous month at 23:59
-  return dateCopy.getTime();
 }

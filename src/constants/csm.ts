@@ -283,7 +283,7 @@ export const SITES: Record<SiteID, Site> = {
         usdPricePerKWH: 0.046,
       },
       intallationCosts: {
-        equipement: 650000,
+        equipement: 1451436,
       },
     },
     fees: {

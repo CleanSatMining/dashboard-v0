@@ -4,6 +4,8 @@ import * as crypto from 'crypto';
 import { SITES, SiteID } from 'src/constants/csm';
 import { MiningSummaryPerDay } from 'src/types/mining/Mining';
 import { APIMiningHistoryResponse } from 'src/types/mining/MiningAPI';
+import { convertDateFormat } from 'src/utils/date';
+
 const PAGE_SIZE = 50; //page size max
 
 interface RevenueHistory {
@@ -200,7 +202,7 @@ function convertAPIDataToStandard(siteId: string, periodsData: DayData[]) {
         hashrateMax,
       );
       return {
-        date: day.timestamp,
+        date: day.timestamp.replace(' 00:00:00', 'T00:00:00+00:00'), //2024-03-10 00:00:00 => 2024-03-10T00:00:00+00:00
         efficiency: efficiency.times(100).toNumber(),
         hashrate: day.hashrate_unit,
         revenue: new BigNumber(day.fppsBlockAmount)

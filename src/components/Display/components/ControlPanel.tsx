@@ -13,16 +13,17 @@ import {
   IconClock,
 } from '@tabler/icons';
 import { PredefinedPeriods } from './Types';
+import { START_DATE } from './Utils';
 import {
   getTimestampFirstDayOfCurrentMonth,
   getTimestampStartOfNDaysAgo,
   getTimestampFirstDayOfNMonthsAgo,
   calculateDaysBetweenDateAndToday,
-  calculateDaysBetweenDates,
   getTimestampLastDayOfNMonthAgo,
   getTimestampEndOfTheDay,
-  START_DATE,
-} from './Utils';
+} from 'src/utils/date';
+
+import { calculateDaysBetweenDates } from 'src/utils/date';
 
 import { TimeSelectDrawer } from './TimeSelectDrawer';
 import { TimeSelectMenu } from './TimeSelectMenu';
@@ -32,7 +33,11 @@ import { useDisclosure } from '@mantine/hooks';
 import { BtcPrice } from '../../CSM/Indicators/components/BtcPrice';
 import { Networkoverview } from '../../CSM/Indicators/components/NetworkOverview';
 import { NetworkUpdateTime } from '../../CSM/Indicators/components/NetworkUpdateTime';
-import { getMidnightTimestamp, getLastMinuteTimestamp } from 'src/utils/date';
+import {
+  getMidnightTimestamp,
+  getLastMinuteTimestamp,
+  getTimestampUTC,
+} from 'src/utils/date';
 
 interface ControlPanelProps {
   isMobile: boolean;
@@ -172,11 +177,11 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
     } else {
       const today = getTimestampStartOfNDaysAgo(0);
       const isEndDateToday =
-        endDateInput === null || endDateInput.getTime() > today;
+        endDateInput === null || getTimestampUTC(endDateInput) > today;
       const endDate = isEndDateToday
         ? today
         : getTimestampEndOfTheDay(endDateInput.getTime());
-      const startDate = startDateInput.getTime();
+      const startDate = getTimestampUTC(startDateInput);
       const duration = calculateDaysBetweenDates(endDate, startDate);
 
       setMenuLabel(t('customDate'));
