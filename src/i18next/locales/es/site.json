@@ -58,6 +58,8 @@
     "operator-explained": "Los costos del operador están incluidos en el costo de la electricidad.",
     "income-explained": "Los ingresos presentados aquí son solo estimaciones. Los dividendos a pagar a los accionistas de CleanSat Mining se calcularán con precisión trimestralmente durante un informe financiero provisional.",
     "operator": "Gestionario de la finca",
-    "toCome": "Próximamente"
+    "toCome": "Próximamente",
+    "Adding": "Añadiendo",
+    "Withrawing": "Retirando"
   }
 }

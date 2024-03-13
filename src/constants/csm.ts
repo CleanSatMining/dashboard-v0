@@ -46,17 +46,31 @@ export const SITES: Record<SiteID, Site> = {
       contractor: Contractor.ANTPOOL,
     },
     mining: {
-      startingDate: '2023-09-01',
-      asics: {
-        powerW: 3167.72487,
-        units: 567,
-        hashrateHs: 106772487000000,
-      },
+      startingDate: '2023-09-01T00:00:00+00:00',
+      asics: [
+        {
+          date: '2023-09-01T00:00:00+00:00',
+          model: 'Whatsminer M30S++',
+          powerW: 3100,
+          units: 375,
+          hashrateHs: 100000000000000,
+          intallationCosts: {
+            equipement: 1238414,
+          },
+        },
+        {
+          date: '2024-03-04T00:00:00+00:00',
+          model: 'Whatsminer M50',
+          powerW: 3300,
+          units: 192,
+          hashrateHs: 120000000000000,
+          intallationCosts: {
+            equipement: 586080,
+          },
+        },
+      ],
       electricity: {
         usdPricePerKWH: 0.0375,
-      },
-      intallationCosts: {
-        equipement: 1238414,
       },
     },
     fees: {
@@ -103,17 +117,21 @@ export const SITES: Record<SiteID, Site> = {
       contractor: Contractor.ANTPOOL,
     },
     mining: {
-      startingDate: '2023-10-01',
-      asics: {
-        powerW: 3100,
-        units: 375,
-        hashrateHs: 100000000000000,
-      },
+      startingDate: '2023-10-01T00:00:00+00:00',
+      asics: [
+        {
+          date: '2023-10-01T00:00:00+00:00',
+          model: 'Whatsminer M30S++',
+          powerW: 3100,
+          units: 375,
+          hashrateHs: 100000000000000,
+          intallationCosts: {
+            equipement: 1070445,
+          },
+        },
+      ],
       electricity: {
         usdPricePerKWH: 0.0575,
-      },
-      intallationCosts: {
-        equipement: 1070445,
       },
     },
     fees: {
@@ -159,17 +177,21 @@ export const SITES: Record<SiteID, Site> = {
       contractor: Contractor.ANTPOOL,
     },
     mining: {
-      startingDate: '2023-08-18',
-      asics: {
-        powerW: 3400,
-        units: 386,
-        hashrateHs: 122000000000000,
-      },
+      startingDate: '2023-08-18T00:00:00+00:00',
+      asics: [
+        {
+          date: '2023-08-18T00:00:00+00:00',
+          model: 'Whatsminer M50',
+          powerW: 3400,
+          units: 386,
+          hashrateHs: 122000000000000,
+          intallationCosts: {
+            equipement: 1258844,
+          },
+        },
+      ],
       electricity: {
         usdPricePerKWH: 0.059,
-      },
-      intallationCosts: {
-        equipement: 1258844,
       },
     },
     fees: {
@@ -215,17 +237,21 @@ export const SITES: Record<SiteID, Site> = {
       contractor: Contractor.LUXOR,
     },
     mining: {
-      startingDate: '2023-06-20',
-      asics: {
-        powerW: 3010,
-        units: 189,
-        hashrateHs: 141000000000000,
-      },
+      startingDate: '2023-06-20T00:00:00+00:00',
+      asics: [
+        {
+          date: '2023-06-20T00:00:00+00:00',
+          model: 'Antminer S19 XP',
+          powerW: 3010,
+          units: 189,
+          hashrateHs: 141000000000000,
+          intallationCosts: {
+            equipement: 726565,
+          },
+        },
+      ],
       electricity: {
         usdPricePerKWH: 0.063,
-      },
-      intallationCosts: {
-        equipement: 726565,
       },
     },
     fees: {
@@ -273,17 +299,21 @@ export const SITES: Record<SiteID, Site> = {
       contractor: Contractor.FOUNDRY,
     },
     mining: {
-      startingDate: '2024-02-29',
-      asics: {
-        powerW: 3300,
-        units: 827,
-        hashrateHs: 117000000000000,
-      },
+      startingDate: '2024-02-29T00:00:00+00:00',
+      asics: [
+        {
+          date: '2024-02-29T00:00:00+00:00',
+          model: 'Antminer S19k pro',
+          powerW: 3300,
+          units: 827,
+          hashrateHs: 117000000000000,
+          intallationCosts: {
+            equipement: 1451436,
+          },
+        },
+      ],
       electricity: {
         usdPricePerKWH: 0.046,
-      },
-      intallationCosts: {
-        equipement: 1451436,
       },
     },
     fees: {

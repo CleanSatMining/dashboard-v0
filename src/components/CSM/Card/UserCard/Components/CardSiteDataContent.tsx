@@ -17,6 +17,7 @@ import {
   formatBTC,
   formatPeriod,
   formatParenthesis,
+  formatTimestampDay,
 } from 'src/utils/format/format';
 import { useMediaQuery } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
@@ -153,7 +154,7 @@ export const CardSiteDataContent: FC<CardSiteDataContentProps> = ({
           {t('start-date')}
         </Text>
         <Text weight={500} fz={isMobile ? 'xs' : 'sm'}>
-          {data.site.miningStart}
+          {formatTimestampDay(new Date(data.site.miningStart).getTime())}
         </Text>
       </Group>
       {siteData && (

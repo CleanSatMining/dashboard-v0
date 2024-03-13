@@ -25,7 +25,8 @@ import {
   getUptimeBySite,
 } from 'src/components/CSM/Utils/yield';
 import { SITES, SiteID } from 'src/constants/csm';
-import BigNumber from 'bignumber.js';
+
+import { getEquipementDepreciation } from 'src/components/CSM/Utils/period';
 
 // cache 60 min
 /* eslint-disable */
@@ -93,7 +94,6 @@ const handler: NextApiHandler = async (
 
   const site: Site = SITES[siteId as SiteID];
   const feeParameters = site.fees;
-  const equipement = new BigNumber(site.mining.intallationCosts.equipement);
   const electricityCost = calculateElectricityCostPerPeriod(
     miningHistory,
     siteId,
@@ -112,12 +112,17 @@ const handler: NextApiHandler = async (
     startTimestamp,
     endTimestamp,
   );
+  const equipementDepreciation = getEquipementDepreciation(
+    site,
+    startTimestamp,
+    endTimestamp,
+  );
 
   const result = calculateCostsAndEBITDAByPeriod(
     minedBtc.value,
     electricityCost,
+    equipementDepreciation,
     feeParameters,
-    equipement,
     period,
     startTimestamp,
     endTimestamp,

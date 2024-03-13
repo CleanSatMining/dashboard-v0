@@ -15,7 +15,7 @@ import {
   calculateGrossYield,
   calculateCostsAndEBITDAByPeriod,
 } from './pnl';
-import { getPeriodFromStart } from './period';
+import { getPeriodFromStart, getEquipementDepreciation } from './period';
 
 //------------------------------------------------------------------------------------------------------------
 // WITH REDUX
@@ -636,7 +636,11 @@ export function getSiteExpensesByPeriod(
     realStartTimestamp,
     endDate,
   );
-  const equipement = new BigNumber(site.mining.intallationCosts.equipement);
+  const equipementDepreciation = getEquipementDepreciation(
+    site,
+    startDate,
+    endDate,
+  );
 
   const estimatedElectricityCost = calculateElectricityCostPerPeriod(
     miningState,
@@ -652,8 +656,8 @@ export function getSiteExpensesByPeriod(
     calculateCostsAndEBITDAByPeriod(
       usdIncome,
       estimatedElectricityCost,
+      equipementDepreciation,
       feeParameters,
-      equipement,
       realPeriod,
       realStartTimestamp,
       endDate,

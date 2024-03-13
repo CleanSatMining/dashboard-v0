@@ -5,6 +5,10 @@ import { SITES, SiteID } from 'src/constants/csm';
 import { MiningSummaryPerDay } from 'src/types/mining/Mining';
 import { APIMiningHistoryResponse } from 'src/types/mining/MiningAPI';
 import { getTimestampUTC, getTimestampNDaysAgo } from 'src/utils/date';
+import {
+  getHashrate,
+  getNumberOfMachines,
+} from 'src/components/CSM/Utils/period';
 
 interface FoundryDayData {
   startTime: string;
@@ -118,13 +122,11 @@ function convertAPIDataToStandard(
   periodsData: FoundryDayData[],
 ): MiningSummaryPerDay[] {
   const site = SITES[siteId as SiteID];
-  const totalMachines = new BigNumber(site.mining.asics.units);
-  const hashrateMax = new BigNumber(site.mining.asics.hashrateHs).times(
-    totalMachines,
-  );
 
   const result: MiningSummaryPerDay[] = periodsData.map<MiningSummaryPerDay>(
     (day) => {
+      const totalMachines = getNumberOfMachines(site, new Date(day.startTime));
+      const hashrateMax = getHashrate(site, new Date(day.startTime));
       const hashrate = new BigNumber(day.hashrate).times(1000000000);
       const efficiency = hashrate.dividedBy(hashrateMax);
       return {

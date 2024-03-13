@@ -1,16 +1,21 @@
 /* eslint @typescript-eslint/no-var-requires: "off" */
-import { FC } from 'react';
-import { Progress, Text, Group } from '@mantine/core';
-
+import { FC, useState } from 'react';
+import { Progress, Text, Group, Card, HoverCard } from '@mantine/core';
+import { calculateDaysBetweenDates } from 'src/utils/date';
 import {
   formatSmallPercent,
   formatHashrate,
   formatPeriod,
   formatParenthesis,
+  formatTimestampDay,
 } from 'src/utils/format/format';
 import { useMediaQuery } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
 import { CardData } from '../Type';
+import BigNumber from 'bignumber.js';
+import { IconChevronDown, IconChevronUp } from '@tabler/icons';
+import { HashratePeriod } from 'src/types/mining/Mining';
+import { TFunction } from 'i18next';
 
 export type CardSiteHashrateProps = {
   data: CardData;
@@ -23,6 +28,7 @@ export const CardSiteHashrate: FC<CardSiteHashrateProps> = ({
 }) => {
   const isMobile = useMediaQuery('(max-width: 36em)');
   const { t } = useTranslation('site', { keyPrefix: 'card' });
+  const [openDetails, setOpenDetails] = useState<boolean>(false);
 
   const hashrateColor = calculateProgressColor(
     data.site.uptime.hashratePercent,
@@ -32,20 +38,60 @@ export const CardSiteHashrate: FC<CardSiteHashrateProps> = ({
 
   return (
     <div style={{ padding }}>
-      <Group position={'apart'} mt={5} mb={isMobile ? 3 : 5}>
-        <Text fz={isMobile ? 'xs' : 'sm'} color={'dimmed'}>
-          {t('uptime-hashrate')}
-        </Text>
-        <Text weight={500} fz={isMobile ? 'xs' : 'sm'}>
-          {formatHashrate(data.site.uptime.hashrate, hasData) +
-            t('over') +
-            formatHashrate(data.site.hashrate)}
-        </Text>
-      </Group>
+      <HoverCard width={280} shadow={'md'}>
+        <HoverCard.Target>
+          <Group
+            position={'apart'}
+            mt={5}
+            mb={isMobile ? 3 : 5}
+            onClick={() =>
+              setOpenDetails(
+                !openDetails && data.site.uptime.hashratePeriods.length > 1,
+              )
+            }
+            style={{
+              cursor:
+                data.site.uptime.hashratePeriods.length > 1
+                  ? 'pointer'
+                  : 'default',
+            }}
+          >
+            <Text fz={isMobile ? 'xs' : 'sm'} color={'dimmed'}>
+              {t('uptime-hashrate')}
+            </Text>
+            <Group spacing={5}>
+              <Text weight={500} fz={isMobile ? 'xs' : 'sm'}>
+                {formatHashrate(data.site.uptime.hashrate, hasData) +
+                  t('over') +
+                  formatHashrate(data.site.hashrate)}
+              </Text>
+              {data.site.uptime.hashratePeriods.length > 1 && (
+                <>
+                  {openDetails ? (
+                    <IconChevronUp></IconChevronUp>
+                  ) : (
+                    <IconChevronDown></IconChevronDown>
+                  )}
+                </>
+              )}
+            </Group>
+          </Group>
+        </HoverCard.Target>
+        <HoverCard.Dropdown>
+          {data.site.uptime.hashratePeriods.map((period, index) => {
+            return (
+              <Text key={index} size={isMobile ? 'xs' : 'sm'}>
+                {getInstallationInformation(period, t)}
+              </Text>
+            );
+          })}
+        </HoverCard.Dropdown>
+      </HoverCard>
       <Progress
         value={data.site.uptime.hashratePercent}
         color={hashrateColor}
       />
+
       <Group position={'apart'} mt={isMobile ? 0 : 5} mb={isMobile ? 0 : 5}>
         <Text fz={'xs'} color={'dimmed'}>
           {hasData
@@ -64,11 +110,88 @@ export const CardSiteHashrate: FC<CardSiteHashrateProps> = ({
           )}
         </Text>
       </Group>
+      {openDetails && data.site.uptime.hashratePeriods.length > 1 && (
+        <Card withBorder={true}>
+          {data.site.uptime.hashratePeriods.map((period, index) => {
+            return (
+              <div key={index}>
+                <Group position={'apart'} mt={5} mb={isMobile ? 3 : 5}>
+                  <Text fz={isMobile ? 'xs' : 'sm'} color={'dimmed'}>
+                    {`Du ${formatTimestampDay(period.start.getTime())} au ${formatTimestampDay(period.end.getTime())}`}
+                  </Text>
+                  <Text weight={500} fz={isMobile ? 'xs' : 'sm'}>
+                    {formatHashrate(period.hashrateHs, hasData) +
+                      t('over') +
+                      formatHashrate(period.hashrateMax)}
+                  </Text>
+                </Group>
+                <Progress
+                  sections={[
+                    {
+                      value: new BigNumber(period.hashrateHs)
+                        .dividedBy(period.hashrateMax)
+                        .times(100)
+                        .toNumber(),
+                      color: calculateProgressColor(
+                        new BigNumber(period.hashrateHs)
+                          .dividedBy(period.hashrateMax)
+                          .times(100)
+                          .toNumber(),
+                      ),
+
+                      tooltip: getInstallationInformation(period, t),
+                    },
+                  ]}
+                />
+                <Group
+                  position={'apart'}
+                  mt={isMobile ? 0 : 5}
+                  mb={isMobile ? 0 : 5}
+                >
+                  <Text fz={'xs'} color={'dimmed'}>
+                    {hasData
+                      ? formatParenthesis(
+                          t('over-start') +
+                            formatPeriod(
+                              calculateDaysBetweenDates(
+                                period.start.getTime(),
+                                period.end.getTime(),
+                              ),
+                              t,
+                            ),
+                        )
+                      : ''}
+                  </Text>
+                  <Text weight={500} fz={isMobile ? 'xs' : 'sm'}>
+                    {formatSmallPercent(
+                      new BigNumber(period.hashrateHs)
+                        .dividedBy(period.hashrateMax)
+                        .toNumber(),
+                      undefined,
+                      undefined,
+                      undefined,
+                      hasData,
+                    )}
+                  </Text>
+                </Group>
+              </div>
+            );
+          })}
+        </Card>
+      )}
     </div>
   );
 };
 
-export function calculateProgressColor(hashratePercent: number) {
+function getInstallationInformation(period: HashratePeriod, t: TFunction) {
+  return period.equipmentInstalled
+    ? `${formatTimestampDay(period.equipmentInstalled.date.getTime())} : ${t('Adding')} ${period.equipmentInstalled.units} ${period.equipmentInstalled.model} (${period.equipmentInstalled.powerW}W / ${formatHashrate(period.equipmentInstalled.hashrateHs)})`
+    : period.equipmentUninstalled
+      ? `${formatTimestampDay(period.equipmentUninstalled.date.getTime())} : ${t('Withrawing')} ${period.equipmentUninstalled.units} ${period.equipmentUninstalled.model} (${period.equipmentUninstalled.powerW}W / ${formatHashrate(period.equipmentUninstalled.hashrateHs)})`
+      : '';
+}
+
+export function calculateProgressColor(hashratePercent: number): string {
   let hashrateColor = 'violet';
   if (hashratePercent < 10) {
     hashrateColor = 'red';

@@ -93,3 +93,23 @@ export function mapHistoryMiningToSiteHistoryMining(siteId: string, history: Min
       token: { byUser: {} },
     };
   }
+export type HashratePeriod = {
+  start: Date;
+  end: Date;
+  equipmentInstalled: {
+    date: Date;
+    model: string;
+    powerW: number;
+    hashrateHs: number;
+    units: number;
+  } | undefined;
+  equipmentUninstalled: {
+    date: Date;
+    model: string;
+    powerW: number;
+    hashrateHs: number;
+    units: number;
+  } | undefined;
+  hashrateHs: number;
+  hashrateMax: number;
+};

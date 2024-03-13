@@ -12,11 +12,18 @@ import { Site, TokenBalance } from '../../../types/mining/Site';
 import { UserSiteCard } from './UserCard/UserSiteCard';
 import { UserSiteCardMobile } from './UserCard/UserSiteCardMobile';
 import { CardData, CardCost } from './UserCard/Type';
+import { HashratePeriod } from 'src/types/mining/Mining';
 import BigNumber from 'bignumber.js';
 import { Yield } from 'src/types/mining/Site';
 import { useCsmTokens } from 'src/hooks/useCsmTokens';
 import { Operator } from 'src/types/mining/Site';
-import { getPeriodFromStart } from '../Utils/period';
+import {
+  getPeriodFromStart,
+  getAverageHashrate,
+  getAverageMachines,
+  getProgressSteps,
+  getAverageEquipmentCost,
+} from '../Utils/period';
 
 import {
   getMinedBtcBySite,
@@ -127,9 +134,32 @@ const _SiteCard: FC<SiteProps> = ({
     shallDisplay(Number(siteId), tokenBalance > 0);
   }
 
+  const steps = getProgressSteps(site, realStartTimestamp, endDate);
+  const hashratePeriods: HashratePeriod[] = steps.map((step) => {
+    //console.log('Step', step);
+    const uptime = getUptimeBySite(
+      miningState,
+      siteId,
+      realPeriod,
+      step.start.getTime(),
+      step.end.getTime(),
+    );
+    const e: HashratePeriod = {
+      start: step.start,
+      end: step.end,
+      hashrateHs: uptime.hashrate,
+      hashrateMax: step.hashrateMax,
+      equipmentInstalled: step.equipmentInstalled,
+      equipmentUninstalled: step.equipmentUninstalled,
+    };
+    return e;
+  });
+
   const data: CardData = buildUserSiteData(
     siteId,
     site,
+    startDate,
+    endDate,
     siteMinedBTC,
     userShare,
     userYield,
@@ -137,6 +167,7 @@ const _SiteCard: FC<SiteProps> = ({
     userToken,
     userTokenToCome,
     siteUptime,
+    hashratePeriods,
     siteCosts,
     realPeriod,
     getPropertyToken,
@@ -201,11 +232,44 @@ const _SiteCard: FC<SiteProps> = ({
       account,
       siteId,
     );
+    const steps = getProgressSteps(site, realStartTimestamp, endDate);
+    const hashratePeriods: HashratePeriod[] = steps.map((step) => {
+      //console.log('Step', JSON.stringify(step));
+
+      const uptime = getUptimeBySite(
+        miningState,
+        siteId,
+        realPeriod,
+        step.start.getTime(),
+        step.end.getTime(),
+      );
+      // if (steps.length > 1) {
+      //   console.log(
+      //     'hashratePeriods',
+      //     siteId,
+      //     realPeriod,
+      //     step.start.getTime(),
+      //     step.end.getTime(),
+      //     JSON.stringify(uptime),
+      //   );
+      //}
+      const e: HashratePeriod = {
+        start: step.start,
+        end: step.end,
+        hashrateHs: uptime.hashrate,
+        hashrateMax: step.hashrateMax,
+        equipmentInstalled: step.equipmentInstalled,
+        equipmentUninstalled: step.equipmentUninstalled,
+      };
+      return e;
+    });
 
     setUserSiteData(
       buildUserSiteData(
         siteId,
         site,
+        startDate,
+        endDate,
         siteMinedBTC,
         userShare,
         userYield,
@@ -213,6 +277,7 @@ const _SiteCard: FC<SiteProps> = ({
         userToken,
         userTokenToCome,
         siteUptime,
+        hashratePeriods,
         siteCosts,
         realPeriod,
         getPropertyToken,
@@ -280,6 +345,8 @@ export const SiteCard = _SiteCard;
 function buildUserSiteData(
   siteId: string,
   site: Site,
+  startTimestamp: number,
+  endTimestamp: number,
   siteMinedBTC: {
     quantity: BigNumber;
     value: BigNumber;
@@ -295,14 +362,20 @@ function buildUserSiteData(
     percent: number;
     hashrate: number;
   },
+  hashratePeriods: HashratePeriod[],
   costs: CardCost,
   period: number,
   getPropertyToken: (address: string) => PropertiesERC20 | undefined,
   operator: Operator | undefined,
 ): CardData {
-  const siteHashrate = new BigNumber(site.mining.asics.hashrateHs)
-    .times(site.mining.asics.units)
-    .toNumber();
+  // const siteHashrate = new BigNumber(site.mining.asics.hashrateHs)
+  //   .times(site.mining.asics.units)
+  //   .toNumber();
+  const siteAverageHashrate = getAverageHashrate(
+    site,
+    startTimestamp,
+    endTimestamp,
+  );
   const tokenProperties = getPropertyToken(site.token.address);
   const tokenSupply = tokenProperties
     ? tokenProperties.supply
@@ -348,12 +421,17 @@ function buildUserSiteData(
     site: {
       operator: operator,
       miningStart: site.mining.startingDate,
-      machines: site.mining.asics.units,
-      hashrate: siteHashrate,
+      machines: getAverageMachines(site, startTimestamp, endTimestamp),
+      hashrate: siteAverageHashrate.toNumber(),
+      equipmentCost: getAverageEquipmentCost(
+        site,
+        startTimestamp,
+        endTimestamp,
+      ),
       uptime: {
         hashrate: siteUptime.hashrate,
         hashratePercent: new BigNumber(siteUptime.hashrate)
-          .dividedBy(siteHashrate)
+          .dividedBy(siteAverageHashrate)
           .times(100)
           .toNumber(),
         onPeriod: period,
@@ -368,6 +446,7 @@ function buildUserSiteData(
           usd: siteYield.net.usd,
         },
         costs: costs,
+        hashratePeriods: hashratePeriods,
       },
     },
   };

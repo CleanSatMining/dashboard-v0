@@ -37,6 +37,14 @@ export function getMidnightTimestamp(inputTimestamp: number): number {
   return date.getTime();
 }
 
+export function getMidnight(inputDate: string): Date {
+  const date = new Date(inputDate);
+  date.setUTCHours(0, 0, 0, 0); // Définir l'heure à 00:00:00.000
+
+  // Retourner le nouveau timestamp à minuit
+  return date;
+}
+
 export function getLastMinuteTimestamp(inputTimestamp: number): number {
   const date = new Date(Number(inputTimestamp));
   date.setUTCHours(23, 59, 59, 999); // Définir l'heure à 23:59:59.999
@@ -229,4 +237,23 @@ export function convertDateFormat(inputDate: string): string {
     new Date(inputDateTime).toISOString().split('.')[0] + '+00:00';
 
   return outputDate;
+}
+
+export function addYearsToTimestamp(
+  inputTimestamp: number,
+  inputYears: number,
+): number {
+  // Convertir le timestamp en objet Date
+  const currentDate = new Date(inputTimestamp);
+
+  // Ajouter 5 ans à la date actuelle en utilisant l'UTC
+  currentDate.setUTCFullYear(currentDate.getUTCFullYear() + inputYears);
+
+  // Renvoyer le nouveau timestamp
+  return currentDate.getTime();
+}
+
+export function formatDateToISOString(inputDate: Date): string {
+  const isoString = inputDate.toISOString();
+  return isoString.substring(0, 23) + '+00:00';
 }

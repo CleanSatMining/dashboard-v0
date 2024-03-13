@@ -16,6 +16,8 @@ import { useMediaQuery } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
 import { CardData } from '../Type';
 import { InfoText } from 'src/components/InfoText/InfoText';
+import { Site } from 'src/types/mining/Site';
+import { getAverageEquipmentCost } from 'src/components/CSM/Utils/period';
 
 export const useStyle = createStyles((theme: MantineTheme) => ({
   accordionContainer: {
@@ -220,7 +222,7 @@ export const CardSiteAccounting: FC<CardSiteAccountingProps> = ({ data }) => {
                 tooltipText={t('provision-explained').replace(
                   '$',
                   formatUsd(
-                    site.mining.intallationCosts.equipement,
+                    data.site.equipmentCost,
                     undefined,
                     undefined,
                     undefined,
@@ -276,3 +278,14 @@ function AccordionLabel({
 const formatExplained = (text: string) => {
   return ' (' + text + ')';
 };
+
+function sumEquipmentCosts(site: Site): number {
+  let totalCost = 0;
+
+  // Parcourir chaque équipement et ajouter son coût au total
+  for (const equipment of site.mining.asics) {
+    totalCost += equipment.intallationCosts.equipement;
+  }
+
+  return totalCost;
+}

@@ -11,22 +11,29 @@ import {
 import { MiningHistory } from 'src/types/mining/Mining';
 import { Site, Fees } from 'src/types/mining/Site';
 
-import { getPeriodFromStart, getMiningDays } from './period';
+import {
+  getPeriodFromStart,
+  getMiningDays,
+  getEquipementDepreciation,
+  getPower,
+  getNumberOfMachines,
+} from './period';
 import { calculateExpenses } from './expenses';
+import { getMidnight } from 'src/utils/date';
 
 const YEAR_IN_DAYS = new BigNumber(365);
 
 /**
- *
+ * calculateElececticityCost
  * @param site
- * @param totalMachines
+ * @param date
  * @param uptimePercentage
  * @param usdPricePerKWH_in
  * @returns
  */
-export function calculateElececticityCostPerDay(
+export function calculateElececticityCost(
   site: Site,
-  totalMachines: number,
+  date: Date,
   uptimePercentage: number,
   usdPricePerKWH_in?: number,
 ): BigNumber {
@@ -35,19 +42,18 @@ export function calculateElececticityCostPerDay(
       ? usdPricePerKWH_in
       : site.mining.electricity.usdPricePerKWH;
 
-  const consumption_kwh_per_day_per_machine = new BigNumber(
-    site.mining.asics.powerW,
-  )
+  const consumption_kwh = new BigNumber(getPower(site, date))
     .times(24)
     .dividedBy(1000);
-  const electricityCostPerDay =
-    site.mining.asics.units > 0
+
+  const totalMachines = getNumberOfMachines(site, date);
+  const electricityCost =
+    totalMachines > 0
       ? new BigNumber(usdPricePerKWH)
-          .times(consumption_kwh_per_day_per_machine)
+          .times(consumption_kwh)
           .times(uptimePercentage)
-          .times(totalMachines)
       : new BigNumber(0);
-  return electricityCostPerDay;
+  return electricityCost;
 }
 
 /**
@@ -80,9 +86,9 @@ export function calculateElectricityCostPerPeriod(
   for (const day of days) {
     const dateTime = new Date(day.date).getTime();
     if (dateTime < billingStartDateTime || dateTime > billingEndDateTime) {
-      const electricityCostPerDay = calculateElececticityCostPerDay(
+      const electricityCostPerDay = calculateElececticityCost(
         site,
-        site.mining.asics.units,
+        getMidnight(day.date),
         day.uptimePercentage / 100,
         basePricePerKWH,
       );
@@ -174,7 +180,12 @@ export function calculateNetYield(
     const site: Site = SITES[siteId as SiteID];
     const fees = site.fees;
     const usdIncome = btcIncome.times(btcPrice);
-    const equipement = new BigNumber(site.mining.intallationCosts.equipement);
+    const equipementDepreciation = getEquipementDepreciation(
+      site,
+      startDate,
+      endDate,
+    );
+
     const { realPeriod, realStartTimestamp } = getPeriodFromStart(
       site,
       startDate,
@@ -184,8 +195,8 @@ export function calculateNetYield(
     const { taxe, EBITDA, provision } = calculateCostsAndEBITDAByPeriod(
       usdIncome,
       electricityCost,
+      equipementDepreciation,
       fees,
-      equipement,
       realPeriod,
       realStartTimestamp,
       endDate,
@@ -245,13 +256,17 @@ export function calculateGrossYield(
       startDate,
       endDate,
     );
-    const equipement = new BigNumber(site.mining.intallationCosts.equipement);
+    const equipementDepreciation = getEquipementDepreciation(
+      site,
+      startDate,
+      endDate,
+    );
 
     const { taxe, EBITDA } = calculateCostsAndEBITDAByPeriod(
       minedBtcValue,
       electricityCost,
+      equipementDepreciation,
       fees,
-      equipement,
       realPeriod,
       realStartTimestamp,
       endDate,
@@ -290,8 +305,9 @@ export function calculateGrossYield(
 export function calculateCostsAndEBITDAByPeriod(
   usdIncome: BigNumber,
   electricityCost: BigNumber,
+  equipementDepreciation: BigNumber,
   feeParameters: Fees,
-  equipementValue: BigNumber,
+  //equipementValue: BigNumber,
   realPeriod: number,
   startDate: number,
   endDate: number,
@@ -328,10 +344,11 @@ export function calculateCostsAndEBITDAByPeriod(
     .minus(estimatedFeeOperatorUsd)
     .minus(csmBillingExpenseUsd)
     .minus(operatorBillingExpenseUsd);
-  const provision = equipementValue
+  /* const provision = equipementValue
     .times(feeParameters.operational.provision)
     .dividedBy(YEAR_IN_DAYS)
-    .times(realPeriod);
+    .times(realPeriod); */
+  const provision = equipementDepreciation;
   const EBITDA_MINUS_PROVISION = EBITDA.minus(provision);
   const taxe = BigNumber.max(
     EBITDA_MINUS_PROVISION.times(SWISS_TAXE),

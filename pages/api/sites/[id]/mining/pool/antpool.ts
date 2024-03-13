@@ -4,7 +4,10 @@ import * as crypto from 'crypto';
 import { SITES, SiteID } from 'src/constants/csm';
 import { MiningSummaryPerDay } from 'src/types/mining/Mining';
 import { APIMiningHistoryResponse } from 'src/types/mining/MiningAPI';
-import { convertDateFormat } from 'src/utils/date';
+import {
+  getHashrate,
+  getNumberOfMachines,
+} from 'src/components/CSM/Utils/period';
 
 const PAGE_SIZE = 50; //page size max
 
@@ -191,13 +194,11 @@ async function _antPoolHistory(
  */
 function convertAPIDataToStandard(siteId: string, periodsData: DayData[]) {
   const site = SITES[siteId as SiteID];
-  const totalMachines = new BigNumber(site.mining.asics.units);
-  const hashrateMax = new BigNumber(site.mining.asics.hashrateHs).times(
-    totalMachines,
-  );
 
   const result: MiningSummaryPerDay[] = periodsData.map<MiningSummaryPerDay>(
     (day) => {
+      const totalMachines = getNumberOfMachines(site, new Date(day.timestamp));
+      const hashrateMax = getHashrate(site, new Date(day.timestamp));
       const efficiency = new BigNumber(day.hashrate_unit).dividedBy(
         hashrateMax,
       );
