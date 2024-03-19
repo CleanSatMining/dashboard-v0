@@ -1,5 +1,6 @@
 /* eslint @typescript-eslint/no-var-requires: "off" */
 import { FC, useState, useEffect } from 'react';
+import Link from 'next/link';
 import {
   Space,
   Text,
@@ -9,8 +10,9 @@ import {
   Flex,
   HoverCard,
   Tooltip,
+  useMantineTheme,
 } from '@mantine/core';
-import { IconPlus, IconMinus } from '@tabler/icons';
+import { IconPlus, IconMinus, IconEye } from '@tabler/icons';
 import Image from 'next/image';
 import {
   formatSimpleUsd,
@@ -29,6 +31,7 @@ import { useAtomValue } from 'jotai';
 import { btcPriceAtom } from 'src/states';
 import { API_SITE } from 'src/constants/apis';
 import { CleanSatMiningSite } from 'src/types/mining/Site';
+import { LINK_BLOCKCHAIN_EXPLORER_BTC } from 'src/constants/apis';
 
 export type CardSiteDataContentProps = {
   data: CardData;
@@ -40,6 +43,7 @@ export const CardSiteDataContent: FC<CardSiteDataContentProps> = ({
   padding = '0px',
 }) => {
   const isMobile = useMediaQuery('(max-width: 36em)');
+  const theme = useMantineTheme();
   const { t } = useTranslation('site', { keyPrefix: 'card' });
   const [displayDetail, setDisplayDetail] = useState<boolean>(false);
   const btcPrice = useAtomValue(btcPriceAtom);
@@ -75,9 +79,39 @@ export const CardSiteDataContent: FC<CardSiteDataContentProps> = ({
     <div style={{ padding }}>
       <Group position={'apart'} mt={0} mb={0} align={'flex-start'}>
         <Stack spacing={0} justify={'flex-start'}>
-          <Text fz={isMobile ? 'xs' : 'sm'} color={'dimmed'}>
-            {t('treasury')}
-          </Text>
+          <Group spacing={3}>
+            <Text fz={isMobile ? 'xs' : 'sm'} color={'dimmed'}>
+              {t('treasury')}
+            </Text>
+            {siteData && siteData?.data.vault.xpub !== '' && (
+              <HoverCard
+                width={200}
+                shadow={'md'}
+                disabled={isMobile ? true : false}
+              >
+                <HoverCard.Target>
+                  <Link
+                    href={LINK_BLOCKCHAIN_EXPLORER_BTC.url(
+                      siteData?.data.vault.xpub,
+                    )}
+                    target={'_blank'}
+                  >
+                    <ActionIcon
+                      size={'sm'}
+                      variant={'transparent'}
+                      radius={'sm'}
+                      color={theme.colorScheme === 'dark' ? 'dark' : 'gray'}
+                    >
+                      <IconEye size={'0.875rem'} />
+                    </ActionIcon>
+                  </Link>
+                </HoverCard.Target>
+                <HoverCard.Dropdown>
+                  <Text size={'sm'}>{t('treasury-detail')}</Text>
+                </HoverCard.Dropdown>
+              </HoverCard>
+            )}
+          </Group>
         </Stack>
         <BitcoinBalanceChecker
           siteId={data.id}

@@ -43,3 +43,15 @@ export const API_USERS_PAYMENTS = {
     '/api/users/' + address + '/sites/' + siteId + '/payments',
   method: 'POST',
 };
+
+export const LINK_BLOCKCHAIN_EXPLORER_BTC = {
+  url: (xpub: string) =>
+    'https://www.blockchain.com/explorer/assets/btc/xpub/' + xpub,
+  method: 'GET',
+};
+
+export const API_BLOCKCHAIN_EXPLORER_BTC = {
+  url: (xpub: string) =>
+    `https://api.haskoin.com/btc/xpub/${xpub}?derive=segwit&nocache=true`,
+  method: 'GET',
+};

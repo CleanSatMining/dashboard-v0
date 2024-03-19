@@ -2,6 +2,7 @@
 import { SITES, SiteID } from 'src/constants/csm';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { LRUCache } from 'lru-cache';
+import { API_BLOCKCHAIN_EXPLORER_BTC } from 'src/constants/apis';
 
 interface BalanceInfo {
   address: string;
@@ -64,9 +65,7 @@ export default async function handler(
     let response = null;
     let data: BalanceInfo | null = null;
     if (xpub) {
-      response = await fetch(
-        `https://api.haskoin.com/btc/xpub/${xpub}?derive=segwit&nocache=true`,
-      );
+      response = await fetch(API_BLOCKCHAIN_EXPLORER_BTC.url(xpub));
       const xpubData: BalanceResponse = await response.json();
       data = {
         address: xpub,

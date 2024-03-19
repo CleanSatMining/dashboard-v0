@@ -11,7 +11,6 @@ import {
   Text,
   Title,
   createStyles,
-  useMantineTheme,
 } from '@mantine/core';
 import { useModals } from '@mantine/modals';
 import { IconShoppingCart } from '@tabler/icons';
@@ -133,7 +132,7 @@ const ShowOfferPage: FC = () => {
         },
       });
     },
-    [modals, refreshOffers, t2]
+    [modals, refreshOffers, t2],
   );
 
   return (
