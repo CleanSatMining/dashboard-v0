@@ -313,7 +313,7 @@ export const SITES: Record<SiteID, Site> = {
         },
       ],
       electricity: {
-        usdPricePerKWH: 0.046,
+        usdPricePerKWH: 0.066,
       },
     },
     fees: {
@@ -323,9 +323,9 @@ export const SITES: Record<SiteID, Site> = {
       operational: {
         operator: {
           includeWithElectricity: false,
-          rate: 0.15,
+          rate: 0,
         },
-        csm: 0,
+        csm: 0.05,
         pool: 0.015,
         taxe: 0.1357,
         provision: 0.2,
