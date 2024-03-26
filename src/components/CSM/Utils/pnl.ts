@@ -302,6 +302,75 @@ export function calculateGrossYield(
   }
 }
 
+export function calculateGrossYieldTaxeFree(
+  siteId: string,
+  minedBtc: BigNumber,
+  btcPrice: number,
+  electricityCost: BigNumber,
+  period: number,
+  startDate: number,
+  endDate: number,
+  expenses: Expense[],
+): {
+  usdIncome: BigNumber;
+  btcIncome: BigNumber;
+  apr: BigNumber;
+} {
+  if (minedBtc.gt(0)) {
+    const site: Site = SITES[siteId as SiteID];
+    const fees = site.fees;
+    const minedBtcValue = minedBtc.times(btcPrice);
+    const { realPeriod, realStartTimestamp } = getPeriodFromStart(
+      site,
+      startDate,
+      endDate,
+    );
+    const equipementDepreciation = getEquipementDepreciation(
+      site,
+      startDate,
+      endDate,
+    );
+
+    const { EBITDA } = calculateCostsAndEBITDAByPeriod(
+      minedBtcValue,
+      electricityCost,
+      equipementDepreciation,
+      fees,
+      realPeriod,
+      realStartTimestamp,
+      endDate,
+      expenses,
+      btcPrice,
+    );
+
+    // const taxe = EBITDA.times(SWISS_TAXE);
+    const usdIncome = EBITDA; // EBITDA.minus(taxe)
+    const btcIncome = usdIncome.dividedBy(btcPrice);
+    const usdIncomeAYear =
+      realPeriod > 0
+        ? usdIncome.times(YEAR_IN_DAYS.dividedBy(realPeriod))
+        : new BigNumber(0);
+    const totalShareValue = new BigNumber(site.token.supply).times(
+      site.token.price,
+    );
+    const apr = totalShareValue.gt(0)
+      ? usdIncomeAYear.dividedBy(totalShareValue)
+      : new BigNumber(0);
+
+    return {
+      usdIncome,
+      btcIncome,
+      apr,
+    };
+  } else {
+    return {
+      usdIncome: new BigNumber(0),
+      btcIncome: new BigNumber(0),
+      apr: new BigNumber(0),
+    };
+  }
+}
+
 export function calculateCostsAndEBITDAByPeriod(
   usdIncome: BigNumber,
   electricityCost: BigNumber,

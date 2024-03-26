@@ -17,7 +17,7 @@ import {
 } from 'src/store/features/miningData/miningDataSelector';
 import { selectUsersState } from 'src/store/features/userData/userDataSelector';
 import { Yield } from 'src/types/mining/Site';
-import { ACTIVATE_DISPLAY_APY } from 'src/constants/csm';
+import { ACTIVATE_DISPLAY_APY, TAXE_FREE_MODE } from 'src/constants/csm';
 
 import {
   formatBTC,
@@ -60,7 +60,11 @@ const _Summary: FC<AssetProps> = ({
   const usersState = useAppSelector(selectUsersState);
   const miningState = useAppSelector(selectMiningHistory);
   const expensesState = useAppSelector(selectMiningExpenses);
-  const [userYield, setUserYield] = useState<{ net: Yield; gross: Yield }>(
+  const [userYield, setUserYield] = useState<{
+    net: Yield;
+    gross: Yield;
+    grossTaxeFree: Yield;
+  }>(
     getUserYield(
       miningState,
       usersState,
@@ -74,7 +78,7 @@ const _Summary: FC<AssetProps> = ({
   );
   const ultraRare = useWalletNFTs(ULTRA_RARE.contract, account);
   //console.log('NFT', JSON.stringify(ultraRare, null, 4));
-
+  const gridMaxSize = TAXE_FREE_MODE && ultraRare.balance === 0 ? 3 : 4;
   const siteIds = getUserSiteIds(usersState, account);
   const investment = getUserInvestment(usersState, account, true);
   const numberOfSite = siteIds.length;
@@ -86,6 +90,8 @@ const _Summary: FC<AssetProps> = ({
   const dataIncomeNet: Data[] = [];
 
   const dataIncomeGross: Data[] = [];
+
+  const dataIncomeTaxeFree: Data[] = [];
 
   const dataAPR: Data[] = [];
 
@@ -129,10 +135,16 @@ const _Summary: FC<AssetProps> = ({
       value: formatBTC(yields.gross.btc),
     };
 
+    const dataYieldGrossTaxeFree: Data = {
+      label: token.symbol, // site.name,
+      value: formatBTC(yields.grossTaxeFree.btc),
+    };
+
     dataTokens.push(dataToken);
     dataSites.push(dataSite);
     dataIncomeNet.push(dataYieldNet);
     dataIncomeGross.push(dataYieldGross);
+    dataIncomeTaxeFree.push(dataYieldGrossTaxeFree);
 
     if (tokenToCome.balance > 0) {
       const dataTokenToCome: Data = {
@@ -174,7 +186,10 @@ const _Summary: FC<AssetProps> = ({
         { minWidth: 'xs', cols: 2 },
         { minWidth: 'sm', cols: 2 },
         { minWidth: 'md', cols: 3 },
-        { minWidth: 1200, cols: ACTIVATE_DISPLAY_APY ? 5 : 4 },
+        {
+          minWidth: 1200,
+          cols: ACTIVATE_DISPLAY_APY ? gridMaxSize + 1 : gridMaxSize,
+        },
       ]}
       spacing={isMobile ? 'xs' : undefined}
       sx={{ marginBottom: isMobile ? '10px' : '20px' }}
@@ -191,7 +206,7 @@ const _Summary: FC<AssetProps> = ({
         data={dataSites}
         Icon={IconBuildingFactory}
       ></SummaryCard>
-      {
+      {!TAXE_FREE_MODE && (
         <>
           <SummaryCard
             title={isMobile ? t('incomes-net-short') : t('incomes-net')}
@@ -211,13 +226,23 @@ const _Summary: FC<AssetProps> = ({
             Icon={IconCoinBitcoin}
           ></SummaryCard>
         </>
-      }
+      )}
       {ACTIVATE_DISPLAY_APY && (
         <SummaryCard
           title={t('my-yield')}
           value={formatPercent(userYield.net.apr)}
           Icon={IconTrendingUp}
           data={dataAPR}
+        ></SummaryCard>
+      )}
+      {TAXE_FREE_MODE && (
+        <SummaryCard
+          title={t('incomes-taxe-free')}
+          toolTip={t('income-taxe-free-explained')}
+          value={formatBTC(userYield.grossTaxeFree.btc)}
+          subValue={formatUsd(userYield.grossTaxeFree.usd)}
+          data={dataIncomeTaxeFree}
+          Icon={IconCoinBitcoin}
         ></SummaryCard>
       )}
       {ultraRare.balance > 0 && (

@@ -121,3 +121,12 @@ export type Site = {
     my = 'my-site',
     all = 'all-status',
   }
+export type SiteCost = {
+  total: number;
+  totalTaxeFree: number;
+  electricity: number;
+  feeCSM: number;
+  feeOperator: number;
+  taxe: number;
+  provision: number;
+};

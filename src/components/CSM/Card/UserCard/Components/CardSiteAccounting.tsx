@@ -17,19 +17,13 @@ import { useTranslation } from 'react-i18next';
 import { CardData } from '../Type';
 import { InfoText } from 'src/components/InfoText/InfoText';
 import { Site } from 'src/types/mining/Site';
-import { getAverageEquipmentCost } from 'src/components/CSM/Utils/period';
+import { TAXE_FREE_MODE } from 'src/constants/csm';
 
 export const useStyle = createStyles((theme: MantineTheme) => ({
   accordionContainer: {
     borderRadius: theme.radius.md,
     marginTop: '5px',
     padding: '0px',
-    // border:
-    //   theme.colorScheme === 'dark' ? `1px solid ${theme.colors.dark[4]}` : '0',
-    // backgroundColor:
-    //   theme.colorScheme === 'dark'
-    //     ? theme.colors.dark[7]
-    //     : theme.colors.gray[0],
   },
 }));
 
@@ -44,12 +38,20 @@ export const CardSiteAccounting: FC<CardSiteAccountingProps> = ({ data }) => {
   const { t } = useTranslation('site', { keyPrefix: 'card' });
   const site = getSite(data.id);
   const [income, setIncome] = useState<number>(data.site.uptime.mined.usd);
-  const [expense, setExpense] = useState<number>(data.site.uptime.costs.total);
+  const [expense, setExpense] = useState<number>(
+    TAXE_FREE_MODE
+      ? data.site.uptime.costs.totalTaxeFree
+      : data.site.uptime.costs.total,
+  );
   const hasData = data.income.available;
 
   useEffect(() => {
     setIncome(data.site.uptime.mined.usd);
-    setExpense(data.site.uptime.costs.total);
+    setExpense(
+      TAXE_FREE_MODE
+        ? data.site.uptime.costs.totalTaxeFree
+        : data.site.uptime.costs.total,
+    );
   }, [data]);
 
   return (
@@ -194,55 +196,69 @@ export const CardSiteAccounting: FC<CardSiteAccountingProps> = ({ data }) => {
                 )}
               </Text>
             </Group>
-            <Group position={'apart'} mt={'0'} mb={'0'}>
-              <Text
-                fz={isMobile ? 'xs' : 'sm'}
-                align={'center'}
-                color={'dimmed'}
-              >
-                {t('cost-taxes') +
-                  formatExplained(formatPercent(site.fees.operational.taxe, 2))}
-              </Text>
-              <Text weight={500} fz={isMobile ? 'xs' : 'sm'} align={'center'}>
-                {formatUsd(
-                  data.site.uptime.costs.taxe,
-                  2,
-                  undefined,
-                  undefined,
-                  undefined,
-                  hasData,
-                )}
-              </Text>
-            </Group>
-            <Group position={'apart'} mt={'0'} mb={'0'}>
-              <InfoText
-                fz={isMobile ? 'xs' : 'sm'}
-                color={'dimmed'}
-                text={t('cost-provision')}
-                tooltipText={t('provision-explained').replace(
-                  '$',
-                  formatUsd(
-                    data.site.equipmentCost,
-                    undefined,
-                    undefined,
-                    undefined,
-                    undefined,
-                    hasData,
-                  ),
-                )}
-              ></InfoText>
+            {!TAXE_FREE_MODE && (
+              <>
+                <Group position={'apart'} mt={'0'} mb={'0'}>
+                  <Text
+                    fz={isMobile ? 'xs' : 'sm'}
+                    align={'center'}
+                    color={'dimmed'}
+                  >
+                    {t('cost-taxes') +
+                      formatExplained(
+                        formatPercent(site.fees.operational.taxe, 2),
+                      )}
+                  </Text>
+                  <Text
+                    weight={500}
+                    fz={isMobile ? 'xs' : 'sm'}
+                    align={'center'}
+                  >
+                    {formatUsd(
+                      data.site.uptime.costs.taxe,
+                      2,
+                      undefined,
+                      undefined,
+                      undefined,
+                      hasData,
+                    )}
+                  </Text>
+                </Group>
+                <Group position={'apart'} mt={'0'} mb={'0'}>
+                  <InfoText
+                    fz={isMobile ? 'xs' : 'sm'}
+                    color={'dimmed'}
+                    text={t('cost-provision')}
+                    tooltipText={t('provision-explained').replace(
+                      '$',
+                      formatUsd(
+                        data.site.equipmentCost,
+                        undefined,
+                        undefined,
+                        undefined,
+                        undefined,
+                        hasData,
+                      ),
+                    )}
+                  ></InfoText>
 
-              <Text weight={500} fz={isMobile ? 'xs' : 'sm'} align={'center'}>
-                {formatUsd(
-                  data.site.uptime.costs.provision,
-                  2,
-                  undefined,
-                  undefined,
-                  undefined,
-                  hasData,
-                )}
-              </Text>
-            </Group>
+                  <Text
+                    weight={500}
+                    fz={isMobile ? 'xs' : 'sm'}
+                    align={'center'}
+                  >
+                    {formatUsd(
+                      data.site.uptime.costs.provision,
+                      2,
+                      undefined,
+                      undefined,
+                      undefined,
+                      hasData,
+                    )}
+                  </Text>
+                </Group>
+              </>
+            )}
           </Accordion.Panel>
         </Accordion.Item>
       </Accordion>

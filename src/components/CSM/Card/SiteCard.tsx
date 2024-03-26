@@ -11,7 +11,8 @@ import { SITES, SiteID } from '../../../constants';
 import { Site, TokenBalance } from '../../../types/mining/Site';
 import { UserSiteCard } from './UserCard/UserSiteCard';
 import { UserSiteCardMobile } from './UserCard/UserSiteCardMobile';
-import { CardData, CardCost } from './UserCard/Type';
+import { CardData } from './UserCard/Type';
+import { SiteCost } from 'src/types/mining/Site';
 import { HashratePeriod } from 'src/types/mining/Mining';
 import BigNumber from 'bignumber.js';
 import { Yield } from 'src/types/mining/Site';
@@ -119,7 +120,7 @@ const _SiteCard: FC<SiteProps> = ({
     realStartTimestamp,
     endDate,
   );
-  const siteCosts: CardCost = getSiteExpensesByPeriod(
+  const siteCosts: SiteCost = getSiteExpensesByPeriod(
     miningState,
     siteId,
     btcPrice,
@@ -218,7 +219,7 @@ const _SiteCard: FC<SiteProps> = ({
       endDate,
       expensesState.byId[siteId] ?? [],
     );
-    const siteCosts: CardCost = getSiteExpensesByPeriod(
+    const siteCosts: SiteCost = getSiteExpensesByPeriod(
       miningState,
       siteId,
       btcPrice,
@@ -352,8 +353,8 @@ function buildUserSiteData(
     value: BigNumber;
   },
   userShare: BigNumber,
-  userYield: { net: Yield; gross: Yield },
-  siteYield: { net: Yield; gross: Yield },
+  userYield: { net: Yield; gross: Yield; grossTaxeFree: Yield },
+  siteYield: { net: Yield; gross: Yield; grossTaxeFree: Yield },
   userToken: TokenBalance,
   userTokenToCome: TokenBalance,
   siteUptime: {
@@ -363,7 +364,7 @@ function buildUserSiteData(
     hashrate: number;
   },
   hashratePeriods: HashratePeriod[],
-  costs: CardCost,
+  costs: SiteCost,
   period: number,
   getPropertyToken: (address: string) => PropertiesERC20 | undefined,
   operator: Operator | undefined,
@@ -402,6 +403,13 @@ function buildUserSiteData(
           usd: userYield.gross.usd,
         },
         apy: userYield.gross.apr,
+      },
+      grossTaxeFree: {
+        balance: {
+          btc: userYield.grossTaxeFree.btc,
+          usd: userYield.grossTaxeFree.usd,
+        },
+        apy: userYield.grossTaxeFree.apr,
       },
     },
 
@@ -444,6 +452,10 @@ function buildUserSiteData(
         earned: {
           btc: siteYield.net.btc,
           usd: siteYield.net.usd,
+        },
+        earnedTaxFree: {
+          btc: siteYield.grossTaxeFree.btc,
+          usd: siteYield.grossTaxeFree.usd,
         },
         costs: costs,
         hashratePeriods: hashratePeriods,

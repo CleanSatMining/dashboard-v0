@@ -11,6 +11,7 @@ import { useMediaQuery } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
 import { CardData } from '../Type';
 import { InfoText } from 'src/components/InfoText/InfoText';
+import { TAXE_FREE_MODE } from 'src/constants/csm';
 
 export const useStyle = createStyles((theme: MantineTheme) => ({
   urlContainer: {
@@ -39,74 +40,124 @@ export const CardIncomeContent: FC<CardIncomeContentProps> = ({
 }) => {
   const isMobile = useMediaQuery('(max-width: 36em)');
   const { t } = useTranslation('site', { keyPrefix: 'card' });
-  const lost = data.income.net.balance.btc < 0;
+  const lost = TAXE_FREE_MODE
+    ? data.income.grossTaxeFree.balance.btc < 0
+    : data.income.net.balance.btc < 0;
 
   const hasData = data.income.available;
 
   return (
     <div style={{ padding }}>
-      <Group position={'apart'} mt={'0'} mb={'0'}>
-        <InfoText
-          text={t('income-gross')}
-          color={'dimmed'}
-          fz={'sm'}
-          tooltipText={t('income-gross-explained')}
-          width={isMobile ? 300 : 400}
-        ></InfoText>
-        <Text weight={500} fz={'sm'} align={'center'}>
-          {formatBTC(data.income.gross.balance.btc, hasData)}
-        </Text>
-      </Group>
-      <Group position={'apart'} mt={'0'} mb={'0'}>
-        <Text fz={'xs'} color={'dimmed'}>
-          {hasData
-            ? formatParenthesis(
-                t('over-start') + formatPeriod(data.site.uptime.onPeriod, t),
-              )
-            : ''}
-        </Text>
-        <Text fz={'xs'} color={'dimmed'}>
-          {formatSimpleUsd(data.income.gross.balance.usd, hasData)}
-        </Text>
-      </Group>
-      <Space h={'5px'}></Space>
-      <Group position={'apart'} mt={'0'} mb={'0'}>
-        <InfoText
-          text={t('income-net')}
-          color={'dimmed'}
-          fz={'sm'}
-          tooltipText={t('income-net-explained')}
-          width={isMobile ? 300 : 400}
-        ></InfoText>
+      {!TAXE_FREE_MODE && (
+        <>
+          <Group position={'apart'} mt={'0'} mb={'0'}>
+            <InfoText
+              text={t('income-gross')}
+              color={'dimmed'}
+              fz={'sm'}
+              tooltipText={t('income-gross-explained')}
+              width={isMobile ? 300 : 400}
+            ></InfoText>
+            <Text weight={500} fz={'sm'} align={'center'}>
+              {formatBTC(data.income.gross.balance.btc, hasData)}
+            </Text>
+          </Group>
+          <Group position={'apart'} mt={'0'} mb={'0'}>
+            <Text fz={'xs'} color={'dimmed'}>
+              {hasData
+                ? formatParenthesis(
+                    t('over-start') +
+                      formatPeriod(data.site.uptime.onPeriod, t),
+                  )
+                : ''}
+            </Text>
+            <Text fz={'xs'} color={'dimmed'}>
+              {formatSimpleUsd(data.income.gross.balance.usd, hasData)}
+            </Text>
+          </Group>
+          <Space h={'5px'}></Space>
+          <Group position={'apart'} mt={'0'} mb={'0'}>
+            <InfoText
+              text={t('income-net')}
+              color={'dimmed'}
+              fz={'sm'}
+              tooltipText={t('income-net-explained')}
+              width={isMobile ? 300 : 400}
+            ></InfoText>
 
-        {!lost && (
-          <Text weight={500} fz={'sm'} align={'center'}>
-            {formatBTC(data.income.net.balance.btc, hasData)}
-          </Text>
-        )}
-        {lost && (
-          <InfoText
-            text={formatBTC(data.income.net.balance.btc)}
-            color={'yellow'}
-            fz={'sm'}
-            tooltipText={t('lost-explained')}
-            weight={500}
-            width={isMobile ? 300 : 400}
-          ></InfoText>
-        )}
-      </Group>
-      <Group position={'apart'} mt={'0'} mb={'0'}>
-        <Text fz={'xs'} color={'dimmed'}>
-          {hasData
-            ? formatParenthesis(
-                t('over-start') + formatPeriod(data.site.uptime.onPeriod, t),
-              )
-            : ''}
-        </Text>
-        <Text fz={'xs'} color={'dimmed'}>
-          {formatSimpleUsd(data.income.net.balance.usd, hasData)}
-        </Text>
-      </Group>
+            {!lost && (
+              <Text weight={500} fz={'sm'} align={'center'}>
+                {formatBTC(data.income.net.balance.btc, hasData)}
+              </Text>
+            )}
+            {lost && (
+              <InfoText
+                text={formatBTC(data.income.net.balance.btc)}
+                color={'yellow'}
+                fz={'sm'}
+                tooltipText={t('lost-explained')}
+                weight={500}
+                width={isMobile ? 300 : 400}
+              ></InfoText>
+            )}
+          </Group>
+          <Group position={'apart'} mt={'0'} mb={'0'}>
+            <Text fz={'xs'} color={'dimmed'}>
+              {hasData
+                ? formatParenthesis(
+                    t('over-start') +
+                      formatPeriod(data.site.uptime.onPeriod, t),
+                  )
+                : ''}
+            </Text>
+            <Text fz={'xs'} color={'dimmed'}>
+              {formatSimpleUsd(data.income.net.balance.usd, hasData)}
+            </Text>
+          </Group>
+        </>
+      )}
+      {TAXE_FREE_MODE && (
+        <>
+          <Group position={'apart'} mt={'0'} mb={'0'}>
+            <InfoText
+              text={t('income-taxe-free')}
+              color={'dimmed'}
+              fz={'sm'}
+              tooltipText={t('income-taxe-free-explained')}
+              width={isMobile ? 300 : 400}
+            ></InfoText>
+
+            {!lost && (
+              <Text weight={500} fz={'sm'} align={'center'}>
+                {formatBTC(data.income.grossTaxeFree.balance.btc, hasData)}
+              </Text>
+            )}
+            {lost && (
+              <InfoText
+                text={formatBTC(data.income.grossTaxeFree.balance.btc)}
+                color={'yellow'}
+                fz={'sm'}
+                tooltipText={t('lost-explained')}
+                weight={500}
+                width={isMobile ? 300 : 400}
+              ></InfoText>
+            )}
+          </Group>
+          <Group position={'apart'} mt={'0'} mb={'0'}>
+            <Text fz={'xs'} color={'dimmed'}>
+              {hasData
+                ? formatParenthesis(
+                    t('over-start') +
+                      formatPeriod(data.site.uptime.onPeriod, t),
+                  )
+                : ''}
+            </Text>
+            <Text fz={'xs'} color={'dimmed'}>
+              {formatSimpleUsd(data.income.grossTaxeFree.balance.usd, hasData)}
+            </Text>
+          </Group>
+        </>
+      )}
     </div>
   );
 };

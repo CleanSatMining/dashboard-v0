@@ -13,9 +13,11 @@ import {
   calculateElectricityCostPerPeriod,
   calculateNetYield,
   calculateGrossYield,
+  calculateGrossYieldTaxeFree,
   calculateCostsAndEBITDAByPeriod,
 } from './pnl';
 import { getPeriodFromStart, getEquipementDepreciation } from './period';
+import { SiteCost } from 'src/types/mining/Site';
 
 //------------------------------------------------------------------------------------------------------------
 // WITH REDUX
@@ -132,13 +134,18 @@ export const getYieldBySite = (
   startDate: number,
   endDate: number,
   expenses: Expense[],
-): { net: Yield; gross: Yield } => {
+): { net: Yield; gross: Yield; grossTaxeFree: Yield } => {
   const netYield: { usd: number; btc: number; apr: number } = {
     usd: 0,
     btc: 0,
     apr: 0,
   };
   const grossYield: { usd: number; btc: number; apr: number } = {
+    usd: 0,
+    btc: 0,
+    apr: 0,
+  };
+  const grossYieldTaxeFree: { usd: number; btc: number; apr: number } = {
     usd: 0,
     btc: 0,
     apr: 0,
@@ -196,9 +203,32 @@ export const getYieldBySite = (
     grossYield.usd = usdIncome.toNumber();
     grossYield.btc = btcIncome.toNumber();
     grossYield.apr = apr.toNumber();
+
+    const {
+      apr: aprTaxeFree,
+      btcIncome: btcIncomeWithoutTaxe,
+      usdIncome: usdIncomeWithoutIncome,
+    } = calculateGrossYieldTaxeFree(
+      siteId,
+      siteBtcIncome,
+      btcPrice,
+      electricityCost,
+      period,
+      startDate,
+      endDate,
+      expenses,
+    );
+
+    grossYieldTaxeFree.usd = usdIncomeWithoutIncome.toNumber();
+    grossYieldTaxeFree.btc = btcIncomeWithoutTaxe.toNumber();
+    grossYieldTaxeFree.apr = aprTaxeFree.toNumber();
   }
 
-  return { net: netYield, gross: grossYield };
+  return {
+    net: netYield,
+    gross: grossYield,
+    grossTaxeFree: grossYieldTaxeFree,
+  };
 };
 
 /**
@@ -222,13 +252,18 @@ export const getUserYieldBySite = (
   startDate: number,
   endDate: number,
   expenses: Expense[],
-): { net: Yield; gross: Yield } => {
+): { net: Yield; gross: Yield; grossTaxeFree: Yield } => {
   const netYield: { usd: number; btc: number; apr: number } = {
     usd: 0,
     btc: 0,
     apr: 0,
   };
   const brutYield: { usd: number; btc: number; apr: number } = {
+    usd: 0,
+    btc: 0,
+    apr: 0,
+  };
+  const brutYieldTaxeFree: { usd: number; btc: number; apr: number } = {
     usd: 0,
     btc: 0,
     apr: 0,
@@ -266,9 +301,20 @@ export const getUserYieldBySite = (
     brutYield.btc = userShare.times(siteYield.gross.btc).toNumber();
     brutYield.usd = userShare.times(siteYield.gross.usd).toNumber();
     brutYield.apr = siteYield.gross.apr;
+    brutYieldTaxeFree.btc = userShare
+      .times(siteYield.grossTaxeFree.btc)
+      .toNumber();
+    brutYieldTaxeFree.usd = userShare
+      .times(siteYield.grossTaxeFree.usd)
+      .toNumber();
+    brutYieldTaxeFree.apr = siteYield.grossTaxeFree.apr;
   }
 
-  return { net: netYield, gross: brutYield };
+  return {
+    net: netYield,
+    gross: brutYield,
+    grossTaxeFree: brutYieldTaxeFree,
+  };
 };
 
 /**
@@ -416,24 +462,34 @@ export const getUserYield = (
   startDate: number,
   endDate: number,
   expenses: MiningExpenses,
-): { net: Yield; gross: Yield } => {
+): { net: Yield; gross: Yield; grossTaxeFree: Yield } => {
   const netYield: { usd: number; btc: number; apr: number } = {
     usd: 0,
     btc: 0,
     apr: 0,
   };
-  const brutYield: { usd: number; btc: number; apr: number } = {
+  const grossYield: { usd: number; btc: number; apr: number } = {
     usd: 0,
     btc: 0,
     apr: 0,
   };
+
+  const grossYieldTaxeFree: { usd: number; btc: number; apr: number } = {
+    usd: 0,
+    btc: 0,
+    apr: 0,
+  };
+
   if (miningState && userState && userState.byAddress[userAddress]) {
     let netBtc: BigNumber = new BigNumber(0);
     let netUsd: BigNumber = new BigNumber(0);
     let netApr: BigNumber = new BigNumber(0);
-    let brutBtc: BigNumber = new BigNumber(0);
-    let brutUsd: BigNumber = new BigNumber(0);
-    let brutApr: BigNumber = new BigNumber(0);
+    let grossBtc: BigNumber = new BigNumber(0);
+    let grossUsd: BigNumber = new BigNumber(0);
+    let grossApr: BigNumber = new BigNumber(0);
+    let grossBtcTaxeFree: BigNumber = new BigNumber(0);
+    let grossUsdTaxeFree: BigNumber = new BigNumber(0);
+    let grossAprTaxeFree: BigNumber = new BigNumber(0);
 
     const totalInvested: BigNumber = getUserInvestment(userState, userAddress);
     for (const siteId of getUserSiteIds(userState, userAddress)) {
@@ -460,20 +516,32 @@ export const getUserYield = (
       netBtc = netBtc.plus(siteYield.net.btc);
       netUsd = netUsd.plus(siteYield.net.usd);
       netApr = netApr.plus(siteInvestementShare.times(siteYield.net.apr));
-      brutBtc = brutBtc.plus(siteYield.gross.btc);
-      brutUsd = brutUsd.plus(siteYield.gross.usd);
-      brutApr = brutApr.plus(siteInvestementShare.times(siteYield.gross.apr));
+      grossBtc = grossBtc.plus(siteYield.gross.btc);
+      grossUsd = grossUsd.plus(siteYield.gross.usd);
+      grossApr = grossApr.plus(siteInvestementShare.times(siteYield.gross.apr));
+      grossBtcTaxeFree = grossBtcTaxeFree.plus(siteYield.grossTaxeFree.btc);
+      grossUsdTaxeFree = grossUsdTaxeFree.plus(siteYield.grossTaxeFree.usd);
+      grossAprTaxeFree = grossAprTaxeFree.plus(
+        siteInvestementShare.times(siteYield.grossTaxeFree.apr),
+      );
     }
 
     netYield.btc = netBtc.toNumber();
     netYield.usd = netUsd.toNumber();
     netYield.apr = netApr.toNumber();
-    brutYield.btc = brutBtc.toNumber();
-    brutYield.usd = brutUsd.toNumber();
-    brutYield.apr = brutApr.toNumber();
+    grossYield.btc = grossBtc.toNumber();
+    grossYield.usd = grossUsd.toNumber();
+    grossYield.apr = grossApr.toNumber();
+    grossYieldTaxeFree.btc = grossBtcTaxeFree.toNumber();
+    grossYieldTaxeFree.usd = grossUsdTaxeFree.toNumber();
+    grossYieldTaxeFree.apr = grossAprTaxeFree.toNumber();
   }
 
-  return { net: netYield, gross: brutYield };
+  return {
+    net: netYield,
+    gross: grossYield,
+    grossTaxeFree: grossYieldTaxeFree,
+  };
 };
 
 /**
@@ -613,14 +681,7 @@ export function getSiteExpensesByPeriod(
   startDate: number,
   endDate: number,
   expenses: Expense[],
-): {
-  total: number;
-  electricity: number;
-  feeCSM: number;
-  feeOperator: number;
-  taxe: number;
-  provision: number;
-} {
+): SiteCost {
   const site: Site = SITES[siteId as SiteID];
   const { realPeriod, realStartTimestamp } = getPeriodFromStart(
     site,
@@ -671,6 +732,10 @@ export function getSiteExpensesByPeriod(
       .plus(feeOperator)
       .plus(taxe)
       .plus(provision)
+      .toNumber(),
+    totalTaxeFree: estimatedElectricityCost
+      .plus(feeCsm)
+      .plus(feeOperator)
       .toNumber(),
     electricity: estimatedElectricityCost.toNumber(),
     feeCSM: feeCsm.toNumber(),

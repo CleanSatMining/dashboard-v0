@@ -11,6 +11,7 @@
     "apy": "Rendement annuel",
     "site-income": "Revenu du site brut",
     "site-net-income": "Revenu du site net",
+    "site-taxe-free-income": "Revenu du site brut",
     "token-percent": " des tokens possédés",
     "my-tokens": "Mes tokens",
     "my-income": "Mes revenus estimés",
@@ -41,12 +42,16 @@
     "incomes": "Revenus estimés",
     "incomes-net": "Revenus nets estimés",
     "incomes-gross": "Revenus bruts estimés",
+    "incomes-taxe-free": "Revenus bruts estimés",
     "incomes-net-short": "Revenus nets est.",
     "incomes-gross-short": "Revenus bruts est.",
+    "incomes-taxe-free-short": "Revenus bruts est.",
     "income-net": "Net estimé",
     "income-gross": "Brut estimé",
+    "income-taxe-free": "Brut estimé",
     "income-net-explained": "Le revenu net est le résultat de la soustraction entre les bitcoins obtenus par le minage et les dépenses encourues. Ces dépenses englobent les coûts liés à l'électricité, les frais opérationnels, les charges CSM, ainsi que les impôts. Est également soustrait, une provision pour faire face à l'obsolescence des équipements de minage. Cette provision est conservée en BTC dans la trésorerie de l'entreprise.",
     "income-gross-explained": "Le revenu brut est le résultat de la soustraction entre les bitcoins obtenus par le minage et les dépenses encourues. Ces dépenses englobent les coûts liés à l'électricité, les frais opérationnels, les charges CSM et les taxes, mais ne tient pas compte de la provision pour faire face à l'obsolescence des équipements de minage.",
+    "income-taxe-free-explained": "Le revenu brut est le résultat de la soustraction entre les bitcoins obtenus par le minage et les dépenses encourues. Ces dépenses englobent les coûts liés à l'électricité, les frais opérationnels, les charges CSM, mais ne tient pas compte de la provision pour faire face à l'obsolescence des équipements de minage, ni des impôts éventuels sur les bénéfices de la société.",
     "income-detail": "Voir les détails du revenu.",
     "over": " sur ",
     "over-start": "sur ",
@@ -60,7 +65,7 @@
     "income-explained": "Les revenus présentés ici ne sont que des estimations. Les dividendes à verser aux actionnaires des sociétés CleanSat Mining seront calculés précisément de manière trimestrielle lors d'un bilan comptable intermédiaire.",
     "operator": "Gestionnaire de la ferme",
     "toCome": "A venir",
-    "Adding": "Ajout de",
+    "Adding": "Mise en service de",
     "Withrawing": "Retrait de"
   }
 }

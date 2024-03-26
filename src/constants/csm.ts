@@ -6,6 +6,7 @@ export const FEE_RATE_BBGS = 0.05;
 export const PROVISION_RATE = 0.2;
 export const SWISS_TAXE = 0.1357;
 export const ACTIVATE_DISPLAY_APY = false;
+export const TAXE_FREE_MODE = true;
 
 export const ULTRA_RARE: UltraRare = {
   collection: 'CleanSat Mining Ultra-Rare',
@@ -322,7 +323,7 @@ export const SITES: Record<SiteID, Site> = {
       },
       operational: {
         operator: {
-          includeWithElectricity: false,
+          includeWithElectricity: true,
           rate: 0,
         },
         csm: 0.05,

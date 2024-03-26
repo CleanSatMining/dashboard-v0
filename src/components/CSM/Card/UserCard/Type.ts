@@ -1,6 +1,7 @@
 import { HashratePeriod } from 'src/types/mining/Mining';
 import { Income } from '../../../../types/mining/Site';
 import { Operator } from 'src/types/mining/Site';
+import { SiteCost } from 'src/types/mining/Site';
 
 export type CardData = {
   id: string;
@@ -13,6 +14,10 @@ export type CardData = {
       apy: number;
     };
     gross: {
+      balance: Income;
+      apy: number;
+    };
+    grossTaxeFree: {
       balance: Income;
       apy: number;
     };
@@ -47,16 +52,8 @@ export type CardData = {
       mined: Income;
       hashrate: number;
       earned: Income;
-      costs: CardCost;
+      earnedTaxFree: Income;
+      costs: SiteCost;
     };
   };
-};
-
-export type CardCost = {
-  total: number;
-  electricity: number;
-  feeCSM: number;
-  feeOperator: number;
-  taxe: number;
-  provision: number;
 };

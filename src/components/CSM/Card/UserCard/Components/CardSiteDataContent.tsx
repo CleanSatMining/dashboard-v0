@@ -32,6 +32,7 @@ import { btcPriceAtom } from 'src/states';
 import { API_SITE } from 'src/constants/apis';
 import { CleanSatMiningSite } from 'src/types/mining/Site';
 import { LINK_BLOCKCHAIN_EXPLORER_BTC } from 'src/constants/apis';
+import { TAXE_FREE_MODE } from 'src/constants/csm';
 
 export type CardSiteDataContentProps = {
   data: CardData;
@@ -51,6 +52,9 @@ export const CardSiteDataContent: FC<CardSiteDataContentProps> = ({
   const [siteData, setSiteData] = useState<CleanSatMiningSite | undefined>(
     undefined,
   );
+  const earned = TAXE_FREE_MODE
+    ? data.site.uptime.earnedTaxFree
+    : data.site.uptime.earned;
 
   useEffect(() => {
     const fetchSiteData = async () => {
@@ -147,7 +151,9 @@ export const CardSiteDataContent: FC<CardSiteDataContentProps> = ({
           <HoverCard.Target>
             <Flex gap={'xs'} align={'center'}>
               <Text fz={isMobile ? 'xs' : 'sm'} color={'dimmed'}>
-                {t('site-net-income')}
+                {TAXE_FREE_MODE
+                  ? t('site-taxe-free-income')
+                  : t('site-net-income')}
               </Text>
               <ActionIcon
                 size={'xs'}
@@ -165,7 +171,7 @@ export const CardSiteDataContent: FC<CardSiteDataContentProps> = ({
           </HoverCard.Dropdown>
         </HoverCard>
         <Text weight={500} fz={isMobile ? 'xs' : 'sm'}>
-          {formatBTC(data.site.uptime.earned.btc, hasData)}
+          {formatBTC(earned.btc, hasData)}
         </Text>
       </Group>
       <Group position={'apart'} mt={0} mb={0}>
@@ -177,7 +183,7 @@ export const CardSiteDataContent: FC<CardSiteDataContentProps> = ({
             : ''}
         </Text>
         <Text fz={'xs'} color={'dimmed'}>
-          {formatSimpleUsd(data.site.uptime.earned.usd, hasData)}
+          {formatSimpleUsd(earned.usd, hasData)}
         </Text>
       </Group>
 
