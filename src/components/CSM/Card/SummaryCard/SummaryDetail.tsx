@@ -4,6 +4,8 @@ import { Accordion, Group, Text } from '@mantine/core';
 
 import { Data } from './SummaryType';
 import { useTranslation } from 'react-i18next';
+import { useAtom } from 'jotai';
+import { userDetailActivatedAtom } from 'src/states';
 
 type SummaryDetailProps = {
   data: Data[];
@@ -11,8 +13,13 @@ type SummaryDetailProps = {
 
 const _SummaryDetailCard: FC<SummaryDetailProps> = ({ data }) => {
   const { t } = useTranslation('site', { keyPrefix: 'card' });
+  const [detailDisplayed, setDetailDisplayed] = useAtom(
+    userDetailActivatedAtom,
+  );
   return (
     <Accordion
+      value={detailDisplayed ? 'detail' : null}
+      onChange={(value) => setDetailDisplayed(value === 'detail')}
       radius={'xl'}
       variant={'separated'}
       defaultValue={''}
