@@ -16,8 +16,6 @@ import { TablerIcon } from '@tabler/icons';
 import { Data } from './SummaryType';
 import { SummaryDetailCard } from './SummaryDetail';
 import { InfoTitle } from 'src/components/InfoText/InfoText';
-import { useAtom } from 'jotai';
-import { userDetailActivatedAtom } from 'src/states';
 
 const useStyle = createStyles((theme: MantineTheme) => ({
   brand: {
@@ -45,9 +43,7 @@ const _SummaryCard: FC<SummaryProps> = ({
   warning,
 }) => {
   const { classes } = useStyle();
-  const [detailDisplayed, setDetailDisplayed] = useAtom(
-    userDetailActivatedAtom,
-  );
+
   const isMobile = useMediaQuery('(max-width: 40em)');
   const up4 = useMediaQuery('(max-width: 1520px)');
   const down4 = useMediaQuery('(min-width: 1199px)');
