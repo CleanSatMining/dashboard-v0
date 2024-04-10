@@ -53,22 +53,26 @@ async function getExpenses(siteId: string): Promise<Expense[]> {
   const expensesCol = collection(db, `sites/${siteId}/expenses`);
   const expenseSnapshot = await getDocs(expensesCol);
   const expenseList = expenseSnapshot.docs.map((doc) => doc.data());
+  console.log(
+    'Firebase expenses site',
+    siteId,
+    JSON.stringify(expenseList, null, 4),
+  );
 
-  const ret = expenseList.map((expense) => {
-    const dateSeconde = expense.date.seconds as string;
+  const ret = expenseList
+    .filter((e) => (e.date = undefined))
+    .map((expense) => {
+      const dateSeconde = expense.date.seconds as string;
 
-    const e: Expense = {
-      csm: expense.csm as number,
-      operator: expense.operator as number,
-      electricity: expense.electricity as number,
-      dateTime: parseInt(dateSeconde) * 1000,
-      siteId: siteId,
-    };
-
-    return e;
-  });
-
-  //console.log('Firebase expenses site', siteId, JSON.stringify(ret, null, 4));
+      const e: Expense = {
+        csm: expense.csm as number,
+        operator: expense.operator as number,
+        electricity: expense.electricity as number,
+        dateTime: parseInt(dateSeconde) * 1000,
+        siteId: siteId,
+      };
+      return e;
+    });
 
   return ret;
 }
