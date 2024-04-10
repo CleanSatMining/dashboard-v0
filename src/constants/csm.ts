@@ -275,7 +275,6 @@ export const SITES: Record<SiteID, Site> = {
       xpub: 'xpub6Bk1T4YnHrQ1eBy5tYoz1HAhkwjGh2Avg43odqjQPVL7KA29eSHr46zg61WiYbk5f5FkR4z6fWfrp9XxieecHMbPZKDg5wFxTqnQGDdv8fz',
     },
   },
-
   [SiteID.delta]: {
     name: 'CSM Delta',
     location: {
