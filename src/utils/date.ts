@@ -212,7 +212,7 @@ export function getTimestampEndOfTheDay(timestamp: number): number {
   targetDate.setHours(23, 59, 59, 999);
 
   // Return the timestamp
-  return targetDate.getTime();
+  return getTimestampUTC(targetDate);
 }
 
 export function calculateDaysBetweenDateAndToday(timestamp: number): number {
