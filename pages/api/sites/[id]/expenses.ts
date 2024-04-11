@@ -60,7 +60,7 @@ async function getExpenses(siteId: string): Promise<Expense[]> {
   );
 
   const ret = expenseList
-    .filter((e) => (e.date = undefined))
+    .filter((e) => e.date !== undefined)
     .map((expense) => {
       const dateSeconde = expense.date.seconds as string;
 
