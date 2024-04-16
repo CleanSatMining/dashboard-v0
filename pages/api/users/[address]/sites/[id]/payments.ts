@@ -18,7 +18,7 @@ export default async function handler(
       .json({ error: "L'id du site et l'adresse utilisateur sont requis." });
   }
 
-  if (id === SiteID.alpha) {
+  if (false) {
     try {
       // Charge les données depuis le fichier
       const data: UserData[] = (await downloadFile()).filter(
