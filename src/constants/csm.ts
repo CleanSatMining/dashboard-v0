@@ -332,8 +332,8 @@ export const SITES: Record<SiteID, Site> = {
       },
     },
     vault: {
-      btcAddress: '',
-      xpub: '',
+      btcAddress: 'bc1qndeglskqunrpe2mfcmxjn7myce9szsj8w9tkws',
+      xpub: 'xpub6Bk1T4YnHrQ1zT6kqCiVhzMeNkJFjsoNQsBzkGqFf2pNG3Nbq2uFqyB2d4U8ezqwNt7P9HxVZAHEnqk1BfWr6gAihjXJuMJKc6yKqYDZJcJ',
     },
   },
 };
