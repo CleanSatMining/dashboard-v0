@@ -231,6 +231,7 @@ export const CardSiteDataContent: FC<CardSiteDataContentProps> = ({
                     objectFit: 'contain',
                     width: '100%',
                     height: '100%',
+                    borderRadius: '10%',
                   }}
                 />
               </Tooltip>

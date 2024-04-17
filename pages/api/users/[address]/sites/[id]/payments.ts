@@ -43,7 +43,8 @@ export default async function handler(
         .json({ success: false, error: 'Erreur serveur interne.' });
     }
   } else {
-    return res.status(404).json({ error: "L'id du site n'est pas trouvé." });
+    return res.status(200).json({ success: true, data: [] });
+    //return res.status(404).json({ error: "L'id du site n'est pas trouvé." });
   }
 }
 
