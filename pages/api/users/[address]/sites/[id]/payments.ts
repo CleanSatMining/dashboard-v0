@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 import { app } from 'src/database/firebase';
-import { SiteID } from 'src/constants/csm';
 import { UserData, AnonymeUserData } from 'src/types/payments';
 
 /* eslint-disable */
