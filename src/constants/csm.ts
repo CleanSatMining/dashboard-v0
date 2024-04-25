@@ -252,7 +252,7 @@ export const SITES: Record<SiteID, Site> = {
         },
       ],
       electricity: {
-        usdPricePerKWH: 0.063,
+        usdPricePerKWH: 0.082,
       },
     },
     fees: {
