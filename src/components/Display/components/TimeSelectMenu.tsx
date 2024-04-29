@@ -8,20 +8,10 @@ import {
 } from '@mantine/core';
 
 import { useTranslation } from 'react-i18next';
-import {
-  IconChevronUp,
-  IconCalendarDue,
-  IconCalendarEvent,
-  IconCalendarPlus,
-  IconCalendarTime,
-  IconCalendar,
-  IconClock,
-  IconChevronDown,
-  IconSearch,
-} from '@tabler/icons';
+import { IconChevronUp, IconChevronDown, IconSearch } from '@tabler/icons';
 import { DateInput, DateValue } from '@mantine/dates';
 import { PredefinedPeriods } from './Types';
-import { FIRST_OF_MAY } from './Utils';
+import { FIRST_OF_MAY, getCalendarIcon } from './Utils';
 import { getDateYesterday } from 'src/utils/date';
 
 interface TimeSelectMenuProps {
@@ -93,112 +83,23 @@ export const TimeSelectMenu: React.FC<TimeSelectMenuProps> = ({
 
       <Menu.Dropdown>
         <Menu.Label>{t('predefinedPeriods')}</Menu.Label>
+        {Object.values(PredefinedPeriods).map((period) => (
+          <Menu.Item
+            key={period}
+            icon={getCalendarIcon(period, 14)}
+            onClick={() => handlePredefinedPeriodClick(period)}
+            color={
+              menuLabel === t(period)
+                ? theme.colorScheme === 'light'
+                  ? 'lime'
+                  : 'brand'
+                : undefined
+            }
+          >
+            {t(period)}
+          </Menu.Item>
+        ))}
 
-        <Menu.Item
-          icon={<IconClock size={14} />}
-          onClick={() =>
-            handlePredefinedPeriodClick(PredefinedPeriods.Last24Hours)
-          }
-          color={
-            menuLabel === t(PredefinedPeriods.Last24Hours)
-              ? theme.colorScheme === 'light'
-                ? 'lime'
-                : 'brand'
-              : undefined
-          }
-        >
-          {t(PredefinedPeriods.Last24Hours)}
-        </Menu.Item>
-        <Menu.Item
-          icon={<IconCalendarTime size={14} />}
-          onClick={() =>
-            handlePredefinedPeriodClick(PredefinedPeriods.Last7Days)
-          }
-          color={
-            menuLabel === t(PredefinedPeriods.Last7Days)
-              ? theme.colorScheme === 'light'
-                ? 'lime'
-                : 'brand'
-              : undefined
-          }
-        >
-          {t(PredefinedPeriods.Last7Days)}
-        </Menu.Item>
-        <Menu.Item
-          icon={<IconCalendarTime size={14} />}
-          onClick={() =>
-            handlePredefinedPeriodClick(PredefinedPeriods.Last30Days)
-          }
-          color={
-            menuLabel === t(PredefinedPeriods.Last30Days)
-              ? theme.colorScheme === 'light'
-                ? 'lime'
-                : 'brand'
-              : undefined
-          }
-        >
-          {t(PredefinedPeriods.Last30Days)}
-        </Menu.Item>
-        <Menu.Item
-          icon={<IconCalendarDue size={14} />}
-          onClick={() =>
-            handlePredefinedPeriodClick(PredefinedPeriods.CurrentMonth)
-          }
-          color={
-            menuLabel === t(PredefinedPeriods.CurrentMonth)
-              ? theme.colorScheme === 'light'
-                ? 'lime'
-                : 'brand'
-              : undefined
-          }
-        >
-          {t(PredefinedPeriods.CurrentMonth)}
-        </Menu.Item>
-        <Menu.Item
-          icon={<IconCalendarEvent size={14} />}
-          onClick={() =>
-            handlePredefinedPeriodClick(PredefinedPeriods.LastMonth)
-          }
-          color={
-            menuLabel === t(PredefinedPeriods.LastMonth)
-              ? theme.colorScheme === 'light'
-                ? 'lime'
-                : 'brand'
-              : undefined
-          }
-        >
-          {t(PredefinedPeriods.LastMonth)}
-        </Menu.Item>
-        <Menu.Item
-          icon={<IconCalendarPlus size={14} />}
-          onClick={() =>
-            handlePredefinedPeriodClick(PredefinedPeriods.Last3Months)
-          }
-          color={
-            menuLabel === t(PredefinedPeriods.Last3Months)
-              ? theme.colorScheme === 'light'
-                ? 'lime'
-                : 'brand'
-              : undefined
-          }
-        >
-          {t(PredefinedPeriods.Last3Months)}
-        </Menu.Item>
-        <Menu.Item
-          icon={<IconCalendar size={14} />}
-          onClick={() =>
-            handlePredefinedPeriodClick(PredefinedPeriods.FromStart)
-          }
-          color={
-            menuLabel === t(PredefinedPeriods.FromStart)
-              ? theme.colorScheme === 'light'
-                ? 'lime'
-                : 'brand'
-              : undefined
-          }
-        >
-          {t(PredefinedPeriods.FromStart)}
-        </Menu.Item>
         <Menu.Divider />
 
         <Menu.Label>

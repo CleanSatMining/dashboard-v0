@@ -21,17 +21,14 @@ import {
   calculateDaysBetweenDateAndToday,
   getTimestampLastDayOfNMonthAgo,
   getTimestampEndOfTheDay,
+  calculateDaysBetweenDates,
 } from 'src/utils/date';
-
-import { calculateDaysBetweenDates } from 'src/utils/date';
 
 import { TimeSelectDrawer } from './TimeSelectDrawer';
 import { TimeSelectMenu } from './TimeSelectMenu';
 
 import { TimeRange } from './TimeRange';
 import { useDisclosure } from '@mantine/hooks';
-import { BtcPrice } from '../../CSM/Indicators/components/BtcPrice';
-import { Networkoverview } from '../../CSM/Indicators/components/NetworkOverview';
 import { NetworkUpdateTime } from '../../CSM/Indicators/components/NetworkUpdateTime';
 import {
   getMidnightTimestamp,

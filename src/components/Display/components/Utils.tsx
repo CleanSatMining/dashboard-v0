@@ -5,35 +5,40 @@ import {
   IconCalendarPlus,
   IconCalendarTime,
   IconClock,
-  TablerIcon,
 } from '@tabler/icons';
 import { PredefinedPeriods } from './Types';
 export const FIRST_OF_MAY = 1682892000000;
 export const START_DATE = 1687212000000;
 
-export function getCalendarIcon(period: PredefinedPeriods): TablerIcon {
-  let Icon = IconCalendar;
+export function getCalendarIcon(
+  period: PredefinedPeriods,
+  size: number | string,
+  stroke: number | string | undefined = undefined,
+): React.ReactNode {
+  let Icon = <IconCalendar size={size}></IconCalendar>;
   switch (period) {
     case PredefinedPeriods.Last24Hours:
-      Icon = IconClock;
+      Icon = <IconClock size={size} stroke={stroke}></IconClock>;
       break;
     case PredefinedPeriods.Last7Days:
-      Icon = IconCalendarTime;
+      Icon = <IconCalendarTime size={size} stroke={stroke}></IconCalendarTime>;
       break;
     case PredefinedPeriods.Last30Days:
-      Icon = IconCalendarTime;
+      Icon = <IconCalendarTime size={size} stroke={stroke}></IconCalendarTime>;
       break;
     case PredefinedPeriods.CurrentMonth:
-      Icon = IconCalendarDue;
+      Icon = <IconCalendarDue size={size} stroke={stroke}></IconCalendarDue>;
       break;
     case PredefinedPeriods.LastMonth:
-      Icon = IconCalendarEvent;
+      Icon = (
+        <IconCalendarEvent size={size} stroke={stroke}></IconCalendarEvent>
+      );
       break;
     case PredefinedPeriods.Last3Months:
-      Icon = IconCalendarPlus;
+      Icon = <IconCalendarPlus size={size} stroke={stroke}></IconCalendarPlus>;
       break;
     case PredefinedPeriods.FromStart:
-      Icon = IconCalendar;
+      Icon = <IconCalendar size={size} stroke={stroke}></IconCalendar>;
       break;
     // Add cases for other predefined periods as needed
     default:

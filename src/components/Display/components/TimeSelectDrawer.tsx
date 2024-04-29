@@ -12,18 +12,10 @@ import {
 } from '@mantine/core';
 
 import { useTranslation } from 'react-i18next';
-import {
-  IconCalendar,
-  IconCalendarDue,
-  IconCalendarEvent,
-  IconCalendarPlus,
-  IconCalendarTime,
-  IconClock,
-  IconAdjustments,
-} from '@tabler/icons';
+import { IconCalendar, IconCalendarTime, IconAdjustments } from '@tabler/icons';
 import { DateInput, DateValue } from '@mantine/dates';
 import { PredefinedPeriods } from './Types';
-import { FIRST_OF_MAY } from './Utils';
+import { FIRST_OF_MAY, getCalendarIcon } from './Utils';
 import { getDateYesterday } from 'src/utils/date';
 
 import { IconChevronRight, IconActivity, IconBolt } from '@tabler/icons';
@@ -109,60 +101,20 @@ export const TimeSelectDrawer: React.FC<TimeSelectDrawerProps> = ({
               menuLabel !== t('customDuration') && menuLabel !== t('customDate')
             }
           >
-            <NavLink
-              label={t(PredefinedPeriods.Last24Hours)}
-              icon={<IconClock size={'1rem'} stroke={1.5} />}
-              onClick={() =>
-                handlePredefinedPeriodClick(PredefinedPeriods.Last24Hours)
-              }
-              active={menuLabel === t(PredefinedPeriods.Last24Hours)}
-              variant={'subtle'}
-            />
-            <NavLink
-              label={t(PredefinedPeriods.Last7Days)}
-              icon={<IconCalendarTime size={'1rem'} stroke={1.5} />}
-              onClick={() =>
-                handlePredefinedPeriodClick(PredefinedPeriods.Last7Days)
-              }
-              active={menuLabel === t(PredefinedPeriods.Last7Days)}
-              variant={'subtle'}
-            />
-            <NavLink
-              label={t(PredefinedPeriods.Last30Days)}
-              icon={<IconCalendarTime size={'1rem'} stroke={1.5} />}
-              onClick={() =>
-                handlePredefinedPeriodClick(PredefinedPeriods.Last30Days)
-              }
-              active={menuLabel === t(PredefinedPeriods.Last30Days)}
-              variant={'subtle'}
-            />
-            <NavLink
-              label={t(PredefinedPeriods.CurrentMonth)}
-              icon={<IconCalendarDue size={'1rem'} stroke={1.5} />}
-              onClick={() =>
-                handlePredefinedPeriodClick(PredefinedPeriods.CurrentMonth)
-              }
-              active={menuLabel === t(PredefinedPeriods.CurrentMonth)}
-              variant={'subtle'}
-            />
-            <NavLink
-              label={t(PredefinedPeriods.LastMonth)}
-              icon={<IconCalendarEvent size={'1rem'} stroke={1.5} />}
-              onClick={() =>
-                handlePredefinedPeriodClick(PredefinedPeriods.LastMonth)
-              }
-              active={menuLabel === t(PredefinedPeriods.LastMonth)}
-              variant={'subtle'}
-            />
-            <NavLink
-              label={t(PredefinedPeriods.Last3Months)}
-              icon={<IconCalendarPlus size={'1rem'} stroke={1.5} />}
-              onClick={() =>
-                handlePredefinedPeriodClick(PredefinedPeriods.Last3Months)
-              }
-              active={menuLabel === t(PredefinedPeriods.Last3Months)}
-              variant={'subtle'}
-            />
+            {Object.values(PredefinedPeriods).map(
+              (
+                period, // PredefinedPeriods.All is an array of predefined periods
+              ) => (
+                <NavLink
+                  key={period}
+                  label={t(period)}
+                  icon={getCalendarIcon(period, '1rem', 1.5)}
+                  onClick={() => handlePredefinedPeriodClick(period)}
+                  active={menuLabel === t(period)}
+                  variant={'subtle'}
+                />
+              ),
+            )}
           </NavLink>
           <NavLink
             label={
