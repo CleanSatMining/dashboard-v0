@@ -304,7 +304,7 @@ export const SITES: Record<SiteID, Site> = {
         {
           date: '2024-02-29T00:00:00+00:00',
           model: 'Antminer S19k pro',
-          powerW: 3300,
+          powerW: 2760,
           units: 827,
           hashrateHs: 117000000000000,
           intallationCosts: {
