@@ -399,14 +399,20 @@ export function calculateCostsAndEBITDAByPeriod(
   const csmBillingExpenseUsd = csmBillingExpense.times(btcPrice);
   const operatorBillingExpenseUsd = operatorBillingExpense.times(btcPrice);
 
-  const estimatedFeeCsmUsd = usdIncome
-    .minus(electricityCost)
-    .times(feeParameters.operational.csm)
-    .times(unbilledRate);
-  const estimatedFeeOperatorUsd = usdIncome
-    .minus(electricityCost)
-    .times(feeParameters.operational.operator.rate)
-    .times(unbilledRate);
+  const estimatedFeeCsmUsd = BigNumber.maximum(
+    usdIncome
+      .minus(electricityCost)
+      .times(feeParameters.operational.csm)
+      .times(unbilledRate),
+    0,
+  );
+  const estimatedFeeOperatorUsd = BigNumber.maximum(
+    usdIncome
+      .minus(electricityCost)
+      .times(feeParameters.operational.operator.rate)
+      .times(unbilledRate),
+    0,
+  );
   const EBITDA = usdIncome
     .minus(electricityCost)
     .minus(estimatedFeeCsmUsd)
