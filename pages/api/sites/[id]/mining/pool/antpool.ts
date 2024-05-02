@@ -61,7 +61,8 @@ export async function antpoolHistory(
     console.log('ANTPOOL API apiKey', apiKey);
     console.log('ANTPOOL API apiSign', apiSign);
     const ret = await _antPoolHistory(siteId, first, apiKey, apiSign, url);
-    if (ret.days === undefined) return { days: [], error: ret.error };
+    if (ret.days === undefined)
+      return { days: [], error: ret.error, updated: new Date().getTime() };
     const result = new Map(ret.days.map((i) => [i.timestamp, i]));
     returns.push(result);
   }
@@ -112,8 +113,8 @@ export async function antpoolHistory(
   const days: MiningSummaryPerDay[] = convertAPIDataToStandard(siteId, [
     ...sumData.values(),
   ]);
-
-  return { days };
+  const updated = new Date().getTime();
+  return { days, updated };
 }
 
 async function _antPoolHistory(

@@ -67,11 +67,13 @@ export async function luxorHistory(
       const response: RevenueHistory = await result.json();
       //console.log(JSON.stringify(response, null, 4));
       const history: APIMiningHistoryResponse = {
+        updated: new Date().getTime(),
         days: response.data.getHashrateScoreHistory.nodes,
       };
       json = history; // JSON.stringify(history, null);
     } else {
-      const erreur = {
+      const erreur: APIMiningHistoryResponse = {
+        updated: new Date().getTime(),
         days: [],
         error: await result.json(),
       };

@@ -9,10 +9,11 @@ import { antpoolHistory } from './pool/antpool';
 import { luxorHistory } from './pool/luxor';
 import { foundryHistory } from './pool/foundry';
 import { LRUCache } from 'lru-cache';
+import { getDayOfMonthUTC } from 'src/utils/date';
 
-// cache 60 min
+// cache 60 min * 24 = 1 day
 /* eslint-disable */
-const cache = new LRUCache<string, any>({ max: 500, ttl: 1000 * 60 * 60 });
+const cache = new LRUCache<string, any>({ max: 500, ttl: 1000 * 60 * 60 * 24 });
 /* eslint-enable */
 
 const handler: NextApiHandler = async (
@@ -43,9 +44,17 @@ const handler: NextApiHandler = async (
   const cacheKey = `${siteId}-${first}`;
 
   // Check if the response is cached
-  const cachedData = cache.get(cacheKey);
-  if (cachedData) {
-    return res.status(200).json(cachedData);
+  const cachedData: APIMiningHistoryResponse = cache.get(cacheKey);
+  if (cachedData && cachedData.updated > 0) {
+    const cacheDay = getDayOfMonthUTC(cachedData.updated);
+    const currentDay = getDayOfMonthUTC(new Date().getTime());
+
+    if (cacheDay !== currentDay) {
+      console.log('CACHE EXPIRED', cacheDay, currentDay);
+    } else {
+      console.log('PASS WITH CACHE');
+      return res.status(200).json(cachedData);
+    }
   }
 
   const json: APIMiningHistoryResponse | undefined = await getMiningHistory(
@@ -115,6 +124,7 @@ export async function getMiningHistory(
       site.api.url,
     );
     const history = {
+      updated: new Date().getTime(),
       days: [],
     };
     json = history;

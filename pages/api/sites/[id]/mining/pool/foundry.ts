@@ -1,5 +1,4 @@
 import BigNumber from 'bignumber.js';
-import * as crypto from 'crypto';
 
 import { SITES, SiteID } from 'src/constants/csm';
 import { MiningSummaryPerDay } from 'src/types/mining/Mining';
@@ -61,7 +60,9 @@ export async function foundryHistory(
     ret.days,
   );
 
-  return { days };
+  const updated = new Date().getTime();
+
+  return { updated, days };
 }
 
 async function _foundryHistory(

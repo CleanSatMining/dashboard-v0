@@ -257,3 +257,13 @@ export function formatDateToISOString(inputDate: Date): string {
   const isoString = inputDate.toISOString();
   return isoString.substring(0, 23) + '+00:00';
 }
+
+export function getDayOfMonthUTC(timestamp: number): number {
+  // Create a new Date object from the timestamp
+  const date = new Date(timestamp);
+
+  // Get the day of the month using Date object methods
+  const dayOfMonthUTC = date.getUTCDate(); // getUTCDate() returns the day of the month using UTC time
+
+  return dayOfMonthUTC;
+}
