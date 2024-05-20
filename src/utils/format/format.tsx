@@ -278,10 +278,10 @@ export function formatTimestamp(timestamp: number): string {
   const day = dateCopy.getUTCDate().toString().padStart(2, '0');
   const hours = dateCopy.getUTCHours().toString().padStart(2, '0');
   const minutes = dateCopy.getUTCMinutes().toString().padStart(2, '0');
-  const seconds = dateCopy.getUTCSeconds().toString().padStart(2, '0');
+  //const seconds = dateCopy.getUTCSeconds().toString().padStart(2, '0');
 
   // Retourner la date formatée en UTC
-  return `${day}/${month}/${year} ${hours}:${minutes}:${seconds} UTC`;
+  return `${day}/${month}/${year} ${hours}:${minutes} UTC`;
 }
 
 export function formatTimestampDay(timestamp: number): string {

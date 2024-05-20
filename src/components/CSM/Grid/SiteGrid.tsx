@@ -87,8 +87,13 @@ const _SiteGrid: FC<SiteProps> = ({
           getSite(id).status === MiningStatus.inactive)),
   );
   return (
-    <Flex gap={0} direction={'column'} align={'center'}>
-      <Grid gutter={0} gutterMd={25} gutterXs={'xs'} style={{ width: '100%' }}>
+    <Flex
+      gap={0}
+      direction={'column'}
+      align={'center'}
+      style={{ marginLeft: '-8px', marginRight: '-8px' }}
+    >
+      <Grid style={{ width: '100%' }}>
         {displayedSites.map((i) => (
           <Grid.Col md={6} lg={4} key={`grid-${i}`}>
             <SiteCard

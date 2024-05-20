@@ -15,6 +15,7 @@ interface IndicatorProps {
   label?: string;
   marginLeft?: string;
   withBorder?: boolean;
+  isMobile?: boolean;
 }
 
 export const Indicator: FC<IndicatorProps> = ({
@@ -23,6 +24,7 @@ export const Indicator: FC<IndicatorProps> = ({
   label,
   marginLeft,
   withBorder = true,
+  isMobile = false,
 }) => {
   const theme = useMantineTheme();
   return (
@@ -40,26 +42,49 @@ export const Indicator: FC<IndicatorProps> = ({
               theme.colorScheme === 'dark' ? theme.colors.dark[6] : undefined,
           }}
         >
-          <Flex direction={'column'}>
-            {label && (
-              <Text size={'sm'} color={'dimmed'} fs={'italic'}>
-                {label}
-              </Text>
-            )}
-            <Group position={'left'} spacing={5}>
-              {imageUrl && (
-                <Avatar
-                  src={imageUrl}
-                  size={16}
-                  sx={{ margin: '0px' }}
-                  radius={0}
-                ></Avatar>
+          {isMobile ? (
+            <Group position={'apart'} spacing={5}>
+              {label && (
+                <Text size={'xs'} color={'dimmed'} fs={'italic'}>
+                  {label}
+                </Text>
               )}
-              <Text fw={'bold'} size={16}>
-                {value}
-              </Text>
+              <Group position={'left'} spacing={5}>
+                {imageUrl && (
+                  <Avatar
+                    src={imageUrl}
+                    size={16}
+                    sx={{ margin: '0px' }}
+                    radius={0}
+                  ></Avatar>
+                )}
+                <Text fw={'bold'} size={'xs'}>
+                  {value}
+                </Text>
+              </Group>
             </Group>
-          </Flex>
+          ) : (
+            <Flex direction={'column'}>
+              {label && (
+                <Text size={'sm'} color={'dimmed'} fs={'italic'}>
+                  {label}
+                </Text>
+              )}
+              <Group position={'left'} spacing={5}>
+                {imageUrl && (
+                  <Avatar
+                    src={imageUrl}
+                    size={16}
+                    sx={{ margin: '0px' }}
+                    radius={0}
+                  ></Avatar>
+                )}
+                <Text fw={'bold'} size={16}>
+                  {value}
+                </Text>
+              </Group>
+            </Flex>
+          )}
         </Paper>
       }
     </>

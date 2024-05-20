@@ -10,12 +10,14 @@ interface NetworkUpdateTimeProps {
   marginLeft?: string;
   withBorder?: boolean;
   withLabel?: boolean;
+  isMobile?: boolean;
 }
 
 export const NetworkUpdateTime: FC<NetworkUpdateTimeProps> = ({
   marginLeft,
   withBorder = true,
   withLabel = false,
+  isMobile = false,
 }) => {
   const { t } = useTranslation('banner');
   const { overview, isLoading } = useNetworkOverview();
@@ -29,6 +31,7 @@ export const NetworkUpdateTime: FC<NetworkUpdateTimeProps> = ({
             label={withLabel ? t('updateTime') : ''}
             marginLeft={marginLeft}
             withBorder={withBorder}
+            isMobile={isMobile}
           ></Indicator>
         </>
       )}

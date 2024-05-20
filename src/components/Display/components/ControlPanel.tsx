@@ -216,25 +216,90 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
       {isSmall && (
         <div
           style={{
-            marginLeft: isMobile ? '10px' : 0,
-            marginRight: isMobile ? '10px' : 0,
-            marginTop: isMobile ? '10px' : 0,
+            marginTop: isMobile ? '5px' : 0,
+            marginBottom: isMobile ? '10px' : 0,
           }}
         >
-          <NetworkUpdateTime withLabel={true}></NetworkUpdateTime>
+          <NetworkUpdateTime
+            withLabel={true}
+            isMobile={isMobile}
+          ></NetworkUpdateTime>
         </div>
       )}
-      <Group position={'apart'}>
-        <Group
-          mih={isMobile ? 50 : 70}
-          spacing={'xs'}
-          position={'left'}
-          align={'center'}
-          m={isMobile ? 10 : undefined}
-        >
-          {dateModeChecked && (
-            <>
-              {isMobile && (
+      {!isMobile && (
+        <Group position={'apart'}>
+          <Group mih={70} spacing={'xs'} position={'left'} align={'center'}>
+            {dateModeChecked && (
+              <>
+                {!isMobile && (
+                  <div
+                    style={{
+                      marginTop: isMobile ? 0 : '5px',
+                    }}
+                  >
+                    <TimeSelectMenu
+                      IconMenu={IconMenu}
+                      closeMenu={closeMenu}
+                      openMenu={openMenu}
+                      menuOpened={menuOpened}
+                      menuLabel={menuLabel}
+                      numberInput={numberInput}
+                      setNumberInput={setNumberInput}
+                      startDateInput={startDateInput}
+                      startDateError={startDateError}
+                      setStartDateInput={setStartDateInput}
+                      setStartDateError={setStartDateError}
+                      endDateInput={endDateInput}
+                      setEndDateInput={setEndDateInput}
+                      handleDateRangeItemClick={handleDateRangeItemClick}
+                      handleNumberOfDaysClick={handleNumberOfDaysClick}
+                      handlePredefinedPeriodClick={handlePredefinedPeriodClick}
+                    ></TimeSelectMenu>
+                  </div>
+                )}
+                <TimeRange
+                  startTimestamp={startTimestamp}
+                  endTimestamp={endTimestamp}
+                ></TimeRange>
+              </>
+            )}
+            {!dateModeChecked && (
+              <SegmentedControl
+                data={dataSegmentedControl}
+                w={500}
+                radius={50}
+                value={period}
+                onChange={setPeriod}
+              />
+            )}
+            {false && (
+              <Checkbox
+                label={'Mode date'}
+                checked={dateModeChecked}
+                onChange={(event) =>
+                  setDateModeChecked(event.currentTarget.checked)
+                }
+              />
+            )}
+          </Group>
+
+          {!isSmall && <NetworkUpdateTime withLabel={true}></NetworkUpdateTime>}
+          {/* <Networkoverview></Networkoverview> */}
+          {/* <BtcPrice marginLeft={isMobile ? '0px' : '20px'}></BtcPrice> */}
+        </Group>
+      )}
+      {isMobile && (
+        <Group position={'apart'}>
+          <Group
+            mih={50}
+            spacing={6}
+            position={'left'}
+            align={'center'}
+            m={0}
+            style={{ marginBottom: '10px' }}
+          >
+            {dateModeChecked && (
+              <>
                 <TimeSelectDrawer
                   IconMenu={IconMenu}
                   closeDrawer={closeDrawer}
@@ -253,63 +318,39 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
                   handleNumberOfDaysClick={handleNumberOfDaysClick}
                   handlePredefinedPeriodClick={handlePredefinedPeriodClick}
                 ></TimeSelectDrawer>
-              )}
-              {!isMobile && (
-                <div
-                  style={{
-                    marginTop: isMobile ? 0 : '5px',
-                  }}
-                >
-                  <TimeSelectMenu
-                    IconMenu={IconMenu}
-                    closeMenu={closeMenu}
-                    openMenu={openMenu}
-                    menuOpened={menuOpened}
-                    menuLabel={menuLabel}
-                    numberInput={numberInput}
-                    setNumberInput={setNumberInput}
-                    startDateInput={startDateInput}
-                    startDateError={startDateError}
-                    setStartDateInput={setStartDateInput}
-                    setStartDateError={setStartDateError}
-                    endDateInput={endDateInput}
-                    setEndDateInput={setEndDateInput}
-                    handleDateRangeItemClick={handleDateRangeItemClick}
-                    handleNumberOfDaysClick={handleNumberOfDaysClick}
-                    handlePredefinedPeriodClick={handlePredefinedPeriodClick}
-                  ></TimeSelectMenu>
-                </div>
-              )}
-              <TimeRange
-                startTimestamp={startTimestamp}
-                endTimestamp={endTimestamp}
-              ></TimeRange>
-            </>
-          )}
-          {!dateModeChecked && (
-            <SegmentedControl
-              data={dataSegmentedControl}
-              w={500}
-              radius={50}
-              value={period}
-              onChange={setPeriod}
-            />
-          )}
-          {false && (
-            <Checkbox
-              label={'Mode date'}
-              checked={dateModeChecked}
-              onChange={(event) =>
-                setDateModeChecked(event.currentTarget.checked)
-              }
-            />
-          )}
-        </Group>
 
-        {!isSmall && <NetworkUpdateTime withLabel={true}></NetworkUpdateTime>}
-        {/* <Networkoverview></Networkoverview> */}
-        {/* <BtcPrice marginLeft={isMobile ? '0px' : '20px'}></BtcPrice> */}
-      </Group>
+                <TimeRange
+                  startTimestamp={startTimestamp}
+                  endTimestamp={endTimestamp}
+                  isMobile={isMobile}
+                ></TimeRange>
+              </>
+            )}
+            {!dateModeChecked && (
+              <SegmentedControl
+                data={dataSegmentedControl}
+                w={500}
+                radius={50}
+                value={period}
+                onChange={setPeriod}
+              />
+            )}
+            {false && (
+              <Checkbox
+                label={'Mode date'}
+                checked={dateModeChecked}
+                onChange={(event) =>
+                  setDateModeChecked(event.currentTarget.checked)
+                }
+              />
+            )}
+          </Group>
+
+          {!isSmall && <NetworkUpdateTime withLabel={true}></NetworkUpdateTime>}
+          {/* <Networkoverview></Networkoverview> */}
+          {/* <BtcPrice marginLeft={isMobile ? '0px' : '20px'}></BtcPrice> */}
+        </Group>
+      )}
       {!isMobile && isSmall && <Space h={5}></Space>}
     </Flex>
   );

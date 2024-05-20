@@ -237,7 +237,9 @@ const _Summary: FC<AssetProps> = ({
       )}
       {TAXE_FREE_MODE && (
         <SummaryCard
-          title={t('incomes-taxe-free')}
+          title={
+            isMobile ? t('incomes-taxe-free-short') : t('incomes-taxe-free')
+          }
           toolTip={t('income-taxe-free-explained')}
           value={formatBTC(userYield.grossTaxeFree.btc)}
           subValue={formatUsd(userYield.grossTaxeFree.usd)}
