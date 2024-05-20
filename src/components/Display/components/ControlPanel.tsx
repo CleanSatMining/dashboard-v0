@@ -64,7 +64,7 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
   defaultValue,
 }) => {
   const { t } = useTranslation('timeframe', { keyPrefix: 'menu' });
-  const isSmall = useMediaQuery('(max-width: 850px)');
+  const isSmall = useMediaQuery('(max-width: 874px)');
   //const [menuOpened, setMenuOpened] = useState(false);
   const [menuLabel, setMenuLabel] = useState<string>(t(defaultValue));
   const [numberInput, setNumberInput] = useState<number | ''>(1);
@@ -216,13 +216,13 @@ const ControlPanel: React.FC<ControlPanelProps> = ({
       {isSmall && (
         <div
           style={{
-            marginTop: isMobile ? '5px' : 0,
+            marginTop: isMobile || isSmall ? '5px' : 0,
             marginBottom: isMobile ? '10px' : 0,
           }}
         >
           <NetworkUpdateTime
             withLabel={true}
-            isMobile={isMobile}
+            isMobile={isMobile || isSmall}
           ></NetworkUpdateTime>
         </div>
       )}
