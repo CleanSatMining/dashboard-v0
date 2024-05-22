@@ -87,47 +87,82 @@ export async function getMiningHistory(
   let json: APIMiningHistoryResponse | undefined = undefined;
 
   const site = SITES[siteId as SiteID];
-  const username = site.api.username ?? '';
-  const url = site.api.url ?? '';
-  const pool = site.api.contractor;
 
-  console.log('API MINING siteId', siteId);
-  console.log('API MINING first', first);
-  console.log('API MINING username', username);
-  console.log('API MINING url', url);
-  console.log('API MINING pool', pool);
-
-  if (username && url && pool) {
-    switch (pool) {
-      case Contractor.LUXOR: {
-        json = await luxorHistory(url, username, first);
-        break;
-      }
-      case Contractor.ANTPOOL: {
-        json = await antpoolHistory(url, username, first, siteId);
-        break;
-      }
-      case Contractor.FOUNDRY: {
-        json = await foundryHistory(url, username, first, siteId);
-        break;
-      }
-      default: {
-        //statements;
-        console.warn('API SUMMARY : unknown pool' + pool + ' siteId' + siteId);
-        break;
-      }
-    }
-  } else {
-    console.log(
-      'WARN : No url or user defined',
-      site.api.username,
-      site.api.url,
-    );
+  if (!site.api || site.api.length === 0) {
+    console.warn('API SUMMARY : no api defined', siteId);
     const history = {
       updated: new Date().getTime(),
       days: [],
     };
     json = history;
+    return json;
   }
+
+  for (const api of site.api) {
+    let apiResponse: APIMiningHistoryResponse | undefined = undefined;
+    const username = api.username ?? '';
+    const url = api.url ?? '';
+    const pool = api.contractor;
+    const subaccountId = api.subaccount?.id ?? undefined;
+
+    console.log('API MINING siteId', siteId);
+    console.log('API MINING first', first);
+    console.log('API MINING username', username);
+    console.log('API MINING url', url);
+    console.log('API MINING pool', pool);
+
+    if (username && url && pool) {
+      switch (pool) {
+        case Contractor.LUXOR: {
+          apiResponse = await luxorHistory(url, username, first, subaccountId);
+          break;
+        }
+        case Contractor.ANTPOOL: {
+          apiResponse = await antpoolHistory(
+            url,
+            username,
+            first,
+            siteId,
+            subaccountId,
+          );
+          break;
+        }
+        case Contractor.FOUNDRY: {
+          apiResponse = await foundryHistory(
+            url,
+            username,
+            first,
+            siteId,
+            subaccountId,
+          );
+          break;
+        }
+        default: {
+          //statements;
+          console.warn(
+            'API SUMMARY : unknown pool' + pool + ' siteId' + siteId,
+          );
+          break;
+        }
+      }
+      if (apiResponse && apiResponse.error) {
+        console.error('API SUMMARY : error', apiResponse.error);
+      } else if (apiResponse && apiResponse.days) {
+        if (json === undefined) {
+          json = apiResponse;
+        } else {
+          json.days = json.days.concat(apiResponse.days);
+        }
+      }
+    } else {
+      console.log('WARN : No url or user defined', api.username, api.url);
+      const history = {
+        updated: new Date().getTime(),
+        days: [],
+      };
+      json = history;
+    }
+  }
+
   return json;
 }

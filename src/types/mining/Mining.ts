@@ -1,5 +1,6 @@
 
 export type MiningSummaryPerDay = {
+    subaccountId: number | undefined;
     date: string;
     efficiency: number;
     hashrate: number;
@@ -60,6 +61,7 @@ export type UserState = {
 export type Expense = {
     dateTime: number;
     siteId: string;
+    subaccountId?: number;
     csm: number;
     operator: number;
     electricity: number;

@@ -95,8 +95,15 @@ export function getPeriodFromStart(
  * @param date
  * @returns
  */
-export function getNumberOfMachines(site: Site, date: Date): number {
+export function getNumberOfMachines(
+  site: Site,
+  date: Date,
+  subaccountId?: number,
+): number {
   //const site: Site = SITES[siteId as SiteID];
+  const asicsSubaccountConfig = site.api.find(
+    (api) => api.subaccount?.id === subaccountId,
+  );
 
   let totalMachines = 0;
 
@@ -105,7 +112,23 @@ export function getNumberOfMachines(site: Site, date: Date): number {
       getMidnightTimestamp(new Date(asics.date).getTime()) <=
       getMidnightTimestamp(date.getTime())
     ) {
-      totalMachines = totalMachines + asics.units;
+      if (subaccountId === undefined) {
+        totalMachines = totalMachines + asics.units;
+      } else if (
+        asicsSubaccountConfig !== undefined &&
+        asicsSubaccountConfig.subaccount !== undefined &&
+        asicsSubaccountConfig.subaccount.asics.find(
+          (a) => a.asicsId === asics.id,
+        ) !== undefined
+      ) {
+        const asicSubaccountConfig =
+          asicsSubaccountConfig.subaccount.asics.find(
+            (a) => a.asicsId === asics.id,
+          );
+        const machines = asicSubaccountConfig?.machines ?? 0;
+
+        totalMachines = totalMachines + machines;
+      }
     }
   }
 
@@ -113,14 +136,22 @@ export function getNumberOfMachines(site: Site, date: Date): number {
 }
 
 /**
- * getNumberOfMachines
+ * getPower
  *
  * @param siteId
  * @param date
  * @returns
  */
-export function getPower(site: Site, date: Date): BigNumber {
+export function getPower(
+  site: Site,
+  date: Date,
+  subaccountId?: number,
+): BigNumber {
   //const site: Site = SITES[siteId as SiteID];
+
+  const asicsSubaccountConfig = site.api.find(
+    (api) => api.subaccount?.id === subaccountId,
+  );
 
   let power = new BigNumber(0);
 
@@ -129,9 +160,26 @@ export function getPower(site: Site, date: Date): BigNumber {
       getMidnightTimestamp(new Date(asics.date).getTime()) <=
       getMidnightTimestamp(date.getTime())
     ) {
-      power = power.plus(
-        new BigNumber(asics.powerW).times(Math.abs(asics.units)),
-      );
+      if (subaccountId === undefined) {
+        power = power.plus(
+          new BigNumber(asics.powerW).times(Math.abs(asics.units)),
+        );
+      } else if (
+        asicsSubaccountConfig !== undefined &&
+        asicsSubaccountConfig.subaccount !== undefined &&
+        asicsSubaccountConfig.subaccount.asics.find(
+          (a) => a.asicsId === asics.id,
+        ) !== undefined
+      ) {
+        const asicSubaccountConfig =
+          asicsSubaccountConfig.subaccount.asics.find(
+            (a) => a.asicsId === asics.id,
+          );
+        const machines = asicSubaccountConfig?.machines ?? 0;
+        power = power.plus(
+          new BigNumber(asics.powerW).times(Math.abs(machines)),
+        );
+      }
     }
   }
 
@@ -544,6 +592,7 @@ export function getAsicsInOut(
     const units = -asics.units;
     const hashrateHs = -asics.hashrateHs;
     const equipmentOut: Asics = {
+      id: asics.id,
       model: asics.model,
       powerW: -asics.powerW,
       date: outDate,

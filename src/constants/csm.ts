@@ -40,16 +40,19 @@ export const SITES: Record<SiteID, Site> = {
         'https://gnosisscan.io/address/0xf8419b6527A24007c2BD81bD1aA3b5a735C1F4c9',
     },
     status: MiningStatus.active,
-    api: {
-      enable: true,
-      username: 'bbgs-csma',
-      url: 'https://antpool.com/api/paymentHistoryV2.htm',
-      contractor: Contractor.ANTPOOL,
-    },
+    api: [
+      {
+        enable: true,
+        username: 'bbgs-csma',
+        url: 'https://antpool.com/api/paymentHistoryV2.htm',
+        contractor: Contractor.ANTPOOL,
+      },
+    ],
     mining: {
       startingDate: '2023-09-01T00:00:00+00:00',
       asics: [
         {
+          id: 0,
           date: '2023-09-01T00:00:00+00:00',
           model: 'Whatsminer M30S++',
           powerW: 3100,
@@ -60,6 +63,7 @@ export const SITES: Record<SiteID, Site> = {
           },
         },
         {
+          id: 1,
           date: '2024-03-04T00:00:00+00:00',
           model: 'Whatsminer M50',
           powerW: 3300,
@@ -111,16 +115,19 @@ export const SITES: Record<SiteID, Site> = {
         'https://gnosisscan.io/address/0x364D1aAF7a98e26A1F072e926032f154428481d1',
     },
     status: MiningStatus.active,
-    api: {
-      enable: true,
-      username: 'bbgs-csmb',
-      url: 'https://antpool.com/api/paymentHistoryV2.htm',
-      contractor: Contractor.ANTPOOL,
-    },
+    api: [
+      {
+        enable: true,
+        username: 'bbgs-csmb',
+        url: 'https://antpool.com/api/paymentHistoryV2.htm',
+        contractor: Contractor.ANTPOOL,
+      },
+    ],
     mining: {
       startingDate: '2023-10-01T00:00:00+00:00',
       asics: [
         {
+          id: 0,
           date: '2023-10-01T00:00:00+00:00',
           model: 'Whatsminer M30S++',
           powerW: 3100,
@@ -171,16 +178,19 @@ export const SITES: Record<SiteID, Site> = {
         'https://gnosisscan.io/address/0x203A5080450FFC3e038284082FBF5EBCdc9B053f',
     },
     status: MiningStatus.active,
-    api: {
-      enable: true,
-      username: 'bbgs-fin',
-      url: 'https://antpool.com/api/paymentHistoryV2.htm',
-      contractor: Contractor.ANTPOOL,
-    },
+    api: [
+      {
+        enable: true,
+        username: 'bbgs-fin',
+        url: 'https://antpool.com/api/paymentHistoryV2.htm',
+        contractor: Contractor.ANTPOOL,
+      },
+    ],
     mining: {
       startingDate: '2023-08-18T00:00:00+00:00',
       asics: [
         {
+          id: 0,
           date: '2023-08-18T00:00:00+00:00',
           model: 'Whatsminer M50',
           powerW: 3400,
@@ -231,16 +241,19 @@ export const SITES: Record<SiteID, Site> = {
         'https://gnosisscan.io/address/0x71C86CbB71846425De5f3a693e989F4BDd97E98d',
     },
     status: MiningStatus.active,
-    api: {
-      enable: true,
-      username: 'cleansatmininggamma',
-      url: 'https://api.beta.luxor.tech/graphql',
-      contractor: Contractor.LUXOR,
-    },
+    api: [
+      {
+        enable: true,
+        username: 'cleansatmininggamma',
+        url: 'https://api.beta.luxor.tech/graphql',
+        contractor: Contractor.LUXOR,
+      },
+    ],
     mining: {
       startingDate: '2023-06-20T00:00:00+00:00',
       asics: [
         {
+          id: 0,
           date: '2023-06-20T00:00:00+00:00',
           model: 'Antminer S19 XP',
           powerW: 3010,
@@ -292,16 +305,47 @@ export const SITES: Record<SiteID, Site> = {
         'https://gnosisscan.io/token/0x20D2F2d4b839710562D25274A3e98Ea1F0392D24',
     },
     status: MiningStatus.active,
-    api: {
-      enable: true,
-      username: 'Datafactoryoregon',
-      url: 'http://api.foundryusapool.com/earnings/',
-      contractor: Contractor.FOUNDRY,
-    },
+    api: [
+      {
+        subaccount: {
+          name: 'csm-delta-oregon',
+          id: 0,
+          asics: [
+            {
+              asicsId: 0,
+              machines: 672,
+            },
+          ],
+          profitShare: 1,
+        },
+        enable: true,
+        username: 'Datafactoryoregon',
+        url: 'http://api.foundryusapool.com/earnings/',
+        contractor: Contractor.FOUNDRY,
+      },
+      {
+        subaccount: {
+          name: 'csm-delta-pecos',
+          id: 1,
+          asics: [
+            {
+              asicsId: 0,
+              machines: 155,
+            },
+          ],
+          profitShare: 0.6,
+        },
+        enable: true,
+        username: 'csmdeltapecos',
+        url: 'http://api.foundryusapool.com/earnings/',
+        contractor: Contractor.FOUNDRY,
+      },
+    ],
     mining: {
       startingDate: '2024-02-29T00:00:00+00:00',
       asics: [
         {
+          id: 0,
           date: '2024-02-29T00:00:00+00:00',
           model: 'Antminer S19k pro',
           powerW: 2760,
@@ -314,6 +358,16 @@ export const SITES: Record<SiteID, Site> = {
       ],
       electricity: {
         usdPricePerKWH: 0.066,
+        subaccount: [
+          {
+            subaccountId: 0,
+            usdPricePerKWH: 0.066,
+          },
+          {
+            subaccountId: 1,
+            usdPricePerKWH: 0.045,
+          },
+        ],
       },
     },
     fees: {
@@ -324,6 +378,7 @@ export const SITES: Record<SiteID, Site> = {
         operator: {
           includeWithElectricity: true,
           rate: 0,
+          beneficeRateAPI: [0, 0.4],
         },
         csm: 0.05,
         pool: 0.015,

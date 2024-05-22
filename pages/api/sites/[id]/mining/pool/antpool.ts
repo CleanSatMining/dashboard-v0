@@ -48,6 +48,7 @@ export async function antpoolHistory(
   usernames: string,
   first: number,
   siteId: string,
+  subaccountId: number | undefined,
 ): Promise<APIMiningHistoryResponse> {
   const users = usernames.split(',');
 
@@ -110,9 +111,11 @@ export async function antpoolHistory(
     });
   }
 
-  const days: MiningSummaryPerDay[] = convertAPIDataToStandard(siteId, [
-    ...sumData.values(),
-  ]);
+  const days: MiningSummaryPerDay[] = convertAPIDataToStandard(
+    siteId,
+    [...sumData.values()],
+    subaccountId,
+  );
   const updated = new Date().getTime();
   return { days, updated };
 }
@@ -193,7 +196,11 @@ async function _antPoolHistory(
  * @param periodsData
  * @returns
  */
-function convertAPIDataToStandard(siteId: string, periodsData: DayData[]) {
+function convertAPIDataToStandard(
+  siteId: string,
+  periodsData: DayData[],
+  subaccountId: number | undefined,
+) {
   const site = SITES[siteId as SiteID];
 
   const result: MiningSummaryPerDay[] = periodsData.map<MiningSummaryPerDay>(
@@ -204,6 +211,7 @@ function convertAPIDataToStandard(siteId: string, periodsData: DayData[]) {
         hashrateMax,
       );
       return {
+        subaccountId: subaccountId,
         date: day.timestamp.replace(' 00:00:00', 'T00:00:00+00:00'), //2024-03-10 00:00:00 => 2024-03-10T00:00:00+00:00
         efficiency: efficiency.times(100).toNumber(),
         hashrate: day.hashrate_unit,
@@ -231,22 +239,22 @@ function getApiSecrets(username: string, user?: string) {
   //console.log('ANTPOOL username', username, apiSign);
 
   switch (username) {
-    case SITES[SiteID.alpha].api.username: {
+    case SITES[SiteID.alpha].api[0].username: {
       apiKey = process.env.ANTPOOL_A_API_KEY_ACCOUNT ?? '';
       apiSecret = process.env.ANTPOOL_A_API_SIGN_SECRET ?? '';
       apiSign = getSignature(username, apiKey, apiSecret);
       break;
     }
-    case SITES[SiteID.omega].api.username: {
+    case SITES[SiteID.omega].api[0].username: {
       apiKey = process.env.ANTPOOL_O_API_KEY_ACCOUNT ?? '';
       apiSecret = process.env.ANTPOOL_O_API_SIGN_SECRET ?? '';
       apiSign = getSignature(username, apiKey, apiSecret);
       break;
     }
-    case SITES[SiteID.beta].api.username: {
+    case SITES[SiteID.beta].api[0].username: {
       if (user) {
-        const users = SITES[SiteID.beta].api.username
-          ? SITES[SiteID.beta].api.username.split(',')
+        const users = SITES[SiteID.beta].api[0].username
+          ? SITES[SiteID.beta].api[0].username.split(',')
           : [];
         const index = users.indexOf(user);
         const apiKeys = process.env.ANTPOOL_B_API_KEY_ACCOUNT ?? '';

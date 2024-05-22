@@ -27,7 +27,7 @@ import {
 } from '../Utils/period';
 
 import {
-  getMinedBtcBySite,
+  getMinedBtc,
   getUptimeBySite,
   getUserSiteShare,
   getUserTokenBalance,
@@ -85,13 +85,14 @@ const _SiteCard: FC<SiteProps> = ({
     account,
     getPropertyToken(site.token.address),
   );
-  const siteMinedBTC = getMinedBtcBySite(
+  const siteMinedBTC = getMinedBtc(
     miningState,
     siteId,
     realPeriod,
     btcPrice,
     realStartTimestamp,
     endDate,
+    expensesState.byId[siteId] ?? [],
   );
   const userYield = getUserYieldBySite(
     miningState,
@@ -195,13 +196,14 @@ const _SiteCard: FC<SiteProps> = ({
       expensesState.byId[siteId] ?? [],
     );
 
-    const siteMinedBTC = getMinedBtcBySite(
+    const siteMinedBTC = getMinedBtc(
       miningState,
       siteId,
       realPeriod,
       btcPrice,
       realStartTimestamp,
       endDate,
+      expensesState.byId[siteId] ?? [],
     );
     const siteUptime = getUptimeBySite(
       miningState,
@@ -385,7 +387,7 @@ function buildUserSiteData(
     id: siteId,
     label: site.name,
     income: {
-      available: site.api.enable,
+      available: site.api[0].enable,
       mined: {
         btc: siteMinedBTC.quantity.times(userShare).toNumber(),
         usd: siteMinedBTC.value.times(userShare).toNumber(),

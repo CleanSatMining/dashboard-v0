@@ -31,22 +31,26 @@ const YEAR_IN_DAYS = new BigNumber(365);
  * @param usdPricePerKWH_in
  * @returns
  */
-export function calculateElececticityCost(
+export function calculateElectricityCost(
   site: Site,
   date: Date,
   uptimePercentage: number,
   usdPricePerKWH_in?: number,
+  subaccountId?: number,
 ): BigNumber {
-  const usdPricePerKWH =
-    usdPricePerKWH_in !== undefined
-      ? usdPricePerKWH_in
-      : site.mining.electricity.usdPricePerKWH;
+  const usdPricePerKWH_config =
+    site.mining.electricity.subaccount?.find(
+      (subaccount) => subaccount.subaccountId === subaccountId,
+    )?.usdPricePerKWH ?? site.mining.electricity.usdPricePerKWH;
 
-  const consumption_kwh = new BigNumber(getPower(site, date))
+  const usdPricePerKWH =
+    usdPricePerKWH_in !== undefined ? usdPricePerKWH_in : usdPricePerKWH_config;
+
+  const consumption_kwh = new BigNumber(getPower(site, date, subaccountId))
     .times(24)
     .dividedBy(1000);
 
-  const totalMachines = getNumberOfMachines(site, date);
+  const totalMachines = getNumberOfMachines(site, date, subaccountId);
   const electricityCost =
     totalMachines > 0
       ? new BigNumber(usdPricePerKWH)
@@ -73,20 +77,29 @@ export function calculateElectricityCostPerPeriod(
   expenses: Expense[],
   btcPrice: number,
   basePricePerKWH?: number,
+  subaccountId?: number,
 ): BigNumber {
   const site: Site = SITES[siteId as SiteID];
   let electricityCost: BigNumber = new BigNumber(0);
 
-  const days = getMiningDays(miningState, siteId, period, startDate, endDate);
+  const days = getMiningDays(
+    miningState,
+    siteId,
+    period,
+    startDate,
+    endDate,
+  ).filter(
+    (day) => day.subaccountId === subaccountId || subaccountId === undefined,
+  );
   const { electricity, billingStartDateTime, billingEndDateTime } =
-    calculateExpenses(expenses, startDate, endDate);
+    calculateExpenses(expenses, startDate, endDate, subaccountId);
 
   const billingElectricity = electricity.times(btcPrice);
 
   for (const day of days) {
     const dateTime = new Date(day.date).getTime();
     if (dateTime < billingStartDateTime || dateTime > billingEndDateTime) {
-      const electricityCostPerDay = calculateElececticityCost(
+      const electricityCostPerDay = calculateElectricityCost(
         site,
         getMidnight(day.date),
         day.uptimePercentage / 100,
@@ -233,6 +246,18 @@ export function calculateNetYield(
   }
 }
 
+/**
+ * calculateGrossYield
+ * @param siteId
+ * @param minedBtc
+ * @param btcPrice
+ * @param electricityCost
+ * @param period
+ * @param startDate
+ * @param endDate
+ * @param expenses
+ * @returns
+ */
 export function calculateGrossYield(
   siteId: string,
   minedBtc: BigNumber,

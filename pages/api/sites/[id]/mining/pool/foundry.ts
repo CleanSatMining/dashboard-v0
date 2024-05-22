@@ -40,6 +40,7 @@ export async function foundryHistory(
   subaccount: string,
   first: number,
   siteId: string,
+  subaccountId: number | undefined,
 ): Promise<APIMiningHistoryResponse> {
   // fetch all data
 
@@ -58,6 +59,7 @@ export async function foundryHistory(
   const days: MiningSummaryPerDay[] = convertAPIDataToStandard(
     siteId,
     ret.days,
+    subaccountId,
   );
 
   const updated = new Date().getTime();
@@ -84,6 +86,8 @@ async function _foundryHistory(
 
   //console.log('ANTPOOL input', post_data, apiKey);
   try {
+    console.log('FOUNDRY API URL', urlWithParam);
+
     const result = await fetch(urlWithParam, {
       method: 'GET',
       headers: {
@@ -121,6 +125,7 @@ async function _foundryHistory(
 function convertAPIDataToStandard(
   siteId: string,
   periodsData: FoundryDayData[],
+  subaccountId: number | undefined,
 ): MiningSummaryPerDay[] {
   const site = SITES[siteId as SiteID];
 
@@ -131,6 +136,7 @@ function convertAPIDataToStandard(
       const hashrate = new BigNumber(day.hashrate).times(1000000000);
       const efficiency = hashrate.dividedBy(hashrateMax);
       return {
+        subaccountId: subaccountId,
         date: day.startTime,
         efficiency: efficiency.times(100).toNumber(),
         hashrate: hashrate.toNumber(),
@@ -153,11 +159,14 @@ function getApiSecrets(username: string): string {
   let apiKey = '';
 
   switch (username) {
-    case SITES[SiteID.delta].api.username: {
-      apiKey = process.env.FOUNDRY_API_KEY_ACCOUNT ?? '';
+    case SITES[SiteID.delta].api[0].username: {
+      apiKey = process.env.FOUNDRY_D_API_KEY_ACCOUNT ?? '';
       break;
     }
-
+    case SITES[SiteID.delta].api[1].username: {
+      apiKey = process.env.FOUNDRY_D_PECOS_API_KEY_ACCOUNT ?? '';
+      break;
+    }
     default: {
       break;
     }

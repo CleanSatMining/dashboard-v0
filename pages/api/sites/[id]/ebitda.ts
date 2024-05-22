@@ -20,10 +20,7 @@ import {
   MiningHistory,
   filterOldDates,
 } from 'src/types/mining/Mining';
-import {
-  getMinedBtcBySite,
-  getUptimeBySite,
-} from 'src/components/CSM/Utils/yield';
+import { getMinedBtc, getUptimeBySite } from 'src/components/CSM/Utils/yield';
 import { SITES, SiteID } from 'src/constants/csm';
 
 import { getEquipementDepreciation } from 'src/components/CSM/Utils/period';
@@ -104,13 +101,14 @@ const handler: NextApiHandler = async (
     btcPrice,
     basePricePerKWH,
   );
-  const minedBtc = getMinedBtcBySite(
+  const minedBtc = getMinedBtc(
     miningHistory,
     siteId,
     period,
     btcPrice,
     startTimestamp,
     endTimestamp,
+    [],
   );
   const equipementDepreciation = getEquipementDepreciation(
     site,

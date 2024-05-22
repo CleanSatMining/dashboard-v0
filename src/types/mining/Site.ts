@@ -21,7 +21,7 @@ export type Site = {
     image: string;
     token: Token;
     status: MiningStatus;
-    api: Api;
+    api: Api[];
     mining: Mining;
     fees: Fees;
     vault: {
@@ -50,7 +50,18 @@ export type Site = {
     username: string | undefined;
     url: string | undefined;
     contractor: Contractor | undefined;
+    subaccount?: {
+      name: string;
+      id: number;
+      asics: SubacountAsics[];
+      profitShare: number;
+    };
   }
+
+  export type SubacountAsics = {
+    asicsId: number;  // index of the asics
+    machines: number; // number of machines
+  };
 
 
   export enum MiningStatus {
@@ -74,11 +85,18 @@ export type Site = {
     startingDate: string;
     electricity:{
       usdPricePerKWH: number;
+      subaccount?: subaccuntElectricity[];
     }
     asics:Asics[],
   }
 
+  export type subaccuntElectricity = {
+    subaccountId: number;
+    usdPricePerKWH: number;
+  }
+
   export type Asics = {
+    id: number;
     model: string;
     powerW: number;
     units: number;
@@ -103,6 +121,7 @@ export type Site = {
       operator: {
         includeWithElectricity : boolean;
         rate : number; //BBGS, OP
+        beneficeRateAPI?: number[]; //BBGS, OP
       }
       csm:number;
       pool:number;

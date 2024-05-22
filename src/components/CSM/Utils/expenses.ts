@@ -5,6 +5,7 @@ export function calculateExpenses(
   expenses: Expense[],
   startDateTime: number,
   endDateTime: number,
+  subaccountId?: number,
 ): {
   total: BigNumber;
   csm: BigNumber;
@@ -15,18 +16,25 @@ export function calculateExpenses(
   period: number;
 } {
   // Filtrer les dépenses qui sont dans la plage de dates spécifiée
-  const filteredExpenses = expenses.filter((expense) => {
-    const expenseDateTime = expense.dateTime;
-    const firstDayOfBilling = getFirstDayOfMonth(
-      new Date(expenseDateTime),
-    ).getTime();
-    const lastDayOfBilling = getLastDayOfMonth(
-      new Date(expenseDateTime),
-    ).getTime();
-    return (
-      lastDayOfBilling >= startDateTime && firstDayOfBilling <= endDateTime
-    );
-  });
+  const filteredExpenses = expenses
+    .filter(
+      (e) =>
+        subaccountId === undefined || // Si subaccountId est undefined, on ne filtre pas par subaccountId
+        e.subaccountId === subaccountId || // Si subaccountId est défini, on filtre par subaccountId
+        (e.subaccountId === undefined && subaccountId === 0), // Si subaccountId est 0, on filtre les dépenses sans subaccountId
+    )
+    .filter((expense) => {
+      const expenseDateTime = expense.dateTime;
+      const firstDayOfBilling = getFirstDayOfMonth(
+        new Date(expenseDateTime),
+      ).getTime();
+      const lastDayOfBilling = getLastDayOfMonth(
+        new Date(expenseDateTime),
+      ).getTime();
+      return (
+        lastDayOfBilling >= startDateTime && firstDayOfBilling <= endDateTime
+      );
+    });
 
   const totalExpenses = calculateExpensesInRange(
     filteredExpenses,
