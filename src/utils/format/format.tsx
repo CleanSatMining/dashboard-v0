@@ -31,12 +31,14 @@ export const formatUsd = (
 
   return num < 999
     ? prefix + num.toFixed(digitSmallNumber) + unitToDisplay
-    : tvl.toLocaleString('en-US', {
-        style: 'currency',
-        currency: currency,
-        maximumFractionDigits: digit,
-        minimumFractionDigits: digit,
-      });
+    : tvl
+        .toLocaleString('en-US', {
+          style: 'currency',
+          currency: currency,
+          maximumFractionDigits: digit,
+          minimumFractionDigits: digit,
+        })
+        .replace(',', ' ');
 };
 
 export const formatSimpleUsd = (
@@ -87,10 +89,12 @@ export const formatPercent = (
   // Format output
   return num < 999
     ? `${num.toFixed(dp)}${unitToDisplay}%`
-    : numberPercent.toLocaleString('en-US', {
-        maximumFractionDigits: 0,
-        minimumFractionDigits: 0,
-      }) + '%';
+    : numberPercent
+        .toLocaleString('en-US', {
+          maximumFractionDigits: 0,
+          minimumFractionDigits: 0,
+        })
+        .replace(',', ' ') + '%';
 };
 
 export function formatSmallPercent(
@@ -103,10 +107,12 @@ export function formatSmallPercent(
   if (!hasData) return '- %';
   return !formatZero && percent === 0
     ? '0%'
-    : (percent * 100).toLocaleString('en-US', {
-        maximumFractionDigits: maxPlaces,
-        minimumFractionDigits: minPlaces,
-      }) + '%';
+    : (percent * 100)
+        .toLocaleString('en-US', {
+          maximumFractionDigits: maxPlaces,
+          minimumFractionDigits: minPlaces,
+        })
+        .replace(',', ' ') + '%';
 }
 
 export function formatBigNumber(num: number) {
@@ -121,10 +127,13 @@ export function formatBigNumber(num: number) {
     value = value.decimalPlaces(0, BigNumber.ROUND_FLOOR);
   }
   if (order < 2 && value.abs().gte(100)) {
-    return value.toNumber().toLocaleString('en-US', {
-      maximumFractionDigits: 0,
-      minimumFractionDigits: 0,
-    });
+    return value
+      .toNumber()
+      .toLocaleString('en-US', {
+        maximumFractionDigits: 0,
+        minimumFractionDigits: 0,
+      })
+      .replace(',', ' ');
   }
   const units = ['', 'k', 'M', 'B', 'T'];
 
@@ -152,7 +161,7 @@ export function formatFullNumber(
     value.toFormat(maxDp, roundMode, {
       prefix: '',
       decimalSeparator: '.',
-      groupSeparator: ',',
+      groupSeparator: ' ',
       groupSize: 3,
       secondaryGroupSize: 0,
       fractionGroupSeparator: '.',
@@ -171,7 +180,7 @@ export function formatFullBigNumber(
     value.toFormat(maxDp, roundMode, {
       prefix: '',
       decimalSeparator: '.',
-      groupSeparator: ',',
+      groupSeparator: ' ',
       groupSize: 3,
       secondaryGroupSize: 0,
       fractionGroupSeparator: '.',
