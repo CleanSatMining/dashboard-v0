@@ -53,11 +53,11 @@ async function getExpenses(siteId: string): Promise<Expense[]> {
   const expensesCol = collection(db, `sites/${siteId}/expenses`);
   const expenseSnapshot = await getDocs(expensesCol);
   const expenseList = expenseSnapshot.docs.map((doc) => doc.data());
-  console.log(
-    'Firebase expenses site',
-    siteId,
-    JSON.stringify(expenseList, null, 4),
-  );
+  // console.log(
+  //   'Firebase expenses site',
+  //   siteId,
+  //   JSON.stringify(expenseList, null, 4),
+  // );
 
   const ret = expenseList
     .filter((e) => e.date !== undefined)

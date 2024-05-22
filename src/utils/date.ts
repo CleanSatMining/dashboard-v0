@@ -205,6 +205,27 @@ export function getDateYesterday(): Date {
   return yesterday;
 }
 
+export function getYesterdayMidnightUTC(
+  hours: number,
+  min: number,
+  sec: number,
+  ms: number,
+): number {
+  // Créez une nouvelle date correspondant à la date et l'heure actuelles
+  const now = new Date();
+
+  // Ajustez cette date pour obtenir la veille
+  const yesterday = new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - 1),
+  );
+
+  // Mettez les heures, minutes, secondes et millisecondes à zéro pour obtenir minuit
+  yesterday.setUTCHours(hours, min, sec, ms);
+
+  // Retournez le timestamp en millisecondes depuis l'époque Unix
+  return yesterday.getTime();
+}
+
 export function getTimestampEndOfTheDay(timestamp: number): number {
   const targetDate = new Date(timestamp);
 
@@ -266,4 +287,26 @@ export function getDayOfMonthUTC(timestamp: number): number {
   const dayOfMonthUTC = date.getUTCDate(); // getUTCDate() returns the day of the month using UTC time
 
   return dayOfMonthUTC;
+}
+
+export function isTodayUTC(timestamp: number): boolean {
+  const givenDate = new Date(timestamp);
+  const now = new Date();
+
+  // Extraire la date UTC de 'givenDate'
+  const givenUTCYear = givenDate.getUTCFullYear();
+  const givenUTCMonth = givenDate.getUTCMonth();
+  const givenUTCDay = givenDate.getUTCDate();
+
+  // Extraire la date UTC de 'now'
+  const currentUTCYear = now.getUTCFullYear();
+  const currentUTCMonth = now.getUTCMonth();
+  const currentUTCDay = now.getUTCDate();
+
+  // Comparer les parties année, mois et jour
+  return (
+    givenUTCYear === currentUTCYear &&
+    givenUTCMonth === currentUTCMonth &&
+    givenUTCDay === currentUTCDay
+  );
 }

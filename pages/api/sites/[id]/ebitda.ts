@@ -12,6 +12,8 @@ import {
   getLastMinuteTimestamp,
   getFirstDayOfPreviousMonth,
   getLastDayOfPreviousMonth,
+  isTodayUTC,
+  getYesterdayMidnightUTC as getYesterdayUTC,
 } from 'src/utils/date';
 import { getMiningHistory } from './mining/history';
 import { LRUCache } from 'lru-cache';
@@ -52,7 +54,9 @@ const handler: NextApiHandler = async (
       console.log('req.body', JSON.stringify(req.body));
     }
     startTimestamp = getMidnightTimestamp(Number(requestBody.startTimestamp));
-    endTimestamp = getLastMinuteTimestamp(Number(requestBody.endTimestamp));
+    endTimestamp = isTodayUTC(Number(requestBody.endTimestamp))
+      ? getYesterdayUTC(23, 59, 59, 999)
+      : getLastMinuteTimestamp(Number(requestBody.endTimestamp));
     btcPrice = Number(requestBody.btcPrice);
     basePricePerKWH =
       requestBody.basePricePerKWH !== undefined
