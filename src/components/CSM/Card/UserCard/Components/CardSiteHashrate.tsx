@@ -120,7 +120,10 @@ export const CardSiteHashrate: FC<CardSiteHashrateProps> = ({
                     {`Du ${formatTimestampDay(period.start.getTime())} au ${formatTimestampDay(period.end.getTime())}`}
                   </Text>
                   <Text weight={500} fz={isMobile ? 'xs' : 'sm'}>
-                    {formatHashrate(period.hashrateHs, hasData) +
+                    {formatHashrate(
+                      Math.min(period.hashrateHs, period.hashrateMax),
+                      hasData,
+                    ) +
                       t('over') +
                       formatHashrate(period.hashrateMax)}
                   </Text>
@@ -128,7 +131,9 @@ export const CardSiteHashrate: FC<CardSiteHashrateProps> = ({
                 <Progress
                   sections={[
                     {
-                      value: new BigNumber(period.hashrateHs)
+                      value: new BigNumber(
+                        Math.min(period.hashrateHs, period.hashrateMax),
+                      )
                         .dividedBy(period.hashrateMax)
                         .times(100)
                         .toNumber(),
