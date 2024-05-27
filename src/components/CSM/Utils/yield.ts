@@ -795,18 +795,6 @@ export function getSiteExpensesByPeriod(
     btcPrice,
   );
 
-  if (miningState.byId[siteId].mining === undefined) {
-    return {
-      total: 0,
-      totalTaxeFree: 0,
-      electricity: 0,
-      feeCSM: 0,
-      feeOperator: 0,
-      taxe: 0,
-      provision: 0,
-    };
-  }
-
   const { feeCsm, feeOperator, taxe, provision } =
     calculateCostsAndEBITDAByPeriod(
       usdIncome,
