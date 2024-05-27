@@ -129,6 +129,7 @@ const handler: NextApiHandler = async (
     startTimestamp,
     endTimestamp,
     [],
+    miningHistory.byId[siteId].mining.days ?? [],
     btcPrice,
   );
 
