@@ -82,41 +82,50 @@ export function calculateElectricityCostPerPeriod(
   const site: Site = SITES[siteId as SiteID];
   let electricityCost: BigNumber = new BigNumber(0);
 
-  const days = getMiningDays(
-    miningState,
-    siteId,
-    period,
-    startDate,
-    endDate,
-  ).filter(
-    (day) => day.subaccountId === subaccountId || subaccountId === undefined,
-  );
-  const { electricity, billingStartDateTime, billingEndDateTime } =
-    calculateExpenses(
-      expenses,
-      miningState.byId[siteId].mining.days,
+  if (
+    miningState !== undefined &&
+    miningState.byId[siteId] !== undefined &&
+    miningState.byId[siteId].mining !== undefined &&
+    miningState.byId[siteId].mining.days !== undefined
+  ) {
+    const days = getMiningDays(
+      miningState,
+      siteId,
+      period,
       startDate,
       endDate,
-      subaccountId,
+    ).filter(
+      (day) => day.subaccountId === subaccountId || subaccountId === undefined,
     );
-
-  const billingElectricity = electricity.times(btcPrice);
-
-  for (const day of days) {
-    const dateTime = new Date(day.date).getTime();
-    if (dateTime < billingStartDateTime || dateTime > billingEndDateTime) {
-      const electricityCostPerDay = calculateElectricityCost(
-        site,
-        getMidnight(day.date),
-        day.uptimePercentage / 100,
-        basePricePerKWH,
+    const { electricity, billingStartDateTime, billingEndDateTime } =
+      calculateExpenses(
+        expenses,
+        miningState.byId[siteId].mining.days,
+        startDate,
+        endDate,
+        subaccountId,
       );
 
-      electricityCost = electricityCost.plus(electricityCostPerDay);
-    }
-  }
+    const billingElectricity = electricity.times(btcPrice);
 
-  return electricityCost.plus(billingElectricity);
+    for (const day of days) {
+      const dateTime = new Date(day.date).getTime();
+      if (dateTime < billingStartDateTime || dateTime > billingEndDateTime) {
+        const electricityCostPerDay = calculateElectricityCost(
+          site,
+          getMidnight(day.date),
+          day.uptimePercentage / 100,
+          basePricePerKWH,
+        );
+
+        electricityCost = electricityCost.plus(electricityCostPerDay);
+      }
+    }
+
+    return electricityCost.plus(billingElectricity);
+  } else {
+    return electricityCost;
+  }
 }
 
 /**
