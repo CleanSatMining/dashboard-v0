@@ -8,7 +8,7 @@ import {
   SWISS_TAXE,
   SiteID,
 } from 'src/constants';
-import { MiningHistory, MiningSummaryPerDay } from 'src/types/mining/Mining';
+import { MiningHistory } from 'src/types/mining/Mining';
 import { Site, Fees } from 'src/types/mining/Site';
 
 import {
@@ -92,13 +92,7 @@ export function calculateElectricityCostPerPeriod(
     (day) => day.subaccountId === subaccountId || subaccountId === undefined,
   );
   const { electricity, billingStartDateTime, billingEndDateTime } =
-    calculateExpenses(
-      expenses,
-      miningState.byId[siteId].mining.days,
-      startDate,
-      endDate,
-      subaccountId,
-    );
+    calculateExpenses(expenses, startDate, endDate, subaccountId);
 
   const billingElectricity = electricity.times(btcPrice);
 
@@ -190,7 +184,6 @@ export function calculateNetYield(
   startDate: number,
   endDate: number,
   expenses: Expense[],
-  miningHistory: MiningSummaryPerDay[],
 ): {
   netUsdIncome: BigNumber;
   netBtcIncome: BigNumber;
@@ -221,7 +214,6 @@ export function calculateNetYield(
       realStartTimestamp,
       endDate,
       expenses,
-      miningHistory,
       btcPrice,
     );
 
@@ -275,7 +267,6 @@ export function calculateGrossYield(
   startDate: number,
   endDate: number,
   expenses: Expense[],
-  miningHistory: MiningSummaryPerDay[],
 ): {
   usdIncome: BigNumber;
   btcIncome: BigNumber;
@@ -305,7 +296,6 @@ export function calculateGrossYield(
       realStartTimestamp,
       endDate,
       expenses,
-      miningHistory,
       btcPrice,
     );
 
@@ -346,7 +336,6 @@ export function calculateGrossYieldTaxeFree(
   startDate: number,
   endDate: number,
   expenses: Expense[],
-  miningHistory: MiningSummaryPerDay[],
 ): {
   usdIncome: BigNumber;
   btcIncome: BigNumber;
@@ -376,7 +365,6 @@ export function calculateGrossYieldTaxeFree(
       realStartTimestamp,
       endDate,
       expenses,
-      miningHistory,
       btcPrice,
     );
 
@@ -418,7 +406,6 @@ export function calculateCostsAndEBITDAByPeriod(
   startDate: number,
   endDate: number,
   expenses: Expense[],
-  miningHistory: MiningSummaryPerDay[],
   btcPrice: number,
 ): {
   feeCsm: BigNumber;
@@ -431,7 +418,7 @@ export function calculateCostsAndEBITDAByPeriod(
     period: billingPeriod,
     csm: csmBillingExpense,
     operator: operatorBillingExpense,
-  } = calculateExpenses(expenses, miningHistory, startDate, endDate);
+  } = calculateExpenses(expenses, startDate, endDate);
   const unBilledDays = realPeriod - billingPeriod;
   const unbilledRate = unBilledDays / realPeriod;
   const csmBillingExpenseUsd = csmBillingExpense.times(btcPrice);
