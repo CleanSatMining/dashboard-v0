@@ -257,8 +257,8 @@ describe('calculateExpenses', () => {
 
     const totalHashrate = MINING_HISTORY.filter(
       (d) =>
-        new Date(d.date).getMonth() === 4 &&
-        new Date(d.date).getFullYear() === 2024,
+        new Date(d.date).getUTCMonth() === 3 && // Avril
+        new Date(d.date).getUTCFullYear() === 2024,
     ).reduce((acc, history) => {
       return acc.plus(history.hashrate);
     }, new BigNumber(0));
@@ -266,17 +266,17 @@ describe('calculateExpenses', () => {
     const hashrate1 =
       MINING_HISTORY.find(
         (d) =>
-          new Date(d.date).getDate() === 1 &&
-          new Date(d.date).getMonth() === 4 &&
-          new Date(d.date).getFullYear() === 2024,
+          new Date(d.date).getUTCDate() === 1 &&
+          new Date(d.date).getUTCMonth() === 3 && // Avril
+          new Date(d.date).getUTCFullYear() === 2024,
       )?.hashrate || 0;
 
     const hashrate2 =
       MINING_HISTORY.find(
         (d) =>
-          new Date(d.date).getDate() === 2 &&
-          new Date(d.date).getMonth() === 4 &&
-          new Date(d.date).getFullYear() === 2024,
+          new Date(d.date).getUTCDate() === 2 &&
+          new Date(d.date).getUTCMonth() === 3 && // Avril
+          new Date(d.date).getUTCFullYear() === 2024,
       )?.hashrate || 0;
 
     const periodHashrate = new BigNumber(hashrate1).plus(hashrate2);
@@ -295,6 +295,125 @@ describe('calculateExpenses', () => {
     );
     expect(Number(result.electricity.toNumber().toFixed(15))).toEqual(
       Number(electricityApril.times(ratio).toNumber().toFixed(15)),
+    );
+  });
+
+  test('calcul des dépenses au prorata du hashrate sur 2 mois', () => {
+    const expenses = [
+      {
+        dateTime: new Date('2024-04-01T00:00:00.000+00:00').getTime(),
+        csm: 0.04055,
+        operator: 0.042,
+        electricity: 1.049,
+        siteId: '3',
+      },
+      {
+        dateTime: new Date('2024-03-01T00:00:00.000+00:00').getTime(),
+        csm: 0.0360415,
+        operator: 0.0360415,
+        electricity: 0.7299749,
+        siteId: '3',
+      },
+    ];
+
+    const startDateTime = new Date('2024-03-31T00:00:00.000+00:00').getTime();
+    const endDateTime = new Date('2024-04-01T00:00:00.000+00:00').getTime();
+
+    const result = calculateExpenses(
+      expenses,
+      MINING_HISTORY,
+      startDateTime,
+      endDateTime,
+    );
+
+    const totalApril = new BigNumber(
+      expenses[0].csm + expenses[0].operator + expenses[0].electricity,
+    );
+    const csmApril = new BigNumber(expenses[0].csm);
+    const operatorApril = new BigNumber(expenses[0].operator);
+    const electricityApril = new BigNumber(expenses[0].electricity);
+
+    const totalMars = new BigNumber(
+      expenses[1].csm + expenses[1].operator + expenses[1].electricity,
+    );
+    const csmMars = new BigNumber(expenses[1].csm);
+    const operatorMars = new BigNumber(expenses[1].operator);
+    const electricityMars = new BigNumber(expenses[1].electricity);
+
+    const totalHashrateApril = MINING_HISTORY.filter(
+      (d) =>
+        new Date(d.date).getUTCMonth() === 3 && // Avril
+        new Date(d.date).getUTCFullYear() === 2024,
+    ).reduce((acc, history) => {
+      return acc.plus(history.hashrate);
+    }, new BigNumber(0));
+
+    const totalHashrateMars = MINING_HISTORY.filter(
+      (d) =>
+        new Date(d.date).getUTCMonth() === 2 && // Mars
+        new Date(d.date).getUTCFullYear() === 2024,
+    ).reduce((acc, history) => {
+      return acc.plus(history.hashrate);
+    }, new BigNumber(0));
+
+    const hashrateApril1 =
+      MINING_HISTORY.find(
+        (d) =>
+          new Date(d.date).getUTCDate() === 1 &&
+          new Date(d.date).getUTCMonth() === 3 && // Avril
+          new Date(d.date).getUTCFullYear() === 2024,
+      )?.hashrate || 0;
+
+    const hashrateMars31 =
+      MINING_HISTORY.find(
+        (d) =>
+          new Date(d.date).getUTCDate() === 31 &&
+          new Date(d.date).getUTCMonth() === 2 && // Mars
+          new Date(d.date).getUTCFullYear() === 2024,
+      )?.hashrate || 0;
+
+    const aprilPeriodHashrate = new BigNumber(hashrateApril1);
+    const ratioApril = aprilPeriodHashrate.dividedBy(totalHashrateApril);
+    const marsPeriodHashrate = new BigNumber(hashrateMars31);
+    const ratioMars = marsPeriodHashrate.dividedBy(totalHashrateMars);
+
+    console.log('ratio', ratioApril.toNumber(), totalHashrateApril.toNumber());
+
+    expect(Number(result.total.toNumber().toFixed(15))).toEqual(
+      Number(
+        totalApril
+          .times(ratioApril)
+          .plus(totalMars.times(ratioMars))
+          .toNumber()
+          .toFixed(15),
+      ),
+    );
+    expect(Number(result.csm.toNumber().toFixed(15))).toEqual(
+      Number(
+        csmApril
+          .times(ratioApril)
+          .plus(csmMars.times(ratioMars))
+          .toNumber()
+          .toFixed(15),
+      ),
+    );
+    expect(Number(result.operator.toNumber().toFixed(15))).toEqual(
+      Number(
+        operatorApril
+          .times(ratioApril)
+          .plus(operatorMars.times(ratioMars))
+          .toNumber()
+          .toFixed(15),
+      ),
+    );
+    expect(Number(result.electricity.toNumber().toFixed(15))).toEqual(
+      Number(
+        electricityApril
+          .times(ratioApril)
+          .plus(electricityMars.times(ratioMars))
+          .toNumber()
+          .toFixed(15),
+      ),
     );
   });
 });

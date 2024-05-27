@@ -82,6 +82,7 @@ function calculateExpensesInRange(
     const lastDayOfBilling = getLastDayOfMonth(
       new Date(expenseDateTime),
     ).getTime();
+    let offsetDateTime = firstDayOfBilling;
 
     // Vérifier si la dépense est comprise dans la plage de dates
     if (lastDayOfBilling >= startDateTime && firstDayOfBilling <= endDateTime) {
@@ -100,6 +101,7 @@ function calculateExpensesInRange(
         //calculer le nombre de jours restants dans le mois (debut période -> fin du mois)
         daysRemaining =
           daysRemaining - new Date(startDateTime).getUTCDate() + 1;
+        offsetDateTime = startDateTime;
       }
 
       // Calculer le prorata pour la date de fin
@@ -132,7 +134,7 @@ function calculateExpensesInRange(
         } else {
           let periodHashrate: BigNumber = new BigNumber(0);
           for (let i = 0; i < daysRemaining; i++) {
-            const date = new Date(startDateTime + i * 24 * 60 * 60 * 1000);
+            const date = new Date(offsetDateTime + i * 24 * 60 * 60 * 1000);
             const dayHashrate =
               miningHistory.find((d) => {
                 return (
