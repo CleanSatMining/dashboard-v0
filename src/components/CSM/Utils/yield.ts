@@ -39,65 +39,74 @@ export function getMinedBtc(
   endDate: number,
   expenses: Expense[],
 ): { quantity: BigNumber; value: BigNumber } {
-  const hasSubaccount = SITES[siteId as SiteID].api.every(
-    (api) => api.subaccount !== undefined,
-  );
-
-  let siteBtcMined = new BigNumber(0);
-
-  if (hasSubaccount) {
-    let subaccountsBtcMined = new BigNumber(0);
-    for (const subaccountApi of SITES[siteId as SiteID].api) {
-      if (subaccountApi.subaccount) {
-        const { quantity: subaccountBtcMined } = getMinedBtc_(
-          miningState,
-          siteId,
-          period,
-          btcPrice,
-          startDate,
-          endDate,
-          subaccountApi.subaccount.id,
-        );
-
-        const subaccountElectricityCost = calculateElectricityCostPerPeriod(
-          miningState,
-          siteId,
-          period,
-          startDate,
-          endDate,
-          expenses,
-          btcPrice,
-          undefined,
-          subaccountApi.subaccount.id,
-        );
-        const subaccountElectricityCost_btc =
-          subaccountElectricityCost.dividedBy(btcPrice);
-        const btcIncomeShare = subaccountBtcMined
-          .minus(subaccountElectricityCost_btc)
-          .multipliedBy(subaccountApi.subaccount.profitShare);
-        const subaccountBtcIncome =
-          subaccountElectricityCost_btc.plus(btcIncomeShare);
-        subaccountsBtcMined = subaccountsBtcMined.plus(subaccountBtcIncome);
-      } else {
-        console.error(
-          'No subaccount ' + siteId + ' ' + JSON.stringify(subaccountApi),
-        );
-      }
-    }
-    siteBtcMined = subaccountsBtcMined;
-  } else {
-    const { quantity: siteBtc } = getMinedBtc_(
-      miningState,
-      siteId,
-      period,
-      btcPrice,
-      startDate,
-      endDate,
+  if (
+    miningState &&
+    miningState.byId[siteId] &&
+    miningState.byId[siteId].mining &&
+    miningState.byId[siteId].mining.days
+  ) {
+    const hasSubaccount = SITES[siteId as SiteID].api.every(
+      (api) => api.subaccount !== undefined,
     );
-    siteBtcMined = siteBtc;
+
+    let siteBtcMined = new BigNumber(0);
+
+    if (hasSubaccount) {
+      let subaccountsBtcMined = new BigNumber(0);
+      for (const subaccountApi of SITES[siteId as SiteID].api) {
+        if (subaccountApi.subaccount) {
+          const { quantity: subaccountBtcMined } = getMinedBtc_(
+            miningState,
+            siteId,
+            period,
+            btcPrice,
+            startDate,
+            endDate,
+            subaccountApi.subaccount.id,
+          );
+
+          const subaccountElectricityCost = calculateElectricityCostPerPeriod(
+            miningState,
+            siteId,
+            period,
+            startDate,
+            endDate,
+            expenses,
+            btcPrice,
+            undefined,
+            subaccountApi.subaccount.id,
+          );
+          const subaccountElectricityCost_btc =
+            subaccountElectricityCost.dividedBy(btcPrice);
+          const btcIncomeShare = subaccountBtcMined
+            .minus(subaccountElectricityCost_btc)
+            .multipliedBy(subaccountApi.subaccount.profitShare);
+          const subaccountBtcIncome =
+            subaccountElectricityCost_btc.plus(btcIncomeShare);
+          subaccountsBtcMined = subaccountsBtcMined.plus(subaccountBtcIncome);
+        } else {
+          console.error(
+            'No subaccount ' + siteId + ' ' + JSON.stringify(subaccountApi),
+          );
+        }
+      }
+      siteBtcMined = subaccountsBtcMined;
+    } else {
+      const { quantity: siteBtc } = getMinedBtc_(
+        miningState,
+        siteId,
+        period,
+        btcPrice,
+        startDate,
+        endDate,
+      );
+      siteBtcMined = siteBtc;
+    }
+
+    return { quantity: siteBtcMined, value: siteBtcMined.times(btcPrice) };
   }
 
-  return { quantity: siteBtcMined, value: siteBtcMined.times(btcPrice) };
+  return { quantity: new BigNumber(0), value: new BigNumber(0) };
 }
 
 function getMinedBtc_(
@@ -243,6 +252,7 @@ export const getYieldBySite = (
       startDate,
       endDate,
       expenses,
+      miningState.byId[siteId].mining.days,
     );
 
     netYield.usd = netUsdIncome.toNumber();
@@ -258,6 +268,7 @@ export const getYieldBySite = (
       startDate,
       endDate,
       expenses,
+      miningState.byId[siteId].mining.days,
     );
 
     grossYield.usd = usdIncome.toNumber();
@@ -277,6 +288,7 @@ export const getYieldBySite = (
       startDate,
       endDate,
       expenses,
+      miningState.byId[siteId].mining.days,
     );
 
     grossYieldTaxeFree.usd = usdIncomeWithoutIncome.toNumber();
@@ -793,6 +805,7 @@ export function getSiteExpensesByPeriod(
       realStartTimestamp,
       endDate,
       expenses,
+      miningState.byId[siteId].mining.days,
       btcPrice,
     );
 
