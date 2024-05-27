@@ -239,7 +239,7 @@ const Display: FC = () => {
         ></AccountSelect>
       )}
       <ControlPanel
-        defaultValue={PredefinedPeriods.Last7Days}
+        defaultValue={PredefinedPeriods.Last24Hours}
         isMobile={isMobile}
         period={period}
         setPeriod={setPeriod}
