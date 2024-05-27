@@ -63,7 +63,7 @@ async function getSite(
   siteId: string,
 ): Promise<CleanSatMiningSite | undefined> {
   const siteCol = collection(db, `sites`);
-  console.log('siteCol passed');
+
   const siteSnapshot = await getDocs(siteCol);
   const site = siteSnapshot.docs
     .map((doc) => doc.data())
