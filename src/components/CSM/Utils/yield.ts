@@ -252,7 +252,7 @@ export const getYieldBySite = (
       startDate,
       endDate,
       expenses,
-      miningState.byId[siteId].mining.days,
+      miningState.byId[siteId]?.mining.days ?? [],
     );
 
     netYield.usd = netUsdIncome.toNumber();
@@ -268,7 +268,7 @@ export const getYieldBySite = (
       startDate,
       endDate,
       expenses,
-      miningState.byId[siteId].mining.days,
+      miningState.byId[siteId]?.mining.days ?? [],
     );
 
     grossYield.usd = usdIncome.toNumber();
@@ -288,7 +288,7 @@ export const getYieldBySite = (
       startDate,
       endDate,
       expenses,
-      miningState.byId[siteId].mining.days,
+      miningState.byId[siteId]?.mining.days ?? [],
     );
 
     grossYieldTaxeFree.usd = usdIncomeWithoutIncome.toNumber();
@@ -660,10 +660,11 @@ export const getUptimeBySite = (
   endDate: number,
 ): { machines: number; days: number; percent: number; hashrate: number } => {
   if (
-    miningState &&
-    miningState.byId &&
-    miningState.byId[siteId] &&
-    miningState.byId[siteId].mining.days
+    (miningState &&
+      miningState.byId &&
+      miningState.byId[siteId] &&
+      miningState.byId[siteId]?.mining.days) ??
+    []
   ) {
     const site: Site = SITES[siteId as SiteID];
     const { realPeriod, realStartTimestamp } = getPeriodFromStart(
@@ -740,6 +741,8 @@ export function getCSMTokenAddress(siteId: string): string {
 
 export function getNumberOfDaysSinceStart(site: Site) {
   if (
+    site !== undefined &&
+    site.mining !== undefined &&
     site.mining.startingDate !== undefined &&
     site.mining.startingDate !== '-'
   ) {
@@ -805,7 +808,7 @@ export function getSiteExpensesByPeriod(
       realStartTimestamp,
       endDate,
       expenses,
-      miningState.byId[siteId].mining.days,
+      miningState.byId[siteId]?.mining.days ?? [],
       btcPrice,
     );
 
