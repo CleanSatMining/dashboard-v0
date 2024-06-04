@@ -16,6 +16,7 @@ import { TablerIcon } from '@tabler/icons';
 import { Data } from './SummaryType';
 import { SummaryDetailCard } from './SummaryDetail';
 import { InfoTitle } from 'src/components/InfoText/InfoText';
+import { PeriodWarningDisplay } from 'src/components/CSM/Card/components/PeriodDisplay';
 
 const useStyle = createStyles((theme: MantineTheme) => ({
   brand: {
@@ -30,7 +31,8 @@ type SummaryProps = {
   value?: string;
   data: Data[];
   subValue?: string;
-  warning?: boolean;
+  warningValue?: boolean;
+  warningData?: boolean;
 };
 
 const _SummaryCard: FC<SummaryProps> = ({
@@ -40,7 +42,8 @@ const _SummaryCard: FC<SummaryProps> = ({
   value,
   data,
   subValue,
-  warning,
+  warningValue,
+  warningData,
 }) => {
   const { classes } = useStyle();
 
@@ -96,20 +99,31 @@ const _SummaryCard: FC<SummaryProps> = ({
               align={'flex-start'}
               direction={'column'}
             >
-              {warning && (
-                <InfoTitle
-                  title={value}
-                  order={isMobile ? 5 : 4}
-                  color={'yellow'}
-                  tooltipText={t('lost-explained')}
-                  width={300}
-                ></InfoTitle>
-              )}
-              {!warning && (
-                <Title order={isMobile ? 5 : 4} color={'brand'}>
-                  {value}
-                </Title>
-              )}
+              <Group spacing={5}>
+                {warningData && (
+                  <PeriodWarningDisplay
+                    dataMissing={true}
+                    iconSize={isMobile ? 16 : 24}
+                  ></PeriodWarningDisplay>
+                )}
+                {warningValue && (
+                  <InfoTitle
+                    title={value}
+                    order={isMobile ? 5 : 4}
+                    color={'yellow'}
+                    tooltipText={t('lost-explained')}
+                    width={300}
+                  ></InfoTitle>
+                )}
+                {!warningValue && (
+                  <Title
+                    order={isMobile ? 5 : 4}
+                    color={warningData ? 'yellow' : 'brand'}
+                  >
+                    {value}
+                  </Title>
+                )}
+              </Group>
               {subValue !== undefined && (
                 <Text
                   color={'dimmed'}

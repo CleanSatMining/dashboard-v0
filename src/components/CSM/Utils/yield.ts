@@ -659,6 +659,9 @@ export const getUptimeBySite = (
   startDate: number,
   endDate: number,
 ): { machines: number; days: number; percent: number; hashrate: number } => {
+  if (period === 0 || startDate > endDate)
+    return { machines: 0, days: 0, percent: 0, hashrate: 0 };
+
   if (
     (miningState &&
       miningState.byId &&
@@ -672,6 +675,7 @@ export const getUptimeBySite = (
       startDate,
       endDate,
     );
+
     const days = getMiningDays(
       miningState,
       siteId,
@@ -679,6 +683,10 @@ export const getUptimeBySite = (
       realStartTimestamp,
       endDate,
     );
+
+    if (realPeriod === 0 || days.length === 0)
+      return { machines: 0, days: 0, percent: 0, hashrate: 0 };
+
     let uptimeHashrate: BigNumber = new BigNumber(0);
     let uptimePercentage: BigNumber = new BigNumber(0);
     let uptimeTotalMachines: BigNumber = new BigNumber(0);

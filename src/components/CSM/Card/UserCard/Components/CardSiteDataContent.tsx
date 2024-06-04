@@ -33,6 +33,7 @@ import { API_SITE } from 'src/constants/apis';
 import { CleanSatMiningSite } from 'src/types/mining/Site';
 import { LINK_BLOCKCHAIN_EXPLORER_BTC } from 'src/constants/apis';
 import { TAXE_FREE_MODE } from 'src/constants/csm';
+import PeriodDisplay from 'src/components/CSM/Card/components/PeriodDisplay';
 
 export type CardSiteDataContentProps = {
   data: CardData;
@@ -133,13 +134,12 @@ export const CardSiteDataContent: FC<CardSiteDataContentProps> = ({
         </Text>
       </Group>
       <Group position={'apart'} mt={0} mb={0}>
-        <Text fz={'xs'} color={'dimmed'}>
-          {hasData
-            ? formatParenthesis(
-                t('over-start') + formatPeriod(data.site.uptime.onPeriod, t),
-              )
-            : ''}
-        </Text>
+        {hasData && (
+          <PeriodDisplay
+            period={data.site.uptime.period}
+            dataMissing={data.dataMissing}
+          ></PeriodDisplay>
+        )}
         <Text fz={'xs'} color={'dimmed'}>
           {formatSimpleUsd(data.site.uptime.mined.usd, hasData)}
         </Text>
@@ -175,13 +175,12 @@ export const CardSiteDataContent: FC<CardSiteDataContentProps> = ({
         </Text>
       </Group>
       <Group position={'apart'} mt={0} mb={0}>
-        <Text fz={'xs'} color={'dimmed'}>
-          {hasData
-            ? formatParenthesis(
-                t('over-start') + formatPeriod(data.site.uptime.onPeriod, t),
-              )
-            : ''}
-        </Text>
+        {hasData && (
+          <PeriodDisplay
+            period={data.site.uptime.period}
+            dataMissing={data.dataMissing}
+          ></PeriodDisplay>
+        )}
         <Text fz={'xs'} color={'dimmed'}>
           {formatSimpleUsd(earned.usd, hasData)}
         </Text>

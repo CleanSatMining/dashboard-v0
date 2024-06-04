@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { CardData } from '../Type';
 import { InfoText } from 'src/components/InfoText/InfoText';
 import { TAXE_FREE_MODE } from 'src/constants/csm';
+import PeriodDisplay from 'src/components/CSM/Card/components/PeriodDisplay';
 
 export const useStyle = createStyles((theme: MantineTheme) => ({
   urlContainer: {
@@ -63,14 +64,12 @@ export const CardIncomeContent: FC<CardIncomeContentProps> = ({
             </Text>
           </Group>
           <Group position={'apart'} mt={'0'} mb={'0'}>
-            <Text fz={'xs'} color={'dimmed'}>
-              {hasData
-                ? formatParenthesis(
-                    t('over-start') +
-                      formatPeriod(data.site.uptime.onPeriod, t),
-                  )
-                : ''}
-            </Text>
+            {hasData && (
+              <PeriodDisplay
+                period={data.site.uptime.period}
+                dataMissing={data.dataMissing}
+              ></PeriodDisplay>
+            )}
             <Text fz={'xs'} color={'dimmed'}>
               {formatSimpleUsd(data.income.gross.balance.usd, hasData)}
             </Text>
@@ -102,14 +101,12 @@ export const CardIncomeContent: FC<CardIncomeContentProps> = ({
             )}
           </Group>
           <Group position={'apart'} mt={'0'} mb={'0'}>
-            <Text fz={'xs'} color={'dimmed'}>
-              {hasData
-                ? formatParenthesis(
-                    t('over-start') +
-                      formatPeriod(data.site.uptime.onPeriod, t),
-                  )
-                : ''}
-            </Text>
+            {hasData && (
+              <PeriodDisplay
+                period={data.site.uptime.period}
+                dataMissing={data.dataMissing}
+              ></PeriodDisplay>
+            )}
             <Text fz={'xs'} color={'dimmed'}>
               {formatSimpleUsd(data.income.net.balance.usd, hasData)}
             </Text>
@@ -144,14 +141,12 @@ export const CardIncomeContent: FC<CardIncomeContentProps> = ({
             )}
           </Group>
           <Group position={'apart'} mt={'0'} mb={'0'}>
-            <Text fz={'xs'} color={'dimmed'}>
-              {hasData
-                ? formatParenthesis(
-                    t('over-start') +
-                      formatPeriod(data.site.uptime.onPeriod, t),
-                  )
-                : ''}
-            </Text>
+            {hasData && (
+              <PeriodDisplay
+                period={data.site.uptime.period}
+                dataMissing={data.dataMissing}
+              ></PeriodDisplay>
+            )}
             <Text fz={'xs'} color={'dimmed'}>
               {formatSimpleUsd(data.income.grossTaxeFree.balance.usd, hasData)}
             </Text>

@@ -8,6 +8,7 @@ import {
   addYearsToTimestamp,
   getMidnightTimestamp,
   formatDateToISOString,
+  getTimestamp183DaysAgo,
 } from 'src/utils/date';
 import BigNumber from 'bignumber.js';
 
@@ -75,17 +76,52 @@ export function getPeriodFromStart(
   site: Site,
   startTimestamp: number,
   endTimestamp: number,
-): { realPeriod: number; realStartTimestamp: number } {
+): { realPeriod: number; realStartTimestamp: number; dataMissing: boolean } {
   const siteStartTimestamp = new Date(site.mining.startingDate).getTime();
   const realStartTimestamp = Math.max(startTimestamp, siteStartTimestamp);
   const realPeriod = calculateDaysBetweenDates(
     realStartTimestamp,
     endTimestamp,
   );
+
+  if (isWarningSiteDataMissing(site, startTimestamp)) {
+    const timestamp183DaysAgo = getTimestamp183DaysAgo();
+    if (startTimestamp < timestamp183DaysAgo) {
+      const days =
+        timestamp183DaysAgo > endTimestamp
+          ? 0
+          : calculateDaysBetweenDates(timestamp183DaysAgo, endTimestamp);
+      return {
+        realPeriod: days,
+        realStartTimestamp: timestamp183DaysAgo,
+        dataMissing: true,
+      };
+    }
+  }
+
   return {
-    realPeriod,
-    realStartTimestamp,
+    realPeriod: realPeriod,
+    realStartTimestamp: realStartTimestamp,
+    dataMissing: false,
   };
+}
+
+export function isWarningSiteDataMissing(
+  site: Site,
+  startTimestamp: number,
+): boolean {
+  if (
+    site.name === 'CSM Alpha' ||
+    site.name === 'CSM Beta' ||
+    site.name === 'CSM Omega'
+  ) {
+    const timestamp183DaysAgo = getTimestamp183DaysAgo();
+    if (startTimestamp < timestamp183DaysAgo) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 /**
@@ -234,6 +270,10 @@ export function getAverageHashrate(
   startTimestamp: number,
   endTimestamp: number,
 ): BigNumber {
+  if (startTimestamp >= endTimestamp) {
+    return new BigNumber(0);
+  }
+
   let hashrate = new BigNumber(0);
   const siteStartTimestamp = new Date(site.mining.startingDate).getTime();
   const startPeriod = Math.max(startTimestamp, siteStartTimestamp);
@@ -538,6 +578,10 @@ export function getProgressSteps(
   startTimestamp: number,
   endTimestamp: number,
 ): HashratePeriod[] {
+  if (startTimestamp >= endTimestamp) {
+    return [];
+  }
+
   const asicsIn = getAsicsEquipements(site, startTimestamp, endTimestamp);
   const asicsInOut = getAsicsInOut(asicsIn, endTimestamp);
 

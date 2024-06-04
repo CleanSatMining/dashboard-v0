@@ -310,3 +310,10 @@ export function isTodayUTC(timestamp: number): boolean {
     givenUTCDay === currentUTCDay
   );
 }
+
+export function getTimestamp183DaysAgo(): number {
+  const date = new Date();
+  date.setUTCHours(0, 0, 0, 0);
+
+  return date.getTime() - 183 * 24 * 60 * 60 * 1000;
+}

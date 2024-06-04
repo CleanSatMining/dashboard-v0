@@ -66,7 +66,7 @@ const _SiteCard: FC<SiteProps> = ({
   const { getPropertyToken } = useCsmTokens();
 
   const site: Site = SITES[siteId as SiteID];
-  const { realPeriod, realStartTimestamp } = getPeriodFromStart(
+  const { realPeriod, realStartTimestamp, dataMissing } = getPeriodFromStart(
     site,
     startDate,
     endDate,
@@ -161,6 +161,8 @@ const _SiteCard: FC<SiteProps> = ({
     siteId,
     site,
     startDate,
+    realStartTimestamp,
+    endDate,
     endDate,
     siteMinedBTC,
     userShare,
@@ -172,8 +174,10 @@ const _SiteCard: FC<SiteProps> = ({
     hashratePeriods,
     siteCosts,
     realPeriod,
+    period,
     getPropertyToken,
     undefined,
+    dataMissing,
   );
 
   const [userSiteData, setUserSiteData] = useState<CardData>(data);
@@ -272,6 +276,8 @@ const _SiteCard: FC<SiteProps> = ({
         siteId,
         site,
         startDate,
+        realStartTimestamp,
+        endDate,
         endDate,
         siteMinedBTC,
         userShare,
@@ -283,8 +289,10 @@ const _SiteCard: FC<SiteProps> = ({
         hashratePeriods,
         siteCosts,
         realPeriod,
+        period,
         getPropertyToken,
         undefined,
+        dataMissing,
       ),
     );
     if (shallDisplay) {
@@ -342,14 +350,16 @@ export const SiteCard = _SiteCard;
  * @param userYield
  * @param userToken
  * @param siteUptime
- * @param period
+ * @param realPeriod
  * @returns
  */
 function buildUserSiteData(
   siteId: string,
   site: Site,
-  startTimestamp: number,
-  endTimestamp: number,
+  instructionStart: number,
+  realStart: number,
+  instructionEnd: number,
+  realEnd: number,
   siteMinedBTC: {
     quantity: BigNumber;
     value: BigNumber;
@@ -367,17 +377,19 @@ function buildUserSiteData(
   },
   hashratePeriods: HashratePeriod[],
   costs: SiteCost,
-  period: number,
+  realPeriod: number,
+  instructionPeriod: number,
   getPropertyToken: (address: string) => PropertiesERC20 | undefined,
   operator: Operator | undefined,
+  dataMissing: boolean,
 ): CardData {
   // const siteHashrate = new BigNumber(site.mining.asics.hashrateHs)
   //   .times(site.mining.asics.units)
   //   .toNumber();
   const siteAverageHashrate = getAverageHashrate(
     site,
-    startTimestamp,
-    endTimestamp,
+    instructionStart,
+    instructionEnd,
   );
   const tokenProperties = getPropertyToken(site.token.address);
   const tokenSupply = tokenProperties
@@ -386,6 +398,7 @@ function buildUserSiteData(
   return {
     id: siteId,
     label: site.name,
+    dataMissing: dataMissing,
     income: {
       available: site.api[0].enable,
       mined: {
@@ -431,20 +444,34 @@ function buildUserSiteData(
     site: {
       operator: operator,
       miningStart: site.mining.startingDate,
-      machines: getAverageMachines(site, startTimestamp, endTimestamp),
+      machines: getAverageMachines(site, instructionStart, instructionEnd),
       hashrate: siteAverageHashrate.toNumber(),
       equipmentCost: getAverageEquipmentCost(
         site,
-        startTimestamp,
-        endTimestamp,
+        instructionStart,
+        instructionEnd,
       ),
       uptime: {
+        period: {
+          real: {
+            days: realPeriod,
+            start: realStart,
+            end: realEnd,
+          },
+          instruction: {
+            days: instructionPeriod,
+            start: instructionStart,
+            end: instructionEnd,
+          },
+        },
         hashrate: siteUptime.hashrate,
-        hashratePercent: new BigNumber(siteUptime.hashrate)
-          .dividedBy(siteAverageHashrate)
-          .times(100)
-          .toNumber(),
-        onPeriod: period,
+        hashratePercent: siteAverageHashrate.gt(0)
+          ? new BigNumber(siteUptime.hashrate)
+              .dividedBy(siteAverageHashrate)
+              .times(100)
+              .toNumber()
+          : 0,
+        //onPeriod: realPeriod,
         days: siteUptime.days,
         machines: siteUptime.machines,
         mined: {

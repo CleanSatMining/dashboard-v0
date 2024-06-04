@@ -1,14 +1,21 @@
 /* eslint @typescript-eslint/no-var-requires: "off" */
 import { FC } from 'react';
 
-import { Card, Avatar, Text, Accordion, Group, Progress } from '@mantine/core';
+import {
+  Card,
+  Avatar,
+  Text,
+  Accordion,
+  Group,
+  Progress,
+  HoverCard,
+} from '@mantine/core';
 
 import { MiningStatus } from '../../../../types/mining/Site';
 import {
   formatSimpleUsd,
   formatToken,
   formatHashrate,
-  formatPeriod,
 } from 'src/utils/format/format';
 
 import { CardHeader } from './Components/CardHeader';
@@ -22,6 +29,7 @@ import {
 import { CardData } from './Type';
 import { useTranslation } from 'react-i18next';
 import Image from 'next/image';
+import { periodText } from 'src/components/CSM/Card/components/PeriodDisplay';
 
 type CardMobileProps = {
   title: string;
@@ -41,6 +49,7 @@ export const UserSiteCardMobile: FC<CardMobileProps> = ({
   countryCode,
 }) => {
   const { t } = useTranslation('site', { keyPrefix: 'card' });
+  const { t: t_time } = useTranslation('timeframe', { keyPrefix: 'time' });
   //console.log('MOUNT UserSiteCard', title, data.apr);
   const hasData = data.income.available;
 
@@ -114,9 +123,20 @@ export const UserSiteCardMobile: FC<CardMobileProps> = ({
                 hasData,
               )}
               label={t('my-income-short')}
-              description={
-                t('over-start') + formatPeriod(data.site.uptime.onPeriod, t)
+              description={periodText(
+                data.site.uptime.period,
+                t_time,
+                data.dataMissing,
+                true,
+              )}
+              descriptionColor={
+                data.site.uptime.period.real.days !==
+                data.site.uptime.period.instruction.days
+                  ? 'yellow'
+                  : 'dimmed'
               }
+              warning={data.dataMissing}
+              warningMessage={t_time('warning')}
             ></AccordionLabel>
           </Accordion.Control>
           <Accordion.Panel>
@@ -134,6 +154,9 @@ interface AccordionLabelProps {
   value: string;
   valuePercent?: number;
   description?: string;
+  descriptionColor?: string;
+  warning?: boolean;
+  warningMessage?: string;
 }
 
 function AccordionLabel({
@@ -141,6 +164,9 @@ function AccordionLabel({
   image,
   value,
   description,
+  descriptionColor,
+  warning,
+  warningMessage,
 }: AccordionLabelProps) {
   return (
     <Group position={'apart'} mih={40}>
@@ -149,9 +175,31 @@ function AccordionLabel({
         <Text weight={500} color={'dimmed'}>
           {label}
         </Text>
-        <Text size={'xs'} weight={400} align={'center'} color={'dimmed'}>
-          {description}
-        </Text>
+        <Group position={'center'} spacing={5}>
+          {warning && (
+            <HoverCard width={280} shadow={'md'}>
+              <HoverCard.Target>
+                <Image
+                  src={'/icons/warning.png'}
+                  alt={`Warning icon`}
+                  width={14}
+                  height={14}
+                ></Image>
+              </HoverCard.Target>
+              <HoverCard.Dropdown>
+                <Text size='sm'>{warningMessage}</Text>
+              </HoverCard.Dropdown>
+            </HoverCard>
+          )}
+          <Text
+            size={'xs'}
+            weight={400}
+            align={'center'}
+            color={descriptionColor ? descriptionColor : 'dimmed'}
+          >
+            {description}
+          </Text>
+        </Group>
       </div>
       <Text size={'sm'} weight={400}>
         {value}

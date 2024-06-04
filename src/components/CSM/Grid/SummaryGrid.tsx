@@ -95,15 +95,20 @@ const _Summary: FC<AssetProps> = ({
 
   const dataAPR: Data[] = [];
 
+  let datasMissing = false;
+
   for (const siteId of siteIds) {
     const token = getUserTokenBalance(usersState, account, siteId);
     const tokenToCome = getUserTokenBalanceToCome(usersState, account, siteId);
     const site = getSite(siteId);
-    const { realPeriod, realStartTimestamp } = getPeriodFromStart(
+    const { realPeriod, realStartTimestamp, dataMissing } = getPeriodFromStart(
       site,
       startDate,
       endDate,
     );
+
+    datasMissing = datasMissing || dataMissing;
+
     const yields = getUserYieldBySite(
       miningState,
       usersState,
@@ -215,7 +220,7 @@ const _Summary: FC<AssetProps> = ({
             subValue={formatUsd(userYield.net.usd)}
             data={dataIncomeNet}
             Icon={IconCoinBitcoin}
-            warning={userYield.net.usd < 0}
+            warningValue={userYield.net.usd < 0}
           ></SummaryCard>
           <SummaryCard
             title={isMobile ? t('incomes-gross-short') : t('incomes-gross')}
@@ -245,6 +250,8 @@ const _Summary: FC<AssetProps> = ({
           subValue={formatUsd(userYield.grossTaxeFree.usd)}
           data={dataIncomeTaxeFree}
           Icon={IconCoinBitcoin}
+          warningValue={userYield.grossTaxeFree.usd < 0}
+          warningData={datasMissing}
         ></SummaryCard>
       )}
       {ultraRare.balance > 0 && (

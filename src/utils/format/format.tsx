@@ -241,13 +241,9 @@ export const formatUsdCentsPerKWh = (
   return usd + suffix;
 };
 
-export function formatPeriod(
-  d: number,
-  t: TFunction<'site', 'card'>,
-  inDay = false,
-): string {
+export function formatPeriod(d: number, t: TFunction, inDay = false): string {
   let label = '';
-  if (inDay) {
+  if (inDay || d < 1) {
     label = d > 1 ? d + ' ' + t('days') : d + ' ' + t('day');
   } else if (d >= 360 && d <= 366) {
     label = 1 + t('year');

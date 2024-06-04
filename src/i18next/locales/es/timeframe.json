@@ -1,10 +1,17 @@
 {
   "time": {
     "day": "día",
+    "days": " días",
+    "month": " mes",
+    "months": " meses",
+    "year": " año",
+    "years": " años",
     "hour": "hora",
     "from": "Desde",
     "to": "Hasta",
-    "lessOneMinute": "Menos de un minuto"
+    "lessOneMinute": "Menos de un minuto",
+    "over-start": "over ",
+    "warning": "La periode demandée ne peut pas être affichée. L'api de Antpool ne renvoit pas toutes les données sur la période demandée."
   },
   "menu": {
     "month": "mes",
@@ -20,7 +27,7 @@
     "currentMonth": "Mes actual",
     "lastMonth": "Mes pasado",
     "last3Months": "Últimos 3 meses",
-    "fromStart" : "Todo",
+    "fromStart": "Todo",
     "byDate": "Por fecha",
     "byDuration": "Por duración (en días)",
     "update": "Ver fechas",

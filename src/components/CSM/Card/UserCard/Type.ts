@@ -6,6 +6,7 @@ import { SiteCost } from 'src/types/mining/Site';
 export type CardData = {
   id: string;
   label: string;
+  dataMissing: boolean;
   income: {
     available: boolean;
     mined: Income;
@@ -44,7 +45,19 @@ export type CardData = {
     hashrate: number;
     equipmentCost: number;
     uptime: {
-      onPeriod: number;
+      period: {
+        real: {
+          days: number;
+          start: number;
+          end: number;
+        };
+        instruction: {
+          days: number;
+          start: number;
+          end: number;
+        };
+      };
+      //onPeriod: number;
       days: number;
       machines: number;
       hashratePercent: number;

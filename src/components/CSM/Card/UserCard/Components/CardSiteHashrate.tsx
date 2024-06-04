@@ -16,6 +16,7 @@ import BigNumber from 'bignumber.js';
 import { IconChevronDown, IconChevronUp } from '@tabler/icons';
 import { HashratePeriod } from 'src/types/mining/Mining';
 import { TFunction } from 'i18next';
+import PeriodDisplay from 'src/components/CSM/Card/components/PeriodDisplay';
 
 export type CardSiteHashrateProps = {
   data: CardData;
@@ -93,13 +94,12 @@ export const CardSiteHashrate: FC<CardSiteHashrateProps> = ({
       />
 
       <Group position={'apart'} mt={isMobile ? 0 : 5} mb={isMobile ? 0 : 5}>
-        <Text fz={'xs'} color={'dimmed'}>
-          {hasData
-            ? formatParenthesis(
-                t('over-start') + formatPeriod(data.site.uptime.onPeriod, t),
-              )
-            : ''}
-        </Text>
+        {hasData && (
+          <PeriodDisplay
+            period={data.site.uptime.period}
+            dataMissing={data.dataMissing}
+          ></PeriodDisplay>
+        )}
         <Text weight={500} fz={isMobile ? 'xs' : 'sm'}>
           {formatSmallPercent(
             data.site.uptime.hashratePercent / 100,

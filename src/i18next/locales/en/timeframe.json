@@ -1,10 +1,17 @@
 {
   "time": {
     "day": "day",
+    "days": " days",
+    "month": " month",
+    "months": " months",
+    "year": " year",
+    "years": " years",
     "hour": "hour",
     "from": "From",
     "to": "To",
-    "lessOneMinute": "Less than a minute"
+    "lessOneMinute": "Less than a minute",
+    "over-start": "over ",
+    "warning": "The requested period cannot be displayed. The Antpool API does not return all the data for the requested period."
   },
   "menu": {
     "month": "month",
@@ -20,7 +27,7 @@
     "currentMonth": "Current Month",
     "lastMonth": "Last Month",
     "last3Months": "Last 3 Months",
-    "fromStart" : "All",
+    "fromStart": "All",
     "byDate": "By Date",
     "byDuration": "By Duration (in days)",
     "update": "View Dates",
