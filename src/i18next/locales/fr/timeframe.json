@@ -12,6 +12,7 @@
     "years": " ans",
     "over-start": "sur ",
     "empty": "Aucune donnée disponible",
+    "not-started": "Non demarré",
     "warning": "La periode demandée ne peut pas être affichée. L'api de Antpool ne renvoit pas toutes les données sur la période demandée.",
     "warning-no-data": "La periode demandée ne peut pas être affichée. L'api de Antpool ne renvoit pas de données sur la période demandée.",
     "warning-income": "Les gains affichés sont incomplets. L'api de Antpool utilisée sur les site Alpha, Beta et Omega ne renvoit pas toutes les données sur la periode demandée."

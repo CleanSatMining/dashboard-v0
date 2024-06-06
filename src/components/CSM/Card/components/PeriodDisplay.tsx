@@ -33,6 +33,8 @@ const PeriodDisplay: React.FC<MyComponentProps> = ({
 }) => {
   const { t: t_time } = useTranslation('timeframe', { keyPrefix: 'time' });
   const isInstructionReal = period.real.start === period.instruction.start;
+  const isEmpty =
+    period.real.days === 0 || period.real.start >= period.real.end;
   return (
     <Group spacing={5}>
       {dataMissing && (
@@ -56,7 +58,12 @@ const PeriodDisplay: React.FC<MyComponentProps> = ({
           />
         </Tooltip>
       )}
-      <Text fz={'xs'} color={isInstructionReal ? 'dimmed' : 'yellow'}>
+      <Text
+        fz={'xs'}
+        color={
+          isInstructionReal || (isEmpty && !dataMissing) ? 'dimmed' : 'yellow'
+        }
+      >
         {periodText(period, t_time, dataMissing)}
       </Text>
     </Group>
@@ -128,8 +135,10 @@ export function periodText(
       formatTimestampDay(period.real.end) +
       ' ' +
       formatParenthesis(formatPeriod(period.real.days, t_time));
-  } else if (isEmpty) {
+  } else if (dataMissing) {
     text = t_time('empty');
+  } else if (isEmpty) {
+    text = t_time('not-started');
   } else {
     text = t_time('over-start') + formatPeriod(period.real.days, t_time);
   }
