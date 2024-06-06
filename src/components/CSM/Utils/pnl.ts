@@ -442,7 +442,7 @@ export function calculateCostsAndEBITDAByPeriod(
     operator: operatorBillingExpense,
   } = calculateExpenses(expenses, miningHistory, startDate, endDate);
   const unBilledDays = realPeriod - billingPeriod;
-  const unbilledRate = unBilledDays / realPeriod;
+  const unbilledRate = realPeriod > 0 ? unBilledDays / realPeriod : 0;
   const csmBillingExpenseUsd = csmBillingExpense.times(btcPrice);
   const operatorBillingExpenseUsd = operatorBillingExpense.times(btcPrice);
 

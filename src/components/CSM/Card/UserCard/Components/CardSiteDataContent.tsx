@@ -17,8 +17,6 @@ import Image from 'next/image';
 import {
   formatSimpleUsd,
   formatBTC,
-  formatPeriod,
-  formatParenthesis,
   formatTimestampDay,
 } from 'src/utils/format/format';
 import { useMediaQuery } from '@mantine/hooks';

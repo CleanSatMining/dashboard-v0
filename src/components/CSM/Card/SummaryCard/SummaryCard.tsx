@@ -16,7 +16,7 @@ import { TablerIcon } from '@tabler/icons';
 import { Data } from './SummaryType';
 import { SummaryDetailCard } from './SummaryDetail';
 import { InfoTitle } from 'src/components/InfoText/InfoText';
-import { PeriodWarningDisplay } from 'src/components/CSM/Card/components/PeriodDisplay';
+import { PeriodIncomeWarningDisplay } from 'src/components/CSM/Card/components/PeriodDisplay';
 
 const useStyle = createStyles((theme: MantineTheme) => ({
   brand: {
@@ -101,10 +101,10 @@ const _SummaryCard: FC<SummaryProps> = ({
             >
               <Group spacing={5}>
                 {warningData && (
-                  <PeriodWarningDisplay
+                  <PeriodIncomeWarningDisplay
                     dataMissing={true}
                     iconSize={isMobile ? 16 : 24}
-                  ></PeriodWarningDisplay>
+                  ></PeriodIncomeWarningDisplay>
                 )}
                 {warningValue && (
                   <InfoTitle

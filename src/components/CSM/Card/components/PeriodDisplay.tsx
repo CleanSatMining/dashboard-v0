@@ -37,7 +37,11 @@ const PeriodDisplay: React.FC<MyComponentProps> = ({
     <Group spacing={5}>
       {dataMissing && (
         <Tooltip
-          label={t_time('warning')}
+          label={
+            period.real.days === 0
+              ? t_time('warning-no-data')
+              : t_time('warning')
+          }
           multiline={true}
           position={'right'}
           //color={'red'}
@@ -66,17 +70,16 @@ interface PeriodWarningDisplayProps {
   iconSize: number;
 }
 
-export const PeriodWarningDisplay: React.FC<PeriodWarningDisplayProps> = ({
-  dataMissing,
-  iconSize = 16,
-}) => {
+export const PeriodIncomeWarningDisplay: React.FC<
+  PeriodWarningDisplayProps
+> = ({ dataMissing, iconSize = 16 }) => {
   const { t: t_time } = useTranslation('timeframe', { keyPrefix: 'time' });
 
   return (
     <>
       {dataMissing && (
         <Tooltip
-          label={t_time('warning')}
+          label={t_time('warning-income')}
           multiline={true}
           position={'right'}
           //color={'red'}
@@ -114,7 +117,8 @@ export function periodText(
 ): string {
   let text = '';
   const isInstructionReal = period.real.start === period.instruction.start;
-  if (!isInstructionReal && !simple) {
+  const isEmpty = period.real.days === 0;
+  if (!isInstructionReal && !simple && !isEmpty) {
     text =
       formatTimestampDay(period.real.start) +
       ' ' +
