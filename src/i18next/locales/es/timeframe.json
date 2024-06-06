@@ -11,6 +11,7 @@
     "to": "Hasta",
     "lessOneMinute": "Menos de un minuto",
     "over-start": "over ",
+    "empty": "No hay datos disponibles",
     "warning": "El período solicitado no se puede mostrar. La API de Antpool no devuelve todos los datos para el período solicitado.",
     "warning-no-data": "El período solicitado no se puede mostrar. La API de Antpool no devuelve datos para el período solicitado.",
     "warning-income": "Las ganancias mostradas están incompletas. La API de Antpool utilizada en los sitios Alpha, Beta y Omega no devuelve todos los datos para el período solicitado."

@@ -117,7 +117,8 @@ export function periodText(
 ): string {
   let text = '';
   const isInstructionReal = period.real.start === period.instruction.start;
-  const isEmpty = period.real.days === 0;
+  const isEmpty =
+    period.real.days === 0 || period.real.start >= period.real.end;
   if (!isInstructionReal && !simple && !isEmpty) {
     text =
       formatTimestampDay(period.real.start) +
@@ -127,6 +128,8 @@ export function periodText(
       formatTimestampDay(period.real.end) +
       ' ' +
       formatParenthesis(formatPeriod(period.real.days, t_time));
+  } else if (isEmpty) {
+    text = t_time('empty');
   } else {
     text = t_time('over-start') + formatPeriod(period.real.days, t_time);
   }
