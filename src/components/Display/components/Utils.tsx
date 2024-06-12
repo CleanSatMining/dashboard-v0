@@ -5,7 +5,7 @@ import {
   IconCalendarPlus,
   IconCalendarTime,
   IconClock,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import { PredefinedPeriods } from './Types';
 export const FIRST_OF_MAY = 1682892000000;
 export const START_DATE = 1687212000000;

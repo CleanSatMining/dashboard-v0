@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import { ActionIcon, Group, Title } from '@mantine/core';
 import { useModals } from '@mantine/modals';
-import { IconEdit } from '@tabler/icons';
+import { IconEdit } from '@tabler/icons-react';
 import { useWeb3React } from '@web3-react/core';
 
 import { Offer } from 'src/types/offer/Offer';
@@ -13,13 +13,11 @@ type UpdateActions = {
   updateOffer: Offer;
 };
 
-export const UpdateActionsWithPermit: FC<UpdateActions> = ({
-  updateOffer,
-}) => {
+export const UpdateActionsWithPermit: FC<UpdateActions> = ({ updateOffer }) => {
   const { account } = useWeb3React();
   const modals = useModals();
 
-  const { refreshOffers } = useRefreshOffers(false); 
+  const { refreshOffers } = useRefreshOffers(false);
 
   const { t } = useTranslation('modals');
 
@@ -27,14 +25,14 @@ export const UpdateActionsWithPermit: FC<UpdateActions> = ({
     (offer: Offer) => {
       modals.openContextModal('updatePermit', {
         title: <Title order={3}>{t('update.title')}</Title>,
-        size: "lg",
+        size: 'lg',
         innerProps: {
           offer: offer,
           triggerTableRefresh: refreshOffers,
         },
       });
     },
-    [modals, refreshOffers, t]
+    [modals, refreshOffers, t],
   );
 
   const onOpenWalletModal = useCallback(() => {

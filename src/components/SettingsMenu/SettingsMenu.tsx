@@ -11,7 +11,12 @@ import {
   useMantineColorScheme,
 } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconLanguage, IconMoon, IconSettings, IconSun } from '@tabler/icons';
+import {
+  IconLanguage,
+  IconMoon,
+  IconSettings,
+  IconSun,
+} from '@tabler/icons-react';
 
 import { setCookie } from 'cookies-next';
 

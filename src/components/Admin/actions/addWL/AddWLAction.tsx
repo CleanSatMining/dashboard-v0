@@ -11,7 +11,7 @@ import { AddWL } from './AddWL';
 import { useAtom } from 'jotai';
 import { wlTokensAtom } from 'src/states';
 import { DEFAULT_WL_TOKEN } from 'src/types/WlToken';
-import { IconPlus } from '@tabler/icons';
+import { IconPlus } from '@tabler/icons-react';
 import { calcRem } from 'src/utils/style';
 import { useTranslation } from 'react-i18next';
 

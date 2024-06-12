@@ -8,7 +8,7 @@ import {
   Skeleton,
   Badge,
 } from '@mantine/core';
-import { IconChevronDown, IconChevronUp, IconTrash } from '@tabler/icons';
+import { IconChevronDown, IconChevronUp, IconTrash } from '@tabler/icons-react';
 import { ColumnDef, RowSelectionState, Table } from '@tanstack/react-table';
 import BigNumber from 'bignumber.js';
 import { TFunction } from 'i18next';

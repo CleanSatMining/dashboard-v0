@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import { ActionIcon, Group, Title } from '@mantine/core';
 import { useModals } from '@mantine/modals';
-import { IconTrash } from '@tabler/icons';
+import { IconTrash } from '@tabler/icons-react';
 import { useWeb3React } from '@web3-react/core';
 
 import { Offer } from 'src/types/offer/Offer';
@@ -13,9 +13,7 @@ type DeleteActions = {
   deleteOffer: Offer;
 };
 
-export const DeleteAdminAction: FC<DeleteActions> = ({
-  deleteOffer,
-}) => {
+export const DeleteAdminAction: FC<DeleteActions> = ({ deleteOffer }) => {
   const { account } = useWeb3React();
   const modals = useModals();
 
@@ -27,15 +25,15 @@ export const DeleteAdminAction: FC<DeleteActions> = ({
     (offer: Offer) => {
       modals.openContextModal('delete', {
         title: <Title order={3}>{t('delete.title')}</Title>,
-        size: "lg",
+        size: 'lg',
         innerProps: {
           offerIds: [offer.offerId],
           onSuccess: refreshOffers,
-          isAdminDelete: true
+          isAdminDelete: true,
         },
       });
     },
-    [modals, refreshOffers, t]
+    [modals, refreshOffers, t],
   );
 
   const onOpenWalletModal = useCallback(() => {

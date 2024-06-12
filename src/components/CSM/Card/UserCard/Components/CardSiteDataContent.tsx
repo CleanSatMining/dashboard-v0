@@ -12,7 +12,7 @@ import {
   Tooltip,
   useMantineTheme,
 } from '@mantine/core';
-import { IconPlus, IconMinus, IconEye } from '@tabler/icons';
+import { IconPlus, IconMinus, IconEye } from '@tabler/icons-react';
 import Image from 'next/image';
 import {
   formatSimpleUsd,

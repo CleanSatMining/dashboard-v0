@@ -12,7 +12,7 @@ import {
   useMantineTheme,
 } from '@mantine/core';
 import { AvailableConnectors } from '@realtoken/realt-commons';
-import { IconCheck, IconCopy } from '@tabler/icons';
+import { IconCheck, IconCopy } from '@tabler/icons-react';
 
 import { useAtomValue } from 'jotai';
 

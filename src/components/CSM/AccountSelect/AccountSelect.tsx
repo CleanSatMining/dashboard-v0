@@ -12,7 +12,7 @@ import {
   Space,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { IconAt } from '@tabler/icons';
+import { IconAt } from '@tabler/icons-react';
 
 const useStyles = createStyles(() => ({
   container: {

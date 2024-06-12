@@ -11,7 +11,7 @@ import {
   IconCalendarPlus,
   IconCalendarTime,
   IconClock,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import { PredefinedPeriods } from './Types';
 import { START_DATE } from './Utils';
 import {

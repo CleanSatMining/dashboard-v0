@@ -1,5 +1,5 @@
 import { createStyles, Flex, Text } from '@mantine/core';
-import { IconExternalLink } from '@tabler/icons';
+import { IconExternalLink } from '@tabler/icons-react';
 import { openInNewTab } from 'src/utils/window';
 
 const useStyle = createStyles((theme) => ({

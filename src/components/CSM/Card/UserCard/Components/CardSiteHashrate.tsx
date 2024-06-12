@@ -13,7 +13,7 @@ import { useMediaQuery } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';
 import { CardData } from '../Type';
 import BigNumber from 'bignumber.js';
-import { IconChevronDown, IconChevronUp } from '@tabler/icons';
+import { IconChevronDown, IconChevronUp } from '@tabler/icons-react';
 import { HashratePeriod } from 'src/types/mining/Mining';
 import { TFunction } from 'i18next';
 import PeriodDisplay from 'src/components/CSM/Card/components/PeriodDisplay';

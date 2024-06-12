@@ -8,7 +8,7 @@ import {
   Tooltip,
   Space,
 } from '@mantine/core';
-import { IconExternalLink } from '@tabler/icons';
+import { IconExternalLink } from '@tabler/icons-react';
 import {
   formatSmallPercent,
   formatToken,

@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Flex, Tabs } from '@mantine/core';
-import { IconFingerprint, IconList, IconPlus } from '@tabler/icons';
+import { IconFingerprint, IconList, IconPlus } from '@tabler/icons-react';
 import {
   MarketTablePrivate,
   MarketTableUser,
@@ -12,11 +12,8 @@ const TransfersPage = () => {
   const menu = useTranslation('menu', { keyPrefix: 'subMenuMyOffer' });
   return (
     <ConnectedProvider>
-      <Flex
-        direction={"column"}
-        my={"xl"}
-      >
-        <Tabs color={"brand"} variant={"pills"} defaultValue={'myOffers'}>
+      <Flex direction={'column'} my={'xl'}>
+        <Tabs color={'brand'} variant={'pills'} defaultValue={'myOffers'}>
           <Tabs.List>
             <Tabs.Tab value={'myOffers'} icon={<IconList size={18} />}>
               {menu.t('myOffers')}

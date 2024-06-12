@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { IconInfoCircle } from '@tabler/icons';
+import { IconInfoCircle } from '@tabler/icons-react';
 import {
   Flex,
   Text,
@@ -77,10 +77,10 @@ export const InfoText: FC<InfoTextProps> = ({
   const iconColorCalc = iconColor
     ? iconColor
     : color === 'dimmed'
-    ? 'gray'
-    : color === 'yellow'
-    ? '#f08c00'
-    : color;
+      ? 'gray'
+      : color === 'yellow'
+        ? '#f08c00'
+        : color;
   const cardWidth = width ?? 400;
   return (
     <HoverCard
@@ -136,10 +136,10 @@ export const InfoTitle: FC<InfoTitleProps> = ({
   const iconColorCalc = iconColor
     ? iconColor
     : color === 'dimmed'
-    ? 'gray'
-    : color === 'yellow'
-    ? '#f08c00'
-    : color;
+      ? 'gray'
+      : color === 'yellow'
+        ? '#f08c00'
+        : color;
   const cardWidth = width ?? 400;
   return (
     <HoverCard

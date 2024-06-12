@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next';
 
 import { Flex, Text } from '@mantine/core';
-import { IconWalletOff } from '@tabler/icons';
+import { IconWalletOff } from '@tabler/icons-react';
 import { useWeb3React } from '@web3-react/core';
 
 interface ConnectedProviderProps {

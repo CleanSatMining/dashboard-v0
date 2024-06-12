@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 
 import { ActionIcon, Group, Title } from '@mantine/core';
 import { useModals } from '@mantine/modals';
-import { IconTrash } from '@tabler/icons';
+import { IconTrash } from '@tabler/icons-react';
 import { useWeb3React } from '@web3-react/core';
 
 import { Offer } from 'src/types/offer/Offer';

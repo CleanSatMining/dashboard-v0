@@ -1,5 +1,5 @@
 import { createStyles, Flex, Text } from '@mantine/core';
-import { IconArrowRight, IconMoneybag } from '@tabler/icons';
+import { IconArrowRight, IconMoneybag } from '@tabler/icons-react';
 import { FC } from 'react';
 import { Offer } from 'src/types/offer';
 

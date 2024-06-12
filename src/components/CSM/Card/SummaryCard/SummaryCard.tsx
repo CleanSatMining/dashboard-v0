@@ -12,7 +12,7 @@ import {
   HoverCard,
 } from '@mantine/core';
 import { useMediaQuery } from '@mantine/hooks';
-import { TablerIcon } from '@tabler/icons';
+import { TablerIcon } from '@tabler/icons-react';
 import { Data } from './SummaryType';
 import { SummaryDetailCard } from './SummaryDetail';
 import { InfoTitle } from 'src/components/InfoText/InfoText';

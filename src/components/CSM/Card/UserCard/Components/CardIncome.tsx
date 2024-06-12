@@ -9,7 +9,7 @@ import {
   Avatar,
   HoverCard,
 } from '@mantine/core';
-import { IconInfoCircle } from '@tabler/icons';
+import { IconInfoCircle } from '@tabler/icons-react';
 
 import { useMediaQuery } from '@mantine/hooks';
 import { useTranslation } from 'react-i18next';

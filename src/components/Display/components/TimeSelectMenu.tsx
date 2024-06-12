@@ -8,7 +8,11 @@ import {
 } from '@mantine/core';
 
 import { useTranslation } from 'react-i18next';
-import { IconChevronUp, IconChevronDown, IconSearch } from '@tabler/icons';
+import {
+  IconChevronUp,
+  IconChevronDown,
+  IconSearch,
+} from '@tabler/icons-react';
 import { DateInput, DateValue } from '@mantine/dates';
 import { PredefinedPeriods } from './Types';
 import { FIRST_OF_MAY, getCalendarIcon } from './Utils';

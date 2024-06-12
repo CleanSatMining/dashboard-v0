@@ -12,13 +12,17 @@ import {
 } from '@mantine/core';
 
 import { useTranslation } from 'react-i18next';
-import { IconCalendar, IconCalendarTime, IconAdjustments } from '@tabler/icons';
+import {
+  IconCalendar,
+  IconCalendarTime,
+  IconAdjustments,
+} from '@tabler/icons-react';
 import { DateInput, DateValue } from '@mantine/dates';
 import { PredefinedPeriods } from './Types';
 import { FIRST_OF_MAY, getCalendarIcon } from './Utils';
 import { getDateYesterday } from 'src/utils/date';
 
-import { IconChevronRight, IconActivity, IconBolt } from '@tabler/icons';
+import { IconChevronRight, IconActivity, IconBolt } from '@tabler/icons-react';
 
 interface TimeSelectDrawerProps {
   drawerOpened: boolean;

@@ -22,7 +22,7 @@ import {
   IconAlignJustified,
   IconListDetails,
   IconChartRadar,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 import { openInNewTab } from 'src/utils/window';
 import { useTranslation } from 'react-i18next';
 import { IconLink } from 'src/components/Link/Link';

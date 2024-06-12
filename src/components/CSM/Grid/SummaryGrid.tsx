@@ -8,7 +8,7 @@ import {
   IconCoinBitcoin,
   IconCoins,
   IconTrendingUp,
-} from '@tabler/icons';
+} from '@tabler/icons-react';
 
 import { useAppSelector } from 'src/hooks/react-hooks';
 import {
