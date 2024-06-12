@@ -18,7 +18,7 @@ import { BytesLike } from "@ethersproject/bytes";
 import { Listener, Provider } from "@ethersproject/providers";
 import { FunctionFragment, EventFragment, Result } from "@ethersproject/abi";
 import type { TypedEventFilter, TypedEvent, TypedListener } from "./common";
-
+import { Contract, ContractInterface } from '@ethersproject/contracts';
 export interface Erc20Interface extends ethers.utils.Interface {
   functions: {
     "allowance(address,address)": FunctionFragment;
@@ -112,7 +112,7 @@ export type TransferEvent = TypedEvent<
   [string, string, BigNumber] & { from: string; to: string; value: BigNumber }
 >;
 
-export interface Erc20 extends BaseContract {
+export interface Erc20 extends Contract {
   connect(signerOrProvider: Signer | Provider | string): this;
   attach(addressOrName: string): this;
   deployed(): Promise<this>;
