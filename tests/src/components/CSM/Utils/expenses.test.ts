@@ -1,5 +1,5 @@
 import {
-  calculateExpenses,
+  getBillExpenses,
   getLastDayOfMonth,
   calculateDaysBetweenDates,
 } from 'src/components/CSM/Utils/expenses';
@@ -27,7 +27,7 @@ describe('calculateExpenses', () => {
     const startDateTime = new Date('2023-12-01T00:00:00.000+00:00').getTime();
     const endDateTime = new Date('2023-12-31T00:00:00.000+00:00').getTime();
 
-    const result = calculateExpenses(
+    const result = getBillExpenses(
       expenses,
       MINING_HISTORY,
       startDateTime,
@@ -75,7 +75,7 @@ describe('calculateExpenses', () => {
     const startDateTime = new Date('2023-11-11T00:00:00.000+00:00').getTime();
     const endDateTime = new Date('2023-11-13T00:00:00.000+00:00').getTime();
 
-    const result = calculateExpenses(
+    const result = getBillExpenses(
       expenses,
       MINING_HISTORY,
       startDateTime,
@@ -121,7 +121,7 @@ describe('calculateExpenses', () => {
     const startDateTime = new Date('2023-11-28T00:00:00.000+00:00').getTime();
     const endDateTime = new Date('2023-12-03T00:00:00.000+00:00').getTime();
 
-    const result = calculateExpenses(
+    const result = getBillExpenses(
       expenses,
       MINING_HISTORY,
       startDateTime,
@@ -182,7 +182,7 @@ describe('calculateExpenses', () => {
     const startDateTime = new Date('2023-10-01T00:00:00.000+00:00').getTime();
     const endDateTime = new Date('2024-01-31T00:00:00.000+00:00').getTime();
 
-    const result = calculateExpenses(
+    const result = getBillExpenses(
       expenses,
       MINING_HISTORY,
       startDateTime,
@@ -238,7 +238,7 @@ describe('calculateExpenses', () => {
     const startDateTime = new Date('2024-04-01T00:00:00.000+00:00').getTime();
     const endDateTime = new Date('2024-04-02T00:00:00.000+00:00').getTime();
 
-    const result = calculateExpenses(
+    const result = getBillExpenses(
       expenses,
       MINING_HISTORY,
       startDateTime,
@@ -319,7 +319,7 @@ describe('calculateExpenses', () => {
     const startDateTime = new Date('2024-03-31T00:00:00.000+00:00').getTime();
     const endDateTime = new Date('2024-04-01T00:00:00.000+00:00').getTime();
 
-    const result = calculateExpenses(
+    const result = getBillExpenses(
       expenses,
       MINING_HISTORY,
       startDateTime,

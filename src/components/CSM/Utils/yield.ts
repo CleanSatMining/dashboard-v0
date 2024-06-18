@@ -134,6 +134,18 @@ function getMinedBtc_(
     sumMinedBtc = sumMinedBtc.plus(day.revenue);
   }
 
+  if (siteId === '5') {
+    console.log(
+      'getMinedBtc_',
+      siteId,
+      period,
+      startDate,
+      endDate,
+      subaccountId,
+      sumMinedBtc.toNumber(),
+    );
+  }
+
   return { quantity: sumMinedBtc, value: sumMinedBtc.times(btcPrice) };
 }
 

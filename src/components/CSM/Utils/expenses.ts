@@ -2,7 +2,7 @@ import { Expense, MiningSummaryPerDay } from 'src/types/mining/Mining';
 import BigNumber from 'bignumber.js';
 import { getTimestampUTC } from 'src/utils/date';
 
-export function calculateExpenses(
+export function getBillExpenses(
   expenses: Expense[],
   miningHistory: MiningSummaryPerDay[],
   startDateTime: number,
@@ -38,7 +38,7 @@ export function calculateExpenses(
       );
     });
 
-  const totalExpenses = calculateExpensesInRange(
+  const totalExpenses = getBillExpensesInRange(
     filteredExpenses,
     miningHistory.filter(
       (d) =>
@@ -53,7 +53,7 @@ export function calculateExpenses(
   return totalExpenses;
 }
 
-function calculateExpensesInRange(
+function getBillExpensesInRange(
   expenses: Expense[],
   miningHistory: MiningSummaryPerDay[],
   startDateTime: number,

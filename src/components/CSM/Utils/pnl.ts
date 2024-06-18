@@ -18,7 +18,7 @@ import {
   getPower,
   getNumberOfMachines,
 } from './period';
-import { calculateExpenses } from './expenses';
+import { getBillExpenses } from './expenses';
 import { getMidnight } from 'src/utils/date';
 
 const YEAR_IN_DAYS = new BigNumber(365);
@@ -80,7 +80,7 @@ export function calculateElectricityCostPerPeriod(
   subaccountId?: number,
 ): BigNumber {
   const site: Site = SITES[siteId as SiteID];
-  let electricityCost: BigNumber = new BigNumber(0);
+  let electricityExpense: BigNumber = new BigNumber(0);
 
   if (
     miningState !== undefined &&
@@ -97,34 +97,37 @@ export function calculateElectricityCostPerPeriod(
     ).filter(
       (day) => day.subaccountId === subaccountId || subaccountId === undefined,
     );
-    const { electricity, billingStartDateTime, billingEndDateTime } =
-      calculateExpenses(
-        expenses,
-        miningState.byId[siteId].mining.days,
-        startDate,
-        endDate,
-        subaccountId,
-      );
+    const {
+      electricity: electricityBill,
+      billingStartDateTime,
+      billingEndDateTime,
+    } = getBillExpenses(
+      expenses,
+      miningState.byId[siteId].mining.days,
+      startDate,
+      endDate,
+      subaccountId,
+    );
 
-    const billingElectricity = electricity.times(btcPrice);
+    const electricityBill_BTC = electricityBill.times(btcPrice);
 
     for (const day of days) {
       const dateTime = new Date(day.date).getTime();
       if (dateTime < billingStartDateTime || dateTime > billingEndDateTime) {
-        const electricityCostPerDay = calculateElectricityCost(
+        const electricityExpensePerDay = calculateElectricityCost(
           site,
           getMidnight(day.date),
           day.uptimePercentage / 100,
           basePricePerKWH,
         );
 
-        electricityCost = electricityCost.plus(electricityCostPerDay);
+        electricityExpense = electricityExpense.plus(electricityExpensePerDay);
       }
     }
 
-    return electricityCost.plus(billingElectricity);
+    return electricityExpense.plus(electricityBill_BTC);
   } else {
-    return electricityCost;
+    return electricityExpense;
   }
 }
 
@@ -440,7 +443,7 @@ export function calculateCostsAndEBITDAByPeriod(
     period: billingPeriod,
     csm: csmBillingExpense,
     operator: operatorBillingExpense,
-  } = calculateExpenses(expenses, miningHistory, startDate, endDate);
+  } = getBillExpenses(expenses, miningHistory, startDate, endDate);
   const unBilledDays = realPeriod - billingPeriod;
   const unbilledRate = realPeriod > 0 ? unBilledDays / realPeriod : 0;
   const csmBillingExpenseUsd = csmBillingExpense.times(btcPrice);
