@@ -187,15 +187,19 @@ export function daysInNMonthAgo(date: number, N: number): number {
 }
 
 export function getTimestampStartOfNDaysAgo(N: number): number {
-  const today = new Date();
+  /* const today = new Date();
   const targetDate = new Date(today);
-  targetDate.setDate(today.getDate() - N);
+  targetDate.setUTCDate(today.getUTCDate() - N);
 
   // Set time to midnight
-  targetDate.setHours(0, 0, 0, 0);
+  targetDate.setUTCHours(0, 0, 0, 0);
 
   // Return the timestamp
-  return getTimestampUTC(targetDate);
+  return getTimestampUTC(targetDate); */
+  const today = new Date(); // Get the current date
+  today.setUTCHours(0, 0, 0, 0); // Set time to 00:00:00.000 UTC
+  today.setDate(today.getDate() - N); // Subtract N days
+  return today.getTime(); // Return the timestamp in milliseconds
 }
 
 export function getDateYesterday(): Date {
