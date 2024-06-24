@@ -3,7 +3,6 @@ import { Text, Group, Tooltip } from '@mantine/core';
 import {
   formatPeriod,
   formatTimestampDay,
-  formatTimestamp,
   formatParenthesis,
 } from 'src/utils/format/format';
 import { useTranslation } from 'react-i18next';
@@ -143,11 +142,11 @@ export function periodText(
   } else {
     //text = t_time('over-start') + formatPeriod(period.real.days, t_time);
     text =
-      formatTimestamp(period.real.start) +
+      formatTimestampDay(period.real.start) +
       ' ' +
       t_time('to') +
       ' ' +
-      formatTimestamp(period.real.end) +
+      formatTimestampDay(period.real.end) +
       ' ' +
       formatParenthesis(formatPeriod(period.real.days, t_time));
   }
