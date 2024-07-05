@@ -7,7 +7,7 @@ export type UrlTheGraph = {
 export const UrlTheGraphToken: UrlTheGraph = {
   Eth: '',
   Gnosis:
-    'https://api.thegraph.com/subgraphs/name/clean-sat-mining-thegraph/csm-tokens',
+    'https://api.studio.thegraph.com/query/78811/csm-tokens/version/latest',
   Goerli: '',
 };
 
