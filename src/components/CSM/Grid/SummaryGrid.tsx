@@ -98,9 +98,10 @@ const _Summary: FC<AssetProps> = ({
   let datasMissing = false;
 
   for (const siteId of siteIds) {
-    const token = getUserTokenBalance(usersState, account, siteId);
-    const tokenToCome = getUserTokenBalanceToCome(usersState, account, siteId);
     const site = getSite(siteId);
+    const token = getUserTokenBalance(usersState, account, site);
+    const tokenToCome = getUserTokenBalanceToCome(usersState, account, site);
+
     const { realPeriod, realStartTimestamp, dataMissing } = getPeriodFromStart(
       site,
       startDate,
@@ -112,7 +113,7 @@ const _Summary: FC<AssetProps> = ({
     const yields = getUserYieldBySite(
       miningState,
       usersState,
-      siteId,
+      site,
       account,
       realPeriod,
       btcPrice,

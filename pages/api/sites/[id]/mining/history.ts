@@ -1,7 +1,8 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
 import { APIMiningHistoryResponse } from 'src/types/mining/MiningAPI';
 
-import { SITES, SiteID } from 'src/constants/csm';
+import { SITES } from 'src/constants/csm';
+import { SiteID } from 'src/types/mining/Site';
 import { APIMiningHistoryQuery } from 'src/types/mining/MiningAPI';
 import { Contractor } from 'src/types/mining/Site';
 

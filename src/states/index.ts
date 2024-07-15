@@ -27,3 +27,4 @@ export const wlTokensAtom = atom<WLToken[]>([DEFAULT_WL_TOKEN]);
 export const providerAtom = atomWithStorage<string>('provider', '');
 export const multiPathMultiCurrencyAtom = atom<boolean>(true);
 export const btcPriceAtom = atom<number | null>(null);
+export const adminUserAtom = atom<boolean>(false);

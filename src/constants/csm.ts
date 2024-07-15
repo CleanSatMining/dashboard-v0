@@ -1,4 +1,4 @@
-import { Contractor, MiningStatus, Site } from '../types/mining/Site';
+import { Contractor, MiningStatus, Site, SiteID } from '../types/mining/Site';
 import { UltraRare } from '../types/mining/UltraRare';
 
 export const FEE_RATE_CSM = 0.1;
@@ -15,16 +15,9 @@ export const ULTRA_RARE: UltraRare = {
     'https://gnosisscan.io/address/0x78994c361ef29506bf19a5957582fa10ee561b4b',
 };
 
-export enum SiteID {
-  alpha = '1',
-  beta = '2',
-  omega = '3',
-  gamma = '4',
-  delta = '5',
-}
-
 export const SITES: Record<SiteID, Site> = {
   [SiteID.alpha]: {
+    id: SiteID.alpha,
     name: 'CSM Alpha',
     location: {
       countryCode: 'CD',
@@ -99,6 +92,7 @@ export const SITES: Record<SiteID, Site> = {
     },
   },
   [SiteID.beta]: {
+    id: SiteID.beta,
     name: 'CSM Beta',
     location: {
       countryCode: 'PY',
@@ -163,6 +157,7 @@ export const SITES: Record<SiteID, Site> = {
     },
   },
   [SiteID.omega]: {
+    id: SiteID.omega,
     name: 'CSM Omega',
     location: {
       countryCode: 'FI',
@@ -226,6 +221,7 @@ export const SITES: Record<SiteID, Site> = {
     },
   },
   [SiteID.gamma]: {
+    id: SiteID.gamma,
     name: 'CSM Gamma',
     location: {
       countryCode: 'SE',
@@ -289,6 +285,7 @@ export const SITES: Record<SiteID, Site> = {
     },
   },
   [SiteID.delta]: {
+    id: SiteID.delta,
     name: 'CSM Delta',
     location: {
       countryCode: 'US',

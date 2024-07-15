@@ -4,7 +4,8 @@ import { useAppDispatch } from 'src/hooks/react-hooks';
 import { siteAddedDispatchType } from 'src/store/features/miningData/miningDataSlice';
 
 import { API_MINING_HISTORY } from '../constants/apis';
-import { SITES, SiteID } from '../constants/csm';
+import { SITES } from '../constants/csm';
+import { SiteID } from 'src/types/mining/Site';
 import {
   MiningSummaryPerDay,
   SiteMiningHistory,

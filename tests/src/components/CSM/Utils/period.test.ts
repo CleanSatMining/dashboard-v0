@@ -8,7 +8,8 @@ import {
 } from 'src/components/CSM/Utils/period';
 
 import { Site } from 'src/types/mining/Site';
-import { SITES, SiteID } from 'src/constants/csm';
+import { SITES } from 'src/constants/csm';
+import { SiteID } from 'src/types/mining/Site';
 
 describe('getPower', () => {
   test('calcul de la puissance avant 2e levée', () => {

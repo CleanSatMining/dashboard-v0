@@ -13,6 +13,7 @@ export type Operator = {
 }
 
 export type Site = {
+  id: SiteID;
     name: string;
     location: {
       countryCode: string;
@@ -149,3 +150,12 @@ export type SiteCost = {
   taxe: number;
   provision: number;
 };
+
+export enum SiteID {
+  alpha = '1',
+  beta = '2',
+  omega = '3',
+  gamma = '4',
+  delta = '5'
+}
+

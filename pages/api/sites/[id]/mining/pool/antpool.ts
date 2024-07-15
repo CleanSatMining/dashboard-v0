@@ -1,7 +1,8 @@
 import BigNumber from 'bignumber.js';
 import * as crypto from 'crypto';
 
-import { SITES, SiteID } from 'src/constants/csm';
+import { SITES } from 'src/constants/csm';
+import { SiteID } from 'src/types/mining/Site';
 import { MiningSummaryPerDay } from 'src/types/mining/Mining';
 import { APIMiningHistoryResponse } from 'src/types/mining/MiningAPI';
 import {

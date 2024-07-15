@@ -24,7 +24,7 @@ import { getCSMTokenAddress, getCSMTokenAddresses } from '../CSM/Utils/yield';
 
 import ControlPanel from './components/ControlPanel';
 import { PredefinedPeriods } from './components/Types';
-import { btcPriceAtom } from 'src/states';
+import { btcPriceAtom, adminUserAtom } from 'src/states';
 import { MiningExpenses } from 'src/types/mining/Mining';
 import { expensesAddedDispatchType } from 'src/store/features/miningData/miningDataSlice';
 import { API_MINING_EXPENSES } from 'src/constants/apis';
@@ -49,7 +49,7 @@ const Display: FC = () => {
       ? accountAddress
       : '0xC78f0e746A2e6248eE6D57828985D7fD8d6B33B0',
   );
-  const [adminData, setAdminData] = useState<boolean>(false);
+  const [adminData, setAdminData] = useAtom(adminUserAtom);
 
   const [period, setPeriod] = useState(
     DAYS_PERIODS.filter(filterMobile(isMobile))[0].toString(),

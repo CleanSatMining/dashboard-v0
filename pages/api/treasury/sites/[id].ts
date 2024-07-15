@@ -1,5 +1,6 @@
 // pages/api/getBalance.ts
-import { SITES, SiteID } from 'src/constants/csm';
+import { SITES } from 'src/constants/csm';
+import { SiteID } from 'src/types/mining/Site';
 import { NextApiRequest, NextApiResponse } from 'next';
 import { LRUCache } from 'lru-cache';
 import { API_BLOCKCHAIN_EXPLORER_BTC } from 'src/constants/apis';

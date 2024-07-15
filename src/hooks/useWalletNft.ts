@@ -25,12 +25,12 @@ export const useNFTs = (
         return;
       }
       try {
-        console.log(
+        /* console.log(
           'NFT fetcher:',
           contractAddress,
           account,
           provider?.getSigner(),
-        );
+        ); */
         const contract = new Contract(
           contractAddress,
           CleanSatMiningUltraRareABI,
@@ -39,7 +39,7 @@ export const useNFTs = (
 
         // Obtenez le nom du NFT
         setCollectionName(await contract.name());
-        console.log('Collection name:', collectionName);
+        //console.log('Collection name:', collectionName);
 
         const b = await contract.balanceOf(account);
         console.log('Balance:', b);

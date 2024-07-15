@@ -6,10 +6,9 @@ import {
   PROVISION_RATE,
   SITES,
   SWISS_TAXE,
-  SiteID,
 } from 'src/constants';
 import { MiningHistory, MiningSummaryPerDay } from 'src/types/mining/Mining';
-import { Site, Fees } from 'src/types/mining/Site';
+import { Site, Fees, SiteID } from 'src/types/mining/Site';
 
 import {
   getPeriodFromStart,
@@ -70,7 +69,7 @@ export function calculateElectricityCost(
  */
 export function calculateElectricityCostPerPeriod(
   miningState: MiningHistory,
-  siteId: string,
+  site: Site,
   period: number,
   startDate: number,
   endDate: number,
@@ -79,34 +78,35 @@ export function calculateElectricityCostPerPeriod(
   basePricePerKWH?: number,
   subaccountId?: number,
 ): BigNumber {
-  const site: Site = SITES[siteId as SiteID];
   let electricityExpense: BigNumber = new BigNumber(0);
 
   if (
     miningState !== undefined &&
-    miningState.byId[siteId] !== undefined &&
-    miningState.byId[siteId].mining !== undefined &&
-    miningState.byId[siteId].mining.days !== undefined
+    miningState.byId[site.id] !== undefined &&
+    miningState.byId[site.id].mining !== undefined &&
+    miningState.byId[site.id].mining.days !== undefined
   ) {
+    // filter on subaccount if specified or if there is only one subaccount
+    const subId =
+      subaccountId ??
+      (site.api.length === 1 ? site.api[0].subaccount?.id : undefined);
     const days = getMiningDays(
       miningState,
-      siteId,
+      site,
       period,
       startDate,
       endDate,
-    ).filter(
-      (day) => day.subaccountId === subaccountId || subaccountId === undefined,
-    );
+    ).filter((day) => day.subaccountId === subId || subId === undefined);
     const {
       electricity: electricityBill,
       billingStartDateTime,
       billingEndDateTime,
     } = getBillExpenses(
       expenses,
-      miningState.byId[siteId].mining.days,
+      miningState.byId[site.id].mining.days,
       startDate,
       endDate,
-      subaccountId,
+      subId,
     );
 
     const electricityBill_BTC = electricityBill.times(btcPrice);
@@ -194,7 +194,7 @@ export function calculateYield_deprecated(
  * @returns
  */
 export function calculateNetYield(
-  siteId: string,
+  site: Site,
   btcIncome: BigNumber,
   btcPrice: number,
   electricityCost: BigNumber,
@@ -209,7 +209,6 @@ export function calculateNetYield(
   netApr: BigNumber;
 } {
   if (btcIncome.gt(0)) {
-    const site: Site = SITES[siteId as SiteID];
     const fees = site.fees;
     const usdIncome = btcIncome.times(btcPrice);
     const equipementDepreciation = getEquipementDepreciation(
@@ -279,7 +278,7 @@ export function calculateNetYield(
  * @returns
  */
 export function calculateGrossYield(
-  siteId: string,
+  site: Site,
   minedBtc: BigNumber,
   btcPrice: number,
   electricityCost: BigNumber,
@@ -294,7 +293,6 @@ export function calculateGrossYield(
   apr: BigNumber;
 } {
   if (minedBtc.gt(0)) {
-    const site: Site = SITES[siteId as SiteID];
     const fees = site.fees;
     const minedBtcValue = minedBtc.times(btcPrice);
     const { realPeriod, realStartTimestamp } = getPeriodFromStart(
@@ -350,7 +348,7 @@ export function calculateGrossYield(
 }
 
 export function calculateGrossYieldTaxeFree(
-  siteId: string,
+  site: Site,
   minedBtc: BigNumber,
   btcPrice: number,
   electricityCost: BigNumber,
@@ -365,7 +363,6 @@ export function calculateGrossYieldTaxeFree(
   apr: BigNumber;
 } {
   if (minedBtc.gt(0)) {
-    const site: Site = SITES[siteId as SiteID];
     const fees = site.fees;
     const minedBtcValue = minedBtc.times(btcPrice);
     const { realPeriod, realStartTimestamp } = getPeriodFromStart(

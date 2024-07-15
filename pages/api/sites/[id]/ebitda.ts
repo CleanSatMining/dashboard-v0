@@ -23,7 +23,8 @@ import {
   filterOldDates,
 } from 'src/types/mining/Mining';
 import { getMinedBtc, getUptimeBySite } from 'src/components/CSM/Utils/yield';
-import { SITES, SiteID } from 'src/constants/csm';
+import { SITES } from 'src/constants/csm';
+import { SiteID } from 'src/types/mining/Site';
 
 import { getEquipementDepreciation } from 'src/components/CSM/Utils/period';
 
@@ -97,7 +98,7 @@ const handler: NextApiHandler = async (
   const feeParameters = site.fees;
   const electricityCost = calculateElectricityCostPerPeriod(
     miningHistory,
-    siteId,
+    site,
     period,
     startTimestamp,
     endTimestamp,
@@ -107,7 +108,7 @@ const handler: NextApiHandler = async (
   );
   const minedBtc = getMinedBtc(
     miningHistory,
-    siteId,
+    site,
     period,
     btcPrice,
     startTimestamp,
@@ -135,7 +136,7 @@ const handler: NextApiHandler = async (
 
   const uptime = getUptimeBySite(
     miningHistory,
-    siteId,
+    site,
     period,
     startTimestamp,
     endTimestamp,

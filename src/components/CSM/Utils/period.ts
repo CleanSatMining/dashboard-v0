@@ -2,7 +2,8 @@ import { MiningSummaryPerDay } from 'src/types/mining/Mining';
 import { MiningHistory } from 'src/types/mining/Mining';
 
 import { Site } from 'src/types/mining/Site';
-import { SITES, SiteID } from '../../../constants/csm';
+import { SITES } from '../../../constants/csm';
+import { SiteID } from 'src/types/mining/Site';
 import {
   calculateDaysBetweenDates,
   addYearsToTimestamp,
@@ -18,7 +19,7 @@ import { HashratePeriod } from 'src/types/mining/Mining';
 // Définition de la fonction
 export function getMiningDays(
   miningState: MiningHistory,
-  siteId: string,
+  site: Site,
   period: number,
   startDate: number,
   endDate: number,
@@ -29,20 +30,19 @@ export function getMiningDays(
   // Vérification des conditions pour accéder aux jours d'extraction minière
   if (
     miningState &&
-    miningState.byId[siteId] &&
-    miningState.byId[siteId].mining &&
-    miningState.byId[siteId].mining.days
+    miningState.byId[site.id] &&
+    miningState.byId[site.id].mining &&
+    miningState.byId[site.id].mining.days
   ) {
-    const site: Site = SITES[siteId as SiteID];
     const { realStartTimestamp } = getPeriodFromStart(site, startDate, endDate);
     // Cas où startDate est 0, retourne les premiers jours de la période spécifiée
     if (startDate === 0) {
-      return miningState.byId[siteId].mining.days.slice(
+      return miningState.byId[site.id].mining.days.slice(
         0,
-        Math.min(period, miningState.byId[siteId].mining.days.length),
+        Math.min(period, miningState.byId[site.id].mining.days.length),
       );
     }
-    const aa = miningState.byId[siteId].mining.days.filter((miningDay) => {
+    const aa = miningState.byId[site.id].mining.days.filter((miningDay) => {
       return (
         new Date(miningDay.date).getTime() >= realStartTimestamp &&
         new Date(miningDay.date).getTime() <= endDate

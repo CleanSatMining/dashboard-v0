@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-
+import { NativeSelect, SelectItem } from '@mantine/core';
 import { useAppSelector } from 'src/hooks/react-hooks';
 import {
   selectMiningHistory,
@@ -7,8 +7,8 @@ import {
 } from 'src/store/features/miningData/miningDataSelector';
 import { selectUsersState } from 'src/store/features/userData/userDataSelector';
 import { PropertiesERC20 } from 'src/types/PropertiesToken';
-import { SITES, SiteID } from '../../../constants';
-import { Site, TokenBalance } from '../../../types/mining/Site';
+import { SITES } from '../../../constants';
+import { Site, TokenBalance, SiteID } from '../../../types/mining/Site';
 import { UserSiteCard } from './UserCard/UserSiteCard';
 import { UserSiteCardMobile } from './UserCard/UserSiteCardMobile';
 import { CardData } from './UserCard/Type';
@@ -25,6 +25,8 @@ import {
   getProgressSteps,
   getAverageEquipmentCost,
 } from '../Utils/period';
+import { useAtomValue } from 'jotai';
+import { adminUserAtom } from 'src/states';
 
 import {
   getMinedBtc,
@@ -59,35 +61,34 @@ const _SiteCard: FC<SiteProps> = ({
   shallDisplay,
 }) => {
   //const isMobile = useMediaQuery('(max-width: 36em)');
-
+  const adminUser = useAtomValue(adminUserAtom);
   const usersState = useAppSelector(selectUsersState);
   const miningState = useAppSelector(selectMiningHistory);
   const expensesState = useAppSelector(selectMiningExpenses);
   const { getPropertyToken } = useCsmTokens();
-
   const site: Site = SITES[siteId as SiteID];
+  const subSites = getSubSites(site);
+  const allSites = [site, ...subSites];
+  const [siteValue, setSiteValue] = useState(site.name);
+
   const { realPeriod, realStartTimestamp, dataMissing } = getPeriodFromStart(
     site,
     startDate,
     endDate,
   );
-  const userToken = getUserTokenBalance(usersState, account, siteId);
+  const userToken = getUserTokenBalance(usersState, account, site);
   const tokenBalance = userToken.balance;
-  const userTokenToCome = getUserTokenBalanceToCome(
-    usersState,
-    account,
-    siteId,
-  );
+  const userTokenToCome = getUserTokenBalanceToCome(usersState, account, site);
   const userShare = getUserSiteShare(
     miningState,
     usersState,
-    siteId,
+    site,
     account,
     getPropertyToken(site.token.address),
   );
   const siteMinedBTC = getMinedBtc(
     miningState,
-    siteId,
+    site,
     realPeriod,
     btcPrice,
     realStartTimestamp,
@@ -97,7 +98,7 @@ const _SiteCard: FC<SiteProps> = ({
   const userYield = getUserYieldBySite(
     miningState,
     usersState,
-    siteId,
+    site,
     account,
     realPeriod,
     btcPrice,
@@ -107,7 +108,7 @@ const _SiteCard: FC<SiteProps> = ({
   );
   const siteYield = getYieldBySite(
     miningState,
-    siteId,
+    site,
     realPeriod,
     btcPrice,
     realStartTimestamp,
@@ -116,14 +117,14 @@ const _SiteCard: FC<SiteProps> = ({
   );
   const siteUptime = getUptimeBySite(
     miningState,
-    siteId,
+    site,
     realPeriod,
     realStartTimestamp,
     endDate,
   );
   const siteCosts: SiteCost = getSiteExpensesByPeriod(
     miningState,
-    siteId,
+    site,
     btcPrice,
     realPeriod,
     realStartTimestamp,
@@ -141,7 +142,7 @@ const _SiteCard: FC<SiteProps> = ({
     //console.log('Step', step);
     const uptime = getUptimeBySite(
       miningState,
-      siteId,
+      site,
       realPeriod,
       step.start.getTime(),
       step.end.getTime(),
@@ -183,15 +184,20 @@ const _SiteCard: FC<SiteProps> = ({
   const [userSiteData, setUserSiteData] = useState<CardData>(data);
 
   useEffect(() => {
+    const selectedSite =
+      allSites.find(
+        (s) => s.api.length === 1 && s.api[0].subaccount?.name === siteValue,
+      ) ?? site;
+
     const { realPeriod, realStartTimestamp } = getPeriodFromStart(
-      site,
+      selectedSite,
       startDate,
       endDate,
     );
     const userYield = getUserYieldBySite(
       miningState,
       usersState,
-      siteId,
+      selectedSite,
       account,
       realPeriod,
       btcPrice,
@@ -202,7 +208,7 @@ const _SiteCard: FC<SiteProps> = ({
 
     const siteMinedBTC = getMinedBtc(
       miningState,
-      siteId,
+      selectedSite,
       realPeriod,
       btcPrice,
       realStartTimestamp,
@@ -211,14 +217,14 @@ const _SiteCard: FC<SiteProps> = ({
     );
     const siteUptime = getUptimeBySite(
       miningState,
-      siteId,
+      selectedSite,
       realPeriod,
       realStartTimestamp,
       endDate,
     );
     const siteYield = getYieldBySite(
       miningState,
-      siteId,
+      selectedSite,
       realPeriod,
       btcPrice,
       realStartTimestamp,
@@ -227,7 +233,7 @@ const _SiteCard: FC<SiteProps> = ({
     );
     const siteCosts: SiteCost = getSiteExpensesByPeriod(
       miningState,
-      siteId,
+      selectedSite,
       btcPrice,
       realPeriod,
       realStartTimestamp,
@@ -237,15 +243,15 @@ const _SiteCard: FC<SiteProps> = ({
     const userTokenToCome = getUserTokenBalanceToCome(
       usersState,
       account,
-      siteId,
+      selectedSite,
     );
-    const steps = getProgressSteps(site, realStartTimestamp, endDate);
+    const steps = getProgressSteps(selectedSite, realStartTimestamp, endDate);
     const hashratePeriods: HashratePeriod[] = steps.map((step) => {
       //console.log('Step', JSON.stringify(step));
 
       const uptime = getUptimeBySite(
         miningState,
-        siteId,
+        selectedSite,
         realPeriod,
         step.start.getTime(),
         step.end.getTime(),
@@ -274,7 +280,7 @@ const _SiteCard: FC<SiteProps> = ({
     setUserSiteData(
       buildUserSiteData(
         siteId,
-        site,
+        selectedSite,
         startDate,
         realStartTimestamp,
         endDate,
@@ -310,11 +316,25 @@ const _SiteCard: FC<SiteProps> = ({
     siteId,
     startDate,
     endDate,
+    siteValue,
   ]);
   /* eslint-enable */
 
   return (
     <>
+      {adminUser && (
+        <NativeSelect
+          data={[
+            ...(allSites.map((site) =>
+              site.api.length > 1
+                ? site.name
+                : site.api[0].subaccount?.name ?? site.name,
+            ) as unknown as SelectItem[]),
+          ]}
+          value={siteValue}
+          onChange={(event) => setSiteValue(event.currentTarget.value)}
+        />
+      )}
       {isMobile ? (
         <UserSiteCardMobile
           title={site.name}
@@ -491,4 +511,21 @@ function buildUserSiteData(
       },
     },
   };
+}
+
+function getSubSites(site: Site): Site[] {
+  // Vérifie si site.api est un tableau et contient des éléments
+  if (Array.isArray(site.api) && site.api.length > 1) {
+    // Crée une nouvelle liste de sites où chaque site est identique à l'original,
+    // mais avec le champ `site` remplacé par l'élément correspondant de site.api
+    const ms = site.api.map((apiElement, index) => ({
+      ...site, // Copie toutes les propriétés de l'objet site
+      api: [apiElement],
+    }));
+
+    return ms;
+  } else {
+    // Retourne un tableau vide ou gère l'erreur comme vous le souhaitez
+    return [];
+  }
 }

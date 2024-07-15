@@ -6,7 +6,8 @@ import {
   MiningExpenses,
 } from 'src/types/mining/Mining';
 import { Expense, MiningSummaryPerDay } from 'src/types/mining/Mining';
-import { ALLOWED_SITES, SITES, SiteID } from '../../../constants/csm';
+import { ALLOWED_SITES, SITES } from '../../../constants/csm';
+import { SiteID } from 'src/types/mining/Site';
 import { PropertiesERC20 } from 'src/types/PropertiesToken';
 import { Site, TokenBalance, Yield } from '../../../types/mining/Site';
 import {
@@ -32,7 +33,7 @@ import { SiteCost } from 'src/types/mining/Site';
  */
 export function getMinedBtc(
   miningState: MiningHistory,
-  siteId: string,
+  site: Site,
   period: number,
   btcPrice: number,
   startDate: number,
@@ -41,23 +42,21 @@ export function getMinedBtc(
 ): { quantity: BigNumber; value: BigNumber } {
   if (
     miningState &&
-    miningState.byId[siteId] &&
-    miningState.byId[siteId].mining &&
-    miningState.byId[siteId].mining.days
+    miningState.byId[site.id] &&
+    miningState.byId[site.id].mining &&
+    miningState.byId[site.id].mining.days
   ) {
-    const hasSubaccount = SITES[siteId as SiteID].api.every(
-      (api) => api.subaccount !== undefined,
-    );
+    const hasSubaccount = site.api.every((api) => api.subaccount !== undefined);
 
     let siteBtcMined = new BigNumber(0);
 
     if (hasSubaccount) {
       let subaccountsBtcMined = new BigNumber(0);
-      for (const subaccountApi of SITES[siteId as SiteID].api) {
+      for (const subaccountApi of site.api) {
         if (subaccountApi.subaccount) {
           const { quantity: subaccountBtcMined } = getMinedBtc_(
             miningState,
-            siteId,
+            site,
             period,
             btcPrice,
             startDate,
@@ -67,7 +66,7 @@ export function getMinedBtc(
 
           const subaccountElectricityCost = calculateElectricityCostPerPeriod(
             miningState,
-            siteId,
+            site,
             period,
             startDate,
             endDate,
@@ -86,7 +85,7 @@ export function getMinedBtc(
           subaccountsBtcMined = subaccountsBtcMined.plus(subaccountBtcIncome);
         } else {
           console.error(
-            'No subaccount ' + siteId + ' ' + JSON.stringify(subaccountApi),
+            'No subaccount ' + site.id + ' ' + JSON.stringify(subaccountApi),
           );
         }
       }
@@ -94,7 +93,7 @@ export function getMinedBtc(
     } else {
       const { quantity: siteBtc } = getMinedBtc_(
         miningState,
-        siteId,
+        site,
         period,
         btcPrice,
         startDate,
@@ -111,7 +110,7 @@ export function getMinedBtc(
 
 function getMinedBtc_(
   miningState: MiningHistory,
-  siteId: string,
+  site: Site,
   period: number,
   btcPrice: number,
   startDate: number,
@@ -122,7 +121,7 @@ function getMinedBtc_(
 
   const days = getMiningDays(
     miningState,
-    siteId,
+    site,
     period,
     startDate,
     endDate,
@@ -132,18 +131,6 @@ function getMinedBtc_(
 
   for (const day of days) {
     sumMinedBtc = sumMinedBtc.plus(day.revenue);
-  }
-
-  if (siteId === '5') {
-    console.log(
-      'getMinedBtc_',
-      siteId,
-      period,
-      startDate,
-      endDate,
-      subaccountId,
-      sumMinedBtc.toNumber(),
-    );
   }
 
   return { quantity: sumMinedBtc, value: sumMinedBtc.times(btcPrice) };
@@ -158,14 +145,14 @@ function getMinedBtc_(
  */
 export function getUptimeTotalMachinesBySite(
   miningState: MiningHistory,
-  siteId: string,
+  site: Site,
   period: number,
   startDate: number,
   endDate: number,
 ): BigNumber {
   let sumMachines: BigNumber = new BigNumber(0);
 
-  const days = getMiningDays(miningState, siteId, period, startDate, endDate);
+  const days = getMiningDays(miningState, site, period, startDate, endDate);
   for (const day of days) {
     sumMachines = sumMachines.plus(day.uptimeTotalMachines);
   }
@@ -182,14 +169,14 @@ export function getUptimeTotalMachinesBySite(
  */
 export function getUptimePercentageBySite(
   miningState: MiningHistory,
-  siteId: string,
+  site: Site,
   period: number,
   startDate: number,
   endDate: number,
 ): BigNumber {
   let uptimePercentage: BigNumber = new BigNumber(0);
 
-  const days = getMiningDays(miningState, siteId, period, startDate, endDate);
+  const days = getMiningDays(miningState, site, period, startDate, endDate);
   for (const day of days) {
     uptimePercentage = uptimePercentage.plus(day.uptimePercentage);
   }
@@ -208,7 +195,7 @@ export function getUptimePercentageBySite(
  */
 export const getYieldBySite = (
   miningState: MiningHistory,
-  siteId: string,
+  site: Site,
   period: number,
   btcPrice: number,
   startDate: number,
@@ -232,13 +219,13 @@ export const getYieldBySite = (
   };
   if (
     miningState &&
-    miningState.byId[siteId] &&
-    miningState.byId[siteId].mining &&
-    miningState.byId[siteId].mining.days
+    miningState.byId[site.id] &&
+    miningState.byId[site.id].mining &&
+    miningState.byId[site.id].mining.days
   ) {
     const { quantity: siteBtcMined } = getMinedBtc(
       miningState,
-      siteId,
+      site,
       period,
       btcPrice,
       startDate,
@@ -248,7 +235,7 @@ export const getYieldBySite = (
 
     const electricityCost = calculateElectricityCostPerPeriod(
       miningState,
-      siteId,
+      site,
       period,
       startDate,
       endDate,
@@ -256,7 +243,7 @@ export const getYieldBySite = (
       btcPrice,
     );
     const { netUsdIncome, netBtcIncome, netApr } = calculateNetYield(
-      siteId,
+      site,
       siteBtcMined,
       btcPrice,
       electricityCost,
@@ -264,7 +251,7 @@ export const getYieldBySite = (
       startDate,
       endDate,
       expenses,
-      miningState.byId[siteId]?.mining.days ?? [],
+      miningState.byId[site.id]?.mining.days ?? [],
     );
 
     netYield.usd = netUsdIncome.toNumber();
@@ -272,7 +259,7 @@ export const getYieldBySite = (
     netYield.apr = netApr.toNumber();
 
     const { apr, btcIncome, usdIncome } = calculateGrossYield(
-      siteId,
+      site,
       siteBtcMined,
       btcPrice,
       electricityCost,
@@ -280,7 +267,7 @@ export const getYieldBySite = (
       startDate,
       endDate,
       expenses,
-      miningState.byId[siteId]?.mining.days ?? [],
+      miningState.byId[site.id]?.mining.days ?? [],
     );
 
     grossYield.usd = usdIncome.toNumber();
@@ -292,7 +279,7 @@ export const getYieldBySite = (
       btcIncome: btcIncomeWithoutTaxe,
       usdIncome: usdIncomeWithoutIncome,
     } = calculateGrossYieldTaxeFree(
-      siteId,
+      site,
       siteBtcMined,
       btcPrice,
       electricityCost,
@@ -300,7 +287,7 @@ export const getYieldBySite = (
       startDate,
       endDate,
       expenses,
-      miningState.byId[siteId]?.mining.days ?? [],
+      miningState.byId[site.id]?.mining.days ?? [],
     );
 
     grossYieldTaxeFree.usd = usdIncomeWithoutIncome.toNumber();
@@ -329,7 +316,7 @@ export const getYieldBySite = (
 export const getUserYieldBySite = (
   miningState: MiningHistory,
   userState: UserState,
-  siteId: string,
+  site: Site,
   userAddress: string,
   period: number,
   btcPrice: number,
@@ -354,24 +341,22 @@ export const getUserYieldBySite = (
   };
   if (
     miningState &&
-    miningState.byId[siteId] &&
-    miningState.byId[siteId].mining &&
-    miningState.byId[siteId].mining.days &&
+    miningState.byId[site.id] &&
+    miningState.byId[site.id].mining &&
+    miningState.byId[site.id].mining.days &&
     //miningState.byId[siteId].mining.days.length > 0 &&
     userState &&
     userState.byAddress[userAddress] &&
-    userState.byAddress[userAddress].bySite[siteId] &&
-    userState.byAddress[userAddress].bySite[siteId].token
+    userState.byAddress[userAddress].bySite[site.id] &&
+    userState.byAddress[userAddress].bySite[site.id].token
   ) {
-    const tokenSupply: BigNumber = new BigNumber(
-      SITES[siteId as SiteID].token.supply,
-    );
+    const tokenSupply: BigNumber = new BigNumber(site.token.supply);
     const tokenBalance: BigNumber = new BigNumber(
-      userState.byAddress[userAddress].bySite[siteId].token.balance,
+      userState.byAddress[userAddress].bySite[site.id].token.balance,
     );
     const siteYield = getYieldBySite(
       miningState,
-      siteId,
+      site,
       period,
       btcPrice,
       startDate,
@@ -434,24 +419,23 @@ export const getUserSiteIds = (
 export const getUserTokenBalance = (
   userState: UserState,
   userAddress: string,
-  siteId: string,
+  site: Site,
   toCome?: boolean,
 ): TokenBalance => {
-  const site = SITES[siteId as SiteID];
-
   if (
     userState.byAddress[userAddress] &&
-    userState.byAddress[userAddress].bySite[siteId] &&
-    (userState.byAddress[userAddress].bySite[siteId].token.balance > 0 ||
+    userState.byAddress[userAddress].bySite[site.id] &&
+    (userState.byAddress[userAddress].bySite[site.id].token.balance > 0 ||
       toCome)
   ) {
     const tokenPrice: BigNumber = new BigNumber(site.token.price);
     const tokenBalance: number =
-      userState.byAddress[userAddress].bySite[siteId].token.balance;
+      userState.byAddress[userAddress].bySite[site.id].token.balance;
     const tokenToCome: number =
-      userState.byAddress[userAddress].bySite[siteId].token.toCome?.amount ?? 0;
+      userState.byAddress[userAddress].bySite[site.id].token.toCome?.amount ??
+      0;
     const tokenToComeUsd: number =
-      userState.byAddress[userAddress].bySite[siteId].token.toCome?.usd ?? 0;
+      userState.byAddress[userAddress].bySite[site.id].token.toCome?.usd ?? 0;
 
     return {
       address: site.token.address,
@@ -474,18 +458,17 @@ export const getUserTokenBalance = (
 export const getUserTokenBalanceToCome = (
   userState: UserState,
   userAddress: string,
-  siteId: string,
+  site: Site,
 ): TokenBalance => {
-  const site = SITES[siteId as SiteID];
-
   if (
     userState.byAddress[userAddress] &&
-    userState.byAddress[userAddress].bySite[siteId]
+    userState.byAddress[userAddress].bySite[site.id]
   ) {
     const tokenToCome: number =
-      userState.byAddress[userAddress].bySite[siteId].token.toCome?.amount ?? 0;
+      userState.byAddress[userAddress].bySite[site.id].token.toCome?.amount ??
+      0;
     const tokenToComeUsd: number =
-      userState.byAddress[userAddress].bySite[siteId].token.toCome?.usd ?? 0;
+      userState.byAddress[userAddress].bySite[site.id].token.toCome?.usd ?? 0;
 
     return {
       address: site.token.address,
@@ -518,7 +501,12 @@ export const getUserInvestment = (
   if (userState.byAddress[userAddress]) {
     const userInvestment: BigNumber = getUserSiteIds(userState, userAddress)
       .map((siteId) => {
-        return getUserTokenBalance(userState, userAddress, siteId, toCome).usd;
+        return getUserTokenBalance(
+          userState,
+          userAddress,
+          SITES[siteId as SiteID],
+          toCome,
+        ).usd;
       })
       .reduce((acc, val) => acc.plus(val), new BigNumber(0));
     return userInvestment;
@@ -577,6 +565,7 @@ export const getUserYield = (
 
     const totalInvested: BigNumber = getUserInvestment(userState, userAddress);
     for (const siteId of getUserSiteIds(userState, userAddress)) {
+      const site = SITES[siteId as SiteID];
       const { realPeriod, realStartTimestamp } = getPeriodFromStart(
         SITES[siteId as SiteID],
         startDate,
@@ -585,7 +574,7 @@ export const getUserYield = (
       const siteYield = getUserYieldBySite(
         miningState,
         userState,
-        siteId,
+        site,
         userAddress,
         realPeriod,
         btcPrice,
@@ -594,7 +583,7 @@ export const getUserYield = (
         expenses.byId[siteId] ?? [],
       );
       const siteInvestementShare: BigNumber = new BigNumber(
-        getUserTokenBalance(userState, userAddress, siteId).usd,
+        getUserTokenBalance(userState, userAddress, site).usd,
       ).dividedBy(totalInvested);
 
       netBtc = netBtc.plus(siteYield.net.btc);
@@ -640,16 +629,16 @@ export const getUserYield = (
 export const getUserSiteShare = (
   miningState: MiningHistory,
   userState: UserState,
-  siteId: string,
+  site: Site,
   userAddress: string,
   tokenProperties: PropertiesERC20 | undefined,
 ): BigNumber => {
   if (miningState && userState && userState.byAddress[userAddress]) {
     const tokenSupply = tokenProperties
       ? tokenProperties.supply
-      : SITES[siteId as SiteID].token.supply;
+      : site.token.supply;
     return new BigNumber(
-      getUserTokenBalance(userState, userAddress, siteId).balance,
+      getUserTokenBalance(userState, userAddress, site).balance,
     ).dividedBy(tokenSupply);
   }
 
@@ -666,7 +655,7 @@ export const getUserSiteShare = (
  */
 export const getUptimeBySite = (
   miningState: MiningHistory,
-  siteId: string,
+  site: Site,
   period: number,
   startDate: number,
   endDate: number,
@@ -677,11 +666,10 @@ export const getUptimeBySite = (
   if (
     (miningState &&
       miningState.byId &&
-      miningState.byId[siteId] &&
-      miningState.byId[siteId]?.mining.days) ??
+      miningState.byId[site.id] &&
+      miningState.byId[site.id]?.mining.days) ??
     []
   ) {
-    const site: Site = SITES[siteId as SiteID];
     const { realPeriod, realStartTimestamp } = getPeriodFromStart(
       site,
       startDate,
@@ -690,7 +678,7 @@ export const getUptimeBySite = (
 
     const days = getMiningDays(
       miningState,
-      siteId,
+      site,
       period,
       realStartTimestamp,
       endDate,
@@ -779,14 +767,13 @@ export function getNumberOfDaysSinceStart(site: Site) {
 
 export function getSiteExpensesByPeriod(
   miningState: MiningHistory,
-  siteId: string,
+  site: Site,
   btcPrice: number,
   period: number,
   startDate: number,
   endDate: number,
   expenses: Expense[],
 ): SiteCost {
-  const site: Site = SITES[siteId as SiteID];
   const { realPeriod, realStartTimestamp } = getPeriodFromStart(
     site,
     startDate,
@@ -795,7 +782,7 @@ export function getSiteExpensesByPeriod(
   const feeParameters = site.fees;
   const { value: usdIncome } = getMinedBtc(
     miningState,
-    siteId,
+    site,
     realPeriod,
     btcPrice,
     realStartTimestamp,
@@ -810,7 +797,7 @@ export function getSiteExpensesByPeriod(
 
   const estimatedElectricityCost = calculateElectricityCostPerPeriod(
     miningState,
-    siteId,
+    site,
     realPeriod,
     realStartTimestamp,
     endDate,
@@ -828,7 +815,7 @@ export function getSiteExpensesByPeriod(
       realStartTimestamp,
       endDate,
       expenses,
-      miningState.byId[siteId]?.mining.days ?? [],
+      miningState.byId[site.id]?.mining.days ?? [],
       btcPrice,
     );
 
