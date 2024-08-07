@@ -103,6 +103,7 @@
     "typescript": "^5.4.5"
   },
   "resolutions": {
-    "@radix-ui/react-scroll-area": "^0.1.5-rc.44"
+    "@radix-ui/react-scroll-area": "^0.1.5-rc.44",
+    "lru-cache": "^10.2.2"
   }
 }
