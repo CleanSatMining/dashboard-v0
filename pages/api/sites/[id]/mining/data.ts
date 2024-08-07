@@ -11,7 +11,6 @@ import { luxorData } from './pool/luxor';
 import { foundryData } from './pool/foundry';
 import { LRUCache } from 'lru-cache';
 import { getDayOfMonthUTC } from 'src/utils/date';
-import { userAdded } from 'src/store/features/userData/userDataSlice';
 
 // cache 60 min * 24 = 1 day
 /* eslint-disable */
@@ -29,21 +28,19 @@ const handler: NextApiHandler = async (
   if (!req.body) {
     return res.status(400).json({ error: 'Missing body' });
   }
-    let requestBody: APIMiningDataQuery = req.body;
-    if (typeof req.body === 'string') {
-      requestBody = JSON.parse(req.body);
-    }
+  let requestBody: APIMiningDataQuery = req.body;
+  if (typeof req.body === 'string') {
+    requestBody = JSON.parse(req.body);
+  }
 
-    const { first: firstParameter , username} = requestBody;
+  const { first: firstParameter, username } = requestBody;
 
-    first = firstParameter ?? 500;
-    if (typeof firstParameter === 'string') {
-      first = parseInt(firstParameter);
-    } else if (!Number.isInteger(firstParameter)) {
-      first = 500;
-    }
-  
-  
+  first = firstParameter ?? 500;
+  if (typeof firstParameter === 'string') {
+    first = parseInt(firstParameter);
+  } else if (!Number.isInteger(firstParameter)) {
+    first = 500;
+  }
 
   // Generate a cache key based on the address, page, and pageSize
   const cacheKey = `data${siteId}-${first}-${username}`;
@@ -65,7 +62,7 @@ const handler: NextApiHandler = async (
   const json: APIMiningDataResponse | undefined = await getMiningData(
     siteId,
     first,
-    username
+    username,
   );
 
   //if (siteId === '2') console.log('BETA RESULT', JSON.stringify(json, null, 4));
@@ -107,8 +104,6 @@ export async function getMiningData(
 
   const api = site.api.find((api) => api.username === username);
   if (api) {
-
-
     let apiResponse: APIMiningDataResponse | undefined = undefined;
     const username = api.username ?? '';
     const url = api.url ?? '';
@@ -158,9 +153,7 @@ export async function getMiningData(
       if (apiResponse && apiResponse.error) {
         console.error('API SUMMARY : error', apiResponse.error);
       } else if (apiResponse && apiResponse.days) {
-        
-          json = apiResponse;
-       
+        json = apiResponse;
       }
     } else {
       console.log('WARN : No url or user defined', api.username, api.url);
@@ -171,7 +164,6 @@ export async function getMiningData(
       json = history;
     }
   }
-  
 
   return json;
 }

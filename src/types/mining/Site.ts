@@ -105,6 +105,7 @@ export type Site = {
     date: string;
     intallationCosts:{
       equipement: number;
+      total: number;
     }
   };
 

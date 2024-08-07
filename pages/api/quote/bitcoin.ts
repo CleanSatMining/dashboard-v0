@@ -1,6 +1,12 @@
 import { NextApiHandler, NextApiRequest, NextApiResponse } from 'next';
-
 import { API_BITCOIN_QUOTE } from 'src/constants/apis';
+import { LRUCache } from 'lru-cache';
+
+const cache = new LRUCache<string, any>({
+  max: 500,
+  ttl: 1000 * 60 * 60 * 8,
+});
+/* eslint-enable */
 
 type PriceResponse = {
   data: {
@@ -20,13 +26,30 @@ type PriceResponse = {
 
 interface Quote {
   price: number;
+  message?: any;
 }
 
 const handler: NextApiHandler = async (
   req: NextApiRequest,
   res: NextApiResponse,
 ) => {
-  let json;
+  const json = await fetchBitcoinPrice();
+
+  res.status(200).json(json);
+};
+export default handler;
+
+export async function fetchBitcoinPrice(): Promise<Quote | undefined> {
+  let json = undefined;
+
+  // Generate a cache key based on the address, page, and pageSize
+  const cacheKey = `bitcoin-price`;
+
+  // Check if the response is cached
+  const cachedData = cache.get(cacheKey);
+  if (cachedData) {
+    return cachedData;
+  }
 
   try {
     const result = await fetch(API_BITCOIN_QUOTE.url, {
@@ -56,8 +79,14 @@ const handler: NextApiHandler = async (
           ].close,
       };
       json = quote; // JSON.stringify(quote);
+
+      // Cache the response for future use
+      if (json) {
+        cache.set(cacheKey, json);
+      }
     } else {
       const erreur = {
+        price: 0,
         message: await result.json(),
       };
       json = erreur; //JSON.stringify(erreur);
@@ -65,7 +94,5 @@ const handler: NextApiHandler = async (
   } catch (err) {
     console.log('Error api BTC price');
   }
-
-  res.status(200).json(json);
-};
-export default handler;
+  return json;
+}
