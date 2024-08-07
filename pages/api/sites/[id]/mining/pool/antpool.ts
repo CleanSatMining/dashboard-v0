@@ -121,6 +121,26 @@ export async function antpoolHistory(
   return { days, updated };
 }
 
+export async function antpoolData(
+  url: string,
+  username: string,
+  first: number,
+  siteId: string,
+  subaccountId: number | undefined,
+): Promise<any> {
+  const { apiKey, apiSign } = getApiSecrets(username);
+  console.log('ANTPOOL API usernames', username);
+  console.log('ANTPOOL API apiKey', apiKey);
+  console.log('ANTPOOL API apiSign', apiSign);
+  const ret = await _antPoolHistory(siteId, first, apiKey, apiSign, url);
+  if (ret.days === undefined)
+    return { days: [], error: ret.error, updated: new Date().getTime() };
+
+  const days = ret.days;
+  const updated = new Date().getTime();
+  return { days, updated };
+}
+
 async function _antPoolHistory(
   siteId: string,
   first: number,

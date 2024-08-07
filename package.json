@@ -39,6 +39,7 @@
     "@web3-react/core": "^8.2.3",
     "axios": "^1.7.2",
     "bignumber.js": "^9.1.2",
+    "cleansatmining-simulator": "^0.0.6",
     "clsx": "^2.1.1",
     "cookies-next": "^4.2.1",
     "country-flag-icons": "^1.5.12",

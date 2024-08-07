@@ -68,6 +68,34 @@ export async function foundryHistory(
   return { updated, days };
 }
 
+export async function foundryData(
+  url: string,
+  subaccount: string,
+  first: number,
+  siteId: string,
+  subaccountId: number | undefined,
+): Promise<any> {
+  // fetch all data
+
+  console.log('FOUNDRY API', siteId);
+  const apiKey = getApiSecrets(subaccount);
+  console.log('FOUNDRY API usernames', subaccount);
+  console.log('FOUNDRY API apiKey', apiKey);
+
+  const ret = await _foundryHistory(
+    first,
+    apiKey,
+    `${url}${subaccount}`,
+    siteId,
+  );
+
+  const days = ret.days;
+
+  const updated = new Date().getTime();
+
+  return { updated, days };
+}
+
 async function _foundryHistory(
   first: number,
   apiKey: string,

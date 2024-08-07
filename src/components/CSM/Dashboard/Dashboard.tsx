@@ -1,16 +1,17 @@
 import { FC, useEffect, useState } from 'react';
 
 import { Center, Loader } from '@mantine/core';
-
 import { useAppSelector } from 'src/hooks/react-hooks';
 import { selectUsersState } from 'src/store/features/userData/userDataSelector';
-
 import { MiningSiteSummary } from '../../../hooks/useMiningSummary';
 import { Balance } from '../../../hooks/useWalletERC20Balance';
 import { SummaryGrid } from '../Grid/SummaryGrid';
 import { SiteGrid } from '../Grid/SiteGrid';
 import { Filters } from '../Filter/Filters';
 import { FilterSite, FilterStatus } from 'src/types/mining/Site';
+import { Simulator } from 'cleansatmining-simulator';
+import { ALPHA } from '../mocks/products';
+import 'cleansatmining-simulator/dist/simulator.css';
 
 type UserAssetsProps = {
   account: string;
@@ -52,6 +53,10 @@ const _Dashboard: FC<UserAssetsProps> = ({
   return (
     <>
       {/* {spinner && <Loader color={'lime'} size={'xl'} />} */}
+
+      {/* <div>
+        <Simulator productData={ALPHA}></Simulator>
+      </div> */}
 
       {spinner && (
         <Center maw={400} h={100} mx={'auto'}>
