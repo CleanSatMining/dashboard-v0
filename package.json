@@ -13,6 +13,9 @@
     "release": "release-it",
     "test": "jest"
   },
+  "engines": {
+    "node": ">=20"
+  },
   "dependencies": {
     "@apollo/client": "^3.11.3",
     "@emotion/react": "^11.13.0",
