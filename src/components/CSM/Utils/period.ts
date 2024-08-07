@@ -644,6 +644,7 @@ export function getAsicsInOut(
       hashrateHs: hashrateHs,
       intallationCosts: {
         equipement: -asics.intallationCosts.equipement,
+        total: -asics.intallationCosts.total,
       },
     };
     return equipmentOut;
