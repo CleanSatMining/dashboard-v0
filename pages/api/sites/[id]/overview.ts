@@ -62,7 +62,9 @@ export default async function handler(
         : 0,
       bitcoinValue: bitcoinPrice ? bitcoinPrice.price : 0,
       networkTransactionFees: bitchoinOverview
-        ? bitchoinOverview.feesBlocks24H
+        ? new BigNumber(bitchoinOverview.feesBlocks24H)
+            .dividedBy(100)
+            .toNumber()
         : 0,
       asicsHashrate: site.mining.asics.reduce(
         (acc, asic) =>
