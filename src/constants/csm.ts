@@ -52,7 +52,7 @@ export const SITES: Record<SiteID, Site> = {
           units: 375,
           hashrateHs: 100000000000000,
           intallationCosts: {
-            equipement: 1238414,
+            equipement: 1011860,
             total: 1264824,
           },
         },
@@ -64,7 +64,7 @@ export const SITES: Record<SiteID, Site> = {
           units: 192,
           hashrateHs: 120000000000000,
           intallationCosts: {
-            equipement: 586080,
+            equipement: 468974,
             total: 586217,
           },
         },
@@ -130,7 +130,7 @@ export const SITES: Record<SiteID, Site> = {
           units: 375,
           hashrateHs: 100000000000000,
           intallationCosts: {
-            equipement: 1070445,
+            equipement: 875827,
             total: 1094783,
           },
         },
@@ -195,7 +195,7 @@ export const SITES: Record<SiteID, Site> = {
           units: 386,
           hashrateHs: 122000000000000,
           intallationCosts: {
-            equipement: 1258844,
+            equipement: 1033488,
             total: 1291860,
           },
         },
@@ -360,7 +360,7 @@ export const SITES: Record<SiteID, Site> = {
           units: 827,
           hashrateHs: 117000000000000,
           intallationCosts: {
-            equipement: 1451436,
+            equipement: 1176800,
             total: 1471000,
           },
         },
