@@ -84,7 +84,7 @@ const _SiteGrid: FC<SiteProps> = ({
         (stateFilter === FilterStatus.active &&
           getSite(id).status === MiningStatus.active) ||
         (stateFilter === FilterStatus.inactive &&
-          getSite(id).status === MiningStatus.inactive)),
+          getSite(id).status !== MiningStatus.active)),
   );
   return (
     <Flex

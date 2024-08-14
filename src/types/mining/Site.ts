@@ -69,6 +69,7 @@ export type Site = {
     active = 'active',
     inactive = 'inactive',
     stopped = 'stopped',
+    transit = 'transit',
   }
 
   export enum Contractor {

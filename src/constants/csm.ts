@@ -240,7 +240,7 @@ export const SITES: Record<SiteID, Site> = {
       gnosisscanUrl:
         'https://gnosisscan.io/address/0x71C86CbB71846425De5f3a693e989F4BDd97E98d',
     },
-    status: MiningStatus.active,
+    status: MiningStatus.transit,
     api: [
       {
         enable: true,

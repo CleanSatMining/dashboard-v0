@@ -8,6 +8,7 @@
     "inactive": "inactive",
     "active": "active",
     "stopped": "stopped",
+    "transit": "in transit",
     "apy": "Annual Percentage Yield",
     "site-income": "Gross Site Income",
     "site-net-income": "Net Site Income",
