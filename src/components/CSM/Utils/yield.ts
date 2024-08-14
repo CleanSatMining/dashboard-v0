@@ -39,6 +39,7 @@ export function getMinedBtc(
   startDate: number,
   endDate: number,
   expenses: Expense[],
+  ignoreSubaccountsRules?: boolean,
 ): { quantity: BigNumber; value: BigNumber } {
   if (
     miningState &&
@@ -64,25 +65,34 @@ export function getMinedBtc(
             subaccountApi.subaccount.id,
           );
 
-          const subaccountElectricityCost = calculateElectricityCostPerPeriod(
-            miningState,
-            site,
-            period,
-            startDate,
-            endDate,
-            expenses,
-            btcPrice,
-            undefined,
-            subaccountApi.subaccount.id,
-          );
-          const subaccountElectricityCost_btc =
-            subaccountElectricityCost.dividedBy(btcPrice);
-          const btcIncomeShare = subaccountBtcMined
-            .minus(subaccountElectricityCost_btc)
-            .multipliedBy(subaccountApi.subaccount.profitShare);
-          const subaccountBtcIncome =
-            subaccountElectricityCost_btc.plus(btcIncomeShare);
-          subaccountsBtcMined = subaccountsBtcMined.plus(subaccountBtcIncome);
+          if (ignoreSubaccountsRules === true) {
+            console.log(
+              'ignoreSubaccountsRules',
+              site.id,
+              ignoreSubaccountsRules,
+            );
+            subaccountsBtcMined = subaccountsBtcMined.plus(subaccountBtcMined);
+          } else {
+            const subaccountElectricityCost = calculateElectricityCostPerPeriod(
+              miningState,
+              site,
+              period,
+              startDate,
+              endDate,
+              expenses,
+              btcPrice,
+              undefined,
+              subaccountApi.subaccount.id,
+            );
+            const subaccountElectricityCost_btc =
+              subaccountElectricityCost.dividedBy(btcPrice);
+            const btcIncomeShare = subaccountBtcMined
+              .minus(subaccountElectricityCost_btc)
+              .multipliedBy(subaccountApi.subaccount.profitShare);
+            const subaccountBtcIncome =
+              subaccountElectricityCost_btc.plus(btcIncomeShare);
+            subaccountsBtcMined = subaccountsBtcMined.plus(subaccountBtcIncome);
+          }
         } else {
           console.error(
             'No subaccount ' + site.id + ' ' + JSON.stringify(subaccountApi),
@@ -108,7 +118,7 @@ export function getMinedBtc(
   return { quantity: new BigNumber(0), value: new BigNumber(0) };
 }
 
-function getMinedBtc_(
+export function getMinedBtc_(
   miningState: MiningHistory,
   site: Site,
   period: number,
@@ -119,6 +129,7 @@ function getMinedBtc_(
 ): { quantity: BigNumber; value: BigNumber } {
   let sumMinedBtc: BigNumber = new BigNumber(0);
 
+  console.log('getMinedBtc_', site.id);
   const days = getMiningDays(
     miningState,
     site,
@@ -659,6 +670,7 @@ export const getUptimeBySite = (
   period: number,
   startDate: number,
   endDate: number,
+  subaccountId?: number,
 ): { machines: number; days: number; percent: number; hashrate: number } => {
   if (period === 0 || startDate > endDate)
     return { machines: 0, days: 0, percent: 0, hashrate: 0 };
@@ -675,13 +687,15 @@ export const getUptimeBySite = (
       startDate,
       endDate,
     );
-
+    console.log('getUptimeBySite', site.id, subaccountId);
     const days = getMiningDays(
       miningState,
       site,
       period,
       realStartTimestamp,
       endDate,
+    ).filter(
+      (d) => d.subaccountId === subaccountId || subaccountId === undefined,
     );
 
     if (realPeriod === 0 || days.length === 0)

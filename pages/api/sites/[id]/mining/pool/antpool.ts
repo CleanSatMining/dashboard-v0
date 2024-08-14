@@ -4,7 +4,10 @@ import * as crypto from 'crypto';
 import { SITES } from 'src/constants/csm';
 import { SiteID } from 'src/types/mining/Site';
 import { MiningSummaryPerDay } from 'src/types/mining/Mining';
-import { APIMiningHistoryResponse } from 'src/types/mining/MiningAPI';
+import {
+  APIMiningHistoryResponse,
+  DayDataAntpool,
+} from 'src/types/mining/MiningAPI';
 import {
   getHashrate,
   getNumberOfMachines,
@@ -20,25 +23,12 @@ interface RevenueHistory {
     totalPage: number;
     pageSize: number;
     totalRecord: number;
-    rows: DayData[];
+    rows: DayDataAntpool[];
   };
 }
 
-interface DayData {
-  timestamp: string;
-  hashrate: string;
-  hashrate_unit: number;
-  ppsAmount: number;
-  pplnsAmount: number;
-  soloAmount: number;
-  ppappsAmount: number;
-  ppapplnsAmount: number;
-  fppsBlockAmount: number;
-  fppsFeeAmount: number;
-}
-
 interface AntpoolApiResult {
-  days?: DayData[];
+  days?: DayDataAntpool[];
   /* eslint-disable */
   error?: any;
   /* eslint-enable */
@@ -70,12 +60,12 @@ export async function antpoolHistory(
   }
 
   // consolid data
-  const sumData = new Map<string, DayData>();
+  const sumData = new Map<string, DayDataAntpool>();
   for (const data of returns) {
-    data.forEach((value: DayData, key: string) => {
+    data.forEach((value: DayDataAntpool, key: string) => {
       if (sumData.has(key)) {
         const oldMiningValue = sumData.get(key);
-        const newMiningValue: DayData = {
+        const newMiningValue: DayDataAntpool = {
           timestamp: value.timestamp,
           hashrate:
             value.hashrate +
@@ -155,7 +145,7 @@ async function _antPoolHistory(
 
   const totalPage: number = Math.ceil(first / PAGE_SIZE);
 
-  let periodsData: DayData[] = [];
+  let periodsData: DayDataAntpool[] = [];
   let totalPageReturned = totalPage;
 
   for (let page = 1; page <= totalPage; page++) {
@@ -219,7 +209,7 @@ async function _antPoolHistory(
  */
 function convertAPIDataToStandard(
   siteId: string,
-  periodsData: DayData[],
+  periodsData: DayDataAntpool[],
   subaccountId: number | undefined,
 ) {
   const site = SITES[siteId as SiteID];

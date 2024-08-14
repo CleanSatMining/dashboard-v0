@@ -30,3 +30,39 @@ export type APIEbitdaQuery = {
     btcPrice: number;
     basePricePerKWH?: number;
 }
+
+export interface DayDataAntpool {
+    timestamp: string;
+    hashrate: string;
+    hashrate_unit: number;
+    ppsAmount: number;
+    pplnsAmount: number;
+    soloAmount: number;
+    ppappsAmount: number;
+    ppapplnsAmount: number;
+    fppsBlockAmount: number;
+    fppsFeeAmount: number;
+  }
+
+export interface DayDataLuxor {
+    date: string;
+    efficiency: number;
+    hashrate: number;
+    revenue: number;
+    uptimePercentage: number;
+    uptimeTotalMinutes: number;
+    uptimeTotalMachines: number;
+  }
+
+  export interface DayDataFoundry {
+    startTime: string;
+    endTime: string;
+    totalAmount: number;
+    hashrate: number;
+    ppsBaseAmount: number;
+    txFeeRewardAmount: number;
+    fppsRatePercent: number;
+    ppapplnsAmount: number;
+    feeAmount: number;
+    feeRatePercent: number;
+  }

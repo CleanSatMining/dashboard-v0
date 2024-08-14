@@ -65,6 +65,8 @@ const handler: NextApiHandler = async (
     username,
   );
 
+  console.log('API SUMMARY : data', json?.days?.length);
+
   //if (siteId === '2') console.log('BETA RESULT', JSON.stringify(json, null, 4));
 
   // Cache the response for future use
@@ -154,6 +156,8 @@ export async function getMiningData(
         console.error('API SUMMARY : error', apiResponse.error);
       } else if (apiResponse && apiResponse.days) {
         json = apiResponse;
+      } else {
+        console.warn('API SUMMARY : no data', apiResponse);
       }
     } else {
       console.log('WARN : No url or user defined', api.username, api.url);

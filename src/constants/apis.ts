@@ -23,6 +23,11 @@ export const API_MINING_HISTORY = {
   method: 'POST',
 };
 
+export const API_MINING_DATA = {
+  url: (id: string) => '/api/sites/' + id + '/mining/data',
+  method: 'POST',
+};
+
 export const API_MINING_EXPENSES = {
   url: (id: string) => '/api/sites/' + id + '/expenses',
   method: 'POST',

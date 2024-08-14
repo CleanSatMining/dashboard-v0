@@ -1,5 +1,5 @@
 import { FC, useEffect, useState } from 'react';
-import { NativeSelect, SelectItem } from '@mantine/core';
+import { NativeSelect, SelectItem, ActionIcon, Group } from '@mantine/core';
 import { useAppSelector } from 'src/hooks/react-hooks';
 import {
   selectMiningHistory,
@@ -8,7 +8,12 @@ import {
 import { selectUsersState } from 'src/store/features/userData/userDataSelector';
 import { PropertiesERC20 } from 'src/types/PropertiesToken';
 import { SITES } from '../../../constants';
-import { Site, TokenBalance, SiteID } from '../../../types/mining/Site';
+import {
+  Site,
+  TokenBalance,
+  SiteID,
+  Contractor,
+} from '../../../types/mining/Site';
 import { UserSiteCard } from './UserCard/UserSiteCard';
 import { UserSiteCardMobile } from './UserCard/UserSiteCardMobile';
 import { CardData } from './UserCard/Type';
@@ -27,6 +32,7 @@ import {
 } from '../Utils/period';
 import { useAtomValue } from 'jotai';
 import { adminUserAtom } from 'src/states';
+import { IconDownload } from '@tabler/icons-react';
 
 import {
   getMinedBtc,
@@ -38,6 +44,15 @@ import {
   getYieldBySite,
   getSiteExpensesByPeriod,
 } from '../Utils/yield';
+import { API_MINING_DATA } from 'src/constants/apis';
+
+import {
+  APIMiningDataQuery,
+  DayDataAntpool,
+  DayDataFoundry,
+  DayDataLuxor,
+} from 'src/types/mining/MiningAPI';
+import { getTimestampUTC } from 'src/utils/date';
 
 type SiteProps = {
   siteId: string;
@@ -183,6 +198,81 @@ const _SiteCard: FC<SiteProps> = ({
 
   const [userSiteData, setUserSiteData] = useState<CardData>(data);
 
+  const handleClick = async () => {
+    const selectedSite =
+      allSites.find(
+        (s) => s.api.length === 1 && s.api[0].subaccount?.name === siteValue,
+      ) ?? site;
+
+    const username = selectedSite.api[0].username;
+    const body: APIMiningDataQuery = {
+      siteId: siteId,
+      first: 600,
+      username: username ?? '',
+    };
+    console.log(
+      'API call:',
+      API_MINING_DATA.url(siteId),
+      JSON.stringify(body, null, 2),
+    );
+    try {
+      const response = await fetch(API_MINING_DATA.url(siteId), {
+        method: API_MINING_DATA.method,
+        body: JSON.stringify(body),
+      });
+      const apiData = await response.json();
+      //console.log('API Response:', JSON.stringify(apiData, null, 2));
+      switch (site.api[0].contractor) {
+        case Contractor.ANTPOOL:
+          const antpoolData: { days: DayDataAntpool[] } = apiData;
+          const antpoolDataDays = antpoolData.days
+            .filter(
+              (d) =>
+                convertToTimestamp(d.timestamp) >= startDate &&
+                convertToTimestamp(d.timestamp) <= endDate,
+            )
+            .map((dayData) => ({
+              ...dayData,
+            }));
+          const csv = convertToCSV(antpoolDataDays);
+          downloadCSV(csv, 'antpool.csv');
+          break;
+        case Contractor.FOUNDRY:
+          const foundryData: { days: DayDataFoundry[] } = apiData;
+          const foundryDataDays = foundryData.days
+            .filter(
+              (d) =>
+                convertToTimestamp(d.startTime) >= startDate &&
+                convertToTimestamp(d.startTime) <= endDate,
+            )
+            .map((dayData) => ({
+              ...dayData,
+            }));
+          const csvFoundry = convertToCSV(foundryDataDays);
+          downloadCSV(csvFoundry, siteValue + '.csv');
+          break;
+        case Contractor.LUXOR:
+          const luxorData: { days: DayDataLuxor[] } = apiData;
+          const luxorDataDays = luxorData.days
+            .filter(
+              (d) =>
+                convertToTimestamp(d.date) >= startDate &&
+                convertToTimestamp(d.date) <= endDate,
+            )
+            .map((dayData) => ({
+              ...dayData,
+            }));
+          const csvLuxor = convertToCSV(luxorDataDays);
+          downloadCSV(csvLuxor, siteValue + '.csv');
+          break;
+        default:
+          break;
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
   useEffect(() => {
     const selectedSite =
       allSites.find(
@@ -214,6 +304,7 @@ const _SiteCard: FC<SiteProps> = ({
       realStartTimestamp,
       endDate,
       expensesState.byId[siteId] ?? [],
+      siteValue !== site.name,
     );
     const siteUptime = getUptimeBySite(
       miningState,
@@ -323,17 +414,23 @@ const _SiteCard: FC<SiteProps> = ({
   return (
     <>
       {adminUser && (
-        <NativeSelect
-          data={[
-            ...(allSites.map((site) =>
-              site.api.length > 1
-                ? site.name
-                : site.api[0].subaccount?.name ?? site.name,
-            ) as unknown as SelectItem[]),
-          ]}
-          value={siteValue}
-          onChange={(event) => setSiteValue(event.currentTarget.value)}
-        />
+        <div style={{ display: 'flex', width: '100%' }}>
+          <NativeSelect
+            style={{ flex: 1, width: '100%', marginRight: '8px' }}
+            data={[
+              ...(allSites.map((site) =>
+                site.api.length > 1
+                  ? site.name
+                  : (site.api[0].subaccount?.name ?? site.name),
+              ) as unknown as SelectItem[]),
+            ]}
+            value={siteValue}
+            onChange={(event) => setSiteValue(event.currentTarget.value)}
+          />
+          <ActionIcon onClick={handleClick}>
+            <IconDownload size='1.125rem' />
+          </ActionIcon>
+        </div>
       )}
       {isMobile ? (
         <UserSiteCardMobile
@@ -528,4 +625,37 @@ function getSubSites(site: Site): Site[] {
     // Retourne un tableau vide ou gère l'erreur comme vous le souhaitez
     return [];
   }
+}
+
+function convertToCSV(data: { [key: string]: string | number }[]): string {
+  if (data.length === 0) {
+    return '';
+  }
+
+  const keys = Object.keys(data[0]); // Récupère les clés du premier objet comme en-têtes
+  const header = keys.join(','); // Construit les en-têtes CSV
+  const rows = data
+    .map((row) => keys.map((key) => row[key]).join(','))
+    .join('\n'); // Construit les lignes CSV
+
+  return `${header}\n${rows}`;
+}
+
+function downloadCSV(csvString: string, filename: string) {
+  const blob = new Blob([csvString], { type: 'text/csv' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.setAttribute('hidden', '');
+  a.setAttribute('href', url);
+  a.setAttribute('download', filename);
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  window.URL.revokeObjectURL(url);
+}
+
+function convertToTimestamp(dateString: string): number {
+  const date = new Date(dateString);
+
+  return getTimestampUTC(date);
 }

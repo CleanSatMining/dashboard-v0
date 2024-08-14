@@ -1,19 +1,12 @@
-import { APIMiningHistoryResponse } from 'src/types/mining/MiningAPI';
+import {
+  APIMiningHistoryResponse,
+  DayDataLuxor,
+} from 'src/types/mining/MiningAPI';
 
 interface RevenueHistory {
   data: {
     getHashrateScoreHistory: {
-      nodes: [
-        {
-          date: string;
-          efficiency: number;
-          hashrate: number;
-          revenue: number;
-          uptimePercentage: number;
-          uptimeTotalMinutes: number;
-          uptimeTotalMachines: number;
-        },
-      ];
+      nodes: DayDataLuxor[];
     };
   };
 }

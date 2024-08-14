@@ -3,25 +3,15 @@ import BigNumber from 'bignumber.js';
 import { SITES } from 'src/constants/csm';
 import { SiteID } from 'src/types/mining/Site';
 import { MiningSummaryPerDay } from 'src/types/mining/Mining';
-import { APIMiningHistoryResponse } from 'src/types/mining/MiningAPI';
+import {
+  APIMiningHistoryResponse,
+  DayDataFoundry,
+} from 'src/types/mining/MiningAPI';
 import { getTimestampUTC, getTimestampNDaysAgo } from 'src/utils/date';
 import {
   getHashrate,
   getNumberOfMachines,
 } from 'src/components/CSM/Utils/period';
-
-interface FoundryDayData {
-  startTime: string;
-  endTime: string;
-  totalAmount: number;
-  hashrate: number;
-  ppsBaseAmount: number;
-  txFeeRewardAmount: number;
-  fppsRatePercent: number;
-  ppapplnsAmount: number;
-  feeAmount: number;
-  feeRatePercent: number;
-}
 
 interface FoundryApiError {
   timestamp: string;
@@ -32,7 +22,7 @@ interface FoundryApiError {
 }
 
 interface FoundryApiResult {
-  days: FoundryDayData[];
+  days: DayDataFoundry[];
   error?: FoundryApiError;
 }
 
@@ -126,7 +116,7 @@ async function _foundryHistory(
     });
 
     if (result.ok) {
-      const response: FoundryDayData[] = await result.json();
+      const response: DayDataFoundry[] = await result.json();
       json = {
         days: response,
       };
@@ -153,7 +143,7 @@ async function _foundryHistory(
  */
 function convertAPIDataToStandard(
   siteId: string,
-  periodsData: FoundryDayData[],
+  periodsData: DayDataFoundry[],
   subaccountId: number | undefined,
 ): MiningSummaryPerDay[] {
   const site = SITES[siteId as SiteID];
