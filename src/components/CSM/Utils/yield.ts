@@ -136,8 +136,7 @@ export function getMinedBtc_(
     period,
     startDate,
     endDate,
-  ).filter(
-    (d) => d.subaccountId === subaccountId || subaccountId === undefined,
+    subaccountId,
   );
 
   for (const day of days) {
@@ -694,8 +693,7 @@ export const getUptimeBySite = (
       period,
       realStartTimestamp,
       endDate,
-    ).filter(
-      (d) => d.subaccountId === subaccountId || subaccountId === undefined,
+      subaccountId,
     );
 
     if (realPeriod === 0 || days.length === 0)

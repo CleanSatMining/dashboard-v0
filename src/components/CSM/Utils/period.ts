@@ -23,6 +23,7 @@ export function getMiningDays(
   period: number,
   startDate: number,
   endDate: number,
+  subaccountId?: number,
 ): MiningSummaryPerDay[] {
   // Initialisation d'un tableau vide qui sera retourné en cas de conditions non satisfaites
   const ret: MiningSummaryPerDay[] = [];
@@ -42,7 +43,7 @@ export function getMiningDays(
         Math.min(period, miningState.byId[site.id].mining.days.length),
       );
     }
-    const aa = miningState.byId[site.id].mining.days.filter((miningDay) => {
+    const days = miningState.byId[site.id].mining.days.filter((miningDay) => {
       return (
         new Date(miningDay.date).getTime() >= realStartTimestamp &&
         new Date(miningDay.date).getTime() <= endDate
@@ -59,8 +60,15 @@ export function getMiningDays(
     //     JSON.stringify(aa),
     //   );
 
+    const subaccountValue =
+      subaccountId ??
+      (site.api.length === 1 ? site.api[0].subaccount?.id : undefined);
+
     // Cas où startDate n'est pas 0, filtre les jours dans la plage spécifiée
-    return aa;
+    return days.filter(
+      (d) =>
+        d.subaccountId === subaccountValue || subaccountValue === undefined,
+    );
   }
 
   // Retourne le tableau vide si les conditions ne sont pas satisfaites
