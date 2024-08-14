@@ -292,13 +292,22 @@ export function getAverageHashrate(
   const endPeriod = endTimestamp;
   const period = calculateDaysBetweenDates(startPeriod, endPeriod);
 
+  const shallManageSubaccount = site.api.length === 1 && site.api[0].subaccount;
+  const subAsics = shallManageSubaccount
+    ? site.api[0].subaccount?.asics
+    : undefined;
+
   for (const asics of site.mining.asics) {
+    const subAccountAsics = shallManageSubaccount
+      ? (subAsics?.find((a) => a.asicsId === asics.id)?.machines ?? 0)
+      : undefined;
+
     const installationDate = getMidnightTimestamp(
       new Date(asics.date).getTime(),
     );
     const endLifeMachines = addYearsToTimestamp(installationDate, 5);
     const equipementHashrate = new BigNumber(asics.hashrateHs).times(
-      asics.units,
+      subAccountAsics ?? asics.units,
     );
 
     if (
