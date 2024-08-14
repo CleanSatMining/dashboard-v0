@@ -129,7 +129,6 @@ export function getMinedBtc_(
 ): { quantity: BigNumber; value: BigNumber } {
   let sumMinedBtc: BigNumber = new BigNumber(0);
 
-  console.log('getMinedBtc_', site.id);
   const days = getMiningDays(
     miningState,
     site,
@@ -686,7 +685,7 @@ export const getUptimeBySite = (
       startDate,
       endDate,
     );
-    console.log('getUptimeBySite', site.id, subaccountId);
+
     const days = getMiningDays(
       miningState,
       site,

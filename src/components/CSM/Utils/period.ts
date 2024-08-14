@@ -64,6 +64,10 @@ export function getMiningDays(
       subaccountId ??
       (site.api.length === 1 ? site.api[0].subaccount?.id : undefined);
 
+    // if (site.id === '5') {
+    //   console.log('DAYS FILTERED subaccount', subaccountValue);
+    // }
+
     // Cas où startDate n'est pas 0, filtre les jours dans la plage spécifiée
     return days.filter(
       (d) =>
