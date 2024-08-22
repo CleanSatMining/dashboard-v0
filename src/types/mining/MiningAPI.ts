@@ -29,6 +29,7 @@ export type APIEbitdaQuery = {
     endTimestamp: number;
     btcPrice: number;
     basePricePerKWH?: number;
+    subaccount?: number;
 }
 
 export interface DayDataAntpool {

@@ -53,6 +53,7 @@ import {
   DayDataLuxor,
 } from 'src/types/mining/MiningAPI';
 import { getTimestampUTC } from 'src/utils/date';
+import { getSubSites } from '../Utils/site';
 
 type SiteProps = {
   siteId: string;
@@ -278,6 +279,16 @@ const _SiteCard: FC<SiteProps> = ({
       allSites.find(
         (s) => s.api.length === 1 && s.api[0].subaccount?.name === siteValue,
       ) ?? site;
+    const subaccountId =
+      selectedSite.api.length === 1 &&
+      selectedSite.api[0].subaccount?.name === siteValue
+        ? selectedSite.api[0].subaccount.id
+        : undefined;
+
+    const expenses =
+      expensesState.byId[siteId]?.filter(
+        (e) => subaccountId === e.subaccountId || subaccountId === undefined,
+      ) ?? [];
 
     const { realPeriod, realStartTimestamp } = getPeriodFromStart(
       selectedSite,
@@ -293,7 +304,7 @@ const _SiteCard: FC<SiteProps> = ({
       btcPrice,
       realStartTimestamp,
       endDate,
-      expensesState.byId[siteId] ?? [],
+      expenses,
     );
 
     const siteMinedBTC = getMinedBtc(
@@ -303,7 +314,7 @@ const _SiteCard: FC<SiteProps> = ({
       btcPrice,
       realStartTimestamp,
       endDate,
-      expensesState.byId[siteId] ?? [],
+      expenses,
       siteValue !== site.name,
     );
     const siteUptime = getUptimeBySite(
@@ -320,7 +331,7 @@ const _SiteCard: FC<SiteProps> = ({
       btcPrice,
       realStartTimestamp,
       endDate,
-      expensesState.byId[siteId] ?? [],
+      expenses,
     );
     const siteCosts: SiteCost = getSiteExpensesByPeriod(
       miningState,
@@ -329,7 +340,7 @@ const _SiteCard: FC<SiteProps> = ({
       realPeriod,
       realStartTimestamp,
       endDate,
-      expensesState.byId[siteId] ?? [],
+      expenses,
     );
     const userTokenToCome = getUserTokenBalanceToCome(
       usersState,
@@ -608,23 +619,6 @@ function buildUserSiteData(
       },
     },
   };
-}
-
-function getSubSites(site: Site): Site[] {
-  // Vérifie si site.api est un tableau et contient des éléments
-  if (Array.isArray(site.api) && site.api.length > 1) {
-    // Crée une nouvelle liste de sites où chaque site est identique à l'original,
-    // mais avec le champ `site` remplacé par l'élément correspondant de site.api
-    const ms = site.api.map((apiElement, index) => ({
-      ...site, // Copie toutes les propriétés de l'objet site
-      api: [apiElement],
-    }));
-
-    return ms;
-  } else {
-    // Retourne un tableau vide ou gère l'erreur comme vous le souhaitez
-    return [];
-  }
 }
 
 function convertToCSV(data: { [key: string]: string | number }[]): string {

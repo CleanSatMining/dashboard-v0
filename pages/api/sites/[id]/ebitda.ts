@@ -27,6 +27,7 @@ import { SITES } from 'src/constants/csm';
 import { SiteID } from 'src/types/mining/Site';
 
 import { getEquipementDepreciation } from 'src/components/CSM/Utils/period';
+import { getSubSite } from 'src/components/CSM/Utils/site';
 
 // cache 60 min
 /* eslint-disable */
@@ -44,6 +45,7 @@ const handler: NextApiHandler = async (
   let endTimestamp = getLastDayOfPreviousMonth();
   let btcPrice = 50000;
   let basePricePerKWH: number | undefined = undefined;
+  let subaccount: number | undefined = undefined;
 
   //console.log('req.body:', req.body);
   if (req.body) {
@@ -63,6 +65,7 @@ const handler: NextApiHandler = async (
       requestBody.basePricePerKWH !== undefined
         ? Number(requestBody.basePricePerKWH)
         : undefined;
+    subaccount = requestBody.subaccount;
   }
 
   const period = calculateDaysBetweenDates(startTimestamp, endTimestamp);
@@ -70,8 +73,8 @@ const handler: NextApiHandler = async (
 
   let miningHistoryResponse: APIMiningHistoryResponse | undefined = undefined;
 
-  // Generate a cache key based on the address, page, and pageSize
-  const cacheKey = `${siteId}-${first}`;
+  // Generate a cache key based on the request
+  const cacheKey = `${siteId}-${first}-${startTimestamp}-${endTimestamp}-${btcPrice}-${basePricePerKWH}-${subaccount}`;
 
   // Check if the response is cached
   const cachedData = cache.get(cacheKey);
@@ -95,10 +98,12 @@ const handler: NextApiHandler = async (
   };
 
   const site: Site = SITES[siteId as SiteID];
-  const feeParameters = site.fees;
+  const selectedSite = getSubSite(site, subaccount);
+
+  const feeParameters = selectedSite.fees;
   const electricityCost = calculateElectricityCostPerPeriod(
     miningHistory,
-    site,
+    selectedSite,
     period,
     startTimestamp,
     endTimestamp,
@@ -108,15 +113,26 @@ const handler: NextApiHandler = async (
   );
   const minedBtc = getMinedBtc(
     miningHistory,
-    site,
+    selectedSite,
     period,
     btcPrice,
     startTimestamp,
     endTimestamp,
     [],
   );
+  const fullMinedBtc = getMinedBtc(
+    miningHistory,
+    selectedSite,
+    period,
+    btcPrice,
+    startTimestamp,
+    endTimestamp,
+    [],
+    true,
+  );
+
   const equipementDepreciation = getEquipementDepreciation(
-    site,
+    selectedSite,
     startTimestamp,
     endTimestamp,
   );
@@ -136,7 +152,7 @@ const handler: NextApiHandler = async (
 
   const uptime = getUptimeBySite(
     miningHistory,
-    site,
+    selectedSite,
     period,
     startTimestamp,
     endTimestamp,
@@ -150,7 +166,7 @@ const handler: NextApiHandler = async (
     feeOperator: result.feeOperator,
     electricityCost: electricityCost,
     btcPrice: btcPrice,
-    minedBtc: minedBtc,
+    minedBtc: fullMinedBtc,
     period: period,
     startTimestamp: startTimestamp,
     endTimestamp: endTimestamp,
