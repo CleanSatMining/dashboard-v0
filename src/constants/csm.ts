@@ -228,10 +228,10 @@ export const SITES: Record<SiteID, Site> = {
     id: SiteID.gamma,
     name: 'CSM Gamma',
     location: {
-      countryCode: 'SE',
+      countryCode: 'US',
       name: 'location-gamma',
     },
-    image: 'https://cleansatmining.com/data/files/img_3861.jpg',
+    image: 'https://cleansatmining.com/data/files/missouri.jpg',
     token: {
       address: '0x71C86CbB71846425De5f3a693e989F4BDd97E98d',
       supply: 100000,
@@ -240,13 +240,19 @@ export const SITES: Record<SiteID, Site> = {
       gnosisscanUrl:
         'https://gnosisscan.io/address/0x71C86CbB71846425De5f3a693e989F4BDd97E98d',
     },
-    status: MiningStatus.transit,
+    status: MiningStatus.active,
     api: [
       {
         enable: true,
         username: 'cleansatmininggamma',
         url: 'https://api.beta.luxor.tech/graphql',
         contractor: Contractor.LUXOR,
+      },
+      {
+        enable: true,
+        username: 'csmgama',
+        url: 'http://api.foundryusapool.com/earnings/',
+        contractor: Contractor.FOUNDRY,
       },
     ],
     mining: {
@@ -266,7 +272,7 @@ export const SITES: Record<SiteID, Site> = {
         },
       ],
       electricity: {
-        usdPricePerKWH: 0.082,
+        usdPricePerKWH: 0.069, // 0.082 (suede),
       },
     },
     fees: {

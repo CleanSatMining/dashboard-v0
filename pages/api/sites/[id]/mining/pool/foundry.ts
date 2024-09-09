@@ -186,6 +186,10 @@ function getApiSecrets(username: string): string {
       apiKey = process.env.FOUNDRY_D_PECOS_API_KEY_ACCOUNT ?? '';
       break;
     }
+    case SITES[SiteID.gamma].api[1].username: {
+      apiKey = process.env.FOUNDRY_G_API_KEY_ACCOUNT ?? '';
+      break;
+    }
     default: {
       break;
     }
