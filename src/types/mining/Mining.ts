@@ -1,6 +1,6 @@
 
 export type MiningSummaryPerDay = {
-    subaccountId: number | undefined;
+    subaccountId: number;
     date: string;
     efficiency: number;
     hashrate: number;

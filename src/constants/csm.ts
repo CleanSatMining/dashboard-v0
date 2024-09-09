@@ -247,6 +247,7 @@ export const SITES: Record<SiteID, Site> = {
         username: 'cleansatmininggamma',
         url: 'https://api.beta.luxor.tech/graphql',
         contractor: Contractor.LUXOR,
+        endOfContractAt: 1722470400000,
       },
       {
         enable: true,

@@ -12,6 +12,7 @@ export type APIMiningDataQuery = {
 
 export type APIMiningHistoryResponse = {
     updated: number;
+    siteId: string;
     days:MiningSummaryPerDay[];
     error?: any;
 }

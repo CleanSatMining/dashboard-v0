@@ -28,7 +28,8 @@ export type Site = {
     vault: {
       btcAddress: string;
       xpub: string;
-    }
+    },
+    
   };
 
   export type Token = {
@@ -57,6 +58,7 @@ export type Site = {
       asics: SubacountAsics[];
       profitShare: number;
     };
+    endOfContractAt?: number;
   }
 
   export type SubacountAsics = {

@@ -92,6 +92,7 @@ export async function getMiningHistory(
   if (!site.api || site.api.length === 0) {
     console.warn('API SUMMARY : no api defined', siteId);
     const history = {
+      siteId: siteId,
       updated: new Date().getTime(),
       days: [],
     };
@@ -99,12 +100,13 @@ export async function getMiningHistory(
     return json;
   }
 
+  let index = 0;
   for (const api of site.api) {
     let apiResponse: APIMiningHistoryResponse | undefined = undefined;
     const username = api.username ?? '';
     const url = api.url ?? '';
     const pool = api.contractor;
-    const subaccountId = api.subaccount?.id ?? undefined;
+    const subaccountId = api.subaccount?.id ?? index;
 
     console.log('API MINING siteId', siteId);
     console.log('API MINING first', first);
@@ -115,7 +117,13 @@ export async function getMiningHistory(
     if (username && url && pool) {
       switch (pool) {
         case Contractor.LUXOR: {
-          apiResponse = await luxorHistory(url, username, first, subaccountId);
+          apiResponse = await luxorHistory(
+            url,
+            username,
+            first,
+            siteId,
+            subaccountId,
+          );
           break;
         }
         case Contractor.ANTPOOL: {
@@ -146,9 +154,23 @@ export async function getMiningHistory(
           break;
         }
       }
+      console.log(
+        'API SUMMARY : apiResponse',
+        apiResponse?.updated,
+        apiResponse?.days.length,
+        apiResponse?.error,
+      );
       if (apiResponse && apiResponse.error) {
         console.error('API SUMMARY : error', apiResponse.error);
       } else if (apiResponse && apiResponse.days) {
+        const endOfContractAt = api.endOfContractAt;
+        console.log('API SUMMARY : endOfContractAt', endOfContractAt);
+
+        if (endOfContractAt) {
+          apiResponse.days = apiResponse.days.filter((day) => {
+            return new Date(day.date).getTime() < endOfContractAt;
+          });
+        }
         if (json === undefined) {
           json = apiResponse;
         } else {
@@ -158,11 +180,14 @@ export async function getMiningHistory(
     } else {
       console.log('WARN : No url or user defined', api.username, api.url);
       const history = {
+        siteId: siteId,
         updated: new Date().getTime(),
         days: [],
       };
       json = history;
     }
+
+    index++;
   }
 
   return json;

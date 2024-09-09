@@ -15,7 +15,8 @@ export async function luxorHistory(
   url: string,
   username: string,
   first: number,
-  subaccountId: number | undefined,
+  siteId: string,
+  subaccountId: number,
 ): Promise<APIMiningHistoryResponse | undefined> {
   let json;
   try {
@@ -61,6 +62,7 @@ export async function luxorHistory(
       const response: RevenueHistory = await result.json();
       //console.log(JSON.stringify(response, null, 4));
       const history: APIMiningHistoryResponse = {
+        siteId: siteId,
         updated: new Date().getTime(),
         days: response.data.getHashrateScoreHistory.nodes.map((node) => {
           return {
@@ -78,6 +80,7 @@ export async function luxorHistory(
       json = history; // JSON.stringify(history, null);
     } else {
       const erreur: APIMiningHistoryResponse = {
+        siteId: siteId,
         updated: new Date().getTime(),
         days: [],
         error: await result.json(),
@@ -95,6 +98,7 @@ export async function luxorData(
   url: string,
   username: string,
   first: number,
+  siteId: string,
   subaccountId: number | undefined,
 ): Promise<any | undefined> {
   let json;
@@ -147,6 +151,7 @@ export async function luxorData(
       json = history; // JSON.stringify(history, null);
     } else {
       const erreur: APIMiningHistoryResponse = {
+        siteId: siteId,
         updated: new Date().getTime(),
         days: [],
         error: await result.json(),

@@ -31,7 +31,7 @@ export async function foundryHistory(
   subaccount: string,
   first: number,
   siteId: string,
-  subaccountId: number | undefined,
+  subaccountId: number,
 ): Promise<APIMiningHistoryResponse> {
   // fetch all data
 
@@ -55,7 +55,7 @@ export async function foundryHistory(
 
   const updated = new Date().getTime();
 
-  return { updated, days };
+  return { siteId, updated, days };
 }
 
 export async function foundryData(
@@ -144,7 +144,7 @@ async function _foundryHistory(
 function convertAPIDataToStandard(
   siteId: string,
   periodsData: DayDataFoundry[],
-  subaccountId: number | undefined,
+  subaccountId: number,
 ): MiningSummaryPerDay[] {
   const site = SITES[siteId as SiteID];
 
