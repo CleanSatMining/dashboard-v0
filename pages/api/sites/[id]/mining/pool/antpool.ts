@@ -39,7 +39,7 @@ export async function antpoolHistory(
   usernames: string,
   first: number,
   siteId: string,
-  subaccountId: number | undefined,
+  subaccountId: number,
 ): Promise<APIMiningHistoryResponse> {
   const users = usernames.split(',');
 
@@ -54,7 +54,12 @@ export async function antpoolHistory(
     console.log('ANTPOOL API apiSign', apiSign);
     const ret = await _antPoolHistory(siteId, first, apiKey, apiSign, url);
     if (ret.days === undefined)
-      return { days: [], error: ret.error, updated: new Date().getTime() };
+      return {
+        siteId: siteId,
+        days: [],
+        error: ret.error,
+        updated: new Date().getTime(),
+      };
     const result = new Map(ret.days.map((i) => [i.timestamp, i]));
     returns.push(result);
   }
@@ -108,7 +113,7 @@ export async function antpoolHistory(
     subaccountId,
   );
   const updated = new Date().getTime();
-  return { days, updated };
+  return { siteId, days, updated };
 }
 
 export async function antpoolData(
@@ -210,7 +215,7 @@ async function _antPoolHistory(
 function convertAPIDataToStandard(
   siteId: string,
   periodsData: DayDataAntpool[],
-  subaccountId: number | undefined,
+  subaccountId: number,
 ) {
   const site = SITES[siteId as SiteID];
 

@@ -97,6 +97,7 @@ export async function getMiningData(
   if (!site.api || site.api.length === 0) {
     console.warn('API SUMMARY : no api defined', siteId);
     const history = {
+      siteId: siteId,
       updated: new Date().getTime(),
       days: [],
     };
@@ -121,7 +122,13 @@ export async function getMiningData(
     if (username && url && pool) {
       switch (pool) {
         case Contractor.LUXOR: {
-          apiResponse = await luxorData(url, username, first, subaccountId);
+          apiResponse = await luxorData(
+            url,
+            username,
+            first,
+            siteId,
+            subaccountId,
+          );
           break;
         }
         case Contractor.ANTPOOL: {
@@ -162,6 +169,7 @@ export async function getMiningData(
     } else {
       console.log('WARN : No url or user defined', api.username, api.url);
       const history = {
+        siteId: siteId,
         updated: new Date().getTime(),
         days: [],
       };
