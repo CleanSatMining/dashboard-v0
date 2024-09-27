@@ -259,7 +259,7 @@ export function getEquipmentCost(site: Site, date: Date): BigNumber {
  * @param date
  * @returns
  */
-export function getHashrate(site: Site, date: Date): BigNumber {
+export function getHashrateMax(site: Site, date: Date): BigNumber {
   let hashrate = new BigNumber(0);
 
   for (const asics of getAsicsInOut(site.mining.asics)) {
@@ -605,45 +605,93 @@ export function getProgressSteps(
 
   const asicsIn = getAsicsEquipements(site, startTimestamp, endTimestamp);
   const asicsInOut = getAsicsInOut(asicsIn, endTimestamp);
+  const equipmentInOutDuringPeriod = asicsInOut.filter(
+    (a) => new Date(a.date).getTime() >= startTimestamp,
+  );
 
-  return asicsInOut
-    .map((equipement, index) => {
-      const installationDate = new Date(equipement.date);
-      const nextUpdateDate =
-        index < asicsInOut.length - 1
-          ? new Date(new Date(asicsInOut[index + 1].date).getTime() - 1) //yesterday at 23:59:59
-          : new Date(endTimestamp);
+  const equipmentEvents: Date[] = [new Date()];
+  const days = equipmentInOutDuringPeriod.map((equipement) => {
+    return new Date(equipement.date);
+  });
 
-      const hashrate = getHashrate(site, installationDate);
-      const h: HashratePeriod = {
-        start: new Date(Math.max(installationDate.getTime(), startTimestamp)),
-        end: nextUpdateDate,
-        hashrateHs: 0,
-        hashrateMax: hashrate.toNumber(),
-        equipmentInstalled:
-          equipement.units > 0
-            ? {
-                date: installationDate,
-                model: equipement.model,
-                powerW: equipement.powerW,
-                hashrateHs: equipement.hashrateHs,
-                units: equipement.units,
-              }
-            : undefined,
-        equipmentUninstalled:
-          equipement.units < 0
-            ? {
-                date: installationDate,
-                model: equipement.model,
-                powerW: equipement.powerW,
-                hashrateHs: equipement.hashrateHs,
-                units: equipement.units,
-              }
-            : undefined,
+  equipmentEvents.push(...days);
+
+  console.log('equipmentEvents', JSON.stringify(equipmentEvents, null, 4));
+
+  const allHashratePeriod = equipmentEvents.map((date, index) => {
+    const installationDate = date;
+    const installedAsics = getAsicsInstalledAtATime(
+      asicsInOut,
+      installationDate.getTime(),
+    );
+    const hashrateMax = getHashrateMax(site, installationDate);
+
+    if (site.id === '1') {
+      console.log(
+        'nextUpdateDate',
+        index,
+        installationDate.toISOString(),
+        JSON.stringify(installedAsics, null, 4),
+      );
+    }
+
+    const equipements: {
+      date: Date;
+      model: string;
+      powerW: number;
+      hashrateHs: number;
+      units: number;
+    }[] = installedAsics.map((e) => {
+      return {
+        date: installationDate,
+        model: e.model,
+        powerW: e.powerW,
+        hashrateHs: e.hashrateHs,
+        units: e.units,
       };
-      return h;
-    })
-    .filter((h) => h.start.getTime() < h.end.getTime());
+    });
+
+    const h: HashratePeriod = {
+      start: new Date(Math.max(installationDate.getTime(), startTimestamp)),
+      end: new Date(endTimestamp),
+      hashrateHs: 0,
+      hashrateMax: hashrateMax.toNumber(),
+      equipmentInstalled: equipements,
+      equipmentUninstalled: undefined,
+    };
+    return h;
+  });
+
+  const filteredHashratePeriod = allHashratePeriod.filter(
+    (h) => h.start.getTime() <= h.end.getTime(),
+  );
+
+  if (site.id === '1') {
+    console.log('startTimestamp', new Date(startTimestamp).toISOString());
+    console.log('endTimestamp', new Date(endTimestamp).toISOString());
+    console.log('asicsInOut', JSON.stringify(asicsInOut, null, 4));
+    console.log('Hashrate period', JSON.stringify(allHashratePeriod, null, 4));
+    console.log(
+      'Filtered Hashrate period',
+      JSON.stringify(filteredHashratePeriod, null, 4),
+    );
+  }
+
+  return allHashratePeriod;
+}
+
+export function getAsicsInstalledAtATime(
+  asics: Asics[],
+  timestamp: number,
+): Asics[] {
+  // Filter asics that are installed at the timestamp
+  // and uninstalled after 5 years
+  return asics.filter(
+    (e) =>
+      new Date(e.date).getTime() <= timestamp &&
+      new Date(addYearsToTimestamp(new Date(e.date).getTime(), 5)).getTime() >
+        timestamp,
+  );
 }
 
 export function getAsicsInOut(

@@ -104,14 +104,14 @@ export type HashratePeriod = {
     powerW: number;
     hashrateHs: number;
     units: number;
-  } | undefined;
+  }[] | undefined;
   equipmentUninstalled: {
     date: Date;
     model: string;
     powerW: number;
     hashrateHs: number;
     units: number;
-  } | undefined;
+  }[] | undefined;
   hashrateHs: number;
   hashrateMax: number;
 };

@@ -9,7 +9,7 @@ import {
 } from 'src/types/mining/MiningAPI';
 import { getTimestampUTC, getTimestampNDaysAgo } from 'src/utils/date';
 import {
-  getHashrate,
+  getHashrateMax,
   getNumberOfMachines,
 } from 'src/components/CSM/Utils/period';
 
@@ -151,7 +151,7 @@ function convertAPIDataToStandard(
   const result: MiningSummaryPerDay[] = periodsData.map<MiningSummaryPerDay>(
     (day) => {
       const totalMachines = getNumberOfMachines(site, new Date(day.startTime));
-      const hashrateMax = getHashrate(site, new Date(day.startTime));
+      const hashrateMax = getHashrateMax(site, new Date(day.startTime));
       const hashrate = new BigNumber(day.hashrate).times(1000000000);
       const efficiency = hashrate.dividedBy(hashrateMax);
       return {

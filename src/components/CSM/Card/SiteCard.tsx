@@ -358,16 +358,7 @@ const _SiteCard: FC<SiteProps> = ({
         step.start.getTime(),
         step.end.getTime(),
       );
-      // if (steps.length > 1) {
-      //   console.log(
-      //     'hashratePeriods',
-      //     siteId,
-      //     realPeriod,
-      //     step.start.getTime(),
-      //     step.end.getTime(),
-      //     JSON.stringify(uptime),
-      //   );
-      //}
+
       const e: HashratePeriod = {
         start: step.start,
         end: step.end,
@@ -516,7 +507,7 @@ function buildUserSiteData(
   //   .toNumber();
   const siteAverageHashrate = getAverageHashrate(
     site,
-    instructionStart,
+    realStart,
     instructionEnd,
   );
   const tokenProperties = getPropertyToken(site.token.address);

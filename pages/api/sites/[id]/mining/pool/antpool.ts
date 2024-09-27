@@ -9,7 +9,7 @@ import {
   DayDataAntpool,
 } from 'src/types/mining/MiningAPI';
 import {
-  getHashrate,
+  getHashrateMax,
   getNumberOfMachines,
 } from 'src/components/CSM/Utils/period';
 
@@ -222,7 +222,7 @@ function convertAPIDataToStandard(
   const result: MiningSummaryPerDay[] = periodsData.map<MiningSummaryPerDay>(
     (day) => {
       const totalMachines = getNumberOfMachines(site, new Date(day.timestamp));
-      const hashrateMax = getHashrate(site, new Date(day.timestamp));
+      const hashrateMax = getHashrateMax(site, new Date(day.timestamp));
       const efficiency = new BigNumber(day.hashrate_unit).dividedBy(
         hashrateMax,
       );

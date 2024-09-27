@@ -1,6 +1,6 @@
 /* eslint @typescript-eslint/no-var-requires: "off" */
-import { FC, useState } from 'react';
-import { Progress, Text, Group, Card, HoverCard } from '@mantine/core';
+import React, { FC, useState } from 'react';
+import { Progress, Text, Group, Card, HoverCard, Flex } from '@mantine/core';
 import { calculateDaysBetweenDates } from 'src/utils/date';
 import {
   formatSmallPercent,
@@ -81,9 +81,9 @@ export const CardSiteHashrate: FC<CardSiteHashrateProps> = ({
         <HoverCard.Dropdown>
           {data.site.uptime.hashratePeriods.map((period, index) => {
             return (
-              <Text key={index} size={isMobile ? 'xs' : 'sm'}>
-                {getInstallationInformation(period, t)}
-              </Text>
+              <Flex key={index} direction={'column'}>
+                {getInstallationInformation(period, t, isMobile ? 'xs' : 'sm')}
+              </Flex>
             );
           })}
         </HoverCard.Dropdown>
@@ -188,13 +188,42 @@ export const CardSiteHashrate: FC<CardSiteHashrateProps> = ({
   );
 };
 
-function getInstallationInformation(period: HashratePeriod, t: TFunction) {
+function getInstallationInformation(
+  period: HashratePeriod,
+  t: TFunction,
+  size: string = 'sm',
+) {
   return period.equipmentInstalled
-    ? `${formatTimestampDay(period.equipmentInstalled.date.getTime())} : ${t('Adding')} ${period.equipmentInstalled.units} ${period.equipmentInstalled.model} (${period.equipmentInstalled.powerW}W / ${formatHashrate(period.equipmentInstalled.hashrateHs)})`
-    : period.equipmentUninstalled
-      ? `${formatTimestampDay(period.equipmentUninstalled.date.getTime())} : ${t('Withrawing')} ${period.equipmentUninstalled.units} ${period.equipmentUninstalled.model} (${period.equipmentUninstalled.powerW}W / ${formatHashrate(period.equipmentUninstalled.hashrateHs)})`
-      : '';
+    ? period.equipmentInstalled.map((e) => getContainerInformation(e, t, size))
+    : '';
 }
+
+function getContainerInformation(
+  container: {
+    date: Date;
+    model: string;
+    powerW: number;
+    hashrateHs: number;
+    units: number;
+  },
+  t: TFunction,
+  size: string = 'sm',
+) {
+  return (
+    <Text size={size}>
+      {`${formatTimestampDay(container.date.getTime())} : ${t('Adding')} ${container.units} ${container.model} (${container.powerW}W / ${formatHashrate(container.hashrateHs)})`}
+    </Text>
+  );
+}
+
+/*
+{
+  date: Date;
+  model: string;
+  powerW: number;
+  hashrateHs: number;
+  units: number;
+}*/
 
 export function calculateProgressColor(hashratePercent: number): string {
   let hashrateColor = 'violet';
