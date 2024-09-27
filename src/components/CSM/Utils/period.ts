@@ -609,7 +609,7 @@ export function getProgressSteps(
     (a) => new Date(a.date).getTime() >= startTimestamp,
   );
 
-  const equipmentEvents: Date[] = [new Date()];
+  const equipmentEvents: Date[] = [new Date(startTimestamp)];
   const days = equipmentInOutDuringPeriod.map((equipement) => {
     return new Date(equipement.date);
   });
@@ -619,18 +619,18 @@ export function getProgressSteps(
   console.log('equipmentEvents', JSON.stringify(equipmentEvents, null, 4));
 
   const allHashratePeriod = equipmentEvents.map((date, index) => {
-    const installationDate = date;
+    const eventDate = date;
     const installedAsics = getAsicsInstalledAtATime(
       asicsInOut,
-      installationDate.getTime(),
+      eventDate.getTime(),
     );
-    const hashrateMax = getHashrateMax(site, installationDate);
+    const hashrateMax = getHashrateMax(site, eventDate);
 
     if (site.id === '1') {
       console.log(
         'nextUpdateDate',
         index,
-        installationDate.toISOString(),
+        eventDate.toISOString(),
         JSON.stringify(installedAsics, null, 4),
       );
     }
@@ -643,7 +643,7 @@ export function getProgressSteps(
       units: number;
     }[] = installedAsics.map((e) => {
       return {
-        date: installationDate,
+        date: new Date(e.date),
         model: e.model,
         powerW: e.powerW,
         hashrateHs: e.hashrateHs,
@@ -652,7 +652,7 @@ export function getProgressSteps(
     });
 
     const h: HashratePeriod = {
-      start: new Date(Math.max(installationDate.getTime(), startTimestamp)),
+      start: new Date(Math.max(eventDate.getTime(), startTimestamp)),
       end: new Date(endTimestamp),
       hashrateHs: 0,
       hashrateMax: hashrateMax.toNumber(),
