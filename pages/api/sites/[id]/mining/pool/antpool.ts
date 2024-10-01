@@ -279,6 +279,18 @@ function getApiSecrets(username: string, user?: string) {
         apiKey = apiKeys.split(',')[index];
         apiSecret = apiSecrets.split(',')[index];
         apiSign = getSignature(user, apiKey, apiSecret);
+      } else {
+        //default to first user
+        const users = SITES[SiteID.beta].api[0].username
+          ? SITES[SiteID.beta].api[0].username.split(',')
+          : [];
+        const index = 0;
+        const apiKeys = process.env.ANTPOOL_B_API_KEY_ACCOUNT ?? '';
+        const apiSecrets = process.env.ANTPOOL_B_API_SIGN_SECRET ?? '';
+
+        apiKey = apiKeys.split(',')[index];
+        apiSecret = apiSecrets.split(',')[index];
+        apiSign = getSignature(users[0], apiKey, apiSecret);
       }
 
       break;
