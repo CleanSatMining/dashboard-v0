@@ -6,7 +6,8 @@ import { useAppSelector } from 'src/hooks/react-hooks';
 import { selectUsersState } from 'src/store/features/userData/userDataSelector';
 
 import { ALLOWED_SITES } from '../../../constants';
-import { SiteCard } from 'src/components/CSM/Card/SiteCard';
+//import { SiteCard } from 'src/components/CSM/Card/SiteCard';
+import { SiteCard } from 'src/components/CSM/Card/FarmCard';
 import { FilterStatus, FilterSite, MiningStatus } from 'src/types/mining/Site';
 import { getSite } from 'src/components/CSM/Utils/site';
 import { useMediaQuery } from '@mantine/hooks';

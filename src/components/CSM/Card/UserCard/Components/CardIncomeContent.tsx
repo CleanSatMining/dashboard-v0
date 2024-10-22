@@ -42,7 +42,7 @@ export const CardIncomeContent: FC<CardIncomeContentProps> = ({
   const isMobile = useMediaQuery('(max-width: 36em)');
   const { t } = useTranslation('site', { keyPrefix: 'card' });
   const lost = TAXE_FREE_MODE
-    ? data.income.grossTaxeFree.balance.btc < 0
+    ? data.income.grossDepreciationFree.balance.btc < 0
     : data.income.net.balance.btc < 0;
 
   const hasData = data.income.available;
@@ -126,12 +126,15 @@ export const CardIncomeContent: FC<CardIncomeContentProps> = ({
 
             {!lost && (
               <Text weight={500} fz={'sm'} align={'center'}>
-                {formatBTC(data.income.grossTaxeFree.balance.btc, hasData)}
+                {formatBTC(
+                  data.income.grossDepreciationFree.balance.btc,
+                  hasData,
+                )}
               </Text>
             )}
             {lost && (
               <InfoText
-                text={formatBTC(data.income.grossTaxeFree.balance.btc)}
+                text={formatBTC(data.income.grossDepreciationFree.balance.btc)}
                 color={'yellow'}
                 fz={'sm'}
                 tooltipText={t('lost-explained')}
@@ -148,7 +151,10 @@ export const CardIncomeContent: FC<CardIncomeContentProps> = ({
               ></PeriodDisplay>
             )}
             <Text fz={'xs'} color={'dimmed'}>
-              {formatSimpleUsd(data.income.grossTaxeFree.balance.usd, hasData)}
+              {formatSimpleUsd(
+                data.income.grossDepreciationFree.balance.usd,
+                hasData,
+              )}
             </Text>
           </Group>
         </>

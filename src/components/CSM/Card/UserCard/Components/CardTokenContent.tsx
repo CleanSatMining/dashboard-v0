@@ -113,7 +113,7 @@ export const CardTokenContent: FC<CardTokenContentProps> = ({
             ')'}
         </Text>
       </Group>
-      {data.token.toCome > 0 && (
+      {data.token.amountToCome > 0 && (
         <>
           <Space h={10}></Space>
           <Group position={'apart'} mt={0} mb={0}>
@@ -121,7 +121,7 @@ export const CardTokenContent: FC<CardTokenContentProps> = ({
               {'Quantité ' + t('toCome')}
             </Text>
             <Text weight={500} fz={isMobile ? 'xs' : 'sm'}>
-              {'~ ' + formatToken(data.token.toCome) + ' ' + symbol}
+              {'~ ' + formatToken(data.token.amountToCome) + ' ' + symbol}
             </Text>
           </Group>
           <Group position={'apart'} mt={0} mb={0}>

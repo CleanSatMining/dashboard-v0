@@ -60,3 +60,28 @@ export const API_BLOCKCHAIN_EXPLORER_BTC = {
     `https://api.haskoin.com/btc/xpub/${xpub}?derive=segwit&nocache=true`,
   method: 'GET',
 };
+
+export const API_GATEWAY_FARMS = {
+  url: 'https://cleansatmining-gateway.netlify.app/api/farms',
+  method: 'GET',
+};
+
+export const API_GATEWAY_GET_FARM = {
+  url: (farm: string) =>
+    `https://cleansatmining-gateway.netlify.app/api/farms/${farm}`,
+  method: 'GET',
+};
+
+export const API_GATEWAY_BALANCE = {
+  url: 'https://cleansatmining-gateway.netlify.app/.netlify/functions/balance-sheet',
+  method: 'GET',
+};
+
+export const API_FARM_BALANCE = {
+  url: (farm: string) => `/api/farms/${farm}/balance`,
+  method: 'GET',
+};
+export const API_FARM = {
+  url: (farm: string) => `/api/farms/${farm}`,
+  method: 'GET',
+};

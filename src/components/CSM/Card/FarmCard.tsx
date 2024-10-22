@@ -35,16 +35,16 @@ import { adminUserAtom } from 'src/states';
 import { IconDownload } from '@tabler/icons-react';
 
 import {
-  getMinedBtc,
-  getUptimeBySite,
   getUserSiteShare,
   getUserTokenBalance,
   getUserTokenBalanceToCome,
-  getUserYieldBySite,
-  getYieldBySite,
-  getSiteExpensesByPeriod,
 } from '../Utils/yield';
-import { API_MINING_DATA } from 'src/constants/apis';
+import {
+  API_FARM,
+  API_FARM_BALANCE,
+  API_GATEWAY_GET_FARM,
+  API_MINING_DATA,
+} from 'src/constants/apis';
 
 import {
   APIMiningDataQuery,
@@ -54,6 +54,7 @@ import {
 } from 'src/types/mining/MiningAPI';
 import { getTimestampUTC } from 'src/utils/date';
 import { getSubSites } from '../Utils/site';
+import { BalanceSheet, DetailedBalanceSheet, Farm } from 'src/types/api/farm';
 
 type SiteProps = {
   siteId: string;
@@ -66,7 +67,7 @@ type SiteProps = {
   shallDisplay?: (siteId: number, shallDisplay: boolean) => void;
 };
 
-const _SiteCard: FC<SiteProps> = ({
+const _FarmCard: FC<SiteProps> = ({
   siteId = '1',
   btcPrice,
   period,
@@ -79,15 +80,14 @@ const _SiteCard: FC<SiteProps> = ({
   //const isMobile = useMediaQuery('(max-width: 36em)');
   const adminUser = useAtomValue(adminUserAtom);
   const usersState = useAppSelector(selectUsersState);
-  const miningState = useAppSelector(selectMiningHistory);
-  const expensesState = useAppSelector(selectMiningExpenses);
   const { getPropertyToken } = useCsmTokens();
   const site: Site = SITES[siteId as SiteID];
   const subSites = getSubSites(site);
   const allSites = [site, ...subSites];
   const [siteValue, setSiteValue] = useState(site.name);
+  const [farm, setFarm] = useState<Farm>();
 
-  const { realPeriod, realStartTimestamp, dataMissing } = getPeriodFromStart(
+  const { realPeriod, realStartTimestamp } = getPeriodFromStart(
     site,
     startDate,
     endDate,
@@ -101,102 +101,13 @@ const _SiteCard: FC<SiteProps> = ({
     account,
     getPropertyToken(site.token.address),
   );
-  const siteMinedBTC = getMinedBtc(
-    miningState,
-    site,
-    realPeriod,
-    btcPrice,
-    realStartTimestamp,
-    endDate,
-    expensesState.byId[siteId] ?? [],
-  );
-  const userYield = getUserYieldBySite(
-    miningState,
-    usersState,
-    site,
-    account,
-    realPeriod,
-    btcPrice,
-    realStartTimestamp,
-    endDate,
-    expensesState.byId[siteId] ?? [],
-  );
-  const siteYield = getYieldBySite(
-    miningState,
-    site,
-    realPeriod,
-    btcPrice,
-    realStartTimestamp,
-    endDate,
-    expensesState.byId[siteId] ?? [],
-  );
-  const siteUptime = getUptimeBySite(
-    miningState,
-    site,
-    realPeriod,
-    realStartTimestamp,
-    endDate,
-  );
-  const siteCosts: SiteCost = getSiteExpensesByPeriod(
-    miningState,
-    site,
-    btcPrice,
-    realPeriod,
-    realStartTimestamp,
-    endDate,
-    expensesState.byId[siteId] ?? [],
-  );
 
   if (shallDisplay) {
     //console.log('SHALL DISPLAY', siteId, tokenBalance, tokenBalance > 0);
     shallDisplay(Number(siteId), tokenBalance > 0);
   }
 
-  const steps = getProgressSteps(site, realStartTimestamp, endDate);
-  const hashratePeriods: HashratePeriod[] = steps.map((step) => {
-    //console.log('Step', step);
-    const uptime = getUptimeBySite(
-      miningState,
-      site,
-      realPeriod,
-      step.start.getTime(),
-      step.end.getTime(),
-    );
-    const e: HashratePeriod = {
-      start: step.start,
-      end: step.end,
-      hashrateHs: uptime.hashrate,
-      hashrateMax: step.hashrateMax,
-      equipmentInstalled: step.equipmentInstalled,
-      equipmentUninstalled: step.equipmentUninstalled,
-    };
-    return e;
-  });
-
-  const data: CardData = buildUserSiteData(
-    siteId,
-    site,
-    startDate,
-    realStartTimestamp,
-    endDate,
-    endDate,
-    siteMinedBTC,
-    userShare,
-    userYield,
-    siteYield,
-    userToken,
-    userTokenToCome,
-    siteUptime,
-    hashratePeriods,
-    siteCosts,
-    realPeriod,
-    period,
-    getPropertyToken,
-    undefined,
-    dataMissing,
-  );
-
-  const [userSiteData, setUserSiteData] = useState<CardData>(data);
+  const [userSiteData, setUserSiteData] = useState<CardData>();
 
   const handleClick = async () => {
     const selectedSite =
@@ -274,142 +185,76 @@ const _SiteCard: FC<SiteProps> = ({
   };
 
   useEffect(() => {
-    const selectedSite =
-      allSites.find(
-        (s) => s.api.length === 1 && s.api[0].subaccount?.name === siteValue,
-      ) ?? site;
-    const subaccountId =
-      selectedSite.api.length === 1 &&
-      selectedSite.api[0].subaccount?.name === siteValue
-        ? selectedSite.api[0].subaccount.id
-        : undefined;
+    // appel API pour récupérer les données de minage
+    const farmId = getFarmId(siteId);
 
-    const expenses =
-      expensesState.byId[siteId]?.filter(
-        (e) => subaccountId === e.subaccountId || subaccountId === undefined,
-      ) ?? [];
+    const fetchData = async () => {
+      try {
+        const url = API_FARM.url(farmId);
+        const response = await fetch(url); // Remplacez par votre URL d'API
+        const data: Farm = await response.json();
+        console.log('Fetch Farm data:', data.slug);
+        setFarm(data);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
 
-    const { realPeriod, realStartTimestamp } = getPeriodFromStart(
-      selectedSite,
-      startDate,
-      endDate,
-    );
-    const userYield = getUserYieldBySite(
-      miningState,
-      usersState,
-      selectedSite,
-      account,
-      realPeriod,
-      btcPrice,
-      realStartTimestamp,
-      endDate,
-      expenses,
-    );
+    fetchData();
+  }, []);
 
-    const siteMinedBTC = getMinedBtc(
-      miningState,
-      selectedSite,
-      realPeriod,
-      btcPrice,
-      realStartTimestamp,
-      endDate,
-      expenses,
-      siteValue !== site.name,
-    );
-    const siteUptime = getUptimeBySite(
-      miningState,
-      selectedSite,
-      realPeriod,
-      realStartTimestamp,
-      endDate,
-    );
-    const siteYield = getYieldBySite(
-      miningState,
-      selectedSite,
-      realPeriod,
-      btcPrice,
-      realStartTimestamp,
-      endDate,
-      expenses,
-    );
-    const siteCosts: SiteCost = getSiteExpensesByPeriod(
-      miningState,
-      selectedSite,
-      btcPrice,
-      realPeriod,
-      realStartTimestamp,
-      endDate,
-      expenses,
-    );
-    const userTokenToCome = getUserTokenBalanceToCome(
-      usersState,
-      account,
-      selectedSite,
-    );
-    const steps = getProgressSteps(selectedSite, realStartTimestamp, endDate);
-    const hashratePeriods: HashratePeriod[] = steps.map((step) => {
-      //console.log('Step', JSON.stringify(step));
+  useEffect(() => {
+    // appel API pour récupérer les données de minage
+    const farmId = getFarmId(siteId);
 
-      const uptime = getUptimeBySite(
-        miningState,
-        selectedSite,
-        realPeriod,
-        step.start.getTime(),
-        step.end.getTime(),
-      );
+    const fetchData = async () => {
+      if (farm !== undefined) {
+        try {
+          // convert timstamp to string format 'YYYY-MM-DD'
+          const end = new Date(endDate + 43200000).toISOString().split('T')[0];
+          const start = new Date(startDate).toISOString().split('T')[0];
+          const url =
+            API_FARM_BALANCE.url(farmId) +
+            '?btc=' +
+            btcPrice +
+            '&start=' +
+            start +
+            '&end=' +
+            end;
+          const response = await fetch(url); // Remplacez par votre URL d'API
+          const data: DetailedBalanceSheet = await response.json();
+          console.log('Fetch Farm balance:', data.days);
+          setUserSiteData(
+            buildUserSiteData(
+              siteId,
+              farm,
+              startDate,
+              realStartTimestamp,
+              endDate,
+              endDate,
+              realPeriod,
+              period,
+              userShare,
+              userToken,
+              userTokenToCome,
+              getPropertyToken,
+              data,
+            ),
+          );
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      }
+    };
 
-      const e: HashratePeriod = {
-        start: step.start,
-        end: step.end,
-        hashrateHs: uptime.hashrate,
-        hashrateMax: step.hashrateMax,
-        equipmentInstalled: step.equipmentInstalled,
-        equipmentUninstalled: step.equipmentUninstalled,
-      };
-      return e;
-    });
+    fetchData();
 
-    setUserSiteData(
-      buildUserSiteData(
-        siteId,
-        selectedSite,
-        startDate,
-        realStartTimestamp,
-        endDate,
-        endDate,
-        siteMinedBTC,
-        userShare,
-        userYield,
-        siteYield,
-        userToken,
-        userTokenToCome,
-        siteUptime,
-        hashratePeriods,
-        siteCosts,
-        realPeriod,
-        period,
-        getPropertyToken,
-        undefined,
-        dataMissing,
-      ),
-    );
     if (shallDisplay) {
       shallDisplay(Number(siteId), tokenBalance > 0);
     }
 
     /* eslint-disable */
-  }, [
-    account,
-    btcPrice,
-    miningState,
-    period,
-    shallDisplay,
-    site,
-    siteId,
-    startDate,
-    endDate,
-    siteValue,
-  ]);
+  }, [farm, account, btcPrice, startDate, endDate]);
   /* eslint-enable */
 
   return (
@@ -433,30 +278,56 @@ const _SiteCard: FC<SiteProps> = ({
           </ActionIcon>
         </div>
       )}
-      {isMobile ? (
-        <UserSiteCardMobile
-          title={site.name}
-          subTitle={site.location.name}
-          image={site.image}
-          countryCode={site.location.countryCode}
-          data={userSiteData}
-          status={site.status}
-        />
-      ) : (
-        <UserSiteCard
-          title={site.name}
-          subTitle={site.location.name}
-          countryCode={site.location.countryCode}
-          image={site.image}
-          data={userSiteData}
-          status={site.status}
-        />
+      {userSiteData && (
+        <>
+          {isMobile ? (
+            <UserSiteCardMobile
+              title={site.name}
+              subTitle={site.location.name}
+              image={site.image}
+              countryCode={site.location.countryCode}
+              data={userSiteData}
+              status={site.status}
+            />
+          ) : (
+            <UserSiteCard
+              title={site.name}
+              subTitle={site.location.name}
+              countryCode={site.location.countryCode}
+              image={site.image}
+              data={userSiteData}
+              status={site.status}
+            />
+          )}
+        </>
       )}
     </>
   );
 };
 
-export const SiteCard = _SiteCard;
+export const SiteCard = _FarmCard;
+
+function getFarmId(siteId: string) {
+  let farmId = '';
+  switch (siteId) {
+    case '1':
+      farmId = 'alpha';
+      break;
+    case '2':
+      farmId = 'beta';
+      break;
+    case '3':
+      farmId = 'omega';
+      break;
+    case '4':
+      farmId = 'gamma';
+      break;
+    case '5':
+      farmId = 'delta';
+      break;
+  }
+  return farmId;
+}
 
 /**
  * buildUserSiteData
@@ -473,76 +344,76 @@ export const SiteCard = _SiteCard;
  */
 function buildUserSiteData(
   siteId: string,
-  site: Site,
+  farm: Farm,
   instructionStart: number,
   realStart: number,
   instructionEnd: number,
   realEnd: number,
-  siteMinedBTC: {
-    quantity: BigNumber;
-    value: BigNumber;
-  },
-  userShare: BigNumber,
-  userYield: { net: Yield; gross: Yield; grossTaxeFree: Yield },
-  siteYield: { net: Yield; gross: Yield; grossTaxeFree: Yield },
-  userToken: TokenBalance,
-  userTokenToCome: TokenBalance,
-  siteUptime: {
-    machines: number;
-    days: number;
-    percent: number;
-    hashrate: number;
-  },
-  hashratePeriods: HashratePeriod[],
-  costs: SiteCost,
   realPeriod: number,
   instructionPeriod: number,
+  userShare: BigNumber,
+  userToken: TokenBalance,
+  userTokenToCome: TokenBalance,
   getPropertyToken: (address: string) => PropertiesERC20 | undefined,
-  operator: Operator | undefined,
-  dataMissing: boolean,
+  farmPerformance: DetailedBalanceSheet,
 ): CardData {
-  // const siteHashrate = new BigNumber(site.mining.asics.hashrateHs)
-  //   .times(site.mining.asics.units)
-  //   .toNumber();
-  const siteAverageHashrate = getAverageHashrate(
-    site,
-    realStart,
-    instructionEnd,
-  );
-  const tokenProperties = getPropertyToken(site.token.address);
+  const siteReference =
+    farm.sites[farm.slug === 'delta' ? 0 : farm.sites.length - 1];
+  const tokenProperties = getPropertyToken(farm.token.address);
   const tokenSupply = tokenProperties
     ? tokenProperties.supply
-    : site.token.supply;
+    : farm.token.supply;
+  const expenses = new BigNumber(farmPerformance.balance.expenses.csm.usd)
+    .plus(farmPerformance.balance.expenses.operator.usd)
+    .plus(farmPerformance.balance.expenses.electricity.usd)
+    .toNumber();
+
   return {
     id: siteId,
-    label: site.name,
-    dataMissing: dataMissing,
+    label: farm.name,
+    dataMissing: false,
     income: {
-      available: site.api[0].enable,
+      available: true,
       mined: {
-        btc: siteMinedBTC.quantity.times(userShare).toNumber(),
-        usd: siteMinedBTC.value.times(userShare).toNumber(),
+        btc: userShare
+          .times(farmPerformance.balance.incomes.mining.btc)
+          .toNumber(),
+        usd: userShare
+          .times(farmPerformance.balance.incomes.mining.usd)
+          .toNumber(),
       },
       net: {
         balance: {
-          btc: userYield.net.btc,
-          usd: userYield.net.usd,
+          btc: userShare
+            .times(farmPerformance.balance.revenue.net.btc)
+            .toNumber(),
+          usd: userShare
+            .times(farmPerformance.balance.revenue.net.usd)
+            .toNumber(),
         },
-        apy: userYield.net.apr,
+        apy: 0,
       },
       gross: {
         balance: {
-          btc: userYield.gross.btc,
-          usd: userYield.gross.usd,
+          btc: userShare
+            .times(farmPerformance.balance.revenue.gross.btc)
+            .toNumber(),
+          usd: userShare
+            .times(farmPerformance.balance.revenue.gross.usd)
+            .toNumber(),
         },
-        apy: userYield.gross.apr,
+        apy: 0,
       },
       grossDepreciationFree: {
         balance: {
-          btc: userYield.grossTaxeFree.btc,
-          usd: userYield.grossTaxeFree.usd,
+          btc: userShare
+            .times(farmPerformance.balance.revenue.gross.btc)
+            .toNumber(),
+          usd: userShare
+            .times(farmPerformance.balance.revenue.gross.usd)
+            .toNumber(),
         },
-        apy: userYield.grossTaxeFree.apr,
+        apy: 0,
       },
     },
 
@@ -551,24 +422,30 @@ function buildUserSiteData(
       value: userToken.usd,
       percent: userShare.toNumber(),
       supply: tokenSupply,
-      url: site.token.gnosisscanUrl,
-      symbol: site.token.symbol,
-      address: site.token.address,
+      url: farm.token.gnosisscanUrl,
+      symbol: farm.token.symbol,
+      address: farm.token.address,
       decimal: 9,
       image: 'https://cleansatmining.com/data/files/logo_csm.png',
       amountToCome: userTokenToCome.balance,
       valueToCome: userTokenToCome.usd,
     },
     site: {
-      operator: operator,
-      miningStart: site.mining.startingDate,
-      machines: getAverageMachines(site, instructionStart, instructionEnd),
-      hashrate: siteAverageHashrate.toNumber(),
-      equipmentCost: getAverageEquipmentCost(
-        site,
-        instructionStart,
-        instructionEnd,
+      operator: {
+        name: siteReference.operator.name,
+        logo: siteReference.operator.logo,
+        website: siteReference.operator.website,
+      },
+      miningStart: siteReference.started_at ? siteReference.started_at : '',
+      machines: farmPerformance.equipments.asics.reduce(
+        (acc, asic) => acc + asic.units,
+        0,
       ),
+
+      hashrate: convertHashrateTHsToHs(
+        farmPerformance.equipments.hashrateTHsMax,
+      ),
+      equipmentCost: farmPerformance.equipments.totalCost,
       uptime: {
         period: {
           real: {
@@ -582,33 +459,70 @@ function buildUserSiteData(
             end: instructionEnd,
           },
         },
-        hashrate: siteUptime.hashrate,
-        hashratePercent: siteAverageHashrate.gt(0)
-          ? new BigNumber(siteUptime.hashrate)
-              .dividedBy(siteAverageHashrate)
-              .times(100)
-              .toNumber()
-          : 0,
+        hashrate: convertHashrateTHsToHs(
+          farmPerformance.equipments.hashrateTHs,
+        ),
+        hashratePercent: farmPerformance.equipments.uptime * 100,
         //onPeriod: realPeriod,
-        days: siteUptime.days,
-        machines: siteUptime.machines,
+        days: realPeriod,
+        machines: farmPerformance.equipments.asics
+          .reduce((acc, asic) => acc.plus(asic.units), new BigNumber(0))
+          .times(farmPerformance.equipments.uptime)
+          .toNumber(),
         mined: {
-          btc: siteMinedBTC.quantity.toNumber(),
-          usd: siteMinedBTC.value.toNumber(),
+          btc: farmPerformance.balance.incomes.mining.btc,
+          usd: farmPerformance.balance.incomes.mining.usd,
         },
         earned: {
-          btc: siteYield.net.btc,
-          usd: siteYield.net.usd,
+          btc: farmPerformance.balance.revenue.net.btc,
+          usd: farmPerformance.balance.revenue.net.usd,
         },
         earnedTaxFree: {
-          btc: siteYield.grossTaxeFree.btc,
-          usd: siteYield.grossTaxeFree.usd,
+          btc: farmPerformance.balance.revenue.gross.btc,
+          usd: farmPerformance.balance.revenue.gross.usd,
         },
-        costs: costs,
-        hashratePeriods: hashratePeriods,
+        costs: {
+          electricity: farmPerformance.balance.expenses.electricity.usd,
+          feeCSM: farmPerformance.balance.expenses.csm.usd,
+          feeOperator: farmPerformance.balance.expenses.operator.usd,
+          provision: farmPerformance.balance.expenses.depreciation.usd,
+          taxe: 0,
+          total: expenses,
+          totalTaxeFree: expenses,
+        },
+        hashratePeriods: hashratePeriods(farmPerformance.details),
       },
     },
   };
+}
+
+function hashratePeriods(details: BalanceSheet[]): HashratePeriod[] {
+  const periods = details.map((detail) => ({
+    start: new Date(detail.start),
+    end: new Date(detail.end),
+    equipmentUninstalled: [],
+    hashrateHs: convertHashrateTHsToHs(detail.equipments.hashrateTHs),
+    hashrateMax: convertHashrateTHsToHs(detail.equipments.hashrateTHsMax),
+    equipmentInstalled: equipmentsInstalled(detail),
+  }));
+  return periods;
+}
+
+function equipmentsInstalled(balancesheet: BalanceSheet): {
+  date: Date;
+  hashrateHs: number;
+  units: number;
+  model: string;
+  powerW: number;
+}[] {
+  const equipments = balancesheet.equipments.asics.map((asic) => ({
+    date: new Date(balancesheet.start),
+    hashrateHs: convertHashrateTHsToHs(asic.hashrateTHs),
+    units: asic.units,
+    model: asic.manufacturer + ' ' + asic.model,
+    powerW: asic.powerW,
+  }));
+  return equipments;
 }
 
 function convertToCSV(data: { [key: string]: string | number }[]): string {
@@ -642,4 +556,10 @@ function convertToTimestamp(dateString: string): number {
   const date = new Date(dateString);
 
   return getTimestampUTC(date);
+}
+
+function convertHashrateTHsToHs(hashrateTHs: number): number {
+  return new BigNumber(hashrateTHs)
+    .times(new BigNumber(10).exponentiatedBy(12))
+    .toNumber();
 }

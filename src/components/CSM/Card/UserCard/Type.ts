@@ -18,7 +18,7 @@ export type CardData = {
       balance: Income;
       apy: number;
     };
-    grossTaxeFree: {
+    grossDepreciationFree: {
       balance: Income;
       apy: number;
     };
@@ -34,7 +34,7 @@ export type CardData = {
     address: string;
     decimal: number;
     image: string;
-    toCome: number;
+    amountToCome: number;
     valueToCome: number;
   };
 

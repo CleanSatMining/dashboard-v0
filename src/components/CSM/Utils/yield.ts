@@ -636,13 +636,12 @@ export const getUserYield = (
  * @returns
  */
 export const getUserSiteShare = (
-  miningState: MiningHistory,
   userState: UserState,
   site: Site,
   userAddress: string,
   tokenProperties: PropertiesERC20 | undefined,
 ): BigNumber => {
-  if (miningState && userState && userState.byAddress[userAddress]) {
+  if (userState && userState.byAddress[userAddress]) {
     const tokenSupply = tokenProperties
       ? tokenProperties.supply
       : site.token.supply;
