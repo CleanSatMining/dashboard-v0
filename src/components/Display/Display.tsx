@@ -25,9 +25,7 @@ import { getCSMTokenAddress, getCSMTokenAddresses } from '../CSM/Utils/yield';
 import ControlPanel from './components/ControlPanel';
 import { PredefinedPeriods } from './components/Types';
 import { btcPriceAtom, adminUserAtom } from 'src/states';
-import { MiningExpenses } from 'src/types/mining/Mining';
-import { expensesAddedDispatchType } from 'src/store/features/miningData/miningDataSlice';
-import { API_MINING_EXPENSES } from 'src/constants/apis';
+
 import { AnonymeUserData } from 'src/types/payments';
 import { API_USERS_PAYMENTS } from 'src/constants/apis';
 
@@ -128,6 +126,7 @@ const Display: FC = () => {
     setBtcPrice(price);
   }, [price, setBtcPrice]);
 
+  /*
   useEffect(() => {
     const fetchData = async () => {
       const miningExpenses: MiningExpenses = {
@@ -154,7 +153,7 @@ const Display: FC = () => {
     };
 
     fetchData();
-  }, []);
+  }, []);*/
 
   useEffect(() => {
     const fetchPaymentsData = async (siteId: string) => {
