@@ -239,10 +239,10 @@ const _FarmCard: FC<SiteProps> = ({
               siteId,
               farm,
               startDate,
-              realStartTimestamp,
+              new Date(data.start).getTime(),
               endDate,
-              endDate,
-              realPeriod,
+              new Date(data.end).getTime(),
+              data.days,
               period,
               userShare,
               userToken,
@@ -253,10 +253,6 @@ const _FarmCard: FC<SiteProps> = ({
           );
 
           if (userToken.balance > 0) {
-            console.log(
-              'Update >>>>>>>>>>>>>>>>>>>>>>> gross.btc',
-              userShare.times(data.balance.revenue.gross.btc).toNumber(),
-            );
             userGrossProfit.set(
               farm.token.symbol,
               userShare.times(data.balance.revenue.gross.btc).toNumber(),
