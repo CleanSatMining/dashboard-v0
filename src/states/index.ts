@@ -28,3 +28,5 @@ export const providerAtom = atomWithStorage<string>('provider', '');
 export const multiPathMultiCurrencyAtom = atom<boolean>(true);
 export const btcPriceAtom = atom<number | null>(null);
 export const adminUserAtom = atom<boolean>(false);
+export const userGrossProfitAtom = atom<Map<string, number>>(new Map());
+export const userGrossProfitLastUpdateAtom = atom<Date>(new Date());

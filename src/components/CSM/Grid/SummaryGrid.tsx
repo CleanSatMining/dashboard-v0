@@ -39,6 +39,8 @@ import {
 import { useNFTs as useWalletNFTs } from 'src/hooks/useWalletNft';
 import { ULTRA_RARE } from 'src/constants/csm';
 import { getPeriodFromStart } from 'src/components/CSM/Utils/period';
+import { userGrossProfitAtom, userGrossProfitLastUpdateAtom } from 'src/states';
+import { useAtomValue } from 'jotai';
 
 type AssetProps = {
   btcPrice: number;
@@ -57,6 +59,8 @@ const _Summary: FC<AssetProps> = ({
 }) => {
   const isMobile = useMediaQuery('(max-width: 36em)');
   const { t } = useTranslation('site', { keyPrefix: 'card' });
+  const userGrossProfit = useAtomValue(userGrossProfitAtom);
+  const userGrossProfitLastUpdate = useAtomValue(userGrossProfitLastUpdateAtom);
   const usersState = useAppSelector(selectUsersState);
   const miningState = useAppSelector(selectMiningHistory);
   const expensesState = useAppSelector(selectMiningExpenses);
@@ -76,6 +80,8 @@ const _Summary: FC<AssetProps> = ({
       expensesState,
     ),
   );
+  const grossProfit = userGrossProfit.values().reduce((a, b) => a + b, 0);
+  console.log('=>>>>>>>>>>>>>>>>>>>>>>>>>>>>>grossProfit', grossProfit);
   const ultraRare = useWalletNFTs(ULTRA_RARE.contract, account);
   //console.log('NFT', JSON.stringify(ultraRare, null, 4));
   const gridMaxSize = TAXE_FREE_MODE && ultraRare.balance === 0 ? 3 : 4;
@@ -143,7 +149,7 @@ const _Summary: FC<AssetProps> = ({
 
     const dataYieldGrossTaxeFree: Data = {
       label: token.symbol, // site.name,
-      value: formatBTC(yields.grossTaxeFree.btc),
+      value: formatBTC(userGrossProfit.get(token.symbol) ?? 0),
     };
 
     dataTokens.push(dataToken);
@@ -162,19 +168,25 @@ const _Summary: FC<AssetProps> = ({
   }
 
   useEffect(() => {
-    setUserYield(
-      getUserYield(
-        miningState,
-        usersState,
-        account,
-        period,
-        btcPrice,
-        startDate,
-        endDate,
-        expensesState,
-      ),
+    const userYield = getUserYield(
+      miningState,
+      usersState,
+      account,
+      period,
+      btcPrice,
+      startDate,
+      endDate,
+      expensesState,
     );
+    userYield.grossTaxeFree = {
+      btc: userGrossProfit.values().reduce((a, b) => a + b, 0),
+      usd: userGrossProfit.values().reduce((a, b) => a + b, 0) * btcPrice,
+      apr: 0,
+    };
+    setUserYield(userYield);
   }, [
+    userGrossProfitLastUpdate,
+    userGrossProfit,
     usersState,
     miningState,
     account,

@@ -1,10 +1,6 @@
 import { FC, useEffect, useState } from 'react';
-import { NativeSelect, SelectItem, ActionIcon, Group } from '@mantine/core';
+import { NativeSelect, SelectItem, ActionIcon } from '@mantine/core';
 import { useAppSelector } from 'src/hooks/react-hooks';
-import {
-  selectMiningHistory,
-  selectMiningExpenses,
-} from 'src/store/features/miningData/miningDataSelector';
 import { selectUsersState } from 'src/store/features/userData/userDataSelector';
 import { PropertiesERC20 } from 'src/types/PropertiesToken';
 import { SITES } from '../../../constants';
@@ -17,21 +13,16 @@ import {
 import { UserSiteCard } from './UserCard/UserSiteCard';
 import { UserSiteCardMobile } from './UserCard/UserSiteCardMobile';
 import { CardData } from './UserCard/Type';
-import { SiteCost } from 'src/types/mining/Site';
 import { HashratePeriod } from 'src/types/mining/Mining';
 import BigNumber from 'bignumber.js';
-import { Yield } from 'src/types/mining/Site';
 import { useCsmTokens } from 'src/hooks/useCsmTokens';
-import { Operator } from 'src/types/mining/Site';
+import { getPeriodFromStart } from '../Utils/period';
+import { useAtomValue, useAtom } from 'jotai';
 import {
-  getPeriodFromStart,
-  getAverageHashrate,
-  getAverageMachines,
-  getProgressSteps,
-  getAverageEquipmentCost,
-} from '../Utils/period';
-import { useAtomValue } from 'jotai';
-import { adminUserAtom } from 'src/states';
+  adminUserAtom,
+  userGrossProfitAtom,
+  userGrossProfitLastUpdateAtom,
+} from 'src/states';
 import { IconDownload } from '@tabler/icons-react';
 
 import {
@@ -42,7 +33,6 @@ import {
 import {
   API_FARM,
   API_FARM_BALANCE,
-  API_GATEWAY_GET_FARM,
   API_MINING_DATA,
 } from 'src/constants/apis';
 
@@ -79,6 +69,10 @@ const _FarmCard: FC<SiteProps> = ({
 }) => {
   //const isMobile = useMediaQuery('(max-width: 36em)');
   const adminUser = useAtomValue(adminUserAtom);
+  const [userGrossProfit, setUserGrossProfit] = useAtom(userGrossProfitAtom);
+  const [userGrossProfitLastUpdate, setUserGrossProfitLastUpdate] = useAtom(
+    userGrossProfitLastUpdateAtom,
+  );
   const usersState = useAppSelector(selectUsersState);
   const { getPropertyToken } = useCsmTokens();
   const site: Site = SITES[siteId as SiteID];
@@ -192,9 +186,25 @@ const _FarmCard: FC<SiteProps> = ({
       try {
         const url = API_FARM.url(farmId);
         const response = await fetch(url); // Remplacez par votre URL d'API
-        const data: Farm = await response.json();
-        console.log('Fetch Farm data:', data.slug);
-        setFarm(data);
+        const farmData: Farm = await response.json();
+        console.log('Fetch Farm data:', farmData.slug);
+        setFarm(farmData);
+        setUserSiteData(
+          buildEmptyUserSiteData(
+            siteId,
+            farmData,
+            startDate,
+            realStartTimestamp,
+            endDate,
+            endDate,
+            realPeriod,
+            period,
+            userShare,
+            userToken,
+            userTokenToCome,
+            getPropertyToken,
+          ),
+        );
       } catch (error) {
         console.error('Error fetching data:', error);
       }
@@ -241,6 +251,22 @@ const _FarmCard: FC<SiteProps> = ({
               data,
             ),
           );
+
+          if (userToken.balance > 0) {
+            console.log(
+              'Update >>>>>>>>>>>>>>>>>>>>>>> gross.btc',
+              userShare.times(data.balance.revenue.gross.btc).toNumber(),
+            );
+            userGrossProfit.set(
+              farm.token.symbol,
+              userShare.times(data.balance.revenue.gross.btc).toNumber(),
+            );
+            setUserGrossProfit(() => userGrossProfit);
+          } else {
+            userGrossProfit.delete(farm.token.symbol);
+            setUserGrossProfit(userGrossProfit);
+          }
+          setUserGrossProfitLastUpdate(new Date());
         } catch (error) {
           console.error('Error fetching data:', error);
         }
@@ -494,6 +520,69 @@ function buildUserSiteData(
       },
     },
   };
+}
+
+function buildEmptyUserSiteData(
+  siteId: string,
+  farm: Farm,
+  instructionStart: number,
+  realStart: number,
+  instructionEnd: number,
+  realEnd: number,
+  realPeriod: number,
+  instructionPeriod: number,
+  userShare: BigNumber,
+  userToken: TokenBalance,
+  userTokenToCome: TokenBalance,
+  getPropertyToken: (address: string) => PropertiesERC20 | undefined,
+): CardData {
+  const data: DetailedBalanceSheet = {
+    days: 0,
+    start: '',
+    end: '',
+    details: [],
+    equipments: {
+      asics: [],
+      hashrateTHs: 0,
+      hashrateTHsMax: 0,
+      powerWMax: 0,
+      totalCost: 0,
+      uptime: 0,
+    },
+    balance: {
+      btcSellPrice: 0,
+      expenses: {
+        csm: { btc: 0, usd: 0, source: '' },
+        depreciation: { btc: 0, usd: 0, source: '' },
+        electricity: { btc: 0, usd: 0, source: '' },
+        operator: { btc: 0, usd: 0, source: '' },
+        other: { btc: 0, usd: 0, source: '' },
+      },
+      incomes: {
+        mining: { btc: 0, usd: 0, source: '' },
+        other: { btc: 0, usd: 0, source: '' },
+      },
+      revenue: {
+        gross: { btc: 0, usd: 0, source: '' },
+        net: { btc: 0, usd: 0, source: '' },
+      },
+    },
+  };
+  return buildUserSiteData(
+    siteId,
+    farm,
+    instructionStart,
+    realStart,
+    instructionEnd,
+    realEnd,
+    realPeriod,
+    instructionPeriod,
+    userShare,
+    userToken,
+    userTokenToCome,
+    getPropertyToken,
+    data,
+  );
 }
 
 function hashratePeriods(details: BalanceSheet[]): HashratePeriod[] {
