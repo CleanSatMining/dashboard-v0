@@ -45,6 +45,11 @@ import {
 import { getTimestampUTC } from 'src/utils/date';
 import { getSubSites } from '../Utils/site';
 import { BalanceSheet, DetailedBalanceSheet, Farm } from 'src/types/api/farm';
+import { fetchFarm } from 'src/store/features/farms/farmSlice';
+import { useSelector } from 'react-redux';
+import { selectFarm } from 'src/store/features/farms/farmSelector';
+import { RootState } from '../../../store/store';
+import { useAppDispatch } from 'src/hooks/react-hooks';
 
 type SiteProps = {
   siteId: string;
@@ -70,7 +75,7 @@ const _FarmCard: FC<SiteProps> = ({
   //const isMobile = useMediaQuery('(max-width: 36em)');
   const adminUser = useAtomValue(adminUserAtom);
   const [userGrossProfit, setUserGrossProfit] = useAtom(userGrossProfitAtom);
-  const [userGrossProfitLastUpdate, setUserGrossProfitLastUpdate] = useAtom(
+  const [, setUserGrossProfitLastUpdate] = useAtom(
     userGrossProfitLastUpdateAtom,
   );
   const usersState = useAppSelector(selectUsersState);
@@ -79,7 +84,11 @@ const _FarmCard: FC<SiteProps> = ({
   const subSites = getSubSites(site);
   const allSites = [site, ...subSites];
   const [siteValue, setSiteValue] = useState(site.name);
-  const [farm, setFarm] = useState<Farm>();
+  //const [farm_, setFarm] = useState<Farm>();
+  const farm = useSelector((state: RootState) =>
+    selectFarm(state, getFarmId(siteId)),
+  );
+  const dispatch = useAppDispatch();
 
   const { realPeriod, realStartTimestamp } = getPeriodFromStart(
     site,
@@ -101,7 +110,24 @@ const _FarmCard: FC<SiteProps> = ({
     shallDisplay(Number(siteId), tokenBalance > 0);
   }
 
-  const [userSiteData, setUserSiteData] = useState<CardData>();
+  const [userSiteData, setUserSiteData] = useState<CardData | undefined>(
+    farm
+      ? buildEmptyUserSiteData(
+          siteId,
+          farm,
+          startDate,
+          realStartTimestamp,
+          endDate,
+          endDate,
+          realPeriod,
+          period,
+          userShare,
+          userToken,
+          userTokenToCome,
+          getPropertyToken,
+        )
+      : undefined,
+  );
 
   const handleClick = async () => {
     const selectedSite =
@@ -182,35 +208,44 @@ const _FarmCard: FC<SiteProps> = ({
     // appel API pour récupérer les données de minage
     const farmId = getFarmId(siteId);
 
-    const fetchData = async () => {
-      try {
-        const url = API_FARM.url(farmId);
-        const response = await fetch(url); // Remplacez par votre URL d'API
-        const farmData: Farm = await response.json();
-        console.log('Fetch Farm data:', farmData.slug);
-        setFarm(farmData);
-        setUserSiteData(
-          buildEmptyUserSiteData(
-            siteId,
-            farmData,
-            startDate,
-            realStartTimestamp,
-            endDate,
-            endDate,
-            realPeriod,
-            period,
-            userShare,
-            userToken,
-            userTokenToCome,
-            getPropertyToken,
-          ),
-        );
-      } catch (error) {
-        console.error('Error fetching data:', error);
+    const dispatchFarmData = async () => {
+      //const url = API_FARM.url(farmId);
+      //const response = await fetch(url); // Remplacez par votre URL d'API
+      //const farmData: Farm = await response.json();
+      //console.log('Fetch Farm data:', farmData.slug);
+      if (!farm) {
+        try {
+          dispatch(fetchFarm(farmId));
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
       }
+
+      // const _farm = useSelector((state: RootState) =>
+      //   selectFarm(state, getFarmId(siteId)),
+      // );
+
+      // if (_farm !== undefined) {
+      //   setUserSiteData(
+      //     buildEmptyUserSiteData(
+      //       siteId,
+      //       _farm,
+      //       startDate,
+      //       realStartTimestamp,
+      //       endDate,
+      //       endDate,
+      //       realPeriod,
+      //       period,
+      //       userShare,
+      //       userToken,
+      //       userTokenToCome,
+      //       getPropertyToken,
+      //     ),
+      //   );
+      // }
     };
 
-    fetchData();
+    dispatchFarmData();
   }, []);
 
   useEffect(() => {
@@ -379,8 +414,11 @@ function buildUserSiteData(
   getPropertyToken: (address: string) => PropertiesERC20 | undefined,
   farmPerformance: DetailedBalanceSheet,
 ): CardData {
+  // const siteReference =
+  //   farm.sites[farm.slug === 'delta' ? 0 : farm.sites.length - 1];
   const siteReference =
-    farm.sites[farm.slug === 'delta' ? 0 : farm.sites.length - 1];
+    farm.sites.findLast((site) => !site.isClosed && site.mainSite) ??
+    farm.sites[farm.sites.length - 1];
   const tokenProperties = getPropertyToken(farm.token.address);
   const tokenSupply = tokenProperties
     ? tokenProperties.supply
@@ -389,6 +427,19 @@ function buildUserSiteData(
     .plus(farmPerformance.balance.expenses.operator.usd)
     .plus(farmPerformance.balance.expenses.electricity.usd)
     .toNumber();
+
+  let electricity = farmPerformance.balance.expenses.electricity.usd;
+  let feeCSM = farmPerformance.balance.expenses.csm.usd;
+  let feeOperator = farmPerformance.balance.expenses.operator.usd;
+
+  if (siteReference.contract.opTaxRate === 0) {
+    electricity = new BigNumber(electricity).plus(feeOperator).toNumber();
+    feeOperator = 0;
+  }
+  if (siteReference.contract.csmTaxRate === 0) {
+    electricity = new BigNumber(electricity).plus(feeCSM).toNumber();
+    feeCSM = 0;
+  }
 
   return {
     id: siteId,
@@ -504,9 +555,9 @@ function buildUserSiteData(
           usd: farmPerformance.balance.revenue.gross.usd,
         },
         costs: {
-          electricity: farmPerformance.balance.expenses.electricity.usd,
-          feeCSM: farmPerformance.balance.expenses.csm.usd,
-          feeOperator: farmPerformance.balance.expenses.operator.usd,
+          electricity: electricity,
+          feeCSM: feeCSM,
+          feeOperator: feeOperator,
           provision: farmPerformance.balance.expenses.depreciation.usd,
           taxe: 0,
           total: expenses,

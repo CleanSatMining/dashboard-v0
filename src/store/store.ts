@@ -4,6 +4,7 @@ import { interfaceReducers } from './features/interface/interfaceSlice';
 import { settingsReducers } from './features/settings/settingsSlice';
 import { sitesReducers } from './features/miningData/miningDataSlice';
 import { usersReducers } from './features/userData/userDataSlice';
+import { farmsReducers } from './features/farms/farmSlice';
 
 const rootReducer = combineReducers({
   interface: interfaceReducers,
@@ -11,6 +12,7 @@ const rootReducer = combineReducers({
   createOffers: createOffersReducers,
   sites: sitesReducers,
   users: usersReducers,
+  farms: farmsReducers,
 });
 
 const store = configureStore({
