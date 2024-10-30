@@ -30,11 +30,7 @@ import {
   getUserTokenBalance,
   getUserTokenBalanceToCome,
 } from '../Utils/yield';
-import {
-  API_FARM,
-  API_FARM_BALANCE,
-  API_MINING_DATA,
-} from 'src/constants/apis';
+import { API_FARM_BALANCE, API_MINING_DATA } from 'src/constants/apis';
 
 import {
   APIMiningDataQuery,
@@ -51,7 +47,7 @@ import { selectFarm } from 'src/store/features/farms/farmSelector';
 import { RootState } from '../../../store/store';
 import { useAppDispatch } from 'src/hooks/react-hooks';
 
-type SiteProps = {
+type FarmProps = {
   siteId: string;
   btcPrice: number;
   account: string;
@@ -62,7 +58,7 @@ type SiteProps = {
   shallDisplay?: (siteId: number, shallDisplay: boolean) => void;
 };
 
-const _FarmCard: FC<SiteProps> = ({
+const _FarmCard: FC<FarmProps> = ({
   siteId = '1',
   btcPrice,
   period,

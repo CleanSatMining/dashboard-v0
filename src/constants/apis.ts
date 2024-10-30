@@ -85,3 +85,8 @@ export const API_FARM = {
   url: (farm: string) => `/api/farms/${farm}`,
   method: 'GET',
 };
+
+export const API_FARMS = {
+  url: () => `/api/farms`,
+  method: 'GET',
+};
