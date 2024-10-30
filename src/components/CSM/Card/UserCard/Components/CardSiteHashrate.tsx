@@ -131,12 +131,15 @@ export const CardSiteHashrate: FC<CardSiteHashrateProps> = ({
                 <Progress
                   sections={[
                     {
-                      value: new BigNumber(
-                        Math.min(period.hashrateHs, period.hashrateMax),
-                      )
-                        .dividedBy(period.hashrateMax)
-                        .times(100)
-                        .toNumber(),
+                      value:
+                        period.hashrateMax > 0
+                          ? new BigNumber(
+                              Math.min(period.hashrateHs, period.hashrateMax),
+                            )
+                              .dividedBy(period.hashrateMax)
+                              .times(100)
+                              .toNumber()
+                          : 0,
                       color: calculateProgressColor(
                         new BigNumber(period.hashrateHs)
                           .dividedBy(period.hashrateMax)
@@ -168,15 +171,17 @@ export const CardSiteHashrate: FC<CardSiteHashrateProps> = ({
                       : ''}
                   </Text>
                   <Text weight={500} fz={isMobile ? 'xs' : 'sm'}>
-                    {formatSmallPercent(
-                      new BigNumber(period.hashrateHs)
-                        .dividedBy(period.hashrateMax)
-                        .toNumber(),
-                      undefined,
-                      undefined,
-                      undefined,
-                      hasData,
-                    )}
+                    {period.hashrateMax > 0
+                      ? formatSmallPercent(
+                          new BigNumber(period.hashrateHs)
+                            .dividedBy(period.hashrateMax)
+                            .toNumber(),
+                          undefined,
+                          undefined,
+                          undefined,
+                          hasData,
+                        )
+                      : '0%'}
                   </Text>
                 </Group>
               </div>

@@ -292,7 +292,7 @@ const _FarmCard: FC<SiteProps> = ({
               farm.token.symbol,
               userShare.times(data.balance.revenue.gross.btc).toNumber(),
             );
-            setUserGrossProfit(() => userGrossProfit);
+            setUserGrossProfit(userGrossProfit);
           } else {
             userGrossProfit.delete(farm.token.symbol);
             setUserGrossProfit(userGrossProfit);
