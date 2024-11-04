@@ -1,18 +1,33 @@
 import { createAction, createReducer } from '@reduxjs/toolkit';
-import { API_FARM, API_FARMS } from 'src/constants/apis';
+import { API_FARM, API_FARMS, API_FARM_BALANCE } from 'src/constants/apis';
 
 import { AppDispatch, RootState } from 'src/store/store';
 
-import { Farm, FarmSummary } from 'src/types/api/farm';
+import { DetailedBalanceSheet, Farm, FarmSummary } from 'src/types/api/farm';
 
-interface FarmsInitialStateType {
+interface PeriodMiningStateType {
   isLoading: boolean;
-  farms: Farm[];
+  data: { [dates: string]: DetailedBalanceSheet };
+}
+interface FarmMiningStateType {
+  farm: string;
+  start: string;
+  end: string;
+  mining: DetailedBalanceSheet;
 }
 
-const FarmsInitialState: FarmsInitialStateType = {
+interface FarmsStateType {
+  isLoading: boolean;
+  farms: Farm[];
+  miningData: {
+    [farm: string]: PeriodMiningStateType;
+  };
+}
+
+const FarmsInitialState: FarmsStateType = {
   isLoading: true,
   farms: [],
+  miningData: {},
 };
 
 //DISPATCH TYPE
@@ -20,12 +35,22 @@ export const farmAddDispatchType = 'farms/farmAdd';
 export const farmIsLoadingDispatchType = 'farms/farmIsLoading';
 export const farmsResetDispatchType = 'farms/farmsReset';
 export const farmsLoadAllDispatchType = 'farms/farmsLoadAll';
+export const farmAddMiningDataDispatchType = 'farms/farmAddMiningData';
+export const farmMiningDataIsLoadingDispatchType =
+  'farms/farmMiningDataIsLoading';
 
 //ACTIONS
 export const farmsLoadAll = createAction<Farm[]>(farmsLoadAllDispatchType);
 export const farmAdded = createAction<Farm>(farmAddDispatchType);
 export const farmIsloading = createAction<boolean>(farmIsLoadingDispatchType);
 export const farmsReset = createAction<undefined>(farmsResetDispatchType);
+export const farmAddMiningData = createAction<FarmMiningStateType>(
+  farmAddMiningDataDispatchType,
+);
+export const farmDataMiningIsloading = createAction<{
+  farm: string;
+  isLoading: boolean;
+}>(farmMiningDataIsLoadingDispatchType);
 
 // THUNKS
 export function fetchFarm(slug: string) {
@@ -75,6 +100,59 @@ export function fetchFarms() {
   };
 }
 
+export function fetchFarmMiningData(
+  slug: string,
+  btcPrice: number,
+  start: Date,
+  end: Date,
+) {
+  // TODO: look for type
+  return async function fetchFarmMiningDataThunk(
+    dispatch: AppDispatch,
+    getState: () => RootState,
+  ) {
+    dispatch({
+      type: farmMiningDataIsLoadingDispatchType,
+      payload: { farm: slug, isLoading: true },
+    });
+
+    try {
+      // convert timstamp to string format 'YYYY-MM-DD'
+
+      const endIso = new Date(end).toISOString().split('T')[0];
+      const startIso = new Date(start).toISOString().split('T')[0];
+      const url =
+        API_FARM_BALANCE.url(slug) +
+        '?btc=' +
+        btcPrice +
+        '&start=' +
+        startIso +
+        '&end=' +
+        endIso;
+      console.log('fetch', url);
+      const response = await fetch(url); // Remplacez par votre URL d'API
+      const data: DetailedBalanceSheet = await response.json();
+
+      dispatch({
+        type: farmAddMiningDataDispatchType,
+        payload: {
+          farm: slug,
+          start: startIso,
+          end: endIso,
+          mining: data,
+        },
+      });
+    } catch (error) {
+      console.error('Error fetching mining data', error);
+    }
+
+    dispatch({
+      type: farmMiningDataIsLoadingDispatchType,
+      payload: { farm: slug, isLoading: false },
+    });
+  };
+}
+
 /* eslint-enable  */
 
 export const farmsReducers = createReducer(FarmsInitialState, (builder) => {
@@ -92,5 +170,26 @@ export const farmsReducers = createReducer(FarmsInitialState, (builder) => {
     })
     .addCase(farmsReset, (state, action) => {
       state.farms = [];
+    })
+    .addCase(farmAddMiningData, (state, action) => {
+      const { farm, start, end, mining } = action.payload;
+      if (!state.miningData[farm]) {
+        state.miningData[farm] = {
+          isLoading: false,
+          data: {},
+        };
+      }
+      console.log('add mining data', farm, start + ' - ' + end);
+      state.miningData[farm].data[start + ' - ' + end] = mining;
+    })
+    .addCase(farmDataMiningIsloading, (state, action) => {
+      const { farm } = action.payload;
+      if (!state.miningData[farm]) {
+        state.miningData[farm] = {
+          isLoading: action.payload.isLoading,
+          data: {},
+        };
+      }
+      state.miningData[farm].isLoading = action.payload.isLoading;
     });
 });

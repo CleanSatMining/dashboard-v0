@@ -30,7 +30,7 @@ import {
   getUserTokenBalance,
   getUserTokenBalanceToCome,
 } from '../Utils/yield';
-import { API_FARM_BALANCE, API_MINING_DATA } from 'src/constants/apis';
+import { API_MINING_DATA } from 'src/constants/apis';
 
 import {
   APIMiningDataQuery,
@@ -41,9 +41,16 @@ import {
 import { getTimestampUTC } from 'src/utils/date';
 import { getSubSites } from '../Utils/site';
 import { BalanceSheet, DetailedBalanceSheet, Farm } from 'src/types/api/farm';
-import { fetchFarm } from 'src/store/features/farms/farmSlice';
+import {
+  fetchFarm,
+  fetchFarmMiningData,
+} from 'src/store/features/farms/farmSlice';
 import { useSelector } from 'react-redux';
-import { selectFarm } from 'src/store/features/farms/farmSelector';
+import {
+  selectFarm,
+  selectFarmMiningData,
+  selectFarmMiningIsLoading,
+} from 'src/store/features/farms/farmSelector';
 import { RootState } from '../../../store/store';
 import { useAppDispatch } from 'src/hooks/react-hooks';
 
@@ -83,6 +90,19 @@ const _FarmCard: FC<FarmProps> = ({
   //const [farm_, setFarm] = useState<Farm>();
   const farm = useSelector((state: RootState) =>
     selectFarm(state, getFarmId(siteId)),
+  );
+  const isDataLoading = useSelector((state: RootState) =>
+    selectFarmMiningIsLoading(state, getFarmId(siteId)),
+  );
+  const endIso = new Date(endDate + 43200000).toISOString().split('T')[0];
+  const startIso = new Date(startDate).toISOString().split('T')[0];
+  const miningData = useSelector((state: RootState) =>
+    selectFarmMiningData(
+      state,
+      getFarmId(siteId),
+      new Date(startIso),
+      new Date(endIso),
+    ),
   );
   const dispatch = useAppDispatch();
 
@@ -205,10 +225,6 @@ const _FarmCard: FC<FarmProps> = ({
     const farmId = getFarmId(siteId);
 
     const dispatchFarmData = async () => {
-      //const url = API_FARM.url(farmId);
-      //const response = await fetch(url); // Remplacez par votre URL d'API
-      //const farmData: Farm = await response.json();
-      //console.log('Fetch Farm data:', farmData.slug);
       if (!farm) {
         try {
           dispatch(fetchFarm(farmId));
@@ -217,31 +233,7 @@ const _FarmCard: FC<FarmProps> = ({
         }
       } else {
         console.log('Farm already fetched at init:', farm.slug);
-        //fetchFarmData();
       }
-
-      // const _farm = useSelector((state: RootState) =>
-      //   selectFarm(state, getFarmId(siteId)),
-      // );
-
-      // if (_farm !== undefined) {
-      //   setUserSiteData(
-      //     buildEmptyUserSiteData(
-      //       siteId,
-      //       _farm,
-      //       startDate,
-      //       realStartTimestamp,
-      //       endDate,
-      //       endDate,
-      //       realPeriod,
-      //       period,
-      //       userShare,
-      //       userToken,
-      //       userTokenToCome,
-      //       getPropertyToken,
-      //     ),
-      //   );
-      // }
     };
 
     dispatchFarmData();
@@ -252,12 +244,44 @@ const _FarmCard: FC<FarmProps> = ({
 
     fetchFarmData()();
 
+    if (miningData !== undefined && farm !== undefined) {
+      const data: DetailedBalanceSheet = miningData;
+      setUserSiteData(
+        buildUserSiteData(
+          siteId,
+          farm,
+          startDate,
+          new Date(data.start).getTime(),
+          endDate,
+          new Date(data.end).getTime(),
+          data.days,
+          period,
+          userShare,
+          userToken,
+          userTokenToCome,
+          getPropertyToken,
+          data,
+        ),
+      );
+      if (userToken.balance > 0) {
+        userGrossProfit.set(
+          farm.token.symbol,
+          userShare.times(data.balance.revenue.gross.btc).toNumber(),
+        );
+        setUserGrossProfit(userGrossProfit);
+      } else {
+        userGrossProfit.delete(farm.token.symbol);
+        setUserGrossProfit(userGrossProfit);
+      }
+      setUserGrossProfitLastUpdate(new Date());
+    }
+
     if (shallDisplay) {
       shallDisplay(Number(siteId), tokenBalance > 0);
     }
 
     /* eslint-disable */
-  }, [farm, account, btcPrice, startDate, endDate]);
+  }, [isDataLoading, miningData, farm, account, btcPrice, startDate, endDate]);
   /* eslint-enable */
 
   return (
@@ -312,51 +336,19 @@ const _FarmCard: FC<FarmProps> = ({
 
     return async () => {
       if (farm !== undefined) {
-        console.log('Fetch farm mining data:', farm.slug);
         try {
-          // convert timstamp to string format 'YYYY-MM-DD'
-          const end = new Date(endDate + 43200000).toISOString().split('T')[0];
-          const start = new Date(startDate).toISOString().split('T')[0];
-          const url =
-            API_FARM_BALANCE.url(farmId) +
-            '?btc=' +
-            btcPrice +
-            '&start=' +
-            start +
-            '&end=' +
-            end;
-          const response = await fetch(url); // Remplacez par votre URL d'API
-          const data: DetailedBalanceSheet = await response.json();
+          if (miningData === undefined) {
+            console.log('Fetch farm mining data:', farm.slug, startIso, endIso);
 
-          setUserSiteData(
-            buildUserSiteData(
-              siteId,
-              farm,
-              startDate,
-              new Date(data.start).getTime(),
-              endDate,
-              new Date(data.end).getTime(),
-              data.days,
-              period,
-              userShare,
-              userToken,
-              userTokenToCome,
-              getPropertyToken,
-              data,
-            ),
-          );
-
-          if (userToken.balance > 0) {
-            userGrossProfit.set(
-              farm.token.symbol,
-              userShare.times(data.balance.revenue.gross.btc).toNumber(),
+            dispatch(
+              fetchFarmMiningData(
+                farmId,
+                btcPrice,
+                new Date(startIso),
+                new Date(endIso),
+              ),
             );
-            setUserGrossProfit(userGrossProfit);
-          } else {
-            userGrossProfit.delete(farm.token.symbol);
-            setUserGrossProfit(userGrossProfit);
           }
-          setUserGrossProfitLastUpdate(new Date());
         } catch (error) {
           console.error('Error fetching data:', error);
         }
@@ -419,6 +411,12 @@ function buildUserSiteData(
   getPropertyToken: (address: string) => PropertiesERC20 | undefined,
   farmPerformance: DetailedBalanceSheet,
 ): CardData {
+  if (farmPerformance.balance === undefined) {
+    console.log(
+      '=> Build user site data:',
+      JSON.stringify(farmPerformance, null, 2),
+    );
+  }
   // const siteReference =
   //   farm.sites[farm.slug === 'delta' ? 0 : farm.sites.length - 1];
   const siteReference =
