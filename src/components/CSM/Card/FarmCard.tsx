@@ -215,6 +215,9 @@ const _FarmCard: FC<FarmProps> = ({
         } catch (error) {
           console.error('Error fetching data:', error);
         }
+      } else {
+        console.log('Farm already fetched at init:', farm.slug);
+        //fetchFarmData();
       }
 
       // const _farm = useSelector((state: RootState) =>
@@ -246,61 +249,8 @@ const _FarmCard: FC<FarmProps> = ({
 
   useEffect(() => {
     // appel API pour récupérer les données de minage
-    const farmId = getFarmId(siteId);
 
-    const fetchData = async () => {
-      if (farm !== undefined) {
-        try {
-          // convert timstamp to string format 'YYYY-MM-DD'
-          const end = new Date(endDate + 43200000).toISOString().split('T')[0];
-          const start = new Date(startDate).toISOString().split('T')[0];
-          const url =
-            API_FARM_BALANCE.url(farmId) +
-            '?btc=' +
-            btcPrice +
-            '&start=' +
-            start +
-            '&end=' +
-            end;
-          const response = await fetch(url); // Remplacez par votre URL d'API
-          const data: DetailedBalanceSheet = await response.json();
-          console.log('Fetch Farm balance:', data.days);
-          setUserSiteData(
-            buildUserSiteData(
-              siteId,
-              farm,
-              startDate,
-              new Date(data.start).getTime(),
-              endDate,
-              new Date(data.end).getTime(),
-              data.days,
-              period,
-              userShare,
-              userToken,
-              userTokenToCome,
-              getPropertyToken,
-              data,
-            ),
-          );
-
-          if (userToken.balance > 0) {
-            userGrossProfit.set(
-              farm.token.symbol,
-              userShare.times(data.balance.revenue.gross.btc).toNumber(),
-            );
-            setUserGrossProfit(userGrossProfit);
-          } else {
-            userGrossProfit.delete(farm.token.symbol);
-            setUserGrossProfit(userGrossProfit);
-          }
-          setUserGrossProfitLastUpdate(new Date());
-        } catch (error) {
-          console.error('Error fetching data:', error);
-        }
-      }
-    };
-
-    fetchData();
+    fetchFarmData()();
 
     if (shallDisplay) {
       shallDisplay(Number(siteId), tokenBalance > 0);
@@ -356,6 +306,65 @@ const _FarmCard: FC<FarmProps> = ({
       )}
     </>
   );
+
+  function fetchFarmData() {
+    const farmId = getFarmId(siteId);
+
+    return async () => {
+      if (farm !== undefined) {
+        console.log('Fetch farm mining data:', farm.slug);
+        try {
+          // convert timstamp to string format 'YYYY-MM-DD'
+          const end = new Date(endDate + 43200000).toISOString().split('T')[0];
+          const start = new Date(startDate).toISOString().split('T')[0];
+          const url =
+            API_FARM_BALANCE.url(farmId) +
+            '?btc=' +
+            btcPrice +
+            '&start=' +
+            start +
+            '&end=' +
+            end;
+          const response = await fetch(url); // Remplacez par votre URL d'API
+          const data: DetailedBalanceSheet = await response.json();
+
+          setUserSiteData(
+            buildUserSiteData(
+              siteId,
+              farm,
+              startDate,
+              new Date(data.start).getTime(),
+              endDate,
+              new Date(data.end).getTime(),
+              data.days,
+              period,
+              userShare,
+              userToken,
+              userTokenToCome,
+              getPropertyToken,
+              data,
+            ),
+          );
+
+          if (userToken.balance > 0) {
+            userGrossProfit.set(
+              farm.token.symbol,
+              userShare.times(data.balance.revenue.gross.btc).toNumber(),
+            );
+            setUserGrossProfit(userGrossProfit);
+          } else {
+            userGrossProfit.delete(farm.token.symbol);
+            setUserGrossProfit(userGrossProfit);
+          }
+          setUserGrossProfitLastUpdate(new Date());
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      } else {
+        console.log('Farm not loaded:', farmId);
+      }
+    };
+  }
 };
 
 export const SiteCard = _FarmCard;
