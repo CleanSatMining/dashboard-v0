@@ -185,11 +185,11 @@ export const SITES: Record<SiteID, Site> = {
       },
     ],
     mining: {
-      startingDate: '2023-08-18T00:00:00+00:00',
+      startingDate: '2023-10-01T00:00:00+00:00',
       asics: [
         {
           id: 0,
-          date: '2023-08-18T00:00:00+00:00',
+          date: '2023-10-01T00:00:00+00:00',
           model: 'Whatsminer M50',
           powerW: 3400,
           units: 386,
@@ -257,11 +257,11 @@ export const SITES: Record<SiteID, Site> = {
       },
     ],
     mining: {
-      startingDate: '2023-06-20T00:00:00+00:00',
+      startingDate: '2023-07-01T00:00:00+00:00',
       asics: [
         {
           id: 0,
-          date: '2023-06-20T00:00:00+00:00',
+          date: '2023-07-01T00:00:00+00:00',
           model: 'Antminer S19 XP',
           powerW: 3010,
           units: 189,

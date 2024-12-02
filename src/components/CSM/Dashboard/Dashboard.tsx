@@ -9,8 +9,7 @@ import { SummaryGrid } from '../Grid/SummaryGrid';
 import { SiteGrid } from '../Grid/SiteGrid';
 import { Filters } from '../Filter/Filters';
 import { FilterSite, FilterStatus } from 'src/types/mining/Site';
-import { Simulator } from 'cleansatmining-simulator';
-import { ALPHA } from '../mocks/products';
+
 import 'cleansatmining-simulator/dist/simulator.css';
 
 type UserAssetsProps = {
@@ -31,6 +30,7 @@ const _Dashboard: FC<UserAssetsProps> = ({
   endDate,
 }) => {
   const userState = useAppSelector(selectUsersState);
+
   //const dispatch = useAppDispatch();
   const [spinner, setSpinner] = useState(true);
   const [ownerFilter, setOwnerFilter] = useState<string>(

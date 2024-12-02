@@ -80,8 +80,7 @@ const _Summary: FC<AssetProps> = ({
       expensesState,
     ),
   );
-  const grossProfit = userGrossProfit.values().reduce((a, b) => a + b, 0);
-  console.log('=>>>>>>>>>>>>>>>>>>>>>>>>>>>>>grossProfit', grossProfit);
+
   const ultraRare = useWalletNFTs(ULTRA_RARE.contract, account);
   //console.log('NFT', JSON.stringify(ultraRare, null, 4));
   const gridMaxSize = TAXE_FREE_MODE && ultraRare.balance === 0 ? 3 : 4;
@@ -178,9 +177,10 @@ const _Summary: FC<AssetProps> = ({
       endDate,
       expensesState,
     );
+
     userYield.grossTaxeFree = {
-      btc: userGrossProfit.values().reduce((a, b) => a + b, 0),
-      usd: userGrossProfit.values().reduce((a, b) => a + b, 0) * btcPrice,
+      btc: [...userGrossProfit.values()].reduce((a, b) => a + b, 0),
+      usd: [...userGrossProfit.values()].reduce((a, b) => a + b, 0) * btcPrice,
       apr: 0,
     };
     setUserYield(userYield);

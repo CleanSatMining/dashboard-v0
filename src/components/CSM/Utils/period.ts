@@ -122,16 +122,16 @@ export function isWarningSiteDataMissing(
   site: Site,
   startTimestamp: number,
 ): boolean {
-  if (
-    site.name === 'CSM Alpha' ||
-    site.name === 'CSM Beta' ||
-    site.name === 'CSM Omega'
-  ) {
-    const timestamp183DaysAgo = getTimestamp183DaysAgo();
-    if (startTimestamp < timestamp183DaysAgo) {
-      return true;
-    }
-  }
+  // if (
+  //   site.name === 'CSM Alpha' ||
+  //   site.name === 'CSM Beta' ||
+  //   site.name === 'CSM Omega'
+  // ) {
+  //   const timestamp183DaysAgo = getTimestamp183DaysAgo();
+  //   if (startTimestamp < timestamp183DaysAgo) {
+  //     return true;
+  //   }
+  // }
 
   return false;
 }

@@ -199,6 +199,7 @@ export function getTimestampStartOfNDaysAgo(N: number): number {
   const today = new Date(); // Get the current date
   today.setUTCHours(0, 0, 0, 0); // Set time to 00:00:00.000 UTC
   today.setDate(today.getDate() - N); // Subtract N days
+
   return today.getTime(); // Return the timestamp in milliseconds
 }
 

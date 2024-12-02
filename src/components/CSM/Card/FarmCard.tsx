@@ -30,11 +30,7 @@ import {
   getUserTokenBalance,
   getUserTokenBalanceToCome,
 } from '../Utils/yield';
-import {
-  API_FARM,
-  API_FARM_BALANCE,
-  API_MINING_DATA,
-} from 'src/constants/apis';
+import { API_MINING_DATA } from 'src/constants/apis';
 
 import {
   APIMiningDataQuery,
@@ -45,8 +41,20 @@ import {
 import { getTimestampUTC } from 'src/utils/date';
 import { getSubSites } from '../Utils/site';
 import { BalanceSheet, DetailedBalanceSheet, Farm } from 'src/types/api/farm';
+import {
+  fetchFarm,
+  fetchFarmMiningData,
+} from 'src/store/features/farms/farmSlice';
+import { useSelector } from 'react-redux';
+import {
+  selectFarm,
+  selectFarmMiningData,
+  selectFarmMiningIsLoading,
+} from 'src/store/features/farms/farmSelector';
+import { RootState } from '../../../store/store';
+import { useAppDispatch } from 'src/hooks/react-hooks';
 
-type SiteProps = {
+type FarmProps = {
   siteId: string;
   btcPrice: number;
   account: string;
@@ -57,7 +65,7 @@ type SiteProps = {
   shallDisplay?: (siteId: number, shallDisplay: boolean) => void;
 };
 
-const _FarmCard: FC<SiteProps> = ({
+const _FarmCard: FC<FarmProps> = ({
   siteId = '1',
   btcPrice,
   period,
@@ -70,7 +78,7 @@ const _FarmCard: FC<SiteProps> = ({
   //const isMobile = useMediaQuery('(max-width: 36em)');
   const adminUser = useAtomValue(adminUserAtom);
   const [userGrossProfit, setUserGrossProfit] = useAtom(userGrossProfitAtom);
-  const [userGrossProfitLastUpdate, setUserGrossProfitLastUpdate] = useAtom(
+  const [, setUserGrossProfitLastUpdate] = useAtom(
     userGrossProfitLastUpdateAtom,
   );
   const usersState = useAppSelector(selectUsersState);
@@ -79,7 +87,24 @@ const _FarmCard: FC<SiteProps> = ({
   const subSites = getSubSites(site);
   const allSites = [site, ...subSites];
   const [siteValue, setSiteValue] = useState(site.name);
-  const [farm, setFarm] = useState<Farm>();
+  //const [farm_, setFarm] = useState<Farm>();
+  const farm = useSelector((state: RootState) =>
+    selectFarm(state, getFarmId(siteId)),
+  );
+  const isDataLoading = useSelector((state: RootState) =>
+    selectFarmMiningIsLoading(state, getFarmId(siteId)),
+  );
+  const endIso = new Date(endDate + 43200000).toISOString().split('T')[0];
+  const startIso = new Date(startDate).toISOString().split('T')[0];
+  const miningData = useSelector((state: RootState) =>
+    selectFarmMiningData(
+      state,
+      getFarmId(siteId),
+      new Date(startIso),
+      new Date(endIso),
+    ),
+  );
+  const dispatch = useAppDispatch();
 
   const { realPeriod, realStartTimestamp } = getPeriodFromStart(
     site,
@@ -101,7 +126,24 @@ const _FarmCard: FC<SiteProps> = ({
     shallDisplay(Number(siteId), tokenBalance > 0);
   }
 
-  const [userSiteData, setUserSiteData] = useState<CardData>();
+  const [userSiteData, setUserSiteData] = useState<CardData | undefined>(
+    farm
+      ? buildEmptyUserSiteData(
+          siteId,
+          farm,
+          startDate,
+          realStartTimestamp,
+          endDate,
+          endDate,
+          realPeriod,
+          period,
+          userShare,
+          userToken,
+          userTokenToCome,
+          getPropertyToken,
+        )
+      : undefined,
+  );
 
   const handleClick = async () => {
     const selectedSite =
@@ -182,105 +224,64 @@ const _FarmCard: FC<SiteProps> = ({
     // appel API pour récupérer les données de minage
     const farmId = getFarmId(siteId);
 
-    const fetchData = async () => {
-      try {
-        const url = API_FARM.url(farmId);
-        const response = await fetch(url); // Remplacez par votre URL d'API
-        const farmData: Farm = await response.json();
-        console.log('Fetch Farm data:', farmData.slug);
-        setFarm(farmData);
-        setUserSiteData(
-          buildEmptyUserSiteData(
-            siteId,
-            farmData,
-            startDate,
-            realStartTimestamp,
-            endDate,
-            endDate,
-            realPeriod,
-            period,
-            userShare,
-            userToken,
-            userTokenToCome,
-            getPropertyToken,
-          ),
-        );
-      } catch (error) {
-        console.error('Error fetching data:', error);
+    const dispatchFarmData = async () => {
+      if (!farm) {
+        try {
+          dispatch(fetchFarm(farmId));
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      } else {
+        console.log('Farm already fetched at init:', farm.slug);
       }
     };
 
-    fetchData();
+    dispatchFarmData();
   }, []);
 
   useEffect(() => {
     // appel API pour récupérer les données de minage
-    const farmId = getFarmId(siteId);
 
-    const fetchData = async () => {
-      if (farm !== undefined) {
-        try {
-          // convert timstamp to string format 'YYYY-MM-DD'
-          const end = new Date(endDate + 43200000).toISOString().split('T')[0];
-          const start = new Date(startDate).toISOString().split('T')[0];
-          const url =
-            API_FARM_BALANCE.url(farmId) +
-            '?btc=' +
-            btcPrice +
-            '&start=' +
-            start +
-            '&end=' +
-            end;
-          const response = await fetch(url); // Remplacez par votre URL d'API
-          const data: DetailedBalanceSheet = await response.json();
-          console.log('Fetch Farm balance:', data.days);
-          setUserSiteData(
-            buildUserSiteData(
-              siteId,
-              farm,
-              startDate,
-              realStartTimestamp,
-              endDate,
-              endDate,
-              realPeriod,
-              period,
-              userShare,
-              userToken,
-              userTokenToCome,
-              getPropertyToken,
-              data,
-            ),
-          );
+    fetchFarmData()();
 
-          if (userToken.balance > 0) {
-            console.log(
-              'Update >>>>>>>>>>>>>>>>>>>>>>> gross.btc',
-              userShare.times(data.balance.revenue.gross.btc).toNumber(),
-            );
-            userGrossProfit.set(
-              farm.token.symbol,
-              userShare.times(data.balance.revenue.gross.btc).toNumber(),
-            );
-            setUserGrossProfit(() => userGrossProfit);
-          } else {
-            userGrossProfit.delete(farm.token.symbol);
-            setUserGrossProfit(userGrossProfit);
-          }
-          setUserGrossProfitLastUpdate(new Date());
-        } catch (error) {
-          console.error('Error fetching data:', error);
-        }
+    if (miningData !== undefined && farm !== undefined) {
+      const data: DetailedBalanceSheet = miningData;
+      setUserSiteData(
+        buildUserSiteData(
+          siteId,
+          farm,
+          startDate,
+          new Date(data.start).getTime(),
+          endDate,
+          new Date(data.end).getTime(),
+          data.days,
+          period,
+          userShare,
+          userToken,
+          userTokenToCome,
+          getPropertyToken,
+          data,
+        ),
+      );
+      if (userToken.balance > 0) {
+        userGrossProfit.set(
+          farm.token.symbol,
+          userShare.times(data.balance.revenue.gross.btc).toNumber(),
+        );
+        setUserGrossProfit(userGrossProfit);
+      } else {
+        userGrossProfit.delete(farm.token.symbol);
+        setUserGrossProfit(userGrossProfit);
       }
-    };
-
-    fetchData();
+      setUserGrossProfitLastUpdate(new Date());
+    }
 
     if (shallDisplay) {
       shallDisplay(Number(siteId), tokenBalance > 0);
     }
 
     /* eslint-disable */
-  }, [farm, account, btcPrice, startDate, endDate]);
+  }, [isDataLoading, miningData, farm, account, btcPrice, startDate, endDate]);
   /* eslint-enable */
 
   return (
@@ -329,6 +330,33 @@ const _FarmCard: FC<SiteProps> = ({
       )}
     </>
   );
+
+  function fetchFarmData() {
+    const farmId = getFarmId(siteId);
+
+    return async () => {
+      if (farm !== undefined) {
+        try {
+          if (miningData === undefined) {
+            console.log('Fetch farm mining data:', farm.slug, startIso, endIso);
+
+            dispatch(
+              fetchFarmMiningData(
+                farmId,
+                btcPrice,
+                new Date(startIso),
+                new Date(endIso),
+              ),
+            );
+          }
+        } catch (error) {
+          console.error('Error fetching data:', error);
+        }
+      } else {
+        console.log('Farm not loaded:', farmId);
+      }
+    };
+  }
 };
 
 export const SiteCard = _FarmCard;
@@ -383,8 +411,17 @@ function buildUserSiteData(
   getPropertyToken: (address: string) => PropertiesERC20 | undefined,
   farmPerformance: DetailedBalanceSheet,
 ): CardData {
+  if (farmPerformance.balance === undefined) {
+    console.log(
+      '=> Build user site data:',
+      JSON.stringify(farmPerformance, null, 2),
+    );
+  }
+  // const siteReference =
+  //   farm.sites[farm.slug === 'delta' ? 0 : farm.sites.length - 1];
   const siteReference =
-    farm.sites[farm.slug === 'delta' ? 0 : farm.sites.length - 1];
+    farm.sites.findLast((site) => !site.isClosed && site.mainSite) ??
+    farm.sites[farm.sites.length - 1];
   const tokenProperties = getPropertyToken(farm.token.address);
   const tokenSupply = tokenProperties
     ? tokenProperties.supply
@@ -393,6 +430,19 @@ function buildUserSiteData(
     .plus(farmPerformance.balance.expenses.operator.usd)
     .plus(farmPerformance.balance.expenses.electricity.usd)
     .toNumber();
+
+  let electricity = farmPerformance.balance.expenses.electricity.usd;
+  let feeCSM = farmPerformance.balance.expenses.csm.usd;
+  let feeOperator = farmPerformance.balance.expenses.operator.usd;
+
+  if (siteReference.contract.opTaxRate === 0) {
+    electricity = new BigNumber(electricity).plus(feeOperator).toNumber();
+    feeOperator = 0;
+  }
+  if (siteReference.contract.csmTaxRate === 0) {
+    electricity = new BigNumber(electricity).plus(feeCSM).toNumber();
+    feeCSM = 0;
+  }
 
   return {
     id: siteId,
@@ -508,9 +558,9 @@ function buildUserSiteData(
           usd: farmPerformance.balance.revenue.gross.usd,
         },
         costs: {
-          electricity: farmPerformance.balance.expenses.electricity.usd,
-          feeCSM: farmPerformance.balance.expenses.csm.usd,
-          feeOperator: farmPerformance.balance.expenses.operator.usd,
+          electricity: electricity,
+          feeCSM: feeCSM,
+          feeOperator: feeOperator,
           provision: farmPerformance.balance.expenses.depreciation.usd,
           taxe: 0,
           total: expenses,

@@ -112,7 +112,7 @@ const App = ({ Component, pageProps }: AppProps) => {
                     disableHeaderMultisite={true}
                     footerParam={{
                       name: 'CleanSat Mining',
-                      copyright: 'CleanSat Mining, All rights reserved @2023',
+                      copyright: `CleanSat Mining, All rights reserved @${new Date().getFullYear()} `,
                       logo: () => (
                         <Image src={Logo.src} alt={'CSM Logo'} width={36} />
                       ),

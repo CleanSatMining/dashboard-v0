@@ -1,6 +1,6 @@
 import { FC, useEffect, useState } from 'react';
 
-import { Flex, Grid } from '@mantine/core';
+import { Center, Flex, Grid, Loader } from '@mantine/core';
 
 import { useAppSelector } from 'src/hooks/react-hooks';
 import { selectUsersState } from 'src/store/features/userData/userDataSelector';
@@ -11,6 +11,9 @@ import { SiteCard } from 'src/components/CSM/Card/FarmCard';
 import { FilterStatus, FilterSite, MiningStatus } from 'src/types/mining/Site';
 import { getSite } from 'src/components/CSM/Utils/site';
 import { useMediaQuery } from '@mantine/hooks';
+import { useAppDispatch } from 'src/hooks/react-hooks';
+import { fetchFarms } from 'src/store/features/farms/farmSlice';
+import { selectFarmsIsLoading } from 'src/store/features/farms/farmSelector';
 
 type SiteProps = {
   btcPrice: number;
@@ -36,6 +39,18 @@ const _SiteGrid: FC<SiteProps> = ({
   const [hasBalance, setHasBalance] = useState<boolean[]>(
     ALLOWED_SITES.map((siteId) => getShallDisplay(siteId)),
   );
+  const [spinner, setSpinner] = useState(true);
+  const dispatch = useAppDispatch();
+  const dataLoading = useAppSelector(selectFarmsIsLoading);
+
+  useEffect(() => {
+    dispatch(fetchFarms());
+  }, [dispatch]);
+
+  useEffect(() => {
+    setSpinner(dataLoading);
+  }, [setSpinner, dataLoading]);
+
   useEffect(() => {
     function getShallDisplay(siteId: string): boolean {
       if (
@@ -94,21 +109,29 @@ const _SiteGrid: FC<SiteProps> = ({
       align={'center'}
       style={{ marginLeft: '-8px', marginRight: '-8px' }}
     >
-      <Grid style={{ width: '100%' }}>
-        {displayedSites.map((i) => (
-          <Grid.Col md={6} lg={4} key={`grid-${i}`}>
-            <SiteCard
-              siteId={i}
-              account={address}
-              btcPrice={btcPrice}
-              period={csmPeriod}
-              isMobile={isMobile}
-              endDate={endDate}
-              startDate={startDate}
-            ></SiteCard>
-          </Grid.Col>
-        ))}
-      </Grid>
+      {spinner && (
+        <Center maw={400} h={100} mx={'auto'}>
+          <Loader color={'brand'} size={'xl'} />
+        </Center>
+      )}
+
+      {!spinner && (
+        <Grid style={{ width: '100%' }}>
+          {displayedSites.map((i) => (
+            <Grid.Col md={6} lg={4} key={`grid-${i}`}>
+              <SiteCard
+                siteId={i}
+                account={address}
+                btcPrice={btcPrice}
+                period={csmPeriod}
+                isMobile={isMobile}
+                endDate={endDate}
+                startDate={startDate}
+              ></SiteCard>
+            </Grid.Col>
+          ))}
+        </Grid>
+      )}
     </Flex>
   );
 };

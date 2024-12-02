@@ -82,7 +82,7 @@ export const CardSiteHashrate: FC<CardSiteHashrateProps> = ({
           {data.site.uptime.hashratePeriods.map((period, index) => {
             return (
               <Flex key={index} direction={'column'}>
-                {getInstallationInformation(period, t, isMobile ? 'xs' : 'sm')}
+                {getInstallationInformation(period, isMobile ? 'xs' : 'sm')}
               </Flex>
             );
           })}
@@ -131,12 +131,15 @@ export const CardSiteHashrate: FC<CardSiteHashrateProps> = ({
                 <Progress
                   sections={[
                     {
-                      value: new BigNumber(
-                        Math.min(period.hashrateHs, period.hashrateMax),
-                      )
-                        .dividedBy(period.hashrateMax)
-                        .times(100)
-                        .toNumber(),
+                      value:
+                        period.hashrateMax > 0
+                          ? new BigNumber(
+                              Math.min(period.hashrateHs, period.hashrateMax),
+                            )
+                              .dividedBy(period.hashrateMax)
+                              .times(100)
+                              .toNumber()
+                          : 0,
                       color: calculateProgressColor(
                         new BigNumber(period.hashrateHs)
                           .dividedBy(period.hashrateMax)
@@ -144,7 +147,11 @@ export const CardSiteHashrate: FC<CardSiteHashrateProps> = ({
                           .toNumber(),
                       ),
 
-                      tooltip: getInstallationInformation(period, t),
+                      tooltip: getInstallationInformation(
+                        period,
+                        isMobile ? 'xs' : 'sm',
+                        false,
+                      ),
                     },
                   ]}
                 />
@@ -168,15 +175,17 @@ export const CardSiteHashrate: FC<CardSiteHashrateProps> = ({
                       : ''}
                   </Text>
                   <Text weight={500} fz={isMobile ? 'xs' : 'sm'}>
-                    {formatSmallPercent(
-                      new BigNumber(period.hashrateHs)
-                        .dividedBy(period.hashrateMax)
-                        .toNumber(),
-                      undefined,
-                      undefined,
-                      undefined,
-                      hasData,
-                    )}
+                    {period.hashrateMax > 0
+                      ? formatSmallPercent(
+                          new BigNumber(period.hashrateHs)
+                            .dividedBy(period.hashrateMax)
+                            .toNumber(),
+                          undefined,
+                          undefined,
+                          undefined,
+                          hasData,
+                        )
+                      : '0%'}
                   </Text>
                 </Group>
               </div>
@@ -190,11 +199,13 @@ export const CardSiteHashrate: FC<CardSiteHashrateProps> = ({
 
 function getInstallationInformation(
   period: HashratePeriod,
-  t: TFunction,
   size: string = 'sm',
+  widthDate: boolean = true,
 ) {
   return period.equipmentInstalled
-    ? period.equipmentInstalled.map((e) => getContainerInformation(e, t, size))
+    ? period.equipmentInstalled.map((e) =>
+        getContainerInformation(e, size, widthDate),
+      )
     : '';
 }
 
@@ -206,12 +217,12 @@ function getContainerInformation(
     hashrateHs: number;
     units: number;
   },
-  t: TFunction,
   size: string = 'sm',
+  withDate: boolean = true,
 ) {
   return (
     <Text size={size}>
-      {`${formatTimestampDay(container.date.getTime())} : ${t('Adding')} ${container.units} ${container.model} (${container.powerW}W / ${formatHashrate(container.hashrateHs)})`}
+      {`${withDate ? formatTimestampDay(container.date.getTime()) + ' : ' : ''}${container.units} ${container.model} (${container.powerW}W / ${formatHashrate(container.hashrateHs)})`}
     </Text>
   );
 }
