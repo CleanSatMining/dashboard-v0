@@ -228,13 +228,13 @@ function calculateSiteState(miningState: MiningStatus) {
     case MiningStatus.inactive: {
       //statements;
       badgeState = 'inactive';
-      badgeColor = 'red';
+      badgeColor = 'yellow';
       break;
     }
     case MiningStatus.stopped: {
       //statements;
       badgeState = 'stopped';
-      badgeColor = 'orange';
+      badgeColor = 'red';
       break;
     }
     case MiningStatus.transit: {

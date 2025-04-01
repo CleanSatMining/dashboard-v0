@@ -110,7 +110,7 @@ export const SITES: Record<SiteID, Site> = {
       gnosisscanUrl:
         'https://gnosisscan.io/address/0x364D1aAF7a98e26A1F072e926032f154428481d1',
     },
-    status: MiningStatus.active,
+    status: MiningStatus.stopped,
     api: [
       {
         enable: true,
@@ -175,7 +175,7 @@ export const SITES: Record<SiteID, Site> = {
       gnosisscanUrl:
         'https://gnosisscan.io/address/0x203A5080450FFC3e038284082FBF5EBCdc9B053f',
     },
-    status: MiningStatus.active,
+    status: MiningStatus.stopped,
     api: [
       {
         enable: true,
@@ -240,7 +240,7 @@ export const SITES: Record<SiteID, Site> = {
       gnosisscanUrl:
         'https://gnosisscan.io/address/0x71C86CbB71846425De5f3a693e989F4BDd97E98d',
     },
-    status: MiningStatus.active,
+    status: MiningStatus.stopped,
     api: [
       {
         enable: true,
