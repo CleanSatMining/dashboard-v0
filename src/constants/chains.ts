@@ -27,7 +27,7 @@ export const CHAINS: Record<ChainsID, Chain> = {
     chainName: 'Gnosis Chain',
     logo: GnosisLogo,
     nativeCurrency: DAI,
-    rpcUrl: 'https://rpc.ankr.com/gnosis',
+    rpcUrl: 'https://rpc.gnosis.gateway.fm',
     blockExplorerUrl: 'https://gnosisscan.io/',
     isTestnet: false,
     contracts: {
